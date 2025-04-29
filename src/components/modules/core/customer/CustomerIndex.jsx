@@ -24,6 +24,7 @@ import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDr
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
 import { setDropdownLoad } from "../../../../store/inventory/crudSlice.js";
 import { coreSettingDropdown } from "../../../../store/core/utilitySlice.js";
+import Navigation from "../common/Navigation.jsx";
 
 function CustomerIndex() {
     const { t } = useTranslation();
@@ -90,7 +91,10 @@ function CustomerIndex() {
                     />
                     <Box p={'8'}>
                         <Grid columns={24} gutter={{ base: 8 }}>
-                            <Grid.Col span={15} >
+                            <Grid.Col span={1} >
+                                <Navigation module={"customer"} />
+                            </Grid.Col>
+                            <Grid.Col span={14} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                     <CustomerTable />
                                 </Box>

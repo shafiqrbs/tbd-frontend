@@ -99,7 +99,7 @@ function AccountingConfig() {
                         <Box p={'8'}>
                             <Grid columns={24} gutter={{ base: 8 }}>
                                 <Grid.Col span={1} >
-                                    <Navigation module="settings"/>
+                                    <Navigation module={"settings"}/>
                                 </Grid.Col>
                                 <Grid.Col span={14} >
                                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >

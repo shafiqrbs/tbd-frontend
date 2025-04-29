@@ -21,6 +21,7 @@ import {
     editEntityData,
     setInsertType,
 } from "../../../../store/production/crudSlice.js";
+import NavigationGeneral from "../common/NavigationGeneral.jsx";
 
 
 function ParticularIndex() {
@@ -65,7 +66,10 @@ function ParticularIndex() {
                             />
                             <Box p={'8'}>
                                 <Grid columns={24} gutter={{ base: 8 }}>
-                                    <Grid.Col span={15}>
+                                    <Grid.Col span={1}>
+                                        <NavigationGeneral module={'particular'} />
+                                    </Grid.Col>
+                                    <Grid.Col span={14}>
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
                                             <_ParticularTable particularFetching={particularFetching} setParticularFetching={setParticularFetching} />
                                         </Box>

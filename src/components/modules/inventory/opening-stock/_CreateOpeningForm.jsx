@@ -326,7 +326,7 @@ function _CreateOpeningForm(props) {
         <Box>
             <Grid columns={24} gutter={{ base: 8 }}>
                 <Grid.Col span={1} >
-                    <Navigation module = "opening-stock" />
+                    <Navigation module = {"opening-stock"} />
                 </Grid.Col>
                 <Grid.Col span={22} >
                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >

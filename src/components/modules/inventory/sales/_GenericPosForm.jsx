@@ -49,20 +49,14 @@ import Navigation from "../common/Navigation.jsx";
 import __PosSalesForm from "./__PosSalesForm.jsx";
 import { useHotkeys } from "@mantine/hooks";
 import SettingDrawer from "../common/SettingDrawer.jsx";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function _GenericPosForm(props) {
-  const {
-    currencySymbol,
-    allowZeroPercentage,
-    domainId,
-    isSMSActive,
-    isZeroReceiveAllow,
-    isWarehouse,
-    domainConfigData
-  } = props;
+  const { domainConfigData } = props;
+  let currencySymbol = domainConfigData?.inventory_config?.currency?.symbol;
+  let allowZeroPercentage = domainConfigData?.inventory_config?.zero_stock;
+  let domainId = domainConfigData?.inventory_config?.domain_id;
+  let isSMSActive = domainConfigData?.inventory_config?.is_active_sms;
 
-  let inventoryConfig = domainConfigData?.inventory_config;
   let salesConfig = domainConfigData?.inventory_config?.config_sales;
   let id = domainConfigData?.id;
   let categoryDropDownData = getSettingCategoryDropdownData();
@@ -463,8 +457,7 @@ function _GenericPosForm(props) {
     ],
     []
   );
-  
-  
+
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -609,10 +602,38 @@ function _GenericPosForm(props) {
                   justify="flex-end"
                   align="flex-end"
                 >
-                  <Box pl={`8`} pr={8} mb={"xs"} className={"borderRadiusAll"} w={"100%"}>
+                  <Box
+                    pl={`8`}
+                    pr={8}
+                    mb={"xs"}
+                    className={"borderRadiusAll"}
+                    w={"100%"}
+                  >
                     <Box
-                      mt={productSalesMode === "product" ? "0" : "xs"}
-                      h={height - 130}
+                      h={(() => {
+                        let availableHeight = height - 118;
+
+                        if (productSalesMode === "barcode") {
+                          if (
+                            !salesConfig?.search_by_vendor &&
+                            !salesConfig?.search_by_warehouse &&
+                            !salesConfig?.search_by_category
+                          ) {
+                            availableHeight += 260;
+                          } else {
+                            availableHeight += 264;
+                          }
+                        } else {
+                          if (!salesConfig?.search_by_vendor)
+                            availableHeight += 40;
+                          if (!salesConfig?.search_by_warehouse)
+                            availableHeight += 40;
+                          if (!salesConfig?.search_by_category)
+                            availableHeight += 40;
+                        }
+
+                        return availableHeight;
+                      })()}
                     >
                       {salesConfig?.show_product === 1 && (
                         <DataTable
@@ -792,18 +813,6 @@ function _GenericPosForm(props) {
                                           "temp-sales-products",
                                           JSON.stringify(myCardProducts)
                                         );
-
-                                        // Show success notification
-                                        notifications.show({
-                                          color: "green",
-                                          title: t("ProductAdded"),
-                                          message: t(
-                                            "ProductAddedSuccessfully"
-                                          ),
-                                          autoClose: 1500,
-                                          withCloseButton: true,
-                                        });
-                                        //update the sales table
                                         setLoadCardProducts(true);
                                         // Reset quantity input for this specific product
                                         setProductQuantities((prev) => ({
@@ -834,72 +843,79 @@ function _GenericPosForm(props) {
                           ]}
                           loaderSize="xs"
                           loaderColor="grape"
-                          height={height - 130}
+                          height={"100%"}
+                          scrollAreaProps={{
+                            scrollbarSize: 8,
+                          }}
                         />
                       )}
                     </Box>
                     <Box className="borderRadiusAll">
-                      {salesConfig?.search_by_vendor === 1 && (
-                        <Box mt={"8"}>
-                          <SelectForm
-                            tooltip={t("PurchaseValidateMessage")}
-                            label=""
-                            placeholder={t("Vendor")}
-                            required={false}
-                            nextField={"warehouse_id"}
-                            name={"vendor_id"}
-                            form={form}
-                            dropdownValue={vendorsDropdownData}
-                            id={"purchase_vendor_id"}
-                            mt={1}
-                            searchable={true}
-                            value={vendorData}
-                            changeValue={setVendorData}
-                          />
-                        </Box>
-                      )}
-                      {salesConfig?.search_by_warehouse === 1 && (
-                        <Box mt={"4"}>
-                          <SelectForm
-                            tooltip={t("Warehouse")}
-                            label=""
-                            placeholder={t("Warehouse")}
-                            required={false}
-                            nextField={"category_id"}
-                            name={"warehouse_id"}
-                            form={form}
-                            dropdownValue={warehouseDropdownData}
-                            id={"warehouse_id"}
-                            mt={1}
-                            searchable={true}
-                            value={warehouseData}
-                            changeValue={setWarehouseData}
-                          />
-                        </Box>
-                      )}
-                      {salesConfig?.search_by_category === 1 && (
-                        <Box mt={"4"}>
-                          <SelectForm
-                            tooltip={t("ChooseCategory")}
-                            label={""}
-                            placeholder={t("ChooseCategory")}
-                            required={true}
-                            nextField={"product_id"}
-                            name={"category_id"}
-                            form={form}
-                            dropdownValue={categoryDropDownData}
-                            id={"category_id"}
-                            searchable={true}
-                            value={categoryData}
-                            changeValue={setCategoryData}
-                            comboboxProps={{ withinPortal: false }}
-                          />
+                      {productSalesMode === "product" && (
+                        <Box>
+                          {salesConfig?.search_by_vendor === 1 && (
+                            <Box mt={"8"}>
+                              <SelectForm
+                                tooltip={t("PurchaseValidateMessage")}
+                                label=""
+                                placeholder={t("Vendor")}
+                                required={false}
+                                nextField={"warehouse_id"}
+                                name={"vendor_id"}
+                                form={form}
+                                dropdownValue={vendorsDropdownData}
+                                id={"purchase_vendor_id"}
+                                mt={1}
+                                searchable={true}
+                                value={vendorData}
+                                changeValue={setVendorData}
+                              />
+                            </Box>
+                          )}
+                          {salesConfig?.search_by_warehouse === 1 && (
+                            <Box mt={"4"}>
+                              <SelectForm
+                                tooltip={t("Warehouse")}
+                                label=""
+                                placeholder={t("Warehouse")}
+                                required={false}
+                                nextField={"category_id"}
+                                name={"warehouse_id"}
+                                form={form}
+                                dropdownValue={warehouseDropdownData}
+                                id={"warehouse_id"}
+                                mt={1}
+                                searchable={true}
+                                value={warehouseData}
+                                changeValue={setWarehouseData}
+                              />
+                            </Box>
+                          )}
+                          {salesConfig?.search_by_category === 1 && (
+                            <Box mt={"4"}>
+                              <SelectForm
+                                tooltip={t("ChooseCategory")}
+                                label={""}
+                                placeholder={t("ChooseCategory")}
+                                required={true}
+                                nextField={"product_id"}
+                                name={"category_id"}
+                                form={form}
+                                dropdownValue={categoryDropDownData}
+                                id={"category_id"}
+                                searchable={true}
+                                value={categoryData}
+                                changeValue={setCategoryData}
+                                comboboxProps={{ withinPortal: false }}
+                              />
+                            </Box>
+                          )}
                         </Box>
                       )}
                       {productSalesMode === "product" && (
                         <Box
                           p={"xs"}
-                          mt={"8"}
+                          mt={"4"}
                           className={genericClass.genericHighlightedBox}
                           ml={"-xs"}
                           mr={-8}
@@ -1240,7 +1256,7 @@ function _GenericPosForm(props) {
           settingDrawer={settingDrawer}
           setSettingDrawer={setSettingDrawer}
           module={"Sales"}
-          salesConfig={salesConfig}
+          domainConfigData={domainConfigData}
           id={id}
         />
       )}

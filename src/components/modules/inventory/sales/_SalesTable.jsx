@@ -228,7 +228,7 @@ function _SalesTable(props) {
             </Box>
             <Box>
                 <Grid columns={24} gutter={{ base: 8 }}>
-                    <Grid.Col span={1} ><Navigation module="sales"/></Grid.Col>
+                    <Grid.Col span={1} ><Navigation module={"sales"}/></Grid.Col>
                     <Grid.Col span={14} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box className={'borderRadiusAll'}>

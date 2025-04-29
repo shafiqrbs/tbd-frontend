@@ -39,14 +39,8 @@ function SalesInvoice() {
                             />
                             <Box p={'8'}>
                                 {
-                                    insertType === 'create' && domainConfigData?.inventory_config?.business_model?.slug === 'general' &&
+                                    
                                     <_GenericPosForm
-                                        allowZeroPercentage={domainConfigData?.inventory_config?.zero_stock}
-                                        currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
-                                        domainId={domainConfigData?.inventory_config?.domain_id}
-                                        isSMSActive={domainConfigData?.inventory_config?.is_active_sms}
-                                        isZeroReceiveAllow={domainConfigData?.inventory_config?.is_zero_receive_allow}
-                                        isWarehouse={domainConfigData?.inventory_config?.sku_warehouse}
                                         domainConfigData={domainConfigData}
                                     />
                                 }

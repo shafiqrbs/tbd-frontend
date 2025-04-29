@@ -185,7 +185,7 @@ function VoucherUpdateFrom(props) {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            calssName={'btnPrimaryBg'}
+                                                            className={'btnPrimaryBg'}
                                                             type="submit"
                                                             mt={4}
                                                             id="EntityFormSubmit"

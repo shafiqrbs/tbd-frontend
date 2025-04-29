@@ -99,7 +99,7 @@ function _OpeningApproveTable(props) {
             <Box>
                 <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={1} >
-                        <Navigation module = "opening-approve-stock" />
+                        <Navigation module = {"opening-approve-stock"} />
                     </Grid.Col>
                     <Grid.Col span={22} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >

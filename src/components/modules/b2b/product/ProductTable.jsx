@@ -224,11 +224,12 @@ export default function ProductTable({id}) {
     ];
 
     return (
-        <>
+        <Box style={{position: "relative"}}>
             <LoadingOverlay
                 visible={state.reloadList || reloadList}
                 zIndex={1000}
                 overlayProps={{radius: "sm", blur: 2}}
+                loaderProps={{color:"red"}}
             />
 
             <Grid columns={24} gutter={{base: 8}}>
@@ -282,6 +283,6 @@ export default function ProductTable({id}) {
                     </Box>
                 </Grid.Col>
             </Grid>
-        </>
+        </Box>
     );
 }

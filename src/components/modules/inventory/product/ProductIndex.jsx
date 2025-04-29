@@ -14,6 +14,7 @@ import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavb
 import { useNavigate, useParams } from "react-router-dom";
 import { editEntityData, setDropdownLoad, setEntityNewData, setFormLoading, setInsertType, setSearchKeyword } from "../../../../store/inventory/crudSlice.js";
 import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
+import NavigationGeneral from "../common/NavigationGeneral.jsx";
 
 function  ProductIndex() {
     const { t, i18n } = useTranslation();
@@ -79,7 +80,10 @@ function  ProductIndex() {
                                 {
                                     insertType === 'create' ?
                                         <Grid columns={24} gutter={{ base: 8 }}>
-                                            <Grid.Col span={15}>
+                                            <Grid.Col span={1}>
+                                                <NavigationGeneral module={"product"} />
+                                            </Grid.Col>
+                                            <Grid.Col span={14}>
                                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
                                                     <ProductTable categoryDropdown={categoryDropdown}/>
                                                 </Box>

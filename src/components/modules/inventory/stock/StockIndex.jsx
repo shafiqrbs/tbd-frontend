@@ -11,6 +11,7 @@ import {
 import StockTable from "./StockTable.jsx";
 import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
+import NavigationGeneral from "../common/NavigationGeneral.jsx";
 
 function StockIndex() {
   const { t, i18n } = useTranslation();
@@ -72,7 +73,10 @@ function StockIndex() {
               />
               <Box p={"8"}>
                 <Grid columns={24} gutter={{ base: 8 }}>
-                  <Grid.Col span={24}>
+                  <Grid.Col span={1}>
+                    <NavigationGeneral  module={"stock"} />
+                  </Grid.Col>
+                  <Grid.Col span={23}>
                     <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                       <StockTable categoryDropdown={categoryDropdown} locationData={locationData} />
                     </Box>
