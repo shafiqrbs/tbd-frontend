@@ -29,7 +29,7 @@ export default function _DiscountShortcut() {
         <Flex direction={`column`} align={"center"} gap={"16"}>
           <Flex direction={`column`} align={"center"} mt={"xs"} pt={5}>
             <Tooltip
-              label={t("B2BDomainDashboard")}
+              label={t("DiscountDashboard")}
               px={16}
               py={2}
               withArrow
@@ -47,7 +47,7 @@ export default function _DiscountShortcut() {
                 color={`black`}
                 radius="xl"
                 onClick={(e) => {
-                  navigate("/discount/dashboard");
+                  navigate("/discount");
                 }}
               >
                 <Flex direction={`column`} align={"center"}>
@@ -59,10 +59,9 @@ export default function _DiscountShortcut() {
               {t("Dashboard")}
             </Flex>
           </Flex>
-
           <Flex direction={`column`} align={"center"} pt={5}>
             <Tooltip
-              label={t("Users")}
+              label={t("Discount")}
               px={16}
               py={2}
               withArrow
@@ -89,22 +88,54 @@ export default function _DiscountShortcut() {
               </Button>
             </Tooltip>
             <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
-              {t("Domain")}
+              {t("Discount")}
             </Flex>
           </Flex>
           <Flex direction={`column`} align={"center"} pt={5}>
             <Tooltip
-                label={t("Config")}
+                label={t("UsersDiscount")}
                 px={16}
                 py={2}
                 withArrow
                 position={"left"}
                 c={"white"}
-                bg={"#905a23"}
+                bg={"#F59E0B"}
                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
-                  bg={"#905a23"}
+                  bg={"#F59E0B"}
+                  size="md"
+                  pl={"12"}
+                  pr={"12"}
+                  variant={"light"}
+                  color={`black`}
+                  radius="xl"
+                  onClick={(e) => {
+                    navigate("/discount/users");
+                  }}
+              >
+                <Flex direction={`column`} align={"center"}>
+                  <IconDashboard size={16} color={"white"} />
+                </Flex>
+              </Button>
+            </Tooltip>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+              {t("Users")}
+            </Flex>
+          </Flex>
+          <Flex direction={`column`} align={"center"} pt={5}>
+            <Tooltip
+                label={t("Configuration")}
+                px={16}
+                py={2}
+                withArrow
+                position={"left"}
+                c={"white"}
+                bg={"#3F51B5"}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <Button
+                  bg={"#3F51B5"}
                   size="md"
                   pl={"12"}
                   pr={"12"}
@@ -121,10 +152,9 @@ export default function _DiscountShortcut() {
               </Button>
             </Tooltip>
             <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
-              {t("Domain")}
+              {t("Config")}
             </Flex>
           </Flex>
-
         </Flex>
       </ScrollArea>
     </>

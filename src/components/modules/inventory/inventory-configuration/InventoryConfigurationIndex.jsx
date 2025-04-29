@@ -8,10 +8,13 @@ import InventoryConfigarationForm from "./InventoryConfigarationForm.jsx";
 import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function InventoryConfigurationIndex() {
+
   const { t, i18n } = useTranslation();
 
   const progress = getLoadingProgress();
-  const { domainConfig, fetchData } = getDomainConfig();
+
+  const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
+  console.log(domainConfigData);
 
   return (
     <>

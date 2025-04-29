@@ -1,300 +1,316 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import {
-    Grid,
     Box,
+    Grid,
+    Checkbox,
+    ScrollArea,
     Button,
-    Group,
-    TextInput,
-    LoadingOverlay,
-    Tooltip,
+    Text,
+    Flex,
+    rem,
+    Center, Container, Title, Stack,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { DataTable } from "mantine-datatable";
-import { useTranslation } from "react-i18next";
-import { getHotkeyHandler } from "@mantine/hooks";
-
-import tableCss from "../../../../assets/css/Table.module.css";
-import classes from "../../../../assets/css/FeaturesCards.module.css";
-
-import _Search from "../common/_DiscountSearch.jsx";
-import SelectForm from "../../../form-builders/SelectForm.jsx";
-
+import { useDispatch } from "react-redux";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
+import { IconCheck, IconDeviceFloppy, IconX } from "@tabler/icons-react";
+import { useHotkeys } from "@mantine/hooks";
 import {
-    getCategoryDropdown,
-} from "../../../../store/inventory/utilitySlice.js";
-import {
-    setDropdownLoad,
+    setValidationData,
+    showInstantEntityData,
+    updateEntityData,
 } from "../../../../store/inventory/crudSlice.js";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import InputForm from "../../../form-builders/InputForm.jsx";
+import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
+import KeywordSearch from "../../filter/KeywordSearch";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
-import {
-    getIndexEntityData,
-    storeEntityData,
-} from "../../../../store/core/crudSlice.js";
+function DiscountConfig(props) {
 
-import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
+    const {  domainConfig,config_sales, id } = props;
 
-// ─── Reusable Input for Inline Percentage Fields ──────────────────────────────
-const EditableNumberInput = ({ item, field, value, onUpdate }) => {
-    const [inputValue, setInputValue] = useState(value);
+ //   const  {config_sales} = domainConfig.inventory_conf.config_sales;
+    const {mainAreaHeight} = useOutletContext()
+    let height = mainAreaHeight-94;
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+    const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
-    useEffect(() => {
-        setInputValue(value);
-    }, [value]);
+    const form = useForm({
+        initialValues: {
+            search_by_vendor: config_sales?.search_by_vendor || "",
+            search_by_product_nature: config_sales?.search_by_product_nature || "",
+            search_by_category: config_sales?.search_by_category || "",
+            show_product: config_sales?.show_product || "",
+            is_measurement_enable: config_sales?.is_measurement_enable || "",
+            is_purchase_auto_approved: config_sales?.is_purchase_auto_approved || "",
+            default_vendor_group_id: config_sales?.default_vendor_group_id || "",
+            search_by_warehouse: config_sales?.search_by_warehouse || "",
+        },
+    });
 
-    const handleChange = (e) => {
-        const val = e.currentTarget.value;
-        setInputValue(val);
-        onUpdate(item.id, field, val);
+    const handlePurchaseFormSubmit = (values) => {
+        dispatch(setValidationData(false));
+
+        modals.openConfirmModal({
+            title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
+            children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
+            labels: { confirm: t("Submit"), cancel: t("Cancel") },
+            confirmProps: { color: "red" },
+            onCancel: () => console.log("Cancel"),
+            onConfirm: () => handlePurchaseConfirmSubmit(values),
+        });
     };
 
-    return (
-        <TextInput
-            type="number"
-            size="xs"
-            id={`inline-update-${field}-${item.id}`}
-            value={inputValue}
-            onChange={handleChange}
-            onKeyDown={getHotkeyHandler([
-                [
-                    "Enter",
-                    () => {
-                        document
-                            .getElementById(`inline-update-${field}-${item.id}`)
-                            .focus();
-                    },
-                ],
-            ])}
-        />
-    );
-};
+    const handlePurchaseConfirmSubmit = async (values) => {
+        const properties = [
+            "search_by_vendor",
+            "search_by_product_nature",
+            "search_by_category",
+            "show_product",
+            "is_measurement_enable",
+            "is_purchase_auto_approved",
+            "default_vendor_group_id",
+            "search_by_warehouse",
+        ];
 
-// ─── Main Component ───────────────────────────────────────────────────────────
-export default function DiscountConfigForm({ id }) {
-    const dispatch = useDispatch();
-    const { t } = useTranslation();
-    const { mainAreaHeight } = useOutletContext();
-
-    const height = mainAreaHeight - 120;
-    const perPage = 50;
-
-    const [page, setPage] = useState(1);
-    const [reloadList, setReloadList] = useState(true);
-    const [onlyReloadSetting, setOnlyReloadSetting] = useState(false);
-    const [fetching, setFetching] = useState(false);
-    const [selectedDomainId, setSelectedDomainId] = useState(id);
-    const [subDomainCategoryData, setSubDomainCategoryData] = useState(null);
-
-    const [modeMap, setModeMap] = useState({});
-    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad);
-
-    const form = useForm({ initialValues: { mode_id: "" } });
-
-    useEffect(() => {
-        dispatch(
-            getCategoryDropdown({
-                url: "inventory/select/category",
-                param: { type: "all" },
-            })
-        );
-        dispatch(setDropdownLoad(false));
-    }, [dropdownLoad, dispatch]);
-
-    const fetchTableData = useCallback(async () => {
-        const value = {
-            url: `domain/b2b/sub-domain/setting/${selectedDomainId}`,
-            param: {},
-        };
-        setFetching(true);
+        properties.forEach((property) => {
+            values[property] =
+                values[property] === true || values[property] == 1 ? 1 : 0;
+        });
 
         try {
-            const resultAction = await dispatch(getIndexEntityData(value));
-            if (getIndexEntityData.fulfilled.match(resultAction)) {
-                const payload = resultAction.payload.data;
-                setSubDomainCategoryData(payload);
+            setSaveCreateLoading(true);
 
-                const initialMap = {};
-                payload?.sub_domain_category.forEach((item) => {
-                    initialMap[item.id] = item.percent_mode || null;
-                });
-                setModeMap(initialMap);
+            const value = {
+                url: `inventory/config-purchase-update/${id}`,
+                data: values,
+            };
+            console.log("value", values);
+            await dispatch(updateEntityData(value));
+
+            const resultAction = await dispatch(
+                showInstantEntityData("inventory/config")
+            );
+            if (showInstantEntityData.fulfilled.match(resultAction)) {
+                if (resultAction.payload.data.status === 200) {
+                    localStorage.setItem(
+                        "config-data",
+                        JSON.stringify(resultAction.payload.data.data)
+                    );
+                }
             }
-        } catch (err) {
-            console.error("Fetching error:", err);
-        } finally {
-            setFetching(false);
-            setReloadList(false);
-            setOnlyReloadSetting(false);
-        }
-    }, [dispatch, selectedDomainId]);
 
-    useEffect(() => {
-        if (reloadList || onlyReloadSetting) {
-            fetchTableData();
-        }
-    }, [fetchTableData, reloadList, onlyReloadSetting]);
+            notifications.show({
+                color: "teal",
+                title: t("UpdateSuccessfully"),
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                loading: false,
+                autoClose: 700,
+                style: { backgroundColor: "lightgray" },
+            });
 
-    const handleInlineUpdate = (id, field, value) => {
-        dispatch(
-            storeEntityData({
-                url: "domain/b2b/inline-update/category",
-                data: { id, field_name: field, value },
-            })
-        );
-        setOnlyReloadSetting(true);
+            setTimeout(() => {
+                setSaveCreateLoading(false);
+            }, 700);
+        } catch (error) {
+            console.error("Error updating purchase config:", error);
+
+            notifications.show({
+                color: "red",
+                title: t("UpdateFailed"),
+                icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+                loading: false,
+                autoClose: 700,
+                style: { backgroundColor: "lightgray" },
+            });
+
+            setSaveCreateLoading(false);
+        }
     };
 
+    useHotkeys(
+        [
+            [
+                "alt+p",
+                () => {
+                    document.getElementById("PurchaseFormSubmit").click();
+                },
+            ],
+        ],
+        []
+    );
+
+    const [value, setValue] = useState(null);
+
     return (
-        <>
-            <LoadingOverlay visible={reloadList} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-
-            <Grid columns={24} gutter={{ base: 8 }}>
-
-                <Grid.Col span={20}>
-                    <Box p="xs" bg="white" className="borderRadiusAll">
-                        <Box pl="xs" pb="xs" pr={8} pt="xs" mb="xs" className="boxBackground borderRadiusAll">
-                            <_Search module="product" />
-                        </Box>
-
-                        <Box className="borderRadiusAll">
-                            <DataTable
-                                classNames={tableCss}
-                                records={subDomainCategoryData?.sub_domain_category || []}
-                                columns={[
+        <Container fluid p={0}>
+            <Box p={8} bg={"white"}>
+                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
+                    <Grid>
+                        <Grid.Col span={8} >
+                            <Title order={6} pt={'6'}>{t('DsicountConfiguration')}</Title>
+                        </Grid.Col>
+                        <Grid.Col span={4}>
+                            <Stack right align="flex-end">
+                                <>
                                     {
-                                        accessor: "index",
-                                        title: t("S/N"),
-                                        textAlignment: "right",
-                                        render: (item) =>
-                                            subDomainCategoryData?.sub_domain_category.indexOf(item) +
-                                            1 +
-                                            (page - 1) * perPage,
-                                    },
-                                    { accessor: "category_name", title: t("Category") },
+                                        !saveCreateLoading &&
+                                        <Button
+                                            size="xs"
+                                            className={'btnPrimaryBg'}
+                                            type="submit"
+                                            id="CategoryFormSubmit"
+                                            leftSection={<IconDeviceFloppy size={16} />}
+                                        >
 
-                                    {
-                                        accessor: "percent_mode",
-                                        title: t("Mode"),
-                                        width: "220px",
-                                        textAlign: "center",
-                                        render: (item) => (
+                                            <Flex direction={`column`} gap={0}>
+                                                <Text fz={14} fw={400}>
+                                                    {t("CreateAndSave")}
+                                                </Text>
+                                            </Flex>
+                                        </Button>
+                                    }
+                                </></Stack>
+                        </Grid.Col>
+                    </Grid>
+                </Box>
+            <Box
+                pl={`xs`}
+                pr={8}
+                pt={"6"}
+                pb={"4"}
+                bg={"white"}
+                h={height}
+                className={" borderRadiusAll"}
+            >
+                <Grid>
+                    <Grid.Col span={8} >
+                        <form onSubmit={form.onSubmit(handlePurchaseFormSubmit)}>
+                            <Box pt={"xs"} pl={"xs"}>
+                                <Box mt={"xs"}>
+                                    <Grid gutter={{ base: 1 }} style={{ cursor: "pointer" }}>
+                                        <Grid.Col span={4} fz={"sm"} pt={"1"}>
+                                            {t("SearchByVendor")}
+                                        </Grid.Col>
+                                        <Grid.Col span={6}>
                                             <SelectForm
-                                                tooltip={t("ChooseMode")}
-                                                placeholder={t("ChooseMode")}
-                                                required
-                                                name="percent_mode"
+                                                tooltip={t("ChooseMethod")}
+                                                label={""}
+                                                placeholder={t("ChooseMethod")}
+                                                required={true}
+                                                nextField={"name"}
+                                                name={"method_id"}
                                                 form={form}
-                                                dropdownValue={["Increase", "Decrease"]}
-                                                id={`percent_mode_${item.id}`}
-                                                searchable
-                                                value={modeMap[item.id] || null}
-                                                changeValue={(value) => {
-                                                    setModeMap((prev) => ({ ...prev, [item.id]: value }));
-                                                    handleInlineUpdate(item.id, "percent_mode", value);
-                                                }}
+                                                dropdownValue={["1", "2"]}
+                                                id={"method_id"}
+                                                searchable={false}
+                                                value={value}
+                                                changeValue={setValue}
                                             />
-                                        ),
-                                    },
-                                    {
-                                        accessor: "purchase_percent",
-                                        title: t("Purchase(%)"),
-                                        textAlign: "center",
-                                        width: "220px",
-                                        render: (item) => (
-                                            <EditableNumberInput
-                                                item={item}
-                                                field="purchase_percent"
-                                                value={item.purchase_percent}
-                                                onUpdate={handleInlineUpdate}
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                                <Box mt={"xs"}>
+                                    <Grid gutter={{ base: 1 }} style={{ cursor: "pointer" }}>
+                                        <Grid.Col span={4} fz={"sm"} pt={"1"}>
+                                            {t("SearchByProductNature")}
+                                        </Grid.Col>
+                                        <Grid.Col span={6}>
+                                            <InputForm
+                                                tooltip={t("SubGroupNameValidateMessage")}
+                                                label={""}
+                                                placeholder={t("Name")}
+                                                required={true}
+                                                nextField={"code"}
+                                                name={"name"}
+                                                form={form}
+                                                id={"name"}
                                             />
-                                        ),
-                                    },
-                                    {
-                                        accessor: "mrp_percent",
-                                        title: t("MRP(%)"),
-                                        textAlign: "center",
-                                        width: "220px",
-                                        render: (item) => (
-                                            <EditableNumberInput
-                                                item={item}
-                                                field="mrp_percent"
-                                                value={item.mrp_percent}
-                                                onUpdate={handleInlineUpdate}
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                                <Box mt={"xs"}>
+                                    <Grid gutter={{ base: 1 }} style={{ cursor: "pointer" }}>
+                                        <Grid.Col span={4} fz={"sm"} pt={"1"}>
+                                            {t("SearchByCategory")}
+                                        </Grid.Col>
+                                        <Grid.Col span={6}>
+                                            <TextAreaForm
+                                                autosize={true}
+                                                minRows={4}
+                                                maxRows={4}
+                                                tooltip={t("Narration")}
+                                                label={""}
+                                                placeholder={t("Narration")}
+                                                required={false}
+                                                nextField={"EntityFormSubmits"}
+                                                name={"narration"}
+                                                form={form}
+                                                id={"narration"}
                                             />
-                                        ),
-                                    },
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                                <Box mt={"xs"}>
+                                    <Grid
+                                        gutter={{ base: 1 }}
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() =>
+                                            form.setFieldValue(
+                                                "show_product",
+                                                form.values.show_product === 1 ? 0 : 1
+                                            )
+                                        }
+                                    >
+                                        <Grid.Col span={4} fz={"sm"} pt={"1"}>
+                                            {t("ShowProduct")}
+                                        </Grid.Col>
+                                        <Grid.Col span={6} align={"left"} justify={"left"}>
+                                            <Checkbox
+                                                pr="xs"
+                                                checked={form.values.show_product === 1}
+                                                color="red"
+                                                {...form.getInputProps("show_product", {
+                                                    type: "checkbox",
+                                                })}
+                                                onChange={(event) =>
+                                                    form.setFieldValue(
+                                                        "show_product",
+                                                        event.currentTarget.checked ? 1 : 0
+                                                    )
+                                                }
+                                                styles={(theme) => ({
+                                                    input: {
+                                                        borderColor: "red",
+                                                    },
+                                                })}
+                                            />
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
 
-                                    {
-                                        accessor: "bonus_percent",
-                                        title: t("Bonus(%)"),
-                                        textAlign: "center",
-                                        width: "220px",
-                                        render: (item) => (
-                                            <EditableNumberInput
-                                                item={item}
-                                                field="bonus_percent"
-                                                value={item.bonus_percent}
-                                                onUpdate={handleInlineUpdate}
-                                            />
-                                        ),
-                                    },
+                            </Box>
+                            <Button
+                                id="PurchaseFormSubmit"
+                                type="submit"
+                                style={{ display: "none" }}
+                            >
+                                {t("Submit")}
+                            </Button>
+                        </form>
+                    </Grid.Col>
+                    <Grid.Col span={8} ></Grid.Col>
+                </Grid>
 
-                                    {
-                                        accessor: "action",
-                                        title: t("Action"),
-                                        textAlign: "right",
-                                        render: (item) => (
-                                            <Group gap={4} justify="right" wrap="nowrap">
-                                                
-                                                    <Button
-                                                        size="compact-xs"
-                                                        radius="xs"
-                                                        variant="filled"
-                                                        color={item.not_process === 1 ? "#905a23" : "red.3"}
-                                                        fw={100}
-                                                        fz={12}
-                                                        disabled={item.not_process !== 1}
-                                                        onClick={async () => {
-                                                            setReloadList(true);
-                                                            try {
-                                                                const resultAction = await dispatch(
-                                                                    getIndexEntityData({
-                                                                        url: `domain/b2b/category-wise/price-update/${item.id}`,
-                                                                        param: {},
-                                                                    })
-                                                                );
+            </Box>
+            </Box>
+        </Container>
 
-                                                                if (getIndexEntityData.fulfilled.match(resultAction)) {
-                                                                    showNotificationComponent(resultAction?.payload?.message, "red", "", "", true);
-                                                                }
-                                                            } catch (err) {
-                                                                console.error("Update error", err);
-                                                            } finally {
-                                                                setReloadList(false);
-                                                            }
-                                                        }}
-                                                    >
-                                                        {t("Process")}
-                                                    </Button>
-                                            </Group>
-                                        ),
-                                    },
-                                ]}
-                                fetching={fetching}
-                                totalRecords={subDomainCategoryData?.sub_domain_category?.length || 0}
-                                recordsPerPage={perPage}
-                                page={page}
-                                onPageChange={(p) => setPage(p)}
-                                loaderSize="xs"
-                                loaderColor="grape"
-                                height={height}
-                                scrollAreaProps={{ type: "never" }}
-                            />
-                        </Box>
-                    </Box>
-                </Grid.Col>
-            </Grid>
-        </>
     );
 }
+export default DiscountConfig;

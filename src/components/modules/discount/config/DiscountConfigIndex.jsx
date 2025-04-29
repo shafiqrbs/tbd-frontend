@@ -14,6 +14,9 @@ export default function DiscountConfigIndex() {
     const {t} = useTranslation();
     const progress = getLoadingProgress();
 
+    const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
+
+     console.log(domainConfigData?.inventory_config?.business_model)
     return (
         <>
             {progress !== 100 && (
@@ -33,7 +36,7 @@ export default function DiscountConfigIndex() {
                             <Grid.Col span={1}>
                                 <_DiscountShortcut/>
                             </Grid.Col>
-                            <Grid.Col span={23}>
+                            <Grid.Col span={23} domainConfig={domainConfigData}>
                                 <ConfigDiscountForm id={id}/>
                             </Grid.Col>
                         </Grid>
