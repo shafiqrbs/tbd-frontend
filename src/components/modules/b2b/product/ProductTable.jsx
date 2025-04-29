@@ -229,6 +229,7 @@ export default function ProductTable({id}) {
                 visible={state.reloadList || reloadList}
                 zIndex={1000}
                 overlayProps={{radius: "sm", blur: 2}}
+                loaderProps={{color:"red"}}
             />
 
             <Grid columns={24} gutter={{base: 8}}>

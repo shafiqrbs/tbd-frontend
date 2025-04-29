@@ -204,7 +204,7 @@ function SubDomainSettingForm(props) {
 
     return (
         <Box style={{position: "relative"}}>
-            <LoadingOverlay visible={reloadList || saveCreateLoading} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+            <LoadingOverlay visible={reloadList || saveCreateLoading} zIndex={1000} overlayProps={{radius: "sm", blur: 2}} loaderProps={{color:"red"}}/>
 
             <Container fluid p={0}>
                 <form

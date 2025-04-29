@@ -151,7 +151,7 @@ export default function DashBoardTable() {
                 </Container>
             </Box>
 
-          <LoadingOverlay visible={reloadList} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+          <LoadingOverlay visible={reloadList} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} loaderProps={{color : "red"}} />
           <Box p={"xs"} bg={"white"} className={"borderRadiusAll"} mt={"4"}>
                 <Box bg={"white"} className={"borderRadiusAll"}>
                     <DataTable
