@@ -19,8 +19,8 @@ export default function DomainDetailsSection({ domainConfig, height }) {
           </Title>
         </Box>
         <Box mb={0} bg={"gray.1"} h={height}>
-          <Box p={"md"} className="borderRadiusAll" h={height}>
-            <ScrollArea h={height - 32} type="never">
+          <Box  className="borderRadiusAll" h={height}>
+            <ScrollArea h={height - 32} >
               <Box mt={"0"} mb={"lg"}>
                 <Center>
                   <Title order={6} fz={16}>

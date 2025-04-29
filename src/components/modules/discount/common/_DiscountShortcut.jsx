@@ -47,7 +47,7 @@ export default function _DiscountShortcut() {
                 color={`black`}
                 radius="xl"
                 onClick={(e) => {
-                  navigate("/b2b/dashboard");
+                  navigate("/discount/dashboard");
                 }}
               >
                 <Flex direction={`column`} align={"center"}>
@@ -62,7 +62,7 @@ export default function _DiscountShortcut() {
 
           <Flex direction={`column`} align={"center"} pt={5}>
             <Tooltip
-              label={t("B2BDomain")}
+              label={t("Users")}
               px={16}
               py={2}
               withArrow
@@ -80,8 +80,40 @@ export default function _DiscountShortcut() {
                 color={`black`}
                 radius="xl"
                 onClick={(e) => {
-                  navigate("/b2b/domain");
+                  navigate("/discount/users");
                 }}
+              >
+                <Flex direction={`column`} align={"center"}>
+                  <IconDashboard size={16} color={"white"} />
+                </Flex>
+              </Button>
+            </Tooltip>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+              {t("Domain")}
+            </Flex>
+          </Flex>
+          <Flex direction={`column`} align={"center"} pt={5}>
+            <Tooltip
+                label={t("Config")}
+                px={16}
+                py={2}
+                withArrow
+                position={"left"}
+                c={"white"}
+                bg={"#905a23"}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <Button
+                  bg={"#905a23"}
+                  size="md"
+                  pl={"12"}
+                  pr={"12"}
+                  variant={"light"}
+                  color={`black`}
+                  radius="xl"
+                  onClick={(e) => {
+                    navigate("/discount/config");
+                  }}
               >
                 <Flex direction={`column`} align={"center"}>
                   <IconDashboard size={16} color={"white"} />

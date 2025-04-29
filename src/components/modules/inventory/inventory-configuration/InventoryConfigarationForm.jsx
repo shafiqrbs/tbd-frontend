@@ -112,16 +112,17 @@ function InventoryConfigarationForm() {
 
   const navItems = [
     "Inventory",
+    "Product",
     "Sales",
     "Purchase",
+    "Discount",
+    "Pos",
+    "Vat",
     "Requisition",
     "Accounting",
     "Production",
-    "Discount",
-    "Product",
     "Domain",
-    "Pos",
-    "Vat",
+
   ];
 
   useHotkeys(
@@ -172,6 +173,14 @@ function InventoryConfigarationForm() {
             countryList={countryList}
             businessModelList={businessModelList}
           />
+        );
+      case "Product":
+        return (
+            <ProductForm
+                height={height}
+                config_product={config_product}
+                id={id}
+            />
         );
       case "Sales":
         return (
@@ -227,14 +236,7 @@ function InventoryConfigarationForm() {
             id={id}
           />
         );
-      case "Product":
-        return (
-          <ProductForm
-            height={height}
-            config_product={config_product}
-            id={id}
-          />
-        );
+
       case "Pos":
         return (
           <PosForm

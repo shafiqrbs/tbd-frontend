@@ -101,7 +101,7 @@ function _DiscountUserTable() {
     const fetchData = async () => {
       setFetching(true);
       const value = {
-        url: "core/user",
+        url: "inventory/discount/users",
         param: {
           term: searchKeyword,
           name: userFilterData.name,
