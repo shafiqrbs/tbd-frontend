@@ -28,10 +28,10 @@ import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js
 
 function SettingDrawer(props) {
   const {
+    domainConfigData,
     settingDrawer,
     setSettingDrawer,
     module,
-    salesConfig,
     config_purchase,
     config_requisition,
     id,
@@ -111,7 +111,7 @@ function SettingDrawer(props) {
         );
       default:
         return (
-          <FormGeneric height={height} salesConfig={salesConfig} id={id} />
+          <FormGeneric height={height} salesConfig={domainConfigData?.inventory_config?.config_sales} id={id} />
         );
     }
   };

@@ -8,6 +8,9 @@ import {
   TextInput,
   ActionIcon,
   Button,
+  SimpleGrid,
+  Card,
+  Textarea,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import DatePickerForm from "../../../form-builders/DatePicker";
@@ -32,6 +35,7 @@ import { useOutletContext } from "react-router-dom";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage";
+import inputCss from "../../../../assets/css/InputField.module.css";
 
 export default function __PosInvoiceSection(props) {
   const {
@@ -56,7 +60,8 @@ export default function __PosInvoiceSection(props) {
     setCustomersDropdownData,
     customersDropdownData,
     lastClicked,
-    handleClick,entityEditData
+    handleClick,
+    entityEditData,
   } = props;
 
   //common hooks
@@ -69,7 +74,7 @@ export default function __PosInvoiceSection(props) {
   )
     ? JSON.parse(localStorage.getItem("accounting-transaction-mode"))
     : [];
-  
+
   // transaction modes hover hook
   const [hoveredModeId, setHoveredModeId] = useState(false);
 
@@ -137,85 +142,91 @@ export default function __PosInvoiceSection(props) {
   return (
     <>
       <Box>
-        <Grid columns={24} gutter={{ base: 6 }} pt={"6"}>
-          <Grid.Col span={8}>
-            <Box className={"borderRadiusAll"}>
-              <ScrollArea h={190} scrollbarSize={2} type="never" bg={"gray.1"}>
-                <Box pl={"xs"} pt={"xs"} pr={"xs"} bg={"white"} pb={"10"}>
-                  <Grid columns={"16"} gutter="6">
-                    {transactionModeData &&
-                      transactionModeData.length > 0 &&
-                      transactionModeData.map((mode, index) => {
-                        return (
-                          <Grid.Col span={4} key={index}>
-                            <Box bg={"gray.1"} h={"82"}>
-                              <input
-                                type="radio"
-                                name="transaction_mode_id"
-                                id={"transaction_mode_id_" + mode.id}
-                                className="input-hidden"
-                                value={mode.id}
-                                onChange={(e) => {
-                                  form.setFieldValue(
-                                    "transaction_mode_id",
-                                    e.currentTarget.value
-                                  );
-                                  form.setFieldError(
-                                    "transaction_mode_id",
-                                    null
-                                  );
-                                }}
-                                defaultChecked={
-                                  entityEditData?.transaction_mode_id
-                                    ? entityEditData?.transaction_mode_id ==
-                                      mode.id
-                                    : mode.is_selected
-                                    ? true
-                                    : false
-                                }
-                              />
-                              <Tooltip
-                                label={mode.name}
-                                opened={hoveredModeId === mode.id}
-                                position="top"
-                                bg={"orange.8"}
-                                offset={12}
-                                withArrow
-                                arrowSize={8}
-                              >
-                                <label
-                                  htmlFor={"transaction_mode_id_" + mode.id}
-                                  onMouseEnter={() => {
-                                    setHoveredModeId(mode.id);
+        <SimpleGrid cols={{ base: 1, md: 3 }} mt={"8"} spacing="xs">
+          <Card shadow="md" radius="4" className={"borderRadiusAll"}>
+            <Box>
+              <Box>
+                <ScrollArea scrollbarSize={2} type="never">
+                  <Box bg={"white"}>
+                    <Grid columns={"16"} gutter="6">
+                      {transactionModeData &&
+                        transactionModeData.length > 0 &&
+                        transactionModeData.map((mode, index) => {
+                          return (
+                            <Grid.Col span={4} key={index}>
+                              <Box bg={"gray.1"} h={"82"}>
+                                <input
+                                  type="radio"
+                                  name="transaction_mode_id"
+                                  id={"transaction_mode_id_" + mode.id}
+                                  className="input-hidden"
+                                  value={mode.id}
+                                  onChange={(e) => {
+                                    form.setFieldValue(
+                                      "transaction_mode_id",
+                                      e.currentTarget.value
+                                    );
+                                    form.setFieldError(
+                                      "transaction_mode_id",
+                                      null
+                                    );
                                   }}
-                                  onMouseLeave={() => {
-                                    setHoveredModeId(null);
-                                  }}
+                                  defaultChecked={
+                                    entityEditData?.transaction_mode_id
+                                      ? entityEditData?.transaction_mode_id ==
+                                        mode.id
+                                      : mode.is_selected
+                                      ? true
+                                      : false
+                                  }
+                                />
+                                <Tooltip
+                                  label={mode.name}
+                                  opened={hoveredModeId === mode.id}
+                                  position="top"
+                                  bg={"orange.8"}
+                                  offset={12}
+                                  withArrow
+                                  arrowSize={8}
                                 >
-                                  <img
-                                    src={
-                                      isOnline
-                                        ? mode.path
-                                        : "/images/transaction-mode-offline.jpg"
-                                    }
-                                    alt={mode.method_name}
-                                  />
-                                  <Center fz={"xs"} className={"textColor"}>
-                                    {mode.authorized_name}
-                                  </Center>
-                                </label>
-                              </Tooltip>
-                            </Box>
-                          </Grid.Col>
-                        );
-                      })}
-                  </Grid>
-                </Box>
-              </ScrollArea>
+                                  <label
+                                    htmlFor={"transaction_mode_id_" + mode.id}
+                                    onMouseEnter={() => {
+                                      setHoveredModeId(mode.id);
+                                    }}
+                                    onMouseLeave={() => {
+                                      setHoveredModeId(null);
+                                    }}
+                                  >
+                                    <img
+                                      src={
+                                        isOnline
+                                          ? mode.path
+                                          : "/images/transaction-mode-offline.jpg"
+                                      }
+                                      alt={mode.method_name}
+                                    />
+                                    <Center fz={"xs"} className={"textColor"}>
+                                      {mode.authorized_name}
+                                    </Center>
+                                  </label>
+                                </Tooltip>
+                              </Box>
+                            </Grid.Col>
+                          );
+                        })}
+                    </Grid>
+                  </Box>
+                </ScrollArea>
+              </Box>
             </Box>
-          </Grid.Col>
-          <Grid.Col span={8}>
-            <Box className={genericClass.genericSecondaryBg} p={"xs"} h={192}>
+          </Card>
+          <Card
+            shadow="md"
+            radius="4"
+            className={genericClass.genericSecondaryBg}
+          >
+            <Box className={genericClass.genericSecondaryBg}>
               <Box>
                 <DatePickerForm
                   tooltip={t("InvoiceDateValidateMessage")}
@@ -281,10 +292,13 @@ export default function __PosInvoiceSection(props) {
                 />
               </Box>
             </Box>
-          </Grid.Col>
-          <Grid.Col span={8}>
-            {/* outstading section */}
-            <Box p={"xs"} className={genericClass.genericSecondaryBg} h={192}>
+          </Card>
+          <Card
+            shadow="md"
+            radius="4"
+            className={genericClass.genericSecondaryBg}
+          >
+            <Box className={genericClass.genericSecondaryBg}>
               <Box pb={"xs"} className={genericClass.genericSecondaryBg}>
                 <Grid gutter={{ base: 4 }}>
                   <Grid.Col span={4}>
@@ -341,7 +355,7 @@ export default function __PosInvoiceSection(props) {
                 <Stack justify="space-between">
                   <Box className={genericClass.genericHighlightedBox}>
                     <Grid columns={18} gutter={{ base: 2 }}>
-                      <Grid.Col span={8} mt={"4"} pl={"6"}>
+                      <Grid.Col span={6} mt={"4"} pl={"6"}>
                         <Tooltip
                           label={t("ClickRightButtonForPercentFlat")}
                           px={16}
@@ -429,7 +443,7 @@ export default function __PosInvoiceSection(props) {
                           />
                         </Tooltip>
                       </Grid.Col>
-                      <Grid.Col span={10} align="center" justify="center">
+                      <Grid.Col span={12} align="center" justify="center">
                         <Box
                           fz={"md"}
                           p={"xs"}
@@ -462,7 +476,7 @@ export default function __PosInvoiceSection(props) {
                   withArrow
                 >
                   <Grid gutter={{ base: 1 }}>
-                    <Grid.Col span={10} bg={"#bc924f"} p={"18"} pr={"0"}>
+                    <Grid.Col span={10} bg={"#bc924f"} p={"14"} pr={"0"}>
                       <InputNumberForm
                         type="number"
                         tooltip={t("ReceiveAmountValidateMessage")}
@@ -482,7 +496,7 @@ export default function __PosInvoiceSection(props) {
                         }}
                       />
                     </Grid.Col>
-                    <Grid.Col span={2} bg={"#bc924f"} p={"18"} pl={"8"}>
+                    <Grid.Col span={2} bg={"#bc924f"} p={"14"} pl={"8"}>
                       <Tooltip
                         multiline
                         bg={"#905923"}
@@ -516,8 +530,8 @@ export default function __PosInvoiceSection(props) {
                 </Tooltip>
               </Box>
             </Box>
-          </Grid.Col>
-        </Grid>
+          </Card>
+        </SimpleGrid>
         <Box mt={"8"} pb={"xs"} pr={"xs"}>
           <Button.Group>
             <Button

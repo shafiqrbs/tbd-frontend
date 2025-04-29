@@ -1,52 +1,74 @@
 import React from "react";
-import {
-    Box, Progress
-} from "@mantine/core";
-import { useTranslation } from 'react-i18next';
+import { Box, Progress } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
 import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
 
 function PurchaseInvoice() {
-    const { t, i18n } = useTranslation();
-    const progress = getLoadingProgress()
-    const {configData} = getConfigData()
+  const { t, i18n } = useTranslation();
+  const progress = getLoadingProgress();
+  const domainConfigData = JSON.parse(
+    localStorage.getItem("domain-config-data")
+  );
+  console.log("domainConfigData", domainConfigData);
 
-    return (
-        <>
-            {progress !== 100 &&
-                <Progress color="red" size={"sm"} striped animated value={progress} transitionDuration={200} />}
-            {progress === 100 &&
-                <Box>
-                    {
-                        configData &&
-                        <>
-                            <_SalesPurchaseHeaderNavbar
-                                pageTitle={t('PurchaseInvoice')}
-                                roles={t('Roles')}
-                                allowZeroPercentage={configData?.zero_stock}
-                                currencySymbol={configData?.currency?.symbol}
-                            />
-                            <Box p={'8'}>
-                                {
-                                    // configData?.business_model?.slug === 'general' &&
-                                    <_GenericInvoiceForm
-                                        allowZeroPercentage={configData?.zero_stock}
-                                        currencySymbol={configData?.currency?.symbol}
-                                        isPurchaseByPurchasePrice={configData?.is_purchase_by_purchase_price}
-                                        isWarehouse={configData?.sku_warehouse}
-                                        isSMSActive={configData?.is_active_sms}
-                                    />
-                                }
-                            </Box>
-                        </>
+  return (
+    <>
+      {progress !== 100 && (
+        <Progress
+          color="red"
+          size={"sm"}
+          striped
+          animated
+          value={progress}
+          transitionDuration={200}
+        />
+      )}
+      {progress === 100 && (
+        <Box>
+          {domainConfigData && (
+            <>
+              <_SalesPurchaseHeaderNavbar
+                pageTitle={t("PurchaseInvoice")}
+                roles={t("Roles")}
+                allowZeroPercentage={
+                  domainConfigData?.inventory_config?.zero_stock
+                }
+                currencySymbol={
+                  domainConfigData?.inventory_config?.currency?.symbol
+                }
+              />
+              <Box p={"8"}>
+                {domainConfigData?.inventory_config?.business_model?.slug ===
+                  "general" && (
+                  <_GenericInvoiceForm
+                    allowZeroPercentage={
+                      domainConfigData?.inventory_config?.zero_stock
                     }
-
-                </Box>
-            }
-        </>
-    );
+                    currencySymbol={
+                      domainConfigData?.inventory_config?.currency?.symbol
+                    }
+                    isPurchaseByPurchasePrice={
+                      domainConfigData?.inventory_config
+                        ?.is_purchase_by_purchase_price
+                    }
+                    isWarehouse={
+                      domainConfigData?.inventory_config?.sku_warehouse
+                    }
+                    isSMSActive={
+                      domainConfigData?.inventory_config?.is_active_sms
+                    }
+                  />
+                )}
+              </Box>
+            </>
+          )}
+        </Box>
+      )}
+    </>
+  );
 }
 
 export default PurchaseInvoice;
