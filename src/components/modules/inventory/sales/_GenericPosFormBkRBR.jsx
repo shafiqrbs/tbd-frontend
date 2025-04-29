@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
     Button,
@@ -50,47 +50,130 @@ import __PosSalesForm from "./__PosSalesForm.jsx";
 import {useHotkeys} from "@mantine/hooks";
 import SettingDrawer from "../common/SettingDrawer.jsx";
 
-function _GenericPosForm({domainConfigData}) {
-    // Constants
-    const currencySymbol = domainConfigData?.inventory_config?.currency?.symbol;
-    const domainId = domainConfigData?.inventory_config?.domain_id;
-    const isSMSActive = domainConfigData?.inventory_config?.is_active_sms;
-    const salesConfig = domainConfigData?.inventory_config?.config_sales;
-    const id = domainConfigData?.id;
-    const categoryDropDownData = getSettingCategoryDropdownData();
+function _GenericPosForm(props) {
+    const {domainConfigData} = props;
+    let currencySymbol = domainConfigData?.inventory_config?.currency?.symbol;
+    let domainId = domainConfigData?.inventory_config?.domain_id;
+    let isSMSActive = domainConfigData?.inventory_config?.is_active_sms;
 
-    // Hooks
+    let salesConfig = domainConfigData?.inventory_config?.config_sales;
+    let id = domainConfigData?.id;
+    let categoryDropDownData = getSettingCategoryDropdownData();
+    //common hooks and variables
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 360;
 
-    // State
+    //segmented control
     const [productSalesMode, setProductSalesMode] = useState("product");
+
+    //setting drawer control
     const [settingDrawer, setSettingDrawer] = useState(false);
+
+    //product drawer control
     const [productDrawer, setProductDrawer] = useState(false);
+
+    //sales by barcode comes from backend now static value
     const [salesByBarcode, setSalesByBarcode] = useState(true);
+
+    //warehosue dropdown data
+    let warehouseDropdownData = getCoreWarehouseDropdownData();
+
+    //warehouse hook
     const [warehouseData, setWarehouseData] = useState(null);
+
+    //vendor hook
     const [vendorData, setVendorData] = useState(null);
+
+    //unit type hook
     const [unitType, setUnitType] = useState(null);
+
+    //product hook
     const [product, setProduct] = useState(null);
+
+    //product multi price hook
     const [multiPrice, setMultiPrice] = useState(null);
+
+    //product search hook
     const [searchValue, setSearchValue] = useState("");
+
+    //product dropdown hook
     const [productDropdown, setProductDropdown] = useState([]);
     const [multiPriceDropdown, setMultiPriceDropdown] = useState([]);
     const [unitDropdown, setUnitDropdown] = useState([]);
-    const [selectProductDetails, setSelectProductDetails] = useState(null);
-    const [productQuantities, setProductQuantities] = useState({});
-    const [categoryData, setCategoryData] = useState(null);
-    const [products, setProducts] = useState([]);
-    const [loadCardProducts, setLoadCardProducts] = useState(false);
-    const [tempCardProducts, setTempCardProducts] = useState([]);
+
+    //product dropdown update based on searchValue
+    useEffect(() => {
+        if (searchValue.length > 0) {
+            const storedProducts = localStorage.getItem("core-products");
+            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+            // Filter products where product_nature is not 'raw-materials'
+            const filteredProducts = localProducts.filter(
+                (product) => product.product_nature !== "raw-materials"
+            );
+
+            const lowerCaseSearchTerm = searchValue.toLowerCase();
+            const fieldsToSearch = ["product_name"];
+            const productFilterData = filteredProducts.filter((product) =>
+                fieldsToSearch.some(
+                    (field) =>
+                        product[field] &&
+                        String(product[field]).toLowerCase().includes(lowerCaseSearchTerm)
+                )
+            );
+            const formattedProductData = productFilterData.map((type) => ({
+                label: type.product_name,
+                value: String(type.id),
+            }));
+
+            setProductDropdown(formattedProductData);
+        } else {
+            setProductDropdown([]);
+        }
+    }, [searchValue]);
+
+    //input group currency to show in input right section
+    const inputGroupCurrency = (
+        <Text
+            style={{textAlign: "right", width: "100%", paddingRight: 16}}
+            color={"gray"}
+        >
+            {currencySymbol}
+        </Text>
+    );
+
+    //vendor dropdowndata
     const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
+    useEffect(() => {
+        const fetchVendors = async () => {
+            await vendorDataStoreIntoLocalStorage();
+            let coreVendors = localStorage.getItem("core-vendors");
+            coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
+
+            if (coreVendors && coreVendors.length > 0) {
+                const transformedData = coreVendors.map((type) => {
+                    return {
+                        label: type.mobile + " -- " + type.name,
+                        value: String(type.id),
+                    };
+                });
+                setVendorsDropdownData(transformedData);
+            }
+        };
+        fetchVendors();
+    }, []);
+
+    //no use code
     const [stockProductRestore, setStockProductRestore] = useState(false);
+    useEffect(() => {
+        if (stockProductRestore) {
+            const local = productsDataStoreIntoLocalStorage();
+        }
+    }, [stockProductRestore]);
 
-    // Data
-    const warehouseDropdownData = getCoreWarehouseDropdownData();
+    //product add form
 
-    // Form setup
     const form = useForm({
         initialValues: {
             multi_price: "",
@@ -105,7 +188,6 @@ function _GenericPosForm({domainConfigData}) {
             sub_total: "",
             warehouse_id: "",
             category_id: "",
-            vendor_id: "",
         },
         validate: {
             product_id: (value, values) => {
@@ -145,85 +227,21 @@ function _GenericPosForm({domainConfigData}) {
         },
     });
 
-    // Input group components
-    const inputGroupCurrency = (
-        <Text style={{textAlign: "right", width: "100%", paddingRight: 16}} color={"gray"}>
-            {currencySymbol}
-        </Text>
-    );
-
-    const inputGroupText = (
-        <Text style={{textAlign: "right", width: "100%", paddingRight: 16}} color={"gray"}>
-            {selectProductDetails?.unit_name}
-        </Text>
-    );
-
-    // Effects
-    useEffect(() => {
-        const fetchVendors = async () => {
-            await vendorDataStoreIntoLocalStorage();
-            const coreVendors = localStorage.getItem("core-vendors");
-            const parsedVendors = coreVendors ? JSON.parse(coreVendors) : [];
-
-            if (parsedVendors && parsedVendors.length > 0) {
-                const transformedData = parsedVendors.map((vendor) => ({
-                    label: `${vendor.mobile} -- ${vendor.name}`,
-                    value: String(vendor.id),
-                }));
-                setVendorsDropdownData(transformedData);
-            }
-        };
-        fetchVendors();
-    }, []);
-
-    useEffect(() => {
-        if (stockProductRestore) {
-            productsDataStoreIntoLocalStorage();
-        }
-    }, [stockProductRestore]);
-
-    useEffect(() => {
-        if (searchValue.length > 0) {
-            const storedProducts = localStorage.getItem("core-products");
-            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-            const filteredProducts = localProducts.filter(
-                (product) => product.product_nature !== "raw-materials"
-            );
-
-            const lowerCaseSearchTerm = searchValue.toLowerCase();
-            const fieldsToSearch = ["product_name"];
-            const productFilterData = filteredProducts.filter((product) =>
-                fieldsToSearch.some(
-                    (field) =>
-                        product[field] &&
-                        String(product[field]).toLowerCase().includes(lowerCaseSearchTerm)
-                )
-            );
-
-            const formattedProductData = productFilterData.map((product) => ({
-                label: product.product_name || "",
-                value: String(product.id),
-            }));
-
-            setProductDropdown(formattedProductData);
-        } else {
-            setProductDropdown([]);
-        }
-    }, [searchValue]);
-
+    // multiprice setup
     useEffect(() => {
         form.setFieldValue("price", form.values.multi_price);
         form.setFieldValue("sales_price", form.values.multi_price);
         setMultiPrice(form.values.multi_price);
-        document.getElementById("quantity")?.focus();
-    }, [form.values.multi_price]);
-
+        document.getElementById("quantity").focus();
+    }, [form.values.multi_price])
+    // unit setup
     useEffect(() => {
         form.setFieldValue("quantity", form.values.unit_id);
         setUnitType(form.values.unit_id);
-    }, [form.values.unit_id]);
+    }, [form.values.unit_id])
 
+    //actions when product is selected from table or form
+    const [selectProductDetails, setSelectProductDetails] = useState("");
     useEffect(() => {
         const storedProducts = localStorage.getItem("core-products");
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
@@ -236,30 +254,25 @@ function _GenericPosForm({domainConfigData}) {
             const selectedProduct = filteredProducts[0];
             setSelectProductDetails(selectedProduct);
 
-            if (salesConfig?.is_multi_price === 1 && selectedProduct.multi_price) {
-                const priceDropdown = selectedProduct.multi_price.map((price) => ({
+            if (salesConfig?.is_multi_price === 1) {
+                const priceDropdown = selectedProduct?.multi_price.map((price) => ({
                     label: `${currencySymbol} ${price.price}`,
                     value: String(price.price),
                 }));
                 setMultiPriceDropdown(priceDropdown);
             }
 
-            if (salesConfig?.is_measurement_enable === 1 && selectedProduct.measurements) {
-                const unitDropdown = selectedProduct.measurements.map((unit) => ({
-                    label: unit.unit_name,
-                    value: String(unit.quantity),
-                }));
-                setUnitDropdown(unitDropdown);
-            }
+          if (salesConfig?.is_measurement_enable === 1) {
+              const unitDropdown = selectedProduct?.measurements.map((unit) => ({
+                  label: `${unit.unit_name}`,
+                  value: String(unit.quantity),
+              }));
+              setUnitDropdown(unitDropdown);
+          }
 
             form.setFieldValue("price", selectedProduct.sales_price);
             form.setFieldValue("sales_price", selectedProduct.sales_price);
-
-            if (salesConfig?.is_multi_price) {
-                document.getElementById("multi_price")?.focus();
-            } else {
-                document.getElementById("quantity")?.focus();
-            }
+            salesConfig?.is_multi_price ?document.getElementById("multi_price").focus(): document.getElementById("quantity").focus();
         } else {
             setSelectProductDetails(null);
             form.setFieldValue("price", "");
@@ -267,6 +280,17 @@ function _GenericPosForm({domainConfigData}) {
         }
     }, [form.values.product_id]);
 
+    //selected product group text to show in input
+    const inputGroupText = (
+        <Text
+            style={{textAlign: "right", width: "100%", paddingRight: 16}}
+            color={"gray"}
+        >
+            {selectProductDetails && selectProductDetails.unit_name}
+        </Text>
+    );
+
+    //action when quantity or sales price is changed
     useEffect(() => {
         const quantity = Number(form.values.quantity);
         const salesPrice = Number(form.values.sales_price);
@@ -283,126 +307,66 @@ function _GenericPosForm({domainConfigData}) {
                     position: "top-center",
                     style: {backgroundColor: "mistyrose"},
                 });
-            } else if (selectProductDetails) {
-                setSelectProductDetails({
-                    ...selectProductDetails,
+            } else {
+                setSelectProductDetails((prevDetails) => ({
+                    ...prevDetails,
                     sub_total: quantity * salesPrice,
                     sales_price: salesPrice,
-                });
+                }));
                 form.setFieldValue("sub_total", quantity * salesPrice);
             }
         }
     }, [form.values.quantity, form.values.sales_price]);
 
+    //action when sales percent is changed
     useEffect(() => {
         if (form.values.quantity && form.values.price) {
-            const discountAmount = (Number(form.values.price) * Number(form.values.percent)) / 100;
-            const salesPrice = Number(form.values.price) - discountAmount;
+            const discountAmount = (form.values.price * form.values.percent) / 100;
+            const salesPrice = form.values.price - discountAmount;
 
-            form.setFieldValue("sales_price", salesPrice.toString());
-            form.setFieldValue("sub_total", (salesPrice * Number(form.values.quantity)).toString());
+            form.setFieldValue("sales_price", salesPrice);
+            form.setFieldValue("sub_total", salesPrice);
         }
     }, [form.values.percent]);
 
-    useEffect(() => {
-        const storedProducts = localStorage.getItem("core-products");
-        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-        const filteredProducts = localProducts.filter((product) => {
-            if (categoryData) {
-                return (
-                    product.product_nature !== "raw-materials" &&
-                    product.category_id === Number(categoryData) &&
-                    product.sales_price !== 0
-                );
-            }
-            return product.product_nature !== "raw-materials";
-        });
+    // adding product from table
+    const [productQuantities, setProductQuantities] = useState({});
 
-        setProducts(filteredProducts);
-
-        const transformedProducts = filteredProducts.map((product) => ({
-            label: `${product.display_name} [${product.quantity}] ${product.unit_name} - ${currencySymbol}${product.sales_price}`,
-            value: String(product.id),
-        }));
-        setProductDropdown(transformedProducts);
-    }, [categoryData]);
-
-    useEffect(() => {
-        const tempProducts = localStorage.getItem("temp-sales-products");
-        setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        setLoadCardProducts(false);
-    }, [loadCardProducts]);
-
-    // Hotkeys
-    useHotkeys([
-        ["alt+n", () => document.getElementById("product_id")?.focus()],
-        ["alt+r", () => form.reset()],
-        ["alt+s", () => document.getElementById("EntityFormSubmit")?.click()],
-    ]);
-
-    // Helper functions
-    const updateLocalStorageAndResetForm = useCallback((products) => {
-        localStorage.setItem("temp-sales-products", JSON.stringify(products));
-        setSearchValue("");
-        setWarehouseData(null);
-        setProduct(null);
-        setMultiPrice(null);
-        setUnitType(null);
-        form.reset();
-        document.getElementById("product_id")?.focus();
-    }, [form]);
-
-    const createProductFromValues = useCallback((product, values) => {
-        return {
-            product_id: product.id,
-            display_name: product.display_name,
-            sales_price: Number(values.sales_price),
-            price: Number(values.price),
-            percent: values.percent,
-            stock: product.quantity,
-            quantity: Number(values.quantity),
-            unit_name: product.unit_name,
-            purchase_price: product.purchase_price,
-            sub_total: Number(values.quantity) * Number(values.sales_price),
-            unit_id: product.unit_id,
-            warehouse_id: values.warehouse_id ? Number(values.warehouse_id) : null,
-            warehouse_name: values.warehouse_id
-                ? warehouseDropdownData.find((warehouse) => warehouse.value === values.warehouse_id)?.label || null
-                : null,
-            bonus_quantity: Number(values.bonus_quantity) || 0,
-        };
-    }, [warehouseDropdownData]);
-
-    const handleAddProductByProductId = useCallback((values, myCardProducts, localProducts) => {
+    //handle add product by product Id
+    function handleAddProductByProductId(values, myCardProducts, localProducts) {
         const addProducts = localProducts.reduce((acc, product) => {
             if (product.id === Number(values.product_id)) {
                 acc.push({
                     product_id: product.id,
                     display_name: product.display_name,
-                    sales_price: Number(values.sales_price),
-                    price: Number(values.price),
+                    sales_price: values.sales_price,
+                    price: values.price,
                     percent: values.percent,
                     stock: product.quantity,
-                    quantity: Number(values.quantity),
+                    quantity: values.quantity,
                     unit_name: product.unit_name,
                     purchase_price: product.purchase_price,
-                    sub_total: Number(values.quantity) * Number(values.sales_price),
+                    sub_total: selectProductDetails.sub_total,
                     unit_id: product.unit_id,
-                    warehouse_id: values.warehouse_id ? Number(values.warehouse_id) : null,
-                    warehouse_name: values.warehouse_id
-                        ? warehouseDropdownData.find((warehouse) => warehouse.value === values.warehouse_id)?.label || null
+                    warehouse_id: values.warehouse_id
+                        ? Number(values.warehouse_id)
                         : null,
-                    bonus_quantity: Number(values.bonus_quantity) || 0,
+                    warehouse_name: values.warehouse_id
+                        ? warehouseDropdownData.find(
+                            (warehouse) => warehouse.value === values.warehouse_id
+                        ).label
+                        : null,
+                    bonus_quantity: values.bonus_quantity,
                 });
             }
             return acc;
         }, myCardProducts);
-
         setLoadCardProducts(true);
         updateLocalStorageAndResetForm(addProducts);
-    }, [updateLocalStorageAndResetForm, warehouseDropdownData]);
+    }
 
-    const handleAddProductByBarcode = useCallback((values, myCardProducts, localProducts) => {
+    // handle prodcut by barcode id
+    function handleAddProductByBarcode(values, myCardProducts, localProducts) {
         const barcodeExists = localProducts.some(
             (product) => product.barcode === values.barcode
         );
@@ -426,39 +390,98 @@ function _GenericPosForm({domainConfigData}) {
                 withCloseButton: true,
             });
         }
-    }, [createProductFromValues, updateLocalStorageAndResetForm]);
+    }
 
-    const handleSubmit = useCallback((values) => {
-        if (!values.barcode && !values.product_id) {
-            form.setFieldError("barcode", true);
-            form.setFieldError("product_id", true);
-            return;
-        }
+    //category hook
+    const [categoryData, setCategoryData] = useState(null);
 
-        const cardProducts = localStorage.getItem("temp-sales-products");
-        const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+    //products hook
+    const [products, setProducts] = useState([]);
+
+    //product filter based on category id and set the dropdown value for product dropdown
+    useEffect(() => {
         const storedProducts = localStorage.getItem("core-products");
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-        if (values.product_id && !values.barcode) {
-            if (!salesConfig?.zero_stock) {
-                showNotification({
-                    color: "pink",
-                    title: t("WeNotifyYouThat"),
-                    message: t("ZeroQuantityNotAllow"),
-                    autoClose: 1500,
-                    loading: true,
-                    withCloseButton: true,
-                    position: "top-center",
-                    style: {backgroundColor: "mistyrose"},
-                });
-            } else {
-                handleAddProductByProductId(values, myCardProducts, localProducts);
+        const filteredProducts = localProducts.filter((product) => {
+            if (categoryData) {
+                return (
+                    product.product_nature !== "raw-materials" &&
+                    product.category_id === Number(categoryData) &&
+                    product.sales_price !== 0
+                );
             }
-        } else if (!values.product_id && values.barcode) {
-            handleAddProductByBarcode(values, myCardProducts, localProducts);
-        }
-    }, [form, handleAddProductByBarcode, handleAddProductByProductId, salesConfig?.zero_stock, t]);
+            return product.product_nature !== "raw-materials";
+        });
+
+        setProducts(filteredProducts);
+
+        // Transform product for dropdown
+        const transformedProducts = filteredProducts.map((product) => ({
+            label: `${product.display_name} [${product.quantity}] ${product.unit_name} - ${currencySymbol}${product.sales_price}`,
+            value: String(product.id),
+        }));
+        setProductDropdown(transformedProducts);
+    }, [categoryData]);
+
+    //update local storage and reset form values
+    function updateLocalStorageAndResetForm(addProducts) {
+        localStorage.setItem("temp-sales-products", JSON.stringify(addProducts));
+        setSearchValue("");
+        setWarehouseData(null);
+        setProduct(null);
+        setMultiPrice(null);
+        setUnitType(null);
+        form.reset();
+        document.getElementById("product_id").focus();
+    }
+
+    //load cart product hook
+    const [loadCardProducts, setLoadCardProducts] = useState(false);
+
+    // temp cart product hook
+    const [tempCardProducts, setTempCardProducts] = useState([]);
+
+    //load cart products from local storage
+    useEffect(() => {
+        const tempProducts = localStorage.getItem("temp-sales-products");
+        setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : []);
+        setLoadCardProducts(false);
+    }, [loadCardProducts]);
+    useHotkeys(
+        [
+            [
+                "alt+n",
+                () => {
+                    document.getElementById("product_id").focus();
+                },
+            ],
+        ],
+        []
+    );
+
+    useHotkeys(
+        [
+            [
+                "alt+r",
+                () => {
+                    form.reset();
+                },
+            ],
+        ],
+        []
+    );
+
+    useHotkeys(
+        [
+            [
+                "alt+s",
+                () => {
+                    document.getElementById("EntityFormSubmit").click();
+                },
+            ],
+        ],
+        []
+    );
 
     return (
         <Box>
@@ -467,7 +490,54 @@ function _GenericPosForm({domainConfigData}) {
                     <Navigation/>
                 </Grid.Col>
                 <Grid.Col span={7}>
-                    <form onSubmit={form.onSubmit(handleSubmit)}>
+                    <form
+                        onSubmit={form.onSubmit((values) => {
+                            if (!values.barcode && !values.product_id) {
+                                form.setFieldError("barcode", true);
+                                form.setFieldError("product_id", true);
+                                setTimeout(() => {
+                                }, 1000);
+                            } else {
+                                const cardProducts = localStorage.getItem(
+                                    "temp-sales-products"
+                                );
+                                const myCardProducts = cardProducts
+                                    ? JSON.parse(cardProducts)
+                                    : [];
+                                const storedProducts = localStorage.getItem("core-products");
+                                const localProducts = storedProducts
+                                    ? JSON.parse(storedProducts)
+                                    : [];
+
+                                if (values.product_id && !values.barcode) {
+                                    if (!salesConfig?.zero_stock) {
+                                        showNotification({
+                                            color: "pink",
+                                            title: t("WeNotifyYouThat"),
+                                            message: t("ZeroQuantityNotAllow"),
+                                            autoClose: 1500,
+                                            loading: true,
+                                            withCloseButton: true,
+                                            position: "top-center",
+                                            style: {backgroundColor: "mistyrose"},
+                                        });
+                                    } else {
+                                        handleAddProductByProductId(
+                                            values,
+                                            myCardProducts,
+                                            localProducts
+                                        );
+                                    }
+                                } else if (!values.product_id && values.barcode) {
+                                    handleAddProductByBarcode(
+                                        values,
+                                        myCardProducts,
+                                        localProducts
+                                    );
+                                }
+                            }
+                        })}
+                    >
                         <Box bg={"white"} p={"md"} pb="0" className={"borderRadiusAll"}>
                             <Box>
                                 <Box mb={"xs"}>
@@ -535,7 +605,9 @@ function _GenericPosForm({domainConfigData}) {
                                                         color="gray"
                                                         mt={"1"}
                                                         aria-label="Settings"
-                                                        onClick={() => setSettingDrawer(true)}
+                                                        onClick={() => {
+                                                            setSettingDrawer(true);
+                                                        }}
                                                     >
                                                         <IconDotsVertical
                                                             style={{width: "100%", height: "70%"}}
@@ -578,9 +650,12 @@ function _GenericPosForm({domainConfigData}) {
                                                         availableHeight += 264;
                                                     }
                                                 } else {
-                                                    if (!salesConfig?.search_by_vendor) availableHeight += 40;
-                                                    if (!salesConfig?.search_by_warehouse) availableHeight += 40;
-                                                    if (!salesConfig?.search_by_category) availableHeight += 40;
+                                                    if (!salesConfig?.search_by_vendor)
+                                                        availableHeight += 40;
+                                                    if (!salesConfig?.search_by_warehouse)
+                                                        availableHeight += 40;
+                                                    if (!salesConfig?.search_by_category)
+                                                        availableHeight += 40;
                                                 }
 
                                                 return availableHeight;
@@ -682,7 +757,7 @@ function _GenericPosForm({domainConfigData}) {
                                                                         required={false}
                                                                         nextField={"credit_limit"}
                                                                         name={"quantity"}
-                                                                        id={"quantity" + data.id}
+                                                                        id={"quantity"+data.id}
                                                                     />
                                                                     <Button
                                                                         size="compact-xs"
@@ -720,11 +795,13 @@ function _GenericPosForm({domainConfigData}) {
                                                                             },
                                                                         }}
                                                                         onClick={() => {
-                                                                            const quantity = productQuantities[data.id];
+                                                                            const quantity =
+                                                                                productQuantities[data.id];
                                                                             if (quantity && Number(quantity) > 0) {
-                                                                                const cardProducts = localStorage.getItem(
-                                                                                    "temp-sales-products"
-                                                                                );
+                                                                                const cardProducts =
+                                                                                    localStorage.getItem(
+                                                                                        "temp-sales-products"
+                                                                                    );
                                                                                 const myCardProducts = cardProducts
                                                                                     ? JSON.parse(cardProducts)
                                                                                     : [];
@@ -736,7 +813,7 @@ function _GenericPosForm({domainConfigData}) {
                                                                                     price: data.sales_price,
                                                                                     percent: "",
                                                                                     stock: data.quantity,
-                                                                                    quantity: Number(quantity),
+                                                                                    quantity: quantity,
                                                                                     unit_name: data.unit_name,
                                                                                     purchase_price: data.purchase_price,
                                                                                     sub_total:
@@ -746,32 +823,38 @@ function _GenericPosForm({domainConfigData}) {
                                                                                     warehouse_id: form.values.warehouse_id
                                                                                         ? Number(form.values.warehouse_id)
                                                                                         : null,
-                                                                                    warehouse_name: form.values.warehouse_id
+                                                                                    warehouse_name: form.values
+                                                                                        .warehouse_id
                                                                                         ? warehouseDropdownData.find(
-                                                                                        (warehouse) =>
-                                                                                            warehouse.value ===
-                                                                                            form.values.warehouse_id
-                                                                                    )?.label || null
+                                                                                            (warehouse) =>
+                                                                                                warehouse.value ===
+                                                                                                form.values.warehouse_id
+                                                                                        )?.label
                                                                                         : null,
                                                                                     bonus_quantity: 0,
                                                                                 };
 
                                                                                 myCardProducts.push(productToAdd);
 
+                                                                                // Update localStorage and reset form values
                                                                                 localStorage.setItem(
                                                                                     "temp-sales-products",
                                                                                     JSON.stringify(myCardProducts)
                                                                                 );
                                                                                 setLoadCardProducts(true);
+                                                                                // Reset quantity input for this specific product
                                                                                 setProductQuantities((prev) => ({
                                                                                     ...prev,
                                                                                     [data.id]: "",
                                                                                 }));
                                                                             } else {
+                                                                                // Show error for invalid quantity
                                                                                 notifications.show({
                                                                                     color: "red",
                                                                                     title: t("InvalidQuantity"),
-                                                                                    message: t("PleaseEnterValidQuantity"),
+                                                                                    message: t(
+                                                                                        "PleaseEnterValidQuantity"
+                                                                                    ),
                                                                                     autoClose: 1500,
                                                                                     withCloseButton: true,
                                                                                 });
@@ -880,7 +963,9 @@ function _GenericPosForm({domainConfigData}) {
                                                                     id={"product_id"}
                                                                     searchable={true}
                                                                     value={product}
-                                                                    changeValue={(val) => setProduct(val)}
+                                                                    changeValue={(val) => {
+                                                                        setProduct(val);
+                                                                    }}
                                                                     comboboxProps={{withinPortal: false}}
                                                                 />
                                                             </Box>
@@ -933,7 +1018,9 @@ function _GenericPosForm({domainConfigData}) {
                                                         form={form}
                                                         name={"barcode"}
                                                         id={"barcode"}
-                                                        leftSection={<IconBarcode size={16} opacity={0.5}/>}
+                                                        leftSection={
+                                                            <IconBarcode size={16} opacity={0.5}/>
+                                                        }
                                                     />
                                                 </Box>
                                             )}
@@ -993,11 +1080,13 @@ function _GenericPosForm({domainConfigData}) {
                                                                     form={form}
                                                                     name={"sales_price"}
                                                                     id={"sales_price"}
-                                                                    disabled={!!form.values.percent}
+                                                                    disabled={form.values.percent}
                                                                     leftSection={
                                                                         <IconPlusMinus size={16} opacity={0.5}/>
                                                                     }
-                                                                    rightIcon={<IconCurrency size={16} opacity={0.5}/>}
+                                                                    rightIcon={
+                                                                        <IconCurrency size={16} opacity={0.5}/>
+                                                                    }
                                                                 />
                                                             </Grid.Col>
                                                         </Grid>
@@ -1087,7 +1176,9 @@ function _GenericPosForm({domainConfigData}) {
                                                                     leftSection={
                                                                         <IconPercentage size={16} opacity={0.5}/>
                                                                     }
-                                                                    rightIcon={<IconCurrency size={16} opacity={0.5}/>}
+                                                                    rightIcon={
+                                                                        <IconCurrency size={16} opacity={0.5}/>
+                                                                    }
                                                                     closeIcon={true}
                                                                 />
                                                             </Grid.Col>
