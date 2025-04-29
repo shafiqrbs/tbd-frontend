@@ -92,7 +92,7 @@ export default function DashBoardTable() {
     });
 
     return (
-        <>
+        <Box style={{position : "relative"}}>
             <Box
                 pl={`4`}
                 pr={8}
@@ -216,6 +216,6 @@ export default function DashBoardTable() {
                     />
                 </Box>
             </Box>
-        </>
+        </Box>
     );
 }

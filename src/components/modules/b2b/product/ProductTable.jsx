@@ -224,7 +224,7 @@ export default function ProductTable({id}) {
     ];
 
     return (
-        <>
+        <Box style={{position: "relative"}}>
             <LoadingOverlay
                 visible={state.reloadList || reloadList}
                 zIndex={1000}
@@ -282,6 +282,6 @@ export default function ProductTable({id}) {
                     </Box>
                 </Grid.Col>
             </Grid>
-        </>
+        </Box>
     );
 }

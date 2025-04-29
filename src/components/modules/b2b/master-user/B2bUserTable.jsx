@@ -87,7 +87,7 @@ export default function B2bUserTable({ id }) {
         fetchData();
     }, [fetchData]);
     return (
-        <>
+        <Box style={{position: "relative"}}>
             <LoadingOverlay
                 visible={loading}
                 zIndex={1000}
@@ -173,6 +173,6 @@ export default function B2bUserTable({ id }) {
                     scrollAreaProps={{ type: "never" }}
                 />
             </Box>
-        </>
+        </Box>
     );
 }

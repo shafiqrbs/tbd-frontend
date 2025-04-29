@@ -147,7 +147,7 @@ export default function CategoryTable({ id }) {
     };
 
     return (
-        <>
+        <Box style={{ position: "relative" }}>
             <LoadingOverlay visible={reloadList} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
 
             <Grid columns={24} gutter={{ base: 8 }}>
@@ -306,6 +306,6 @@ export default function CategoryTable({ id }) {
                     </Box>
                 </Grid.Col>
             </Grid>
-        </>
+        </Box>
     );
 }
