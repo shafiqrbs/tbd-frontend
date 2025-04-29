@@ -15,6 +15,7 @@ import {
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import CoreHeaderNavbar from "../CoreHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
+import Navigation from "../common/Navigation.jsx";
 
 function UserIndex() {
   const { t, i18n } = useTranslation();
@@ -66,14 +67,17 @@ function UserIndex() {
           />
           <Box p={"8"}>
             <Grid columns={24} gutter={{ base: 8 }}>
+              <Grid.Col span={1}>
+                <Navigation module={"user"} />
+              </Grid.Col>
               {insertType === "create" && (
-                <Grid.Col span={15}>
+                <Grid.Col span={14}>
                   <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                     <_UserTable />
                   </Box>
                 </Grid.Col>
               )}
-              <Grid.Col span={insertType === 'create' ? 9 : 24}>
+              <Grid.Col span={insertType === "create" ? 9 : 24}>
                 {insertType === "create" ? <_UserForm /> : <_UserUpdateForm />}
               </Grid.Col>
             </Grid>
