@@ -13,7 +13,7 @@ import {
   LoadingOverlay,
   Table,
   Title,
-  Checkbox,
+  Checkbox, Card,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -39,13 +39,14 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 import { modals } from "@mantine/modals";
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
+import classes from "../../../../assets/css/FeaturesCards.module.css";
 
 function _ProductMeasurement(props) {
   const { id } = props;
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 104; //TabList height 104
+  const height = mainAreaHeight - 98; //TabList height 104
 
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [setFormData, setFormDataForUpdate] = useState(false);
@@ -241,72 +242,85 @@ function _ProductMeasurement(props) {
         });
       })}
     >
-      <Box>
-        <Box pb={"3"} pt={"3"} mb={"4"}>
-          <Grid gutter={"4"}>
-            <Grid.Col span={3}>
-              <InputButtonForm
-                tooltip={t("EnterQuantity")}
-                label=""
-                placeholder={t("QTY")}
-                required={true}
-                nextField={"ProductMeasurementFormSubmit"}
-                form={form}
-                name={"quantity"}
-                id={"quantity"}
-                leftSection={
-                  <IconSortAscendingNumbers size={16} opacity={0.5} />
-                }
-                rightSection={
-                  entityEditData.unit_name
-                    ? String(entityEditData.unit_name)
-                    : ""
-                }
-                closeIcon={false}
-              />
-            </Grid.Col>
-            <Grid.Col span={5}>
-              <SelectForm
-                tooltip={t("ChooseProductUnit")}
-                label=""
-                placeholder={t("ChooseProductUnit")}
-                required={true}
-                name={"unit_id"}
-                form={form}
-                dropdownValue={getSettingParticularDropdownData("product-unit")}
-                id={"unit_id"}
-                nextField={"quantity"}
-                searchable={true}
-                value={measurementUnitData}
-                changeValue={setMeasurementUnitData}
-              />
-            </Grid.Col>
-            <Grid.Col span={4}>
-              <Stack right align="flex-end" pt={"3"}>
-                <>
-                  {!saveCreateLoading && isOnline && (
-                    <Button
-                      size="xs"
-                      color={`red.3`}
-                      type="submit"
-                      id="ProductMeasurementFormSubmit"
-                      leftSection={<IconDeviceFloppy size={18} />}
-                    >
-                      <Flex direction={`column`} gap={0}>
-                        <Text fz={14} fw={400}>
-                          {t("AddMeasurement")}
-                        </Text>
-                      </Flex>
-                    </Button>
-                  )}
-                </>
-              </Stack>
-            </Grid.Col>
-          </Grid>
-        </Box>
-        <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
+      <Box >
+        <Grid columns={32} gutter={{ base: 8 }}>
+          <Grid.Col span={12}>
+            <Stack
+                h={height}
+                bg="var(--mantine-color-body)"
+                align="stretch"
+                justify="space-between"
+                className={"borderRadiusAll"}
+            >
+              <Box variant="default">&nbsp;</Box>
+              <Box className={"boxBackground"}>
+                <Box p={'xs'}>
+                  <InputButtonForm
+                      tooltip={t("EnterQuantity")}
+                      label=""
+                      placeholder={t("QTY")}
+                      required={true}
+                      nextField={"ProductMeasurementFormSubmit"}
+                      form={form}
+                      name={"quantity"}
+                      id={"quantity"}
+                      leftSection={
+                        <IconSortAscendingNumbers size={16} opacity={0.5} />
+                      }
+                      rightSection={
+                        entityEditData.unit_name
+                            ? String(entityEditData.unit_name)
+                            : ""
+                      }
+                      closeIcon={false}
+                  />
+                </Box>
+                <Box p={'xs'}>
+                  <SelectForm
+                      tooltip={t("ChooseProductUnit")}
+                      label=""
+                      placeholder={t("ChooseProductUnit")}
+                      required={true}
+                      name={"unit_id"}
+                      form={form}
+                      dropdownValue={getSettingParticularDropdownData("product-unit")}
+                      id={"unit_id"}
+                      nextField={"quantity"}
+                      searchable={true}
+                      value={measurementUnitData}
+                      changeValue={setMeasurementUnitData}
+                  />
+                </Box>
+                <Box
+                    p={`xs`}
+                    className={"titleBackground"}
+                >
+                  <>
+                    {!saveCreateLoading && isOnline && (
+                        <Button
+                            size="xs"
+                            className={'btnPrimaryBg'}
+                            type="submit"
+                            fullWidth={'true'}
+                            id="ProductMeasurementFormSubmit"
+                            leftSection={<IconDeviceFloppy size={18} />}
+                        >
+                          <Flex direction={`column`} gap={0}>
+                            <Text fz={14} fw={400}>
+                              {t("AddMeasurement")}
+                            </Text>
+                          </Flex>
+                        </Button>
+                    )}
+                  </>
+                </Box>
+              </Box>
+            </Stack>
+          </Grid.Col>
+          <Grid.Col span={20}>
+            <Box className={"borderRadiusAll"}>
           <ScrollArea
-            h={height - 40}
+            h={height}
             scrollbarSize={2}
             scrollbars="y"
             type="never"
@@ -320,7 +334,7 @@ function _ProductMeasurement(props) {
             </Box>
             <Box>
               <Table stickyHeader>
-                <Table.Thead>
+                <Table.Thead className={"boxBackground"}>
                   <Table.Tr>
                     <Table.Th fz="xs" w={"20"}>
                       {t("S/N")}
@@ -420,7 +434,10 @@ function _ProductMeasurement(props) {
             </Box>
           </ScrollArea>
         </Box>
+          </Grid.Col>
+        </Grid>
       </Box>
+
     </form>
   );
 }

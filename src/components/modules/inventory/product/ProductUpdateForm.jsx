@@ -9,9 +9,9 @@ import {
   Title,
   Text,
   Button,
-  Flex,
+  Flex, Group, ActionIcon, Input, Menu,
 } from "@mantine/core";
-import { IconDeviceFloppy } from "@tabler/icons-react";
+import {IconDeviceFloppy, IconPencil, IconRefresh, IconShoppingBag} from "@tabler/icons-react";
 import _UpdateProduct from "./_UpdateProduct.jsx";
 import _ProductMeasurement from "./_ProductMeasurement.jsx";
 import _ProductGallery from "./_ProductGallery.jsx";
@@ -19,15 +19,23 @@ import _VatManagement from "./_VatManagement.jsx";
 import _SkuManagement from "./_SkuManagement.jsx";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import { useTranslation } from "react-i18next";
+import tableCss from "../../../../assets/css/Table.module.css";
+import genericClass from "../../../../assets/css/Generic.module.css";
+import {notifications} from "@mantine/notifications";
+import {DataTable} from "mantine-datatable";
+import {editEntityData, setFormLoading, setInsertType} from "../../../../store/core/crudSlice";
+import {useDispatch} from "react-redux";
 
 function ProductUpdateForm(props) {
   const { id } = useParams();
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { categoryDropdown, domainConfigData } = props;
   const product_config = domainConfigData?.inventory_config?.config_product;
   const [activeTab, setActiveTab] = useState("updateProduct");
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 104;
+  const [products, setProducts] = useState([]);
 
   // Define the tab mapping with proper identifiers
   const tabConfig = [
@@ -37,6 +45,15 @@ function ProductUpdateForm(props) {
     { id: "vatManagement", displayName: "Vat Management" },
     { id: "skuManagement", displayName: "Sku Management" },
   ];
+
+  useEffect(() => {
+    const storedProducts = localStorage.getItem("core-products");
+    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+    setProducts(localProducts);
+  }, []);
+
+  console.log(products);
 
 
   const renderForm = () => {
@@ -95,7 +112,7 @@ function ProductUpdateForm(props) {
 
   return (
     <Box>
-      <Grid columns={24} gutter={{ base: 8 }}>
+      <Grid columns={32} gutter={{ base: 8 }}>
         <Grid.Col span={4}>
           <Card shadow="md" radius="4" className={classes.card} padding="xs">
             <Grid gutter={{ base: 2 }}>
@@ -142,7 +159,7 @@ function ProductUpdateForm(props) {
           </Card>
         </Grid.Col>
         <Grid.Col span={20}>
-          <Box bg={"white"} p={"xs"} className={"borderRadiusAll"} mb={"8"}>
+          <Box bg={"white"} p={"xs"} mb={"8"}>
             <Box bg={"white"}>
               <Box
                 pl={`xs`}
@@ -150,10 +167,10 @@ function ProductUpdateForm(props) {
                 pt={"8"}
                 pb={"10"}
                 mb={"4"}
-                className={"boxBackground borderRadiusAll"}
+                className={"boxBackground"}
               >
                 <Grid>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={12}>
                     <Title order={6} pt={"4"}>
                       {t(
                         tabConfig.find((tab) => tab.id === activeTab)
@@ -161,62 +178,140 @@ function ProductUpdateForm(props) {
                       )}
                     </Title>
                   </Grid.Col>
-                  <Grid.Col span={6}>
-                    <Stack right align="flex-end">
-                      <>
-                        {isOnline && (
-                          <Button
-                            size="xs"
-                            className={"btnPrimaryBg"}
-                            leftSection={<IconDeviceFloppy size={16} />}
-                            onClick={() => {
-                              switch (activeTab) {
-                                case "updateProduct":
-                                  document
-                                    .getElementById("UpdateProductFormSubmit")
-                                    ?.click();
-                                  break;
-                                case "productMeasurement":
-                                  document
-                                    .getElementById(
-                                      "ProductMeasurementFormSubmit"
-                                    )
-                                    ?.click();
-                                  break;
-                                case "productGallery":
-                                  document
-                                    .getElementById("ProductGalleryFormSubmit")
-                                    ?.click();
-                                  break;
-                                case "vatManagement":
-                                  document
-                                    .getElementById("VatManagementFormSubmit")
-                                    ?.click();
-                                  break;
-                                case "skuManagement":
-                                  document
-                                    .getElementById("SkuManagementFormSubmit")
-                                    ?.click();
-                                  break;
-                                default:
-                                  break;
-                              }
-                            }}
-                          >
-                            <Flex direction={`column`} gap={0}>
-                              <Text fz={14} fw={400}>
-                                {t("UpdateAndSave")}
-                              </Text>
-                            </Flex>
-                          </Button>
-                        )}
-                      </>
-                    </Stack>
-                  </Grid.Col>
                 </Grid>
               </Box>
-              <Box className={"borderRadiusAll"}>
+              <Box>
                 {renderForm()}
+              </Box>
+            </Box>
+          </Box>
+        </Grid.Col>
+        <Grid.Col span={8}>
+          <Box bg={"white"} p={"xs"} className={"borderRadiusAll"} mb={"8"}>
+            <Box bg={"white"}>
+              <Box className={"borderRadiusAll"}>
+                <DataTable
+                    classNames={{
+                      root: tableCss.root,
+                      table: tableCss.table,
+                      header: tableCss.header,
+                      footer: tableCss.footer,
+                      pagination: tableCss.pagination,
+                    }}
+                    records={products}
+                    columns={[
+                      {
+                        accessor: "display_name",
+                        title: t("Product"),
+                        render: (data, index) => (
+                            <Text fz={11} fw={400}>
+                              {index + 1}. {data.display_name}
+                            </Text>
+                        ),
+                      },
+                      {
+                        accessor: "qty",
+                        width: 200,
+                        title: (
+                            <Group
+                                justify={"flex-end"}
+                                spacing="xs"
+                                noWrap
+                                pl={"sm"}
+                                ml={"sm"}
+                            >
+                              <Box pl={"4"}>{t("")}</Box>
+                              <ActionIcon
+                                  mr={"sm"}
+                                  radius="xl"
+                                  variant="transparent"
+                                  color="grey"
+                                  size="xs"
+                                  onClick={() => {
+                                  }}
+                              >
+                                <IconRefresh
+                                    style={{width: "100%", height: "100%"}}
+                                    stroke={1.5}
+                                />
+                              </ActionIcon>
+                            </Group>
+                        ),
+                        textAlign: "right",
+                        render: (data) => (
+                            <Group
+                                wrap="nowrap"
+                                w="100%"
+                                gap={0}
+                                justify="flex-end"
+                                align="center"
+                                mx="auto"
+                            >
+
+                              <Button
+                                  size="compact-xs"
+                                  color={"#f8eedf"}
+                                  radius={0}
+                                  w="50"
+                                  styles={{
+                                    root: {
+                                      height: "26px",
+                                      borderRadius: 0,
+                                      borderTopColor: "#905923",
+                                      borderBottomColor: "#905923",
+                                      borderLeftColor: "#905923",
+                                    },
+                                  }}
+                                  onClick={() => {
+                                  }}
+                              >
+                                <Text fz={9} fw={400} c={"black"}>
+                                  {data.unit_name}
+                                </Text>
+                              </Button>
+                              <Button
+                                  size="compact-xs"
+                                  className={genericClass.invoiceAdd}
+                                  radius={0}
+                                  w="30"
+                                  onClick={() => {
+                                    dispatch(setInsertType("update"));
+                                    dispatch(
+                                        editEntityData("inventory/product/" + data.id)
+                                    );
+                                    dispatch(setFormLoading(true));
+                                    navigate(`/inventory/product/${data.id}`);
+                                  }}
+                                  styles={{
+                                    root: {
+                                      height: "26px",
+                                      borderRadius:0,
+                                      borderTopRightRadius:
+                                          "var(--mantine-radius-sm)",
+                                      borderBottomRightRadius:
+                                          "var(--mantine-radius-sm)",
+                                    },
+                                  }}
+
+                              >
+                                <Flex direction={`column`} gap={0}>
+                                  <IconPencil size={12}/>
+                                </Flex>
+                              </Button>
+
+
+                            </Group>
+                        ),
+                      },
+
+                    ]}
+                    loaderSize="xs"
+                    loaderColor="grape"
+                    height={height+50}
+                    scrollAreaProps={{
+                      scrollbarSize: 4,
+                    }}
+                />
               </Box>
             </Box>
           </Box>

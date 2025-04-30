@@ -41,6 +41,7 @@ import { modals } from "@mantine/modals";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 import InputForm from "../../../form-builders/InputForm.jsx";
+import EditableNumberInput from "../../../form-builders/InputForm.jsx";
 
 function _SkuManagement(props) {
   const { id, isBrand, isColor, isGrade, isSize, isMultiPrice, isModel } =
@@ -232,33 +233,23 @@ function _SkuManagement(props) {
   };
 
   return (
-    <Box>
-      <ScrollArea scrollbars="y" type="never" h={height}>
-        <Box>
-          <LoadingOverlay
-            visible={formLoad}
-            zIndex={1000}
-            overlayProps={{ radius: "sm", blur: 2 }}
-          />
-        </Box>
-        <Box>
-          <form
+        <form
             onSubmit={form.onSubmit((values) => {
               form.values.product_id = id;
 
               if (
-                !values.grade_id &&
-                !values.model_id &&
-                !values.color_id &&
-                !values.brand_id &&
-                !values.size_id
+                  !values.grade_id &&
+                  !values.model_id &&
+                  !values.color_id &&
+                  !values.brand_id &&
+                  !values.size_id
               ) {
                 notifications.show({
                   loading: true,
                   color: "red",
                   title: "At least one value required",
                   message:
-                    "Data will be loaded in 3 seconds, you cannot close this yet",
+                      "Data will be loaded in 3 seconds, you cannot close this yet",
                   autoClose: 2000,
                   withCloseButton: true,
                 });
@@ -266,12 +257,12 @@ function _SkuManagement(props) {
               }
 
               const existingProductItem = productSkuIndexEntityData?.data.find(
-                (item) =>
-                  Number(item.color_id) === Number(values.color_id) &&
-                  Number(item.brand_id) === Number(values.brand_id) &&
-                  Number(item.size_id) === Number(values.size_id) &&
-                  Number(item.grade_id) === Number(values.grade_id) &&
-                  Number(item.model_id) === Number(values.model_id)
+                  (item) =>
+                      Number(item.color_id) === Number(values.color_id) &&
+                      Number(item.brand_id) === Number(values.brand_id) &&
+                      Number(item.size_id) === Number(values.size_id) &&
+                      Number(item.grade_id) === Number(values.grade_id) &&
+                      Number(item.model_id) === Number(values.model_id)
               );
 
               if (existingProductItem) {
@@ -280,7 +271,7 @@ function _SkuManagement(props) {
                   color: "red",
                   title: "Already exists",
                   message:
-                    "Data will be loaded in 3 seconds, you cannot close this yet",
+                      "Data will be loaded in 3 seconds, you cannot close this yet",
                   autoClose: 2000,
                   withCloseButton: true,
                 });
@@ -289,7 +280,7 @@ function _SkuManagement(props) {
               modals.openConfirmModal({
                 title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
                 children: (
-                  <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                 ),
                 labels: { confirm: t("Submit"), cancel: t("Cancel") },
                 confirmProps: { color: "red" },
@@ -308,9 +299,9 @@ function _SkuManagement(props) {
                       color: "red",
                       title: resultAction.payload.message,
                       icon: (
-                        <IconCheck
-                          style={{ width: rem(18), height: rem(18) }}
-                        />
+                          <IconCheck
+                              style={{ width: rem(18), height: rem(18) }}
+                          />
                       ),
                       loading: false,
                       autoClose: 2000,
@@ -322,9 +313,9 @@ function _SkuManagement(props) {
                       color: "teal",
                       title: t("CreateSuccessfully"),
                       icon: (
-                        <IconCheck
-                          style={{ width: rem(18), height: rem(18) }}
-                        />
+                          <IconCheck
+                              style={{ width: rem(18), height: rem(18) }}
+                          />
                       ),
                       loading: false,
                       autoClose: 2000,
@@ -344,387 +335,413 @@ function _SkuManagement(props) {
                 },
               });
             })}
-          >
-            <>
-              <Box
-                pt={"4"}
-                pb={2}
-                className={"boxBackground  border-bottom-none"}
-              >
-                <Grid columns={11}>
-                  <Grid.Col span={10}>
-                    <Grid gutter={{ base: 2 }}>
-                      <Grid.Col span={"auto"}>
+        >
+          <>
+            <Box>
+              <Grid columns={32} gutter={{ base: 8 }}>
+                <Grid.Col span={12}>
+                  <Stack
+                      h={height}
+                      bg="var(--mantine-color-body)"
+                      align="stretch"
+                      justify="space-between"
+                      className={"borderRadiusAll"}
+                  >
+                    <Box variant="default">&nbsp;</Box>
+                    <Box className={"boxBackground"}>
+                      <Box p={'xs'}>
                         <InputForm
-                          tooltip={t("BarcodeValidateMessage")}
-                          placeholder={t("Barcode")}
-                          required={false}
-                          nextField={"sales_price"}
-                          form={form}
-                          name={"barcode"}
-                          id={"barcode"}
-                        />
-                      </Grid.Col>
-                      {isColor && (
-                        <Grid.Col span={"auto"}>
-                          <SelectForm
-                            tooltip={t("ChooseColor")}
-                            placeholder={t("ChooseColor")}
-                            name={"color_id"}
+                            tooltip={t("BarcodeValidateMessage")}
+                            placeholder={t("Barcode")}
+                            required={false}
+                            nextField={"sales_price"}
                             form={form}
-                            dropdownValue={colorDropDown}
-                            mt={0}
-                            id={"color_id"}
-                            nextField={"size_id"}
-                            searchable={true}
-                            value={colorData}
-                            changeValue={setColorData}
-                          />
-                        </Grid.Col>
+                            name={"barcode"}
+                            id={"barcode"}
+                        />
+                        <EditableNumberInput
+                            item={item}
+                            field="sales_target"
+                            placeholder={t("SalesTarget")}
+                            value=""
+                            onChange={handleFieldChange}
+                        />
+                      </Box>
+                      {isColor && (
+                          <Box p={'xs'}>
+                            <SelectForm
+                                tooltip={t("ChooseColor")}
+                                placeholder={t("ChooseColor")}
+                                name={"color_id"}
+                                form={form}
+                                dropdownValue={colorDropDown}
+                                mt={0}
+                                id={"color_id"}
+                                nextField={"size_id"}
+                                searchable={true}
+                                value={colorData}
+                                changeValue={setColorData}
+                            />
+
+                          </Box>
                       )}
                       {isSize && (
-                        <Grid.Col span={"auto"}>
-                          <SelectForm
-                            tooltip={t("ChooseSize")}
-                            placeholder={t("ChooseSize")}
-                            name={"size_id"}
-                            form={form}
-                            dropdownValue={sizeDropDown}
-                            mt={0}
-                            id={"size_id"}
-                            nextField={"brand_id"}
-                            searchable={true}
-                            value={sizeData}
-                            changeValue={setSizeData}
-                          />
-                        </Grid.Col>
+                          <Box p={'xs'}>
+                            <SelectForm
+                                tooltip={t("ChooseSize")}
+                                placeholder={t("ChooseSize")}
+                                name={"size_id"}
+                                form={form}
+                                dropdownValue={sizeDropDown}
+                                mt={0}
+                                id={"size_id"}
+                                nextField={"brand_id"}
+                                searchable={true}
+                                value={sizeData}
+                                changeValue={setSizeData}
+                            />
+
+                          </Box>
                       )}
                       {isBrand && (
-                        <Grid.Col span={"auto"}>
-                          <SelectForm
-                            tooltip={t("ChooseBrand")}
-                            placeholder={t("ChooseBrand")}
-                            name={"brand_id"}
-                            form={form}
-                            dropdownValue={brandDropDown}
-                            mt={0}
-                            id={"brand_id"}
-                            nextField={"grade_id"}
-                            searchable={true}
-                            value={brandData}
-                            changeValue={setBrandData}
-                          />
-                        </Grid.Col>
+                          <Box p={'xs'}>
+
+                            <SelectForm
+                                tooltip={t("ChooseBrand")}
+                                placeholder={t("ChooseBrand")}
+                                name={"brand_id"}
+                                form={form}
+                                dropdownValue={brandDropDown}
+                                mt={0}
+                                id={"brand_id"}
+                                nextField={"grade_id"}
+                                searchable={true}
+                                value={brandData}
+                                changeValue={setBrandData}
+                            />
+
+                          </Box>
                       )}
                       {isGrade && (
-                        <Grid.Col span={"auto"}>
-                          <SelectForm
-                            tooltip={t("ChooseProductGrade")}
-                            placeholder={t("ChooseProductGrade")}
-                            name={"grade_id"}
-                            form={form}
-                            dropdownValue={gradeDropDown}
-                            mt={0}
-                            id={"grade_id"}
-                            nextField={"model_id"}
-                            searchable={true}
-                            value={gradeData}
-                            changeValue={setGradeData}
-                          />
-                        </Grid.Col>
+                          <Box p={'xs'}>
+
+                            <SelectForm
+                                tooltip={t("ChooseProductGrade")}
+                                placeholder={t("ChooseProductGrade")}
+                                name={"grade_id"}
+                                form={form}
+                                dropdownValue={gradeDropDown}
+                                mt={0}
+                                id={"grade_id"}
+                                nextField={"model_id"}
+                                searchable={true}
+                                value={gradeData}
+                                changeValue={setGradeData}
+                            />
+
+                          </Box>
                       )}
                       {isModel && (
-                        <Grid.Col span={"auto"}>
-                          <SelectForm
-                            tooltip={t("ChooseModel")}
-                            placeholder={t("ChooseModel")}
-                            name={"model_id"}
-                            form={form}
-                            dropdownValue={modelDropDown}
-                            mt={0}
-                            id={"model_id"}
-                            nextField={"EntityFormSubmitSkuItem"}
-                            searchable={true}
-                            value={gradeData}
-                            changeValue={setGradeData}
-                          />
-                        </Grid.Col>
+                          <Box p={'xs'}>
+                            <SelectForm
+                                tooltip={t("ChooseModel")}
+                                placeholder={t("ChooseModel")}
+                                name={"model_id"}
+                                form={form}
+                                dropdownValue={modelDropDown}
+                                mt={0}
+                                id={"model_id"}
+                                nextField={"EntityFormSubmitSkuItem"}
+                                searchable={true}
+                                value={gradeData}
+                                changeValue={setGradeData}
+                            />
+
+                          </Box>
                       )}
-                    </Grid>
-                  </Grid.Col>
-                  <Grid.Col span={1}>
-                    <Stack right align="flex-end" pt={"3"}>
-                      <>
-                        {isOnline && (
-                          <Button
-                            size="xs"
-                            color={`green.8`}
-                            type="submit"
-                            id="SkuManagementFormSubmit"
-                            leftSection={<IconDeviceFloppy size={16} />}
-                          >
-                            <Flex direction={`column`} gap={0}>
-                              <Text fz={14} fw={400}>
-                                {t("Add")}
-                              </Text>
-                            </Flex>
-                          </Button>
+                      <Box
+                          p={`xs`}
+                          className={"titleBackground"}
+                      >
+                        {!saveCreateLoading && isOnline && (
+                            <>
+                              {isOnline && (
+                                  <Button
+                                      size="xs"
+                                      className={'btnPrimaryBg'}
+                                      type="submit"
+                                      fullWidth={'true'}
+                                      id="SkuManagementFormSubmit"
+                                      leftSection={<IconDeviceFloppy size={16} />}
+                                  >
+                                    <Flex direction={`column`} gap={0}>
+                                      <Text fz={14} fw={400}>
+                                        {t("Add")}
+                                      </Text>
+                                    </Flex>
+                                  </Button>
+                              )}
+                            </>
                         )}
-                      </>
-                    </Stack>
-                  </Grid.Col>
-                </Grid>
-              </Box>
-            </>
-          </form>
-          <ScrollArea
-            h={height - 152}
-            scrollbarSize={2}
-            scrollbars="y"
-            type="never"
-          >
-            <Box>
-              <Table stickyHeader>
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th fz="xs">{t("S/N")}</Table.Th>
-                    <Table.Th fz="xs">{t("Name")}</Table.Th>
-                    <Table.Th fz="xs">{t("Barcode")}</Table.Th>
+                      </Box>
+                    </Box>
+                  </Stack>
+                </Grid.Col>
+                <Grid.Col span={20}>
+                  <Box className={"borderRadiusAll"}>
+                  <ScrollArea
+                      h={height+6}
+                      scrollbarSize={2}
+                      scrollbars="y"
+                      type="never"
+                  >
+                    <Box>
+                      <Table stickyHeader>
+                        <Table.Thead className={"boxBackground"}>
+                          <Table.Tr>
+                            <Table.Th fz="xs">{t("S/N")}</Table.Th>
+                            <Table.Th fz="xs">{t("Name")}</Table.Th>
+                            <Table.Th fz="xs">{t("Barcode")}</Table.Th>
 
-                    {isColor && (
-                      <Table.Th fz="xs" ta="center">
-                        {t("Color")}
-                      </Table.Th>
-                    )}
-
-                    {isSize && (
-                      <Table.Th fz="xs" ta="center">
-                        {t("Size")}
-                      </Table.Th>
-                    )}
-
-                    {isBrand && (
-                      <Table.Th fz="xs" ta="center">
-                        {t("Brand")}
-                      </Table.Th>
-                    )}
-
-                    {isGrade && (
-                      <Table.Th fz="xs" ta="center">
-                        {t("Grade")}
-                      </Table.Th>
-                    )}
-
-                    {isModel && (
-                      <Table.Th fz="xs" ta="center">
-                        {t("Model")}
-                      </Table.Th>
-                    )}
-
-                    <Table.Th fz="xs" ta="center">
-                      {t("PurchasePrice")}
-                    </Table.Th>
-
-                    <Table.Th fz="xs" ta="center">
-                      {t("SalesPrice")}
-                    </Table.Th>
-                    {isMultiPrice &&
-                      multiplePriceFieldName?.length > 0 &&
-                      multiplePriceFieldName.map((priceFieldName, index) => (
-                        <Table.Th fz="xs" ta="center" key={index}>
-                          {priceFieldName}
-                        </Table.Th>
-                      ))}
-                    <Table.Th fz="xs" ta="center"></Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {productSkuIndexEntityData?.data?.length > 0 ? (
-                    productSkuIndexEntityData.data.map((sku, index) => {
-                      return (
-                        <Table.Tr key={sku.id}>
-                          <Table.Th fz="xs">{index + 1}</Table.Th>
-                          <Table.Th fz="xs">{sku.name}</Table.Th>
-                          <Table.Th fz="xs">
-                            <TextInput
-                              type="number"
-                              label=""
-                              size="xs"
-                              id={"inline-update-barcode-" + sku.stock_id}
-                              value={barcodeData[index]}
-                              onChange={(e) => {
-                                handleSkuData(
-                                  e.target.value,
-                                  sku.stock_id,
-                                  "barcode",
-                                  index,
-                                  null,
-                                  null
-                                );
-                              }}
-                            />
-                          </Table.Th>
-                          {isColor && (
-                            <Table.Th fz="xs" ta="center">
-                              {sku.color_name}
-                            </Table.Th>
-                          )}
-                          {isSize && (
-                            <Table.Th fz="xs" ta="center">
-                              {sku.size_name}
-                            </Table.Th>
-                          )}
-                          {isBrand && (
-                            <Table.Th fz="xs" ta="center">
-                              {sku.brand_name}
-                            </Table.Th>
-                          )}
-                          {isGrade && (
-                            <Table.Th fz="xs" ta="center">
-                              {sku.grade_name}
-                            </Table.Th>
-                          )}
-                          {isModel && (
-                            <Table.Th fz="xs" ta="center">
-                              {sku.model_name}
-                            </Table.Th>
-                          )}
-
-                          <Table.Th fz="xs" ta="center">
-                            <TextInput
-                              type="number"
-                              label=""
-                              size="xs"
-                              id={"inline-update-price-" + sku.stock_id}
-                              value={purchasePriceData[index]}
-                              onChange={(e) => {
-                                handleSkuData(
-                                  e.target.value,
-                                  sku.stock_id,
-                                  "purchase_price",
-                                  index,
-                                  null,
-                                  null
-                                );
-                              }}
-                            />
-                          </Table.Th>
-
-                          <Table.Th fz="xs" ta="center">
-                            <TextInput
-                              type="number"
-                              label=""
-                              size="xs"
-                              id={"inline-update-price-" + sku.stock_id}
-                              value={priceData[index]}
-                              onChange={(e) => {
-                                handleSkuData(
-                                  e.target.value,
-                                  sku.stock_id,
-                                  "sales_price",
-                                  index,
-                                  null,
-                                  null
-                                );
-                              }}
-                            />
-                          </Table.Th>
-
-                          {sku.price_field?.map((field, fieldIndex) => (
-                            <Table.Th fz="xs" ta="center" key={field.id}>
-                              <TextInput
-                                type="number"
-                                label=""
-                                size="xs"
-                                id={`inline-update-${field.price_field_slug}-${sku.stock_id}`}
-                                value={
-                                  wholesalePriceData[index]?.[fieldIndex]
-                                    ?.price || ""
-                                }
-                                onChange={(e) =>
-                                  handleSkuData(
-                                    e.target.value,
-                                    sku.stock_id,
-                                    field.price_field_slug,
-                                    index,
-                                    fieldIndex,
-                                    field.id
-                                  )
-                                }
-                              />
-                            </Table.Th>
-                          ))}
-                          <Table.Th fz="xs" ta="center">
-                            {!sku.is_master && (
-                              <ActionIcon
-                                size="sm"
-                                variant="transparent"
-                                color="red"
-                                onMouseEnter={(e) =>
-                                  (e.currentTarget.style.color = "red")
-                                }
-                                onMouseLeave={(e) =>
-                                  (e.currentTarget.style.color = "red.6")
-                                }
-                                onClick={() => {
-                                  modals.openConfirmModal({
-                                    title: (
-                                      <Text size="md">
-                                        {" "}
-                                        {t("FormConfirmationTitle")}
-                                      </Text>
-                                    ),
-                                    children: (
-                                      <Text size="sm">
-                                        {" "}
-                                        {t("FormConfirmationMessage")}
-                                      </Text>
-                                    ),
-                                    labels: {
-                                      confirm: "Confirm",
-                                      cancel: "Cancel",
-                                    },
-                                    confirmProps: { color: "red.6" },
-                                    onCancel: () => console.log("Cancel"),
-                                    onConfirm: () => {
-                                      dispatch(
-                                        deleteEntityData(
-                                          "inventory/product/stock/sku/" +
-                                            sku.stock_id
-                                        )
-                                      );
-                                      setTimeout(() => {
-                                        setReloadSkuItemData(true);
-                                      }, 500);
-                                    },
-                                  });
-                                }}
-                              >
-                                <IconX
-                                  height={"18"}
-                                  width={"18"}
-                                  stroke={1.5}
-                                />
-                              </ActionIcon>
+                            {isColor && (
+                                <Table.Th fz="xs" ta="center">
+                                  {t("Color")}
+                                </Table.Th>
                             )}
-                          </Table.Th>
-                        </Table.Tr>
-                      );
-                    })
-                  ) : (
-                    <Table.Tr>
-                      <Table.Th colSpan="4" fz="xs" ta="center">
-                        {t("NoDataAvailable")}
-                      </Table.Th>
-                    </Table.Tr>
-                  )}
-                </Table.Tbody>
-              </Table>
+
+                            {isSize && (
+                                <Table.Th fz="xs" ta="center">
+                                  {t("Size")}
+                                </Table.Th>
+                            )}
+
+                            {isBrand && (
+                                <Table.Th fz="xs" ta="center">
+                                  {t("Brand")}
+                                </Table.Th>
+                            )}
+
+                            {isGrade && (
+                                <Table.Th fz="xs" ta="center">
+                                  {t("Grade")}
+                                </Table.Th>
+                            )}
+
+                            {isModel && (
+                                <Table.Th fz="xs" ta="center">
+                                  {t("Model")}
+                                </Table.Th>
+                            )}
+
+                            <Table.Th fz="xs" ta="center">
+                              {t("PurchasePrice")}
+                            </Table.Th>
+
+                            <Table.Th fz="xs" ta="center">
+                              {t("SalesPrice")}
+                            </Table.Th>
+                            {isMultiPrice &&
+                            multiplePriceFieldName?.length > 0 &&
+                            multiplePriceFieldName.map((priceFieldName, index) => (
+                                <Table.Th fz="xs" ta="center" key={index}>
+                                  {priceFieldName}
+                                </Table.Th>
+                            ))}
+                            <Table.Th fz="xs" ta="center"></Table.Th>
+                          </Table.Tr>
+                        </Table.Thead>
+                        <Table.Tbody>
+                          {productSkuIndexEntityData?.data?.length > 0 ? (
+                              productSkuIndexEntityData.data.map((sku, index) => {
+                                return (
+                                    <Table.Tr key={sku.id}>
+                                      <Table.Th fz="xs">{index + 1}</Table.Th>
+                                      <Table.Th fz="xs">{sku.name}</Table.Th>
+                                      <Table.Th fz="xs">
+                                        <TextInput
+                                            type="number"
+                                            label=""
+                                            size="xs"
+                                            id={"inline-update-barcode-" + sku.stock_id}
+                                            value={barcodeData[index]}
+                                            onChange={(e) => {
+                                              handleSkuData(
+                                                  e.target.value,
+                                                  sku.stock_id,
+                                                  "barcode",
+                                                  index,
+                                                  null,
+                                                  null
+                                              );
+                                            }}
+                                        />
+                                      </Table.Th>
+                                      {isColor && (
+                                          <Table.Th fz="xs" ta="center">
+                                            {sku.color_name}
+                                          </Table.Th>
+                                      )}
+                                      {isSize && (
+                                          <Table.Th fz="xs" ta="center">
+                                            {sku.size_name}
+                                          </Table.Th>
+                                      )}
+                                      {isBrand && (
+                                          <Table.Th fz="xs" ta="center">
+                                            {sku.brand_name}
+                                          </Table.Th>
+                                      )}
+                                      {isGrade && (
+                                          <Table.Th fz="xs" ta="center">
+                                            {sku.grade_name}
+                                          </Table.Th>
+                                      )}
+                                      {isModel && (
+                                          <Table.Th fz="xs" ta="center">
+                                            {sku.model_name}
+                                          </Table.Th>
+                                      )}
+
+                                      <Table.Th fz="xs" ta="center">
+                                        <TextInput
+                                            type="number"
+                                            label=""
+                                            size="xs"
+                                            id={"inline-update-price-" + sku.stock_id}
+                                            value={purchasePriceData[index]}
+                                            onChange={(e) => {
+                                              handleSkuData(
+                                                  e.target.value,
+                                                  sku.stock_id,
+                                                  "purchase_price",
+                                                  index,
+                                                  null,
+                                                  null
+                                              );
+                                            }}
+                                        />
+                                      </Table.Th>
+
+                                      <Table.Th fz="xs" ta="center">
+                                        <TextInput
+                                            type="number"
+                                            label=""
+                                            size="xs"
+                                            id={"inline-update-price-" + sku.stock_id}
+                                            value={priceData[index]}
+                                            onChange={(e) => {
+                                              handleSkuData(
+                                                  e.target.value,
+                                                  sku.stock_id,
+                                                  "sales_price",
+                                                  index,
+                                                  null,
+                                                  null
+                                              );
+                                            }}
+                                        />
+                                      </Table.Th>
+
+                                      {sku.price_field?.map((field, fieldIndex) => (
+                                          <Table.Th fz="xs" ta="center" key={field.id}>
+                                            <TextInput
+                                                type="number"
+                                                label=""
+                                                size="xs"
+                                                id={`inline-update-${field.price_field_slug}-${sku.stock_id}`}
+                                                value={
+                                                  wholesalePriceData[index]?.[fieldIndex]
+                                                      ?.price || ""
+                                                }
+                                                onChange={(e) =>
+                                                    handleSkuData(
+                                                        e.target.value,
+                                                        sku.stock_id,
+                                                        field.price_field_slug,
+                                                        index,
+                                                        fieldIndex,
+                                                        field.id
+                                                    )
+                                                }
+                                            />
+                                          </Table.Th>
+                                      ))}
+                                      <Table.Th fz="xs" ta="center">
+                                        {!sku.is_master && (
+                                            <ActionIcon
+                                                size="sm"
+                                                variant="transparent"
+                                                color="red"
+                                                onMouseEnter={(e) =>
+                                                    (e.currentTarget.style.color = "red")
+                                                }
+                                                onMouseLeave={(e) =>
+                                                    (e.currentTarget.style.color = "red.6")
+                                                }
+                                                onClick={() => {
+                                                  modals.openConfirmModal({
+                                                    title: (
+                                                        <Text size="md">
+                                                          {" "}
+                                                          {t("FormConfirmationTitle")}
+                                                        </Text>
+                                                    ),
+                                                    children: (
+                                                        <Text size="sm">
+                                                          {" "}
+                                                          {t("FormConfirmationMessage")}
+                                                        </Text>
+                                                    ),
+                                                    labels: {
+                                                      confirm: "Confirm",
+                                                      cancel: "Cancel",
+                                                    },
+                                                    confirmProps: { color: "red.6" },
+                                                    onCancel: () => console.log("Cancel"),
+                                                    onConfirm: () => {
+                                                      dispatch(
+                                                          deleteEntityData(
+                                                              "inventory/product/stock/sku/" +
+                                                              sku.stock_id
+                                                          )
+                                                      );
+                                                      setTimeout(() => {
+                                                        setReloadSkuItemData(true);
+                                                      }, 500);
+                                                    },
+                                                  });
+                                                }}
+                                            >
+                                              <IconX
+                                                  height={"18"}
+                                                  width={"18"}
+                                                  stroke={1.5}
+                                              />
+                                            </ActionIcon>
+                                        )}
+                                      </Table.Th>
+                                    </Table.Tr>
+                                );
+                              })
+                          ) : (
+                              <Table.Tr>
+                                <Table.Th colSpan="4" fz="xs" ta="center">
+                                  {t("NoDataAvailable")}
+                                </Table.Th>
+                              </Table.Tr>
+                          )}
+                        </Table.Tbody>
+                      </Table>
+                    </Box>
+                  </ScrollArea>
+                  </Box>
+                </Grid.Col>
+              </Grid>
             </Box>
-          </ScrollArea>
-        </Box>
-      </ScrollArea>
-    </Box>
+          </>
+        </form>
+
+
   );
 }
 
