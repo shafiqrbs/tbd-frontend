@@ -31,9 +31,9 @@ import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js
 
 function DiscountConfig(props) {
 
-    const {  domainConfig,config_sales, id } = props;
-
- //   const  {config_sales} = domainConfig.inventory_conf.config_sales;
+    const {  domainConfig} = props;
+    const  {id} = domainConfig.id;
+    const  {config_sales} = domainConfig.inventory_config.config_discount;
     const {mainAreaHeight} = useOutletContext()
     let height = mainAreaHeight-94;
     const { t } = useTranslation();
@@ -42,14 +42,9 @@ function DiscountConfig(props) {
 
     const form = useForm({
         initialValues: {
-            search_by_vendor: config_sales?.search_by_vendor || "",
-            search_by_product_nature: config_sales?.search_by_product_nature || "",
-            search_by_category: config_sales?.search_by_category || "",
-            show_product: config_sales?.show_product || "",
-            is_measurement_enable: config_sales?.is_measurement_enable || "",
-            is_purchase_auto_approved: config_sales?.is_purchase_auto_approved || "",
-            default_vendor_group_id: config_sales?.default_vendor_group_id || "",
-            search_by_warehouse: config_sales?.search_by_warehouse || "",
+            discount_with_customer: config_sales?.discount_with_customer || "",
+            online_customer: config_sales?.online_customer || "",
+            max_discount: config_sales?.max_discount || "",
         },
     });
 
@@ -68,14 +63,8 @@ function DiscountConfig(props) {
 
     const handlePurchaseConfirmSubmit = async (values) => {
         const properties = [
-            "search_by_vendor",
-            "search_by_product_nature",
-            "search_by_category",
-            "show_product",
-            "is_measurement_enable",
-            "is_purchase_auto_approved",
-            "default_vendor_group_id",
-            "search_by_warehouse",
+            "discount_with_customer",
+            "online_customer",
         ];
 
         properties.forEach((property) => {
@@ -85,9 +74,8 @@ function DiscountConfig(props) {
 
         try {
             setSaveCreateLoading(true);
-
             const value = {
-                url: `inventory/config-purchase-update/${id}`,
+                url: `domain/config/inventory-product/${id}`,
                 data: values,
             };
             console.log("value", values);
@@ -164,7 +152,7 @@ function DiscountConfig(props) {
                                             size="xs"
                                             className={'btnPrimaryBg'}
                                             type="submit"
-                                            id="CategoryFormSubmit"
+                                            id="DiscountConfigFormSubmit"
                                             leftSection={<IconDeviceFloppy size={16} />}
                                         >
 
@@ -193,95 +181,31 @@ function DiscountConfig(props) {
                         <form onSubmit={form.onSubmit(handlePurchaseFormSubmit)}>
                             <Box pt={"xs"} pl={"xs"}>
                                 <Box mt={"xs"}>
-                                    <Grid gutter={{ base: 1 }} style={{ cursor: "pointer" }}>
-                                        <Grid.Col span={4} fz={"sm"} pt={"1"}>
-                                            {t("SearchByVendor")}
-                                        </Grid.Col>
-                                        <Grid.Col span={6}>
-                                            <SelectForm
-                                                tooltip={t("ChooseMethod")}
-                                                label={""}
-                                                placeholder={t("ChooseMethod")}
-                                                required={true}
-                                                nextField={"name"}
-                                                name={"method_id"}
-                                                form={form}
-                                                dropdownValue={["1", "2"]}
-                                                id={"method_id"}
-                                                searchable={false}
-                                                value={value}
-                                                changeValue={setValue}
-                                            />
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
-                                <Box mt={"xs"}>
-                                    <Grid gutter={{ base: 1 }} style={{ cursor: "pointer" }}>
-                                        <Grid.Col span={4} fz={"sm"} pt={"1"}>
-                                            {t("SearchByProductNature")}
-                                        </Grid.Col>
-                                        <Grid.Col span={6}>
-                                            <InputForm
-                                                tooltip={t("SubGroupNameValidateMessage")}
-                                                label={""}
-                                                placeholder={t("Name")}
-                                                required={true}
-                                                nextField={"code"}
-                                                name={"name"}
-                                                form={form}
-                                                id={"name"}
-                                            />
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
-                                <Box mt={"xs"}>
-                                    <Grid gutter={{ base: 1 }} style={{ cursor: "pointer" }}>
-                                        <Grid.Col span={4} fz={"sm"} pt={"1"}>
-                                            {t("SearchByCategory")}
-                                        </Grid.Col>
-                                        <Grid.Col span={6}>
-                                            <TextAreaForm
-                                                autosize={true}
-                                                minRows={4}
-                                                maxRows={4}
-                                                tooltip={t("Narration")}
-                                                label={""}
-                                                placeholder={t("Narration")}
-                                                required={false}
-                                                nextField={"EntityFormSubmits"}
-                                                name={"narration"}
-                                                form={form}
-                                                id={"narration"}
-                                            />
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
-                                <Box mt={"xs"}>
                                     <Grid
                                         gutter={{ base: 1 }}
                                         style={{ cursor: "pointer" }}
                                         onClick={() =>
                                             form.setFieldValue(
-                                                "show_product",
-                                                form.values.show_product === 1 ? 0 : 1
+                                                "discount_with_customer",
+                                                form.values.discount_with_customer === 1 ? 0 : 1
                                             )
                                         }
                                     >
                                         <Grid.Col span={4} fz={"sm"} pt={"1"}>
-                                            {t("ShowProduct")}
+                                            {t("DiscountWithCustomer")}
                                         </Grid.Col>
                                         <Grid.Col span={6} align={"left"} justify={"left"}>
                                             <Checkbox
                                                 pr="xs"
-                                                checked={form.values.show_product === 1}
+                                                checked={form.values.discount_with_customer === 1}
                                                 color="red"
-                                                {...form.getInputProps("show_product", {
+                                                {...form.getInputProps("discount_with_customer", {
                                                     type: "checkbox",
                                                 })}
                                                 onChange={(event) =>
                                                     form.setFieldValue(
-                                                        "show_product",
-                                                        event.currentTarget.checked ? 1 : 0
+                                                        "discount_with_customer",
+                                                        event.discount_with_customer.checked ? 1 : 0
                                                     )
                                                 }
                                                 styles={(theme) => ({
@@ -293,10 +217,46 @@ function DiscountConfig(props) {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-
+                                <Box mt={"xs"}>
+                                    <Grid
+                                        gutter={{ base: 1 }}
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() =>
+                                            form.setFieldValue(
+                                                "online_customer",
+                                                form.values.online_customer === 1 ? 0 : 1
+                                            )
+                                        }
+                                    >
+                                        <Grid.Col span={4} fz={"sm"} pt={"1"}>
+                                            {t("OnlineB2BCustomer")}
+                                        </Grid.Col>
+                                        <Grid.Col span={6} align={"left"} justify={"left"}>
+                                            <Checkbox
+                                                pr="xs"
+                                                checked={form.values.online_customer === 1}
+                                                color="red"
+                                                {...form.getInputProps("online_customer", {
+                                                    type: "checkbox",
+                                                })}
+                                                onChange={(event) =>
+                                                    form.setFieldValue(
+                                                        "online_customer",
+                                                        event.online_customer.checked ? 1 : 0
+                                                    )
+                                                }
+                                                styles={(theme) => ({
+                                                    input: {
+                                                        borderColor: "red",
+                                                    },
+                                                })}
+                                            />
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
                             </Box>
                             <Button
-                                id="PurchaseFormSubmit"
+                                id="DiscountConfigFormSubmit"
                                 type="submit"
                                 style={{ display: "none" }}
                             >

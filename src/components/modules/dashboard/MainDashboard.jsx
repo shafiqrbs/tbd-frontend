@@ -1180,16 +1180,16 @@ function MainDashboard(props) {
                                             >
                                                 <NavLink
                                                     pl={"md"}
-                                                    href="/discount/dashboard"
+                                                    href="/discount"
                                                     label={t("Discount")}
                                                     component="button"
                                                     onClick={(e) => {
-                                                        navigate("/discount/dashboard");
+                                                        navigate("/discount");
                                                     }}
                                                     onAuxClick={(e) => {
                                                         // Handle middle mouse button click for browsers that support it
                                                         if (e.button === 1) {
-                                                            window.open("/discount/dashboard", "_blank");
+                                                            window.open("/discount", "_blank");
                                                         }
                                                     }}
                                                 />

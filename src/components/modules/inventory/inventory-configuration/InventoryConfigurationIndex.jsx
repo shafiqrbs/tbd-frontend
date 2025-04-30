@@ -14,7 +14,7 @@ function InventoryConfigurationIndex() {
   const progress = getLoadingProgress();
 
   const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
-  console.log(domainConfigData);
+
 
   return (
     <>

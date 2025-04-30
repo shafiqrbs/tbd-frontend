@@ -38,6 +38,7 @@ function ProductUpdateForm(props) {
     { id: "skuManagement", displayName: "Sku Management" },
   ];
 
+
   const renderForm = () => {
     switch (activeTab) {
       case "updateProduct":
@@ -55,6 +56,7 @@ function ProductUpdateForm(props) {
     }
   };
   const [isBrand, setBrand] = useState(product_config?.is_brand === 1);
+
   const [vat_integration, setVat_integration] = useState(
     product_config?.vat_integration === 1
   );
