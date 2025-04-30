@@ -47,24 +47,22 @@ import Navigation from "../common/Navigation.jsx";
 import __PosPurchaseForm from "./__PosPurchaseForm.jsx";
 import SettingDrawer from "../common/SettingDrawer.jsx";
 import { useHotkeys } from "@mantine/hooks";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function _GenericInvoiceForm(props) {
-  const {
-    currencySymbol,
-    allowZeroPercentage,
-    domainId,
-    isSMSActive,
-    focusFrom,
-    isWarehouse,
-    isPurchaseByPurchasePrice,
-  } = props;
+  const { domainConfigData } = props;
+  console.log("domainConfigData", domainConfigData);
+  let currencySymbol = domainConfigData?.inventory_config?.currency?.symbol;
+  let allowZeroPercentage = domainConfigData?.inventory_config?.zero_stock;
+  let domainId = domainConfigData?.inventory_config?.domain_id;
+  let isSMSActive = domainConfigData?.inventory_config?.is_active_sms;
+  let isWarehouse =
+    domainConfigData?.inventory_config?.config_purchase?.search_by_warehouse;
+  let isPurchaseByPurchasePrice =
+    domainConfigData?.inventory_config?.isPurchaseByPurchasePrice;
 
-  const { domainConfig, fetchDomainConfig } = getDomainConfig(true);
-
-  let inventory_config = domainConfig?.inventory_config;
+  let inventory_config = domainConfigData?.inventory_config;
   let config_purchase = inventory_config?.config_purchase;
-  let id = domainConfig?.id;
+  let id = domainConfigData?.id;
   //common hooks and variables
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -586,7 +584,7 @@ function _GenericInvoiceForm(props) {
                   </Grid>
                 </Box>
                 <Flex
-                  mih={switchValue === "product" ? height + 271 : height + 271}
+                  mih={height + 224}
                   direction="column"
                   gap={0}
                   bg="white"
@@ -597,13 +595,35 @@ function _GenericInvoiceForm(props) {
                   <Box
                     pl={`8`}
                     pr={8}
-                    mb={"xs"}
+                    mb={"sm"}
                     className={"borderRadiusAll"}
                     w={"100%"}
                   >
                     <Box
-                      mt={switchValue === "product" ? "xs" : "xs"}
-                      h={height - 130}
+                      h={(() => {
+                        let availableHeight = height - 118;
+
+                        if (switchValue === "barcode") {
+                          if (
+                            !config_purchase?.search_by_vendor &&
+                            !config_purchase?.search_by_warehouse &&
+                            !config_purchase?.search_by_category
+                          ) {
+                            availableHeight += 260;
+                          } else {
+                            availableHeight += 264;
+                          }
+                        } else {
+                          if (!config_purchase?.search_by_vendor)
+                            availableHeight += 38;
+                          if (!config_purchase?.search_by_warehouse)
+                            availableHeight += 38;
+                          if (!config_purchase?.search_by_category)
+                            availableHeight += 38;
+                        }
+
+                        return availableHeight;
+                      })()}
                     >
                       {config_purchase?.show_product === 1 && (
                         <DataTable
@@ -782,17 +802,6 @@ function _GenericInvoiceForm(props) {
                                           "temp-purchase-products",
                                           JSON.stringify(myCardProducts)
                                         );
-
-                                        // Show success notification
-                                        notifications.show({
-                                          color: "green",
-                                          title: t("ProductAdded"),
-                                          message: t(
-                                            "ProductAddedSuccessfully"
-                                          ),
-                                          autoClose: 1500,
-                                          withCloseButton: true,
-                                        });
                                         //update the sales table
                                         setLoadCardProducts(true);
                                         // Reset quantity input for this specific product
@@ -824,71 +833,80 @@ function _GenericInvoiceForm(props) {
                           ]}
                           loaderSize="xs"
                           loaderColor="grape"
-                          height={height - 130}
+                          height={"100%"}
+                          scrollAreaProps={{
+                            scrollbarSize: 8,
+                          }}
                         />
                       )}
                     </Box>
-                    {config_purchase?.search_by_vendor === 1 && (
-                      <Box mt={"8"}>
-                        <SelectForm
-                          tooltip={t("Vendor")}
-                          label=""
-                          placeholder={t("Vendor")}
-                          required={false}
-                          nextField={"warehouse_id"}
-                          name={"vendor_id"}
-                          form={form}
-                          dropdownValue={vendorsDropdownData}
-                          id={"purchase_vendor_id"}
-                          mt={1}
-                          searchable={true}
-                          value={vendorData}
-                          changeValue={setVendorData}
-                        />
-                      </Box>
-                    )}
-                    {config_purchase?.search_by_warehouse === 1 && (
-                      <Box mt={"4"}>
-                        <SelectForm
-                          tooltip={t("Warehouse")}
-                          label=""
-                          placeholder={t("Warehouse")}
-                          required={false}
-                          nextField={"category_id"}
-                          name={"warehouse_id"}
-                          form={form}
-                          dropdownValue={warehouseDropdownData}
-                          id={"warehouse_id"}
-                          mt={1}
-                          searchable={true}
-                          value={warehouseData}
-                          changeValue={setWarehouseData}
-                        />
-                      </Box>
-                    )}
-                    {config_purchase?.search_by_category === 1 && (
-                      <Box mt={"4"}>
-                        <SelectForm
-                          tooltip={t("ChooseCategory")}
-                          label={""}
-                          placeholder={t("ChooseCategory")}
-                          required={true}
-                          nextField={"product_id"}
-                          name={"category_id"}
-                          form={form}
-                          dropdownValue={categoryDropDownData}
-                          id={"category_id"}
-                          searchable={true}
-                          value={categoryData}
-                          changeValue={setCategoryData}
-                          comboboxProps={{ withinPortal: false }}
-                        />
-                      </Box>
-                    )}
+                    <Box className="borderRadiusAll">
+                      {switchValue === "product" && (
+                        <Box>
+                          {config_purchase?.search_by_vendor === 1 && (
+                            <Box mt={"8"}>
+                              <SelectForm
+                                tooltip={t("Vendor")}
+                                label=""
+                                placeholder={t("Vendor")}
+                                required={false}
+                                nextField={"warehouse_id"}
+                                name={"vendor_id"}
+                                form={form}
+                                dropdownValue={vendorsDropdownData}
+                                id={"purchase_vendor_id"}
+                                mt={1}
+                                searchable={true}
+                                value={vendorData}
+                                changeValue={setVendorData}
+                              />
+                            </Box>
+                          )}
+                          {config_purchase?.search_by_warehouse === 1 && (
+                            <Box mt={"4"}>
+                              <SelectForm
+                                tooltip={t("Warehouse")}
+                                label=""
+                                placeholder={t("Warehouse")}
+                                required={false}
+                                nextField={"category_id"}
+                                name={"warehouse_id"}
+                                form={form}
+                                dropdownValue={warehouseDropdownData}
+                                id={"warehouse_id"}
+                                mt={1}
+                                searchable={true}
+                                value={warehouseData}
+                                changeValue={setWarehouseData}
+                              />
+                            </Box>
+                          )}
+                          {config_purchase?.search_by_category === 1 && (
+                            <Box mt={"4"}>
+                              <SelectForm
+                                tooltip={t("ChooseCategory")}
+                                label={""}
+                                placeholder={t("ChooseCategory")}
+                                required={true}
+                                nextField={"product_id"}
+                                name={"category_id"}
+                                form={form}
+                                dropdownValue={categoryDropDownData}
+                                id={"category_id"}
+                                searchable={true}
+                                value={categoryData}
+                                changeValue={setCategoryData}
+                                comboboxProps={{ withinPortal: false }}
+                              />
+                            </Box>
+                          )}
+                        </Box>
+                      )}
+                    </Box>
                     {switchValue === "product" && (
                       <Box
                         p={"xs"}
-                        mt={"8"}
+                        mt={"4"}
                         className={genericClass.genericHighlightedBox}
                         ml={"-xs"}
                         mr={-8}
@@ -935,6 +953,7 @@ function _GenericInvoiceForm(props) {
                                   ml={"8"}
                                   color="white"
                                   aria-label="Settings"
+                                  bg={"#905923"}
                                   onClick={() => setProductDrawer(true)}
                                 >
                                   <IconPlus stroke={1} />
@@ -976,21 +995,23 @@ function _GenericInvoiceForm(props) {
                         <Box mt={"4"}>
                           <Grid columns={12} gutter={{ base: 8 }}>
                             <Grid.Col span={4}>
-                              <SelectForm
-                                tooltip={t("MultiPriceValidateMessage")}
-                                label=""
-                                placeholder={t("Price")}
-                                required={false}
-                                nextField={"price"}
-                                name={"multi_price"}
-                                form={form}
-                                dropdownValue={["1", "2", "3", "4", "5"]}
-                                id={"multi_price"}
-                                mt={1}
-                                searchable={true}
-                                value={multiPrice}
-                                changeValue={setMultiPrice}
-                              />
+                              {config_purchase?.is_multi_price_enable === 1 && (
+                                <SelectForm
+                                  tooltip={t("MultiPriceValidateMessage")}
+                                  label=""
+                                  placeholder={t("Price")}
+                                  required={false}
+                                  nextField={"price"}
+                                  name={"multi_price"}
+                                  form={form}
+                                  dropdownValue={["1", "2", "3", "4", "5"]}
+                                  id={"multi_price"}
+                                  mt={1}
+                                  searchable={true}
+                                  value={multiPrice}
+                                  changeValue={setMultiPrice}
+                                />
+                              )}
                             </Grid.Col>
                             <Grid.Col span={4}>
                               <InputButtonForm

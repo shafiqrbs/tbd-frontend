@@ -12,7 +12,6 @@ function PurchaseInvoice() {
   const domainConfigData = JSON.parse(
     localStorage.getItem("domain-config-data")
   );
-  console.log("domainConfigData", domainConfigData);
 
   return (
     <>
@@ -43,24 +42,7 @@ function PurchaseInvoice() {
               <Box p={"8"}>
                 {domainConfigData?.inventory_config?.business_model?.slug ===
                   "general" && (
-                  <_GenericInvoiceForm
-                    allowZeroPercentage={
-                      domainConfigData?.inventory_config?.zero_stock
-                    }
-                    currencySymbol={
-                      domainConfigData?.inventory_config?.currency?.symbol
-                    }
-                    isPurchaseByPurchasePrice={
-                      domainConfigData?.inventory_config
-                        ?.is_purchase_by_purchase_price
-                    }
-                    isWarehouse={
-                      domainConfigData?.inventory_config?.sku_warehouse
-                    }
-                    isSMSActive={
-                      domainConfigData?.inventory_config?.is_active_sms
-                    }
-                  />
+                  <_GenericInvoiceForm domainConfigData={domainConfigData} />
                 )}
               </Box>
             </>
