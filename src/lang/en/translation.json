@@ -1073,5 +1073,6 @@
   "InvoiceProcess": "Invoice Process",
   "EnterInvoiceProcess": "Enter invoice process",
   "MustBeNeedReceiveAmountWithoutCustomer": "Must be need receive amount without customer",
+  "ProductNavigation": "Product Navigation",
   "": ""
 }

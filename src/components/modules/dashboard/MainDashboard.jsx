@@ -77,18 +77,6 @@ function MainDashboard(props) {
         }
     });
 
-
-
-    const targetValues1 = ["payroll", "purchase"];
-
-
-    const allExist = targetValues1.every((value) => userRole.includes(value));
-
-    // check any field exists
-    const targetValues = ["condition_account", "expenditure", "purchase", "payroll_salary", "payroll"];
-    const anyExist = targetValues.some((value) => userRole.includes(value));
-    /* end for user role check */
-
     const {t, i18n} = useTranslation();
     const height = props.height - 105; //TabList height 104
     const navigate = useNavigate();
@@ -205,26 +193,6 @@ function MainDashboard(props) {
                     {["role_inventory","role_domain"].some((value) => userRole.includes(value)) && (
                         <Card shadow="md" radius="md" className={classes.card} padding="lg">
                         <Grid gutter={{base: 2}}>
-                            {/* demo role implement*/}
-                            {/*{
-                                ["condition_account", "expenditure", "purchase", "payroll_salary", "payroll"].some((value) => userRole.includes(value)) &&
-                                (
-                                    <>
-                                        <Grid.Col span={2}>
-                                        <IconMoneybag
-                                            style={{ width: rem(42), height: rem(42) }}
-                                            stroke={2}
-                                            color={theme.colors.teal[6]}
-                                        />
-                                        </Grid.Col>
-                                        <Grid.Col span={10}>
-                                        <Text fz="md" fw={500} className={classes.cardTitle}>
-                                            {t("Sales&PurchaseOverview")}
-                                        </Text>
-                                        </Grid.Col>
-                                    </>
-                                )
-                            }*/}
     
                             <Grid.Col span={2}>
                                 <IconMoneybag
