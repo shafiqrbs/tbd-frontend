@@ -86,6 +86,8 @@ function _GenericPosForm({domainConfigData}) {
   const [tempCardProducts, setTempCardProducts] = useState([]);
   const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
   const [stockProductRestore, setStockProductRestore] = useState(false);
+  const [selectUnitDetails, setSelectUnitDetails] = useState(null);
+
 
   // Data
   const warehouseDropdownData = getCoreWarehouseDropdownData();
@@ -106,6 +108,7 @@ function _GenericPosForm({domainConfigData}) {
       warehouse_id: "",
       category_id: "",
       vendor_id: "",
+      unit_quantity: "",
     },
     validate: {
       product_id: (value, values) => {
@@ -154,7 +157,7 @@ function _GenericPosForm({domainConfigData}) {
 
   const inputGroupText = (
       <Text style={{textAlign: "right", width: "100%", paddingRight: 16}} color={"gray"}>
-        {selectProductDetails?.unit_name}
+        {selectUnitDetails?.unit_name?selectUnitDetails.unit_name:selectProductDetails?.unit_name}
       </Text>
   );
 
@@ -220,7 +223,12 @@ function _GenericPosForm({domainConfigData}) {
   }, [form.values.multi_price]);
 
   useEffect(() => {
-    form.setFieldValue("quantity", form.values.unit_id);
+    // form.setFieldValue("quantity", form.values.unit_id);
+    // form.setFieldValue("quantity", 1);
+    // console.log(form.values.unit_id,selectProductDetails?.measurements);
+    const unitItem = selectProductDetails?.measurements.find((unit) => unit.id == form.values.unit_id);
+    setSelectUnitDetails(unitItem);
+    // console.log(unitItem)
     setUnitType(form.values.unit_id);
   }, [form.values.unit_id]);
 
@@ -247,7 +255,7 @@ function _GenericPosForm({domainConfigData}) {
       if (salesConfig?.is_measurement_enable === 1 && selectedProduct.measurements) {
         const unitDropdown = selectedProduct.measurements.map((unit) => ({
           label: unit.unit_name,
-          value: String(unit.quantity),
+          value: String(unit.id),
         }));
         setUnitDropdown(unitDropdown);
       }
@@ -268,7 +276,18 @@ function _GenericPosForm({domainConfigData}) {
   }, [form.values.product_id]);
 
   useEffect(() => {
-    const quantity = Number(form.values.quantity);
+    let quantity = 0;
+    const selectedQuantity = selectUnitDetails?.quantity;
+    const unitId = form?.values?.unit_id;
+    const unitQuantity = form?.values?.unit_quantity;
+
+    if (selectedQuantity && unitId) {
+      quantity = selectedQuantity * (unitQuantity || 1);
+      form.setFieldValue("quantity", quantity);
+    } else {
+      quantity = Number(form?.values?.quantity) || 0;
+    }
+
     const salesPrice = Number(form.values.sales_price);
 
     if (!isNaN(quantity) && !isNaN(salesPrice) && quantity > 0 && salesPrice >= 0) {
@@ -292,7 +311,7 @@ function _GenericPosForm({domainConfigData}) {
         form.setFieldValue("sub_total", quantity * salesPrice);
       }
     }
-  }, [form.values.quantity, form.values.sales_price]);
+  }, [form.values.quantity, form.values.sales_price,form.values.unit_quantity]);
 
   useEffect(() => {
     if (form.values.quantity && form.values.price) {
@@ -384,6 +403,8 @@ function _GenericPosForm({domainConfigData}) {
           percent: values.percent,
           stock: product.quantity,
           quantity: Number(values.quantity),
+          unit_quantity: Number(values.unit_quantity),
+          measurement_unit : selectUnitDetails,
           unit_name: product.unit_name,
           purchase_price: product.purchase_price,
           sub_total: Number(values.quantity) * Number(values.sales_price),
@@ -1019,7 +1040,9 @@ function _GenericPosForm({domainConfigData}) {
                                             mt={1}
                                             searchable={true}
                                             value={unitType}
-                                            changeValue={setUnitType}
+                                            changeValue={(e)=>{
+                                              setUnitType(e)
+                                            }}
                                         />
                                     )}
                                   </Grid.Col>
@@ -1032,7 +1055,7 @@ function _GenericPosForm({domainConfigData}) {
                                         required={true}
                                         nextField={"percent"}
                                         form={form}
-                                        name={"quantity"}
+                                        name={form.values.unit_id?"unit_quantity":"quantity"}
                                         id={"quantity"}
                                         leftSection={
                                           <IconSortAscendingNumbers
