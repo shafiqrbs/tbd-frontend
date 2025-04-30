@@ -145,7 +145,6 @@ export default function __PosInvoiceSection(props) {
         <SimpleGrid cols={{ base: 1, md: 3 }} mt={"8"} spacing="xs">
           <Card shadow="md" radius="4" className={"borderRadiusAll"}>
             <Box>
-              <Box>
                 <ScrollArea scrollbarSize={2} type="never">
                   <Box bg={"white"}>
                     <Grid columns={"16"} gutter="6">
@@ -218,7 +217,7 @@ export default function __PosInvoiceSection(props) {
                     </Grid>
                   </Box>
                 </ScrollArea>
-              </Box>
+            
             </Box>
           </Card>
           <Card
@@ -401,45 +400,6 @@ export default function __PosInvoiceSection(props) {
                                 )}
                               </ActionIcon>
                             }
-                            // onBlur={async (event) => {
-                            //   const data = {
-                            //     url: "inventory/pos/inline-update",
-                            //     data: {
-                            //       invoice_id: tableId,
-                            //       field_name: "discount",
-                            //       value: event.target.value,
-                            //       discount_type: discountType,
-                            //     },
-                            //   };
-                            //   // Dispatch and handle response
-                            //   try {
-                            //     const resultAction = await dispatch(
-                            //       storeEntityData(data)
-                            //     );
-
-                            //     if (resultAction.payload?.status !== 200) {
-                            //       showNotificationComponent(
-                            //         resultAction.payload?.message ||
-                            //           "Error updating invoice",
-                            //         "red",
-                            //         "",
-                            //         "",
-                            //         true
-                            //       );
-                            //     }
-                            //   } catch (error) {
-                            //     showNotificationComponent(
-                            //       "Request failed. Please try again.",
-                            //       "red",
-                            //       "",
-                            //       "",
-                            //       true
-                            //     );
-                            //     console.error("Error updating invoice:", error);
-                            //   } finally {
-                            //     setReloadInvoiceData(true);
-                            //   }
-                            // }}
                           />
                         </Tooltip>
                       </Grid.Col>
@@ -497,34 +457,6 @@ export default function __PosInvoiceSection(props) {
                       />
                     </Grid.Col>
                     <Grid.Col span={2} bg={"#bc924f"} p={"14"} pl={"8"}>
-                      <Tooltip
-                        multiline
-                        bg={"#905923"}
-                        position="top"
-                        withArrow
-                        ta={"center"}
-                        transitionProps={{ duration: 200 }}
-                        label={`${t("Profit")}: ${currencySymbol} ${Number(
-                          salesProfitAmount
-                        ).toFixed(2)}`}
-                      >
-                        <ActionIcon
-                          radius={"xl"}
-                          variant="transparent"
-                          size={"md"}
-                          color="white"
-                          mt={"2"}
-                          aria-label="Settings"
-                          onClick={() => {
-                            setSettingDrawer(true);
-                          }}
-                        >
-                          <IconDotsVertical
-                            style={{ width: "100%", height: "70%" }}
-                            stroke={1.5}
-                          />
-                        </ActionIcon>
-                      </Tooltip>
                     </Grid.Col>
                   </Grid>
                 </Tooltip>

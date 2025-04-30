@@ -8,6 +8,8 @@ import {
   TextInput,
   ActionIcon,
   Button,
+  SimpleGrid,
+  Card,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import DatePickerForm from "../../../form-builders/DatePicker";
@@ -114,11 +116,11 @@ export default function __PosPurchaseInvoiceSection(props) {
   return (
     <>
       <Box>
-        <Grid columns={24} gutter={{ base: 6 }} pt={"6"}>
-          <Grid.Col span={8}>
-            <Box className={"borderRadiusAll"}>
-              <ScrollArea h={190} scrollbarSize={2} type="never" bg={"gray.1"}>
-                <Box pl={"xs"} pt={"xs"} pr={"xs"} bg={"white"} pb={"10"}>
+        <SimpleGrid cols={{ base: 1, md: 3 }} mt={"8"} spacing="xs">
+          <Card shadow="md" radius="4" className={"borderRadiusAll"}>
+            <Box>
+              <ScrollArea scrollbarSize={2} type="never" bg={"gray.1"}>
+                <Box bg={"white"}>
                   <Grid columns={"16"} gutter="6">
                     {transactionModeData &&
                       transactionModeData.length > 0 &&
@@ -189,81 +191,90 @@ export default function __PosPurchaseInvoiceSection(props) {
                 </Box>
               </ScrollArea>
             </Box>
-          </Grid.Col>
-          <Grid.Col span={8}>
-            <Box className={genericClass.genericSecondaryBg} p={"xs"} h={192}>
-              <Box>
-                <DatePickerForm
-                  tooltip={t("InvoiceDateValidateMessage")}
-                  label=""
-                  placeholder={t("InvoiceDate")}
-                  required={false}
-                  nextField={"discount"}
-                  form={form}
-                  name={"invoice_date"}
-                  id={"invoice_date"}
-                  leftSection={<IconCalendar size={16} opacity={0.5} />}
-                  rightSectionWidth={30}
-                  closeIcon={true}
-                />
-              </Box>
-              {isWarehouse == 1 && (
-                <Box mt={"4"}>
-                  <SelectForm
-                    tooltip={t("Warehouse")}
+          </Card>
+          <Card
+            shadow="md"
+            radius="4"
+            className={genericClass.genericSecondaryBg}
+          >
+            <Box className={genericClass.genericSecondaryBg}>
+              <Box className={genericClass.genericSecondaryBg}>
+                <Box>
+                  <DatePickerForm
+                    tooltip={t("InvoiceDateValidateMessage")}
                     label=""
-                    placeholder={t("Warehouse")}
+                    placeholder={t("InvoiceDate")}
                     required={false}
-                    nextField={"category_id"}
-                    name={"warehouse_id"}
+                    nextField={"discount"}
                     form={form}
-                    dropdownValue={warehouseDropdownData}
-                    id={"warehouse_id"}
-                    mt={1}
-                    searchable={true}
-                    value={warehouseData}
-                    changeValue={setWarehouseData}
+                    name={"invoice_date"}
+                    id={"invoice_date"}
+                    leftSection={<IconCalendar size={16} opacity={0.5} />}
+                    rightSectionWidth={30}
+                    closeIcon={true}
                   />
                 </Box>
-              )}
-              <Box pt={4}>
-                <SelectForm
-                  tooltip={t("ChooseOrderProcess")}
-                  label=""
-                  placeholder={t("OrderProcess")}
-                  required={false}
-                  name={"order_process"}
-                  form={form}
-                  dropdownValue={
-                    localStorage.getItem("order-process")
-                      ? JSON.parse(localStorage.getItem("order-process"))
-                      : []
-                  }
-                  id={"order_process"}
-                  nextField={"narration"}
-                  searchable={false}
-                  value={orderProcess}
-                  changeValue={setOrderProcess}
-                />
-              </Box>
-              <Box pt={4}>
-                <TextAreaForm
-                  size="xs"
-                  tooltip={t("NarrationValidateMessage")}
-                  label=""
-                  placeholder={t("Narration")}
-                  required={false}
-                  nextField={"Status"}
-                  name={"narration"}
-                  form={form}
-                  id={"narration"}
-                />
+                {isWarehouse == 1 && (
+                  <Box mt={"4"}>
+                    <SelectForm
+                      tooltip={t("Warehouse")}
+                      label=""
+                      placeholder={t("Warehouse")}
+                      required={false}
+                      nextField={"category_id"}
+                      name={"warehouse_id"}
+                      form={form}
+                      dropdownValue={warehouseDropdownData}
+                      id={"warehouse_id"}
+                      mt={1}
+                      searchable={true}
+                      value={warehouseData}
+                      changeValue={setWarehouseData}
+                    />
+                  </Box>
+                )}
+                <Box pt={4}>
+                  <SelectForm
+                    tooltip={t("ChooseOrderProcess")}
+                    label=""
+                    placeholder={t("OrderProcess")}
+                    required={false}
+                    name={"order_process"}
+                    form={form}
+                    dropdownValue={
+                      localStorage.getItem("order-process")
+                        ? JSON.parse(localStorage.getItem("order-process"))
+                        : []
+                    }
+                    id={"order_process"}
+                    nextField={"narration"}
+                    searchable={false}
+                    value={orderProcess}
+                    changeValue={setOrderProcess}
+                  />
+                </Box>
+                <Box pt={4}>
+                  <TextAreaForm
+                    size="xs"
+                    tooltip={t("NarrationValidateMessage")}
+                    label=""
+                    placeholder={t("Narration")}
+                    required={false}
+                    nextField={"Status"}
+                    name={"narration"}
+                    form={form}
+                    id={"narration"}
+                  />
+                </Box>
               </Box>
             </Box>
-          </Grid.Col>
-          <Grid.Col span={8}>
-            {/* outstading section */}
-            <Box p={"xs"} className={genericClass.genericSecondaryBg} h={192}>
+          </Card>
+          <Card
+            shadow="md"
+            radius="4"
+            className={genericClass.genericSecondaryBg}
+          >
+            <Box className={genericClass.genericSecondaryBg}>
               <Box pb={"xs"} className={genericClass.genericSecondaryBg}>
                 <Grid gutter={{ base: 4 }}>
                   <Grid.Col span={4}>
@@ -320,7 +331,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                 <Stack justify="space-between">
                   <Box className={genericClass.genericHighlightedBox}>
                     <Grid columns={18} gutter={{ base: 2 }}>
-                      <Grid.Col span={8} mt={"4"} pl={"6"}>
+                      <Grid.Col span={6} mt={"4"} pl={"6"}>
                         <Tooltip
                           label={t("ClickRightButtonForPercentFlat")}
                           px={16}
@@ -366,49 +377,10 @@ export default function __PosPurchaseInvoiceSection(props) {
                                 )}
                               </ActionIcon>
                             }
-                            // onBlur={async (event) => {
-                            //   const data = {
-                            //     url: "inventory/pos/inline-update",
-                            //     data: {
-                            //       invoice_id: tableId,
-                            //       field_name: "discount",
-                            //       value: event.target.value,
-                            //       discount_type: discountType,
-                            //     },
-                            //   };
-                            //   // Dispatch and handle response
-                            //   try {
-                            //     const resultAction = await dispatch(
-                            //       storeEntityData(data)
-                            //     );
-
-                            //     if (resultAction.payload?.status !== 200) {
-                            //       showNotificationComponent(
-                            //         resultAction.payload?.message ||
-                            //           "Error updating invoice",
-                            //         "red",
-                            //         "",
-                            //         "",
-                            //         true
-                            //       );
-                            //     }
-                            //   } catch (error) {
-                            //     showNotificationComponent(
-                            //       "Request failed. Please try again.",
-                            //       "red",
-                            //       "",
-                            //       "",
-                            //       true
-                            //     );
-                            //     console.error("Error updating invoice:", error);
-                            //   } finally {
-                            //     setReloadInvoiceData(true);
-                            //   }
-                            // }}
                           />
                         </Tooltip>
                       </Grid.Col>
-                      <Grid.Col span={10} align="center" justify="center">
+                      <Grid.Col span={12} align="center" justify="center">
                         <Box
                           fz={"md"}
                           p={"xs"}
@@ -441,7 +413,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                   withArrow
                 >
                   <Grid gutter={{ base: 1 }}>
-                    <Grid.Col span={10} bg={"#bc924f"} p={"18"} pr={"0"}>
+                    <Grid.Col span={10} bg={"#bc924f"} p={"14"} pr={"0"}>
                       <InputNumberForm
                         type="number"
                         tooltip={t("ReceiveAmountValidateMessage")}
@@ -461,18 +433,15 @@ export default function __PosPurchaseInvoiceSection(props) {
                         }}
                       />
                     </Grid.Col>
-                    <Grid.Col
-                      span={2}
-                      bg={"#bc924f"}
-                      p={"18"}
-                      pl={"8"}
-                    ></Grid.Col>
+                    <Grid.Col span={2} bg={"#bc924f"} p={"14"} pl={"8"}>
+                      
+                    </Grid.Col>
                   </Grid>
                 </Tooltip>
               </Box>
             </Box>
-          </Grid.Col>
-        </Grid>
+          </Card>
+        </SimpleGrid>
         <Box mt={"8"} pb={"xs"} pr={"xs"}>
           <Button.Group>
             <Button

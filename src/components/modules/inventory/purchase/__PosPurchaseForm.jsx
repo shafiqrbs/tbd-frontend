@@ -408,16 +408,6 @@ export default function __PosPurchaseForm(props) {
                   render: (item) => {
                     return item.sub_total && Number(item.sub_total).toFixed(2);
                   },
-                  footer: (
-                    <Group spacing="xs" textAlign={"right"}>
-                      <Group spacing="xs">
-                        <IconSum size="1.25em" />
-                      </Group>
-                      <Text fw={"600"} fz={"md"}>
-                        {purchaseSubTotalAmount.toFixed(2)}
-                      </Text>
-                    </Group>
-                  ),
                 },
                 {
                   accessor: "action",
@@ -463,9 +453,29 @@ export default function __PosPurchaseForm(props) {
               recordsPerPage={10}
               loaderSize="xs"
               loaderColor="grape"
-              height={height - 264}
+              height={height - 312}
               scrollAreaProps={{ type: "never" }}
             />
+            <Group
+              h={34}
+              justify="space-between"
+              align="center"
+              pt={0}
+              bg={"#f8eedf"}
+            >
+              <Group spacing="xs" pl={"xs"}>
+                <IconSum size="1.25em" />
+                <Text mb={-2}>
+                  {tempCardProducts.length} {t("Items")}
+                </Text>
+              </Group>
+              <Group gap="10" align="center" mr={28}>
+                <IconSum size="16" style={{ color: "black" }} />
+                <Text fw={"600"} fz={"md"}>
+                  {purchaseSubTotalAmount.toFixed(2)}
+                </Text>
+              </Group>
+            </Group>
           </Box>
         </Box>
         <Box>
