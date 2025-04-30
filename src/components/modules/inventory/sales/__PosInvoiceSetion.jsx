@@ -456,7 +456,35 @@ export default function __PosInvoiceSection(props) {
                         }}
                       />
                     </Grid.Col>
-                    <Grid.Col span={2} bg={"#bc924f"} p={"14"} pl={"8"}>
+                    <Grid.Col span={2} bg={"#bc924f"} p={"18"} pl={"8"}>
+                      <Tooltip
+                        multiline
+                        bg={"#905923"}
+                        position="top"
+                        withArrow
+                        ta={"center"}
+                        transitionProps={{ duration: 200 }}
+                        label={`${t("Profit")}: ${currencySymbol} ${Number(
+                          salesProfitAmount
+                        ).toFixed(2)}`}
+                      >
+                        <ActionIcon
+                          radius={"xl"}
+                          variant="transparent"
+                          size={"md"}
+                          color="white"
+                          mt={"2"}
+                          aria-label="Settings"
+                          onClick={() => {
+                            setSettingDrawer(true);
+                          }}
+                        >
+                          <IconDotsVertical
+                            style={{ width: "100%", height: "70%" }}
+                            stroke={1.5}
+                          />
+                        </ActionIcon>
+                      </Tooltip>
                     </Grid.Col>
                   </Grid>
                 </Tooltip>
