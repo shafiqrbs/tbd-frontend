@@ -22,9 +22,9 @@ export default function __PosSalesForm(props) {
         isSMSActive,
         currencySymbol,
         domainId,
-        is_zero_receive_allow,
         tempCardProducts,
         setLoadCardProducts,
+        salesConfig
     } = props;
 
     //common hooks
@@ -34,11 +34,14 @@ export default function __PosSalesForm(props) {
     const [fetching, setFetching] = useState(false);
     const dispatch = useDispatch();
 
+    // transaction mode array
+    const transactionModeData = JSON.parse(localStorage.getItem("accounting-transaction-mode")) ? JSON.parse(localStorage.getItem("accounting-transaction-mode")) : [];
+
     // form
     const form = useForm({
         initialValues: {
             customer_id: "",
-            transaction_mode_id: "",
+            transaction_mode_id: transactionModeData.find(item => item.is_selected === 1)?.id,
             sales_by: "",
             order_process: "",
             narration: "",
@@ -87,7 +90,11 @@ export default function __PosSalesForm(props) {
                 });
 
                 setCustomersDropdownData(transformedData);
-                setDefaultCustomerId(defaultId);
+                if (salesConfig?.default_customer_group_id == '47') {
+                    setDefaultCustomerId(defaultId);
+                    setCustomerData(String(defaultId));
+                    form.setFieldValue("customer_id", defaultId);
+                }
             }
         };
 
@@ -169,6 +176,11 @@ export default function __PosSalesForm(props) {
                     let createdBy = JSON.parse(localStorage.getItem("user"));
 
                     let transformedArray = items.map((product) => {
+                        // Calculate measurement string safely
+                        const measurementString = product?.measurement_unit?.id
+                            ? `${product.unit_quantity || 0}*${product.measurement_unit?.quantity || 0}=${(product.unit_quantity || 0)*(product.measurement_unit?.quantity || 0)} ${product.unit_name || ''}`
+                            : null;
+
                         return {
                             product_id: product.product_id,
                             item_name: product.display_name,
@@ -176,6 +188,10 @@ export default function __PosSalesForm(props) {
                             price: product.price,
                             percent: product.percent,
                             quantity: product.quantity,
+                            measurement_unit_id: product?.measurement_unit?.id || null,
+                            measurement_unit_quantity: product?.measurement_unit?.id ? product.unit_quantity : null,
+                            measurement_unit_name: product?.measurement_unit?.id ? product.measurement_unit?.unit_name : null,
+                            measurement_string: measurementString,
                             uom: product.unit_name,
                             unit_id: product.unit_id,
                             purchase_price: product.purchase_price,
@@ -195,6 +211,8 @@ export default function __PosSalesForm(props) {
                         ? form.values.customer_id
                         : defaultCustomerId;
 
+                    // console.log(form.values.customer_id,defaultCustomerId)
+
                     // Include manual customer input fields if no customer is selected
                     if (
                         !form.values.customer_id ||
@@ -209,8 +227,7 @@ export default function __PosSalesForm(props) {
                     formValue["transaction_mode_id"] = form.values.transaction_mode_id;
                     formValue["discount_type"] = discountType;
                     formValue["discount"] = salesDiscountAmount;
-                    formValue["discount_calculation"] =
-                        discountType === "Percent" ? form.values.discount : 0;
+                    formValue["discount_calculation"] = discountType === "Percent" ? form.values.discount : 0;
                     formValue["vat"] = 0;
                     formValue["total"] = salesTotalAmount;
                     formValue["sales_by_id"] = form.values.sales_by;
@@ -232,17 +249,17 @@ export default function __PosSalesForm(props) {
 
                     formValue["payment"] = hasReceiveAmount
                         ? form.values.receive_amount
-                        : is_zero_receive_allow && isDefaultCustomer
+                        : salesConfig?.is_zero_receive_allow && isDefaultCustomer
                             ? salesTotalAmount
                             : 0;
 
                     // Add console log to display all form values
-                    console.log("Form submission values:", formValue);
+                    // console.log("Form submission values:", formValue);
 
                     // Check if default customer needs receive amount
                     if (
                         isDefaultCustomer &&
-                        !is_zero_receive_allow &&
+                        !salesConfig?.is_zero_receive_allow &&
                         (!form.values.receive_amount ||
                             Number(form.values.receive_amount) <= 0 ||
                             Number(form.values.receive_amount) < salesTotalAmount)
@@ -286,6 +303,8 @@ export default function __PosSalesForm(props) {
                             url: "inventory/sales",
                             data: formValue,
                         };
+
+                        // console.log(data)
                         dispatch(storeEntityData(data));
 
                         notifications.show({
@@ -376,7 +395,7 @@ export default function __PosSalesForm(props) {
                                     width: "140px",
                                     render: (item) => {
                                         const [editedQuantity, setEditedQuantity] = useState(
-                                            item.unit_quantity !== undefined ? item.unit_quantity : item.quantity
+                                            item.unit_quantity !== undefined && item?.measurement_unit?.quantity ? item.unit_quantity : item.quantity
                                         );
 
                                         const handleQuantityChange = (e) => {
@@ -698,7 +717,7 @@ export default function __PosSalesForm(props) {
                         setDiscountType={setDiscountType}
                         returnOrDueText={returnOrDueText}
                         customerData={customerData}
-                        is_zero_receive_allow={is_zero_receive_allow}
+                        salesConfig={salesConfig}
                         salesDueAmount={salesDueAmount}
                         setLoadCardProducts={setLoadCardProducts}
                     />

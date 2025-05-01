@@ -54,7 +54,7 @@ export default function __PosInvoiceSection(props) {
     setDiscountType,
     returnOrDueText,
     customerData,
-    isZeroReceiveAllow,
+    salesConfig,
     salesDueAmount,
     setLoadCardProducts,
     setCustomersDropdownData,
@@ -62,6 +62,7 @@ export default function __PosInvoiceSection(props) {
     lastClicked,
     handleClick,
     entityEditData,
+      defa
   } = props;
 
   //common hooks
@@ -128,8 +129,7 @@ export default function __PosInvoiceSection(props) {
 
   //submit disabled based on default customer check and zeroreceive
   const isDefaultCustomer = !customerData || customerData == defaultCustomerId;
-  const isDisabled =
-    isDefaultCustomer && (isZeroReceiveAllow ? false : salesDueAmount > 0);
+  const isDisabled = isDefaultCustomer && (salesConfig?.is_zero_receive_allow ? false : salesDueAmount > 0);
 
   // Calculate remaining amount dynamically based on receive_amount
   const receiveAmount = form.values.receive_amount
@@ -442,7 +442,7 @@ export default function __PosInvoiceSection(props) {
                         tooltip={t("ReceiveAmountValidateMessage")}
                         label=""
                         placeholder={t("Amount")}
-                        required={isDefaultCustomer && !isZeroReceiveAllow}
+                        required={isDefaultCustomer && !salesConfig?.is_zero_receive_allow}
                         nextField={"sales_by"}
                         form={form}
                         name={"receive_amount"}

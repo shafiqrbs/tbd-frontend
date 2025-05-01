@@ -246,7 +246,7 @@ function _GenericPosForm({domainConfigData}) {
 
       if (salesConfig?.is_multi_price === 1 && selectedProduct.multi_price) {
         const priceDropdown = selectedProduct.multi_price.map((price) => ({
-          label: `${currencySymbol} ${price.price}`,
+          label: `${currencySymbol} ${price.price} - ${price.field_name}`,
           value: String(price.price),
         }));
         setMultiPriceDropdown(priceDropdown);
@@ -254,7 +254,7 @@ function _GenericPosForm({domainConfigData}) {
 
       if (salesConfig?.is_measurement_enable === 1 && selectedProduct.measurements) {
         const unitDropdown = selectedProduct.measurements.map((unit) => ({
-          label: unit.unit_name,
+          label: unit.unit_name+' (1 '+unit.unit_name+'='+unit.quantity+' '+selectedProduct.unit_name+')',
           value: String(unit.id),
         }));
         setUnitDropdown(unitDropdown);
@@ -285,7 +285,7 @@ function _GenericPosForm({domainConfigData}) {
       quantity = selectedQuantity * (unitQuantity || 1);
       form.setFieldValue("quantity", quantity);
     } else {
-      quantity = Number(form?.values?.quantity) || 1;
+      quantity = Number(form?.values?.quantity) || 0;
     }
 
     const salesPrice = Number(form.values.sales_price);
@@ -1094,6 +1094,7 @@ function _GenericPosForm({domainConfigData}) {
                                 <Grid columns={12} gutter={{base: 8}}>
                                   <Grid.Col span={4}></Grid.Col>
                                   <Grid.Col span={4}>
+                                    { salesConfig?.item_sales_percent ==1 &&
                                     <InputNumberForm
                                         tooltip={t("PercentValidateMessage")}
                                         label=""
@@ -1113,6 +1114,7 @@ function _GenericPosForm({domainConfigData}) {
                                         rightIcon={<IconCurrency size={16} opacity={0.5}/>}
                                         closeIcon={true}
                                     />
+                                    }
                                   </Grid.Col>
                                   <Grid.Col span={4}>
                                     <Box style={{display: "none"}}>
@@ -1205,7 +1207,7 @@ function _GenericPosForm({domainConfigData}) {
                 currencySymbol={currencySymbol}
                 domainId={domainId}
                 isSMSActive={isSMSActive}
-                is_zero_receive_allow={salesConfig?.is_zero_receive_allow}
+                salesConfig={salesConfig}
                 tempCardProducts={tempCardProducts}
                 setLoadCardProducts={setLoadCardProducts}
                 setTempCardProducts={setTempCardProducts}
