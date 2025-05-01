@@ -37,6 +37,8 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import { notifications } from "@mantine/notifications";
 import { getHotkeyHandler } from "@mantine/hooks";
 import inputCss from "../../../../assets/css/InlineInputField.module.css";
+import {storeEntityData} from "../../../../store/core/crudSlice";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 // ─── Reusable Input for Inline Percentage Fields ──────────────────────────────
 const EditableNumberInput = ({ item, field, placeholder, value, onChange }) => {
   const [inputValue, setInputValue] = useState(value || "");
@@ -175,34 +177,24 @@ function _DiscountUserTable() {
     setUpdatingRows((prev) => ({ ...prev, [userId]: true }));
 
     try {
-      //   const response = await fetch(`/api/core/user/${userId}/update-discount`, {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify(editedValues[userId]),
-      //   });
-      console.log(editedValues[userId]);
-      if (response.ok) {
-        notifications.show({
-          color: "green",
-          title: t("UpdatedSuccessfully"),
-          icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-          loading: false,
-          autoClose: 700,
-        });
-
-        // Clear the edited values for this user
-        setEditedValues((prev) => {
-          const newState = { ...prev };
-          delete newState[userId];
-          return newState;
-        });
-
-        // Refresh the data
-        dispatch(setFetching(true));
-      } else {
-        throw new Error("Update failed");
+        const value = {
+          url: 'inventory/discount/user-update/'+userId,
+          data: editedValues[userId],
+        };
+      const resultAction = await dispatch(storeEntityData(value));
+      if (storeEntityData.rejected.match(resultAction)) {
+        const fieldErrors = resultAction.payload.errors;
+        // Check if there are field validation errors and dynamically set them
+        if (fieldErrors) {
+          const errorObject = {};
+          Object.keys(fieldErrors).forEach(key => {
+            errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+          });
+          // Display the errors using your form's `setErrors` function dynamically
+          form.setErrors(errorObject);
+        }
+      } else if (storeEntityData.fulfilled.match(resultAction)) {
+        showNotificationComponent(t('CreateSuccessfully'),'teal','lightgray');
       }
     } catch (error) {
       notifications.show({
@@ -212,6 +204,7 @@ function _DiscountUserTable() {
         loading: false,
         autoClose: 700,
       });
+      showNotificationComponent(t('UpdateFailed'),'red','lightgray');
     } finally {
       setUpdatingRows((prev) => {
         const newState = { ...prev };
@@ -261,7 +254,7 @@ function _DiscountUserTable() {
                 <EditableNumberInput
                   item={item}
                   field="max_discount"
-                  value=""
+                  value={item?.max_discount}
                   placeholder={t("MaxDiscount")}
                   onChange={handleFieldChange}
                 />
@@ -274,8 +267,8 @@ function _DiscountUserTable() {
               render: (item) => (
                 <EditableNumberInput
                   item={item}
-                  field="purchase_percent"
-                  value=""
+                  field="discount_percent"
+                  value={item?.discount_percent}
                   placeholder={t("Discount")}
                   onChange={handleFieldChange}
                 />
@@ -290,7 +283,7 @@ function _DiscountUserTable() {
                   item={item}
                   field="sales_target"
                   placeholder={t("SalesTarget")}
-                  value=""
+                  value={item?.sales_target}
                   onChange={handleFieldChange}
                 />
               ),

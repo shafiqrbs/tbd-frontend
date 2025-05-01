@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import {
@@ -31,24 +31,36 @@ import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js
 import {setFetching, storeEntityData} from "../../../../store/core/crudSlice";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
+import InputNumberForm from "../../../form-builders/InputNumberForm";
 
 function DiscountConfig(props) {
 
     const { domainConfig} = props;
-    const  {config_sales} = domainConfig.inventory_config.config_discount;
+    const  config_discount = domainConfig.inventory_config.config_discount;
     const {mainAreaHeight} = useOutletContext()
     let height = mainAreaHeight-94;
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
+    console.log(config_discount);
     const form = useForm({
         initialValues: {
-            discount_with_customer: config_sales?.discount_with_customer || "",
-            online_customer: config_sales?.online_customer || "",
-            max_discount: config_sales?.max_discount || "",
+            discount_with_customer: config_discount?.discount_with_customer || "",
+            online_customer: config_discount?.online_customer || "",
+            max_discount: config_discount?.max_discount || "",
         },
     });
+
+    useEffect(() => {
+        if (config_discount) {
+            form.setValues({
+                max_discount: config_discount?.max_discount || 0,
+                discount_with_customer: config_discount?.discount_with_customer || 0,
+                online_customer: config_discount?.online_customer || 0,
+            });
+        }
+    }, [dispatch, config_discount]);
 
     const handlePurchaseFormSubmit = (values) => {
         dispatch(setValidationData(false));
@@ -123,7 +135,7 @@ function DiscountConfig(props) {
                 <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                     <Grid>
                         <Grid.Col span={8} >
-                            <Title order={6} pt={'6'}>{t('DsicountConfiguration')}</Title>
+                            <Title order={6} pt={'6'}>{t('DiscountConfiguration')}</Title>
                         </Grid.Col>
                         <Grid.Col span={4}>
                             <Stack right align="flex-end">
@@ -159,6 +171,33 @@ function DiscountConfig(props) {
                                         style={{ cursor: "pointer" }}
                                         onClick={() =>
                                             form.setFieldValue(
+                                                "max_discount"
+                                            )
+                                        }
+                                        >
+                                        <Grid.Col span={4} fz={"sm"} pt={"1"}>
+                                            {t("MaxDiscount")}
+                                        </Grid.Col>
+                                        <Grid.Col span={6} align={"left"} justify={"left"}>
+                                            <InputNumberForm
+                                                tooltip={t('MaxDiscountValue')}
+                                                label={""}
+                                                placeholder={t('EnterMaxDiscount')}
+                                                required={true}
+                                                nextField={'discount_with_customer'}
+                                                name={'max_discount'}
+                                                form={form}
+                                                id={'max_discount'}
+                                            />
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                                <Box mt={"xs"}>
+                                    <Grid
+                                        gutter={{ base: 1 }}
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() =>
+                                            form.setFieldValue(
                                                 "discount_with_customer",
                                                 form.values.discount_with_customer === 1 ? 0 : 1
                                             )
@@ -178,7 +217,7 @@ function DiscountConfig(props) {
                                                 onChange={(event) =>
                                                     form.setFieldValue(
                                                         "discount_with_customer",
-                                                        event.discount_with_customer.checked ? 1 : 0
+                                                        event.currentTarget.checked ? 1 : 0
                                                     )
                                                 }
                                                 styles={(theme) => ({
@@ -215,7 +254,7 @@ function DiscountConfig(props) {
                                                 onChange={(event) =>
                                                     form.setFieldValue(
                                                         "online_customer",
-                                                        event.online_customer.checked ? 1 : 0
+                                                        event.currentTarget.checked ? 1 : 0
                                                     )
                                                 }
                                                 styles={(theme) => ({

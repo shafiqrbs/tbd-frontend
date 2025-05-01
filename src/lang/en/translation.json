@@ -1074,5 +1074,7 @@
   "EnterInvoiceProcess": "Enter invoice process",
   "MustBeNeedReceiveAmountWithoutCustomer": "Must be need receive amount without customer",
   "ProductNavigation": "Product Navigation",
+  "DiscountConfiguration": "Discount Configuration",
+  "DiscountConfigurationDescription": "Discount Configuration Description",
   "": ""
 }

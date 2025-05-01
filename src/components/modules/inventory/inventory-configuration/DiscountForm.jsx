@@ -38,7 +38,7 @@ function DiscountForm(props) {
       name: config_discount?.name || "",
       max_discount: config_discount?.max_discount || 0,
       discount_with_customer: config_discount?.discount_with_customer || 0,
-      customer_group_id: config_discount?.customer_group_id || 0,
+      online_customer: config_discount?.online_customer || 0,
     },
   });
   
@@ -48,7 +48,7 @@ function DiscountForm(props) {
         name: config_discount?.name || "",
         max_discount: config_discount?.max_discount || 0,
         discount_with_customer: config_discount?.discount_with_customer || 0,
-        customer_group_id: config_discount?.customer_group_id || 0,
+        online_customer: config_discount?.online_customer || 0,
       });
     }
   }, [dispatch, config_discount]);
@@ -69,6 +69,7 @@ function DiscountForm(props) {
     // Convert checkbox values to 0 or 1
     const properties = [
       "discount_with_customer",
+      "online_customer",
     ];
     properties.forEach((property) => {
       values[property] =
@@ -128,26 +129,6 @@ function DiscountForm(props) {
     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
       <form onSubmit={form.onSubmit(handleDiscountFormSubmit)}>
         <Box pt={"xs"} pl={"xs"}>
-          {/* Name field */}
-          <Box mt={"xs"}>
-            <Grid columns={24} gutter={{ base: 1 }}>
-              <Grid.Col span={12} fz={"sm"} mt={8}>
-                {t("Name")}
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <InputForm
-                  tooltip={t('DiscountName')}
-                  label={""}
-                  placeholder={t('EnterDiscountName')}
-                  required={true}
-                  nextField={'max_discount'}
-                  name={'name'}
-                  form={form}
-                  id={'name'}
-                />
-              </Grid.Col>
-            </Grid>
-          </Box>
 
           {/* Max discount field */}
           <Box mt={"xs"}>
@@ -165,31 +146,6 @@ function DiscountForm(props) {
                   name={'max_discount'}
                   form={form}
                   id={'max_discount'}
-                />
-              </Grid.Col>
-            </Grid>
-          </Box>
-
-          {/* Customer Group dropdown */}
-          <Box mt={"xs"}>
-            <Grid columns={24} gutter={{ base: 1 }}>
-              <Grid.Col span={12} fz={"sm"} mt={8}>
-                {t("CustomerGroup")}
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <SelectForm
-                  tooltip={t('ChooseCustomerGroup')}
-                  label={""}
-                  placeholder={t('ChooseCustomerGroup')}
-                  required={false}
-                  nextField={'discount_with_customer'}
-                  name={'customer_group_id'}
-                  form={form}
-                  dropdownValue={props.customerGroupDropdownData || []}
-                  id={'customer_group_id'}
-                  searchable={true}
-                  value={customerGroupData ? String(customerGroupData) : config_discount?.customer_group_id ? String(config_discount?.customer_group_id) : null}
-                  changeValue={setCustomerGroupData}
                 />
               </Grid.Col>
             </Grid>
@@ -229,6 +185,44 @@ function DiscountForm(props) {
                       borderColor: "red",
                     },
                   })}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
+
+          <Box mt={"xs"}>
+            <Grid
+                gutter={{ base: 1 }}
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                    form.setFieldValue(
+                        "online_customer",
+                        form.values.online_customer === 1 ? 0 : 1
+                    )
+                }
+            >
+              <Grid.Col span={11} fz={"sm"} pt={"1"}>
+                {t("DiscountWithCustomer")}
+              </Grid.Col>
+              <Grid.Col span={1}>
+                <Checkbox
+                    pr="xs"
+                    checked={form.values.online_customer === 1}
+                    color="red"
+                    {...form.getInputProps("online_customer", {
+                      type: "checkbox",
+                    })}
+                    onChange={(event) =>
+                        form.setFieldValue(
+                            "online_customer",
+                            event.currentTarget.checked ? 1 : 0
+                        )
+                    }
+                    styles={(theme) => ({
+                      input: {
+                        borderColor: "red",
+                      },
+                    })}
                 />
               </Grid.Col>
             </Grid>

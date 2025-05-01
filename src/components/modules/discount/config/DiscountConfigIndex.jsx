@@ -16,7 +16,7 @@ export default function DiscountConfigIndex() {
 
     const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
 
-     console.log(domainConfigData)
+  //   console.log(domainConfigData)
     return (
         <>
             {progress !== 100 && (
@@ -25,8 +25,8 @@ export default function DiscountConfigIndex() {
             {progress === 100 && (
                 <>
                     <DiscountHeaderNavbar
-                        pageTitle={t("B2BCategory")}
-                        pageDescription={t("B2BCategoryDescription")}
+                        pageTitle={t("DiscountConfiguration")}
+                        pageDescription={t("DiscountConfigurationDescription")}
                         roles={t("Roles")}
                         allowZeroPercentage=""
                         currencySymbol=""
