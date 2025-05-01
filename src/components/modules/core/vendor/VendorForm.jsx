@@ -86,7 +86,6 @@ function VendorForm(props) {
                         }
 
                         const resultAction = await dispatch(storeEntityData(value));
-
                         if (storeEntityData.rejected.match(resultAction)) {
                             const fieldErrors = resultAction.payload.errors;
 

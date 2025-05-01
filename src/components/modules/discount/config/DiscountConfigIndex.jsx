@@ -37,7 +37,7 @@ export default function DiscountConfigIndex() {
                                 <_DiscountShortcut/>
                             </Grid.Col>
                             <Grid.Col span={23} >
-                                <ConfigDiscountForm domainConfig={domainConfigData}  id={id}/>
+                                <ConfigDiscountForm domainConfig={domainConfigData}/>
                             </Grid.Col>
                         </Grid>
                     </Box>

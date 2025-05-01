@@ -28,11 +28,13 @@ import InputForm from "../../../form-builders/InputForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import KeywordSearch from "../../filter/KeywordSearch";
 import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
+import {setFetching, storeEntityData} from "../../../../store/core/crudSlice";
+import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 
 function DiscountConfig(props) {
 
-    const {  domainConfig} = props;
-    const  {id} = domainConfig.id;
+    const { domainConfig} = props;
     const  {config_sales} = domainConfig.inventory_config.config_discount;
     const {mainAreaHeight} = useOutletContext()
     let height = mainAreaHeight-94;
@@ -75,48 +77,27 @@ function DiscountConfig(props) {
         try {
             setSaveCreateLoading(true);
             const value = {
-                url: `domain/config/inventory-product/${id}`,
+                url: 'domain/config/inventory-discount/'+domainConfig?.id,
                 data: values,
             };
-            console.log("value", values);
-            await dispatch(updateEntityData(value));
-
-            const resultAction = await dispatch(
-                showInstantEntityData("inventory/config")
-            );
-            if (showInstantEntityData.fulfilled.match(resultAction)) {
-                if (resultAction.payload.data.status === 200) {
-                    localStorage.setItem(
-                        "config-data",
-                        JSON.stringify(resultAction.payload.data.data)
-                    );
+            const resultAction = await dispatch(storeEntityData(value));
+            if (storeEntityData.rejected.match(resultAction)) {
+                const fieldErrors = resultAction.payload.errors;
+                // Check if there are field validation errors and dynamically set them
+                if (fieldErrors) {
+                    const errorObject = {};
+                    Object.keys(fieldErrors).forEach(key => {
+                        errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                    });
+                    // Display the errors using your form's `setErrors` function dynamically
+                    form.setErrors(errorObject);
                 }
+            } else if (storeEntityData.fulfilled.match(resultAction)) {
+                showNotificationComponent(t('CreateSuccessfully'),'teal','lightgray');
             }
 
-            notifications.show({
-                color: "teal",
-                title: t("UpdateSuccessfully"),
-                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 700,
-                style: { backgroundColor: "lightgray" },
-            });
-
-            setTimeout(() => {
-                setSaveCreateLoading(false);
-            }, 700);
         } catch (error) {
-            console.error("Error updating purchase config:", error);
-
-            notifications.show({
-                color: "red",
-                title: t("UpdateFailed"),
-                icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 700,
-                style: { backgroundColor: "lightgray" },
-            });
-
+            showNotificationComponent(t('UpdateFailed'),'red','lightgray');
             setSaveCreateLoading(false);
         }
     };
@@ -137,6 +118,7 @@ function DiscountConfig(props) {
 
     return (
         <Container fluid p={0}>
+            <form onSubmit={form.onSubmit(handlePurchaseFormSubmit)}>
             <Box p={8} bg={"white"}>
                 <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                     <Grid>
@@ -146,39 +128,30 @@ function DiscountConfig(props) {
                         <Grid.Col span={4}>
                             <Stack right align="flex-end">
                                 <>
-                                    {
-                                        !saveCreateLoading &&
-                                        <Button
-                                            size="xs"
-                                            className={'btnPrimaryBg'}
-                                            type="submit"
-                                            id="DiscountConfigFormSubmit"
-                                            leftSection={<IconDeviceFloppy size={16} />}
-                                        >
-
-                                            <Flex direction={`column`} gap={0}>
-                                                <Text fz={14} fw={400}>
-                                                    {t("CreateAndSave")}
-                                                </Text>
-                                            </Flex>
-                                        </Button>
-                                    }
-                                </></Stack>
+                                    <Button
+                                        size="xs"
+                                        className={'btnPrimaryBg'}
+                                        type="submit"
+                                        id="DiscountConfigFormSubmit"
+                                        leftSection={<IconDeviceFloppy size={16} />}>
+                                        <Flex direction={`column`} gap={0}>
+                                            <Text fz={14} fw={400}>
+                                                {t("CreateAndSave")}
+                                            </Text>
+                                        </Flex>
+                                    </Button>
+                                </>
+                            </Stack>
                         </Grid.Col>
                     </Grid>
                 </Box>
             <Box
-                pl={`xs`}
-                pr={8}
-                pt={"6"}
-                pb={"4"}
-                bg={"white"}
                 h={height}
                 className={" borderRadiusAll"}
             >
                 <Grid>
                     <Grid.Col span={8} >
-                        <form onSubmit={form.onSubmit(handlePurchaseFormSubmit)}>
+
                             <Box pt={"xs"} pl={"xs"}>
                                 <Box mt={"xs"}>
                                     <Grid
@@ -255,20 +228,15 @@ function DiscountConfig(props) {
                                     </Grid>
                                 </Box>
                             </Box>
-                            <Button
-                                id="DiscountConfigFormSubmit"
-                                type="submit"
-                                style={{ display: "none" }}
-                            >
-                                {t("Submit")}
-                            </Button>
-                        </form>
+
+
                     </Grid.Col>
-                    <Grid.Col span={8} ></Grid.Col>
+                    <Grid.Col span={8}>&nbsp;</Grid.Col>
                 </Grid>
 
             </Box>
             </Box>
+            </form>
         </Container>
 
     );
