@@ -1,5 +1,5 @@
 import {isNotEmpty, useForm} from "@mantine/form";
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import __PosCustomerSection from "./__PosCustomerSection";
 import {Box, Text, ActionIcon, Group, TextInput} from "@mantine/core";
 import {DataTable} from "mantine-datatable";
@@ -15,6 +15,7 @@ import {notifications} from "@mantine/notifications";
 import {IconCheck} from "@tabler/icons-react";
 import {rem} from "@mantine/core";
 import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import InputButtonForm from "../../../form-builders/InputButtonForm";
 
 export default function __PosSalesForm(props) {
     const {
@@ -51,6 +52,8 @@ export default function __PosSalesForm(props) {
             transaction_mode_id: isNotEmpty(),
         },
     });
+
+
 
     //calculate subTotal amount
     let salesSubTotalAmount =
@@ -370,7 +373,7 @@ export default function __PosSalesForm(props) {
                                     accessor: "quantity",
                                     title: t("Quantity"),
                                     textAlign: "center",
-                                    width: "100px",
+                                    width: "140px",
                                     render: (item) => {
                                         const [editedQuantity, setEditedQuantity] = useState(
                                             item.unit_quantity !== undefined ? item.unit_quantity : item.quantity
@@ -427,7 +430,12 @@ export default function __PosSalesForm(props) {
                                                 value={editedQuantity}
                                                 onChange={handleQuantityChange}
                                                 onKeyDown={handleKeyDown} // Use direct handler instead of getHotkeyHandler
+                                                rightSection={<Text style={{textAlign: "right", width: "100%", paddingRight: 16}} fz={'xs'} color={"gray"}>
+                                                    {item?.measurement_unit?.unit_name?item?.measurement_unit.unit_name:item?.measurement_unit?.unit_name}
+                                                </Text>}
+                                                rightSectionWidth={50}
                                             />
+
                                         );
                                     },
                                 },
@@ -449,10 +457,8 @@ export default function __PosSalesForm(props) {
 
                                             return (
                                                 <>
-                                                    {unitName}
-                                                    <br/>
                                                     <span style={{color: 'red'}}>
-                              {'1'} {unitName} = {item.measurement_unit.quantity} {baseUnitName} ({unitQty}*{item.measurement_unit.quantity}={convertedQty})
+                              {unitQty}*{item.measurement_unit.quantity}={convertedQty} {baseUnitName}
                             </span>
                                                 </>
                                             );

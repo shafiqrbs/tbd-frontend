@@ -221,6 +221,7 @@ function ProductForm(props) {
               {t("ProductAttributes")}
             </Text>
           </Center>
+
           {renderCheckboxItem("is_brand", "Brand")}
           {renderCheckboxItem("is_color", "Color")}
           {renderCheckboxItem("is_size", "Size")}

@@ -163,10 +163,19 @@ function _DiscountUserTable() {
   // Handle update for a specific row
   const handleUpdateRow = async (userId) => {
     if (!editedValues[userId]) {
-      showNotificationComponent(t("NoChanges"),'red','lightgray');
+      notifications.show({
+        color: "blue",
+        title: t("NoChanges"),
+        message: t("No changes to update"),
+        icon: <IconAlertCircle style={{ width: rem(18), height: rem(18) }} />,
+        loading: false,
+        autoClose: 700,
+      });
       return;
     }
+
     setUpdatingRows((prev) => ({ ...prev, [userId]: true }));
+
     try {
         const value = {
           url: 'inventory/discount/user-update/'+userId,

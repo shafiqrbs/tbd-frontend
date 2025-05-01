@@ -150,13 +150,13 @@ function _GenericPosForm({domainConfigData}) {
 
   // Input group components
   const inputGroupCurrency = (
-      <Text style={{textAlign: "right", width: "100%", paddingRight: 16}} color={"gray"}>
+      <Text style={{textAlign: "right", width: "100%", paddingRight: 16}} fz={'xs'}  color={"gray"}>
         {currencySymbol}
       </Text>
   );
 
   const inputGroupText = (
-      <Text style={{textAlign: "right", width: "100%", paddingRight: 16}} color={"gray"}>
+      <Text style={{textAlign: "right", width: "100%", paddingRight: 16}} fz={'xs'}  color={"gray"}>
         {selectUnitDetails?.unit_name?selectUnitDetails.unit_name:selectProductDetails?.unit_name}
       </Text>
   );
@@ -285,7 +285,7 @@ function _GenericPosForm({domainConfigData}) {
       quantity = selectedQuantity * (unitQuantity || 1);
       form.setFieldValue("quantity", quantity);
     } else {
-      quantity = Number(form?.values?.quantity) || 0;
+      quantity = Number(form?.values?.quantity) || 1;
     }
 
     const salesPrice = Number(form.values.sales_price);
@@ -701,7 +701,7 @@ function _GenericPosForm({domainConfigData}) {
                                                 }));
                                               }}
                                               required={false}
-                                              nextField={"credit_limit"}
+                                              nextField={""}
                                               name={"quantity"}
                                               id={"quantity" + data.id}
                                           />
@@ -1051,7 +1051,7 @@ function _GenericPosForm({domainConfigData}) {
                                         type="number"
                                         tooltip={t("PercentValidateMessage")}
                                         label=""
-                                        placeholder={t("Quantity")}
+                                        placeholder={t("1")}
                                         required={true}
                                         nextField={"percent"}
                                         form={form}
@@ -1072,7 +1072,7 @@ function _GenericPosForm({domainConfigData}) {
                                         type="number"
                                         tooltip={t("PercentValidateMessage")}
                                         label=""
-                                        placeholder={t("BonusQuantity")}
+                                        placeholder={t("0")}
                                         required={true}
                                         nextField={"percent"}
                                         form={form}

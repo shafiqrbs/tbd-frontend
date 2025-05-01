@@ -51,7 +51,7 @@ function InventoryConfigarationForm() {
   const inventoryConfigData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
-  const [activeTab, setActiveTab] = useState("Inventory");
+  const [activeTab, setActiveTab] = useState("Vat");
 
   const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad);
 
