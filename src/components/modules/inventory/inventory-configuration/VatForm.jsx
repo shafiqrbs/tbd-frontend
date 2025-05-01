@@ -187,7 +187,7 @@ function VatForm(props) {
                     name={"vat_percent"}
                     form={form}
                     id={"vat_percent"}
-                    tooltip={"EnterVATPercent"}
+                    tooltip={t("EnterVATPercent")}
                 />
               </Grid.Col>
             </Grid>

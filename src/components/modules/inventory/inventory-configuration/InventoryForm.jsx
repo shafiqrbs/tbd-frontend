@@ -7,7 +7,7 @@ import {
   ScrollArea,
   Button,
   Text,
-  Center,
+  Center, Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDispatch } from "react-redux";
@@ -85,8 +85,6 @@ function InventoryForm(props) {
       condition_sales: inventory_config?.condition_sales || 0,
       is_marketing_executive: inventory_config?.is_marketing_executive || 0,
       fuel_station: inventory_config?.fuel_station || 0,
-      zero_stock: inventory_config?.zero_stock || 0,
-      system_reset: inventory_config?.system_reset || 0,
       sales_return: inventory_config?.sales_return || 0,
       store_ledger: inventory_config?.store_ledger || 0,
       is_print_header: inventory_config?.is_print_header || 0,
@@ -134,8 +132,6 @@ function InventoryForm(props) {
       "condition_sales",
       "is_marketing_executive",
       "fuel_station",
-      "zero_stock",
-      "system_reset",
       "sales_return",
       "store_ledger",
       "is_print_header",
@@ -251,11 +247,9 @@ function InventoryForm(props) {
     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
       <form onSubmit={form.onSubmit(handleInventoryFormSubmit)}>
         <Box pt={"xs"} pl={"xs"} pb={"sm"}>
-          <Center>
-            <Text fw={800} fz={16} mb="xs">
-              {t("GeneralSettings")}
-            </Text>
-          </Center>
+          <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+            <Title order={6} pt={'4'}>{t('GeneralSettings')}</Title>
+          </Box>
 
           {/* Printer field */}
           <Box mt={"xs"}>
@@ -426,33 +420,9 @@ function InventoryForm(props) {
               </Grid.Col>
             </Grid>
           </Box>
-
-          {/* Border Color field */}
-          <Box mt={"xs"}>
-            <Grid columns={24} gutter={{ base: 1 }}>
-              <Grid.Col span={12} fz={"sm"} mt={8}>
-                {t("BorderColor")}
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <InputForm
-                  label={""}
-                  placeholder={t("EnterBorderColor")}
-                  required={false}
-                  nextField={"invoice_prefix"}
-                  name={"border_color"}
-                  form={form}
-                  id={"border_color"}
-                />
-              </Grid.Col>
-            </Grid>
+          <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+            <Title order={6} pt={'4'}>{t('InvoiceSettings')}</Title>
           </Box>
-
-          <Center>
-            <Text fw={800} fz={16} mt="md" mb="xs">
-              {t("InvoiceSettings")}
-            </Text>
-          </Center>
-
           {/* Invoice Prefix */}
           <Box mt={"xs"}>
             <Grid columns={24} gutter={{ base: 1 }}>
@@ -624,11 +594,9 @@ function InventoryForm(props) {
           {/* Several more dimension fields would go here - including the rest for brevity */}
           {/* Add similar Box/Grid structures for all other dimension fields */}
 
-          <Center>
-            <Text fw={800} fz={16} mt="md" mb="xs">
-              {t("FontSettings")}
-            </Text>
-          </Center>
+          <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+            <Title order={6} pt={'4'}>{t('FontSettings')}</Title>
+          </Box>
 
           {/* Font fields */}
           {/* Font Size Label */}
@@ -653,12 +621,9 @@ function InventoryForm(props) {
           </Box>
 
           {/* Several more font fields would go here - omitting for brevity */}
-
-          <Center>
-            <Text fw={800} fz={16} mt="md" mb="xs">
-              {t("CommissionSettings")}
-            </Text>
-          </Center>
+          <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+            <Title order={6} pt={'4'}>{t('CommissionSettings')}</Title>
+          </Box>
 
           {/* TLO Commission */}
           <Box mt={"xs"}>
@@ -701,29 +666,20 @@ function InventoryForm(props) {
               </Grid.Col>
             </Grid>
           </Box>
-
-          <Center>
-            <Text fw={800} fz={16} mt="md" mb="xs">
-              {t("FeatureToggles")}
-            </Text>
-          </Center>
+          <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+            <Title order={6} pt={'4'}>{t('Features')}</Title>
+          </Box>
 
           {renderCheckboxItem("is_stock_history", "IsStockHistory")}
           {renderCheckboxItem("multi_company", "MultiCompany")}
           {renderCheckboxItem("bonus_from_stock", "BonusFromStock")}
           {renderCheckboxItem("condition_sales", "ConditionSales")}
           {renderCheckboxItem("is_marketing_executive", "IsMarketingExecutive")}
-          {renderCheckboxItem("fuel_station", "FuelStation")}
-          {renderCheckboxItem("zero_stock", "ZeroStock")}
-          {renderCheckboxItem("system_reset", "SystemReset")}
           {renderCheckboxItem("sales_return", "SalesReturn")}
           {renderCheckboxItem("store_ledger", "StoreLedger")}
-
-          <Center>
-            <Text fw={800} fz={16} mt="md" mb="xs">
-              {t("InvoiceFeatures")}
-            </Text>
-          </Center>
+          <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+            <Title order={6} pt={'4'}>{t('InvoiceFeatures')}</Title>
+          </Box>
 
           {renderCheckboxItem("is_print_header", "IsPrintHeader")}
           {renderCheckboxItem("is_invoice_title", "IsInvoiceTitle")}
@@ -735,12 +691,9 @@ function InventoryForm(props) {
           {renderCheckboxItem("is_powered", "IsPowered")}
           {renderCheckboxItem("remove_image", "RemoveImage")}
           {renderCheckboxItem("is_active_sms", "IsActiveSMS")}
-
-          <Center>
-            <Text fw={800} fz={16} mt="md" mb="xs">
-              {t("ProductSettings")}
-            </Text>
-          </Center>
+          <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+            <Title order={6} pt={'4'}>{t('ProductSettings')}</Title>
+          </Box>
 
           {renderCheckboxItem("stock_item", "StockItem")}
           {renderCheckboxItem("is_description", "IsDescription")}
