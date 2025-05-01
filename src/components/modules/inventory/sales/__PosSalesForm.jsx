@@ -188,6 +188,7 @@ export default function __PosSalesForm(props) {
                             price: product.price,
                             percent: product.percent,
                             quantity: product.quantity,
+                            price_matrix_id: product?.multi_price_item?.id || null,
                             measurement_unit_id: product?.measurement_unit?.id || null,
                             measurement_unit_quantity: product?.measurement_unit?.id ? product.unit_quantity : null,
                             measurement_unit_name: product?.measurement_unit?.id ? product.measurement_unit?.unit_name : null,

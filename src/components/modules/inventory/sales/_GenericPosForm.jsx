@@ -87,6 +87,7 @@ function _GenericPosForm({domainConfigData}) {
   const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
   const [stockProductRestore, setStockProductRestore] = useState(false);
   const [selectUnitDetails, setSelectUnitDetails] = useState(null);
+  const [selectMultiPriceItemDetails, setSelectMultiPriceItemDetails] = useState(null);
 
 
   // Data
@@ -216,19 +217,17 @@ function _GenericPosForm({domainConfigData}) {
   }, [searchValue]);
 
   useEffect(() => {
-    form.setFieldValue("price", form.values.multi_price);
-    form.setFieldValue("sales_price", form.values.multi_price);
-    setMultiPrice(form.values.multi_price);
+    const priceItem = selectProductDetails?.multi_price.find((price) => price.id == form.values.multi_price);
+    form.setFieldValue("price", priceItem?.price);
+    form.setFieldValue("sales_price", priceItem?.price);
+    setSelectMultiPriceItemDetails(priceItem);
+    setMultiPrice(priceItem?.price);
     document.getElementById("quantity")?.focus();
   }, [form.values.multi_price]);
 
   useEffect(() => {
-    // form.setFieldValue("quantity", form.values.unit_id);
-    // form.setFieldValue("quantity", 1);
-    // console.log(form.values.unit_id,selectProductDetails?.measurements);
     const unitItem = selectProductDetails?.measurements.find((unit) => unit.id == form.values.unit_id);
     setSelectUnitDetails(unitItem);
-    // console.log(unitItem)
     setUnitType(form.values.unit_id);
   }, [form.values.unit_id]);
 
@@ -247,7 +246,7 @@ function _GenericPosForm({domainConfigData}) {
       if (salesConfig?.is_multi_price === 1 && selectedProduct.multi_price) {
         const priceDropdown = selectedProduct.multi_price.map((price) => ({
           label: `${currencySymbol} ${price.price} - ${price.field_name}`,
-          value: String(price.price),
+          value: String(price.id),
         }));
         setMultiPriceDropdown(priceDropdown);
       }
@@ -405,6 +404,7 @@ function _GenericPosForm({domainConfigData}) {
           quantity: Number(values.quantity),
           unit_quantity: Number(values.unit_quantity),
           measurement_unit : selectUnitDetails,
+          multi_price_item : selectMultiPriceItemDetails,
           unit_name: product.unit_name,
           purchase_price: product.purchase_price,
           sub_total: Number(values.quantity) * Number(values.sales_price),
