@@ -94,7 +94,7 @@ function DiscountConfig(props) {
             };
             const resultAction = await dispatch(storeEntityData(value));
             if (storeEntityData.rejected.match(resultAction)) {
-                const fieldErrors = resultAction.payload.errors;
+                const fieldErrors = resultAction.value.errors;
                 // Check if there are field validation errors and dynamically set them
                 if (fieldErrors) {
                     const errorObject = {};

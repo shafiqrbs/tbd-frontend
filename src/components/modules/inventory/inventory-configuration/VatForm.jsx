@@ -99,10 +99,7 @@ function VatForm(props) {
         url: `domain/config/inventory/${id}`,
         data: values,
       };
-
-      console.log("Submitting values:", values);
       await dispatch(storeEntityData(value));
-
       notifications.show({
         color: "teal",
         title: t("UpdateSuccessfully"),
@@ -111,13 +108,11 @@ function VatForm(props) {
         autoClose: 700,
         style: { backgroundColor: "lightgray" },
       });
-
       setTimeout(() => {
         setSaveCreateLoading(false);
       }, 700);
     } catch (error) {
       console.error("Error updating inventory config:", error);
-
       notifications.show({
         color: "red",
         title: t("UpdateFailed"),

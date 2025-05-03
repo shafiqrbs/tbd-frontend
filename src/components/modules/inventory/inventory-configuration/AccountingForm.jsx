@@ -85,14 +85,14 @@ function AccountingForm(props) {
       return null;
     }
   };
-  
-  console.log(account_config)
+
   const form = useForm({
     initialValues: {
       financial_start_date:
         parseDateValue(account_config?.financial_start_date) || "",
       financial_end_date:
         parseDateValue(account_config?.financial_end_date) || "",
+      capital_investment_id: account_config?.capital_investment_id || "",
       account_bank_id: account_config?.account_bank_id || "",
       account_cash_id: account_config?.account_cash_id || "",
       account_category_id: account_config?.account_category_id || "",
@@ -119,6 +119,7 @@ function AccountingForm(props) {
           parseDateValue(account_config?.financial_start_date) || "",
         financial_end_date:
           parseDateValue(account_config?.financial_end_date) || "",
+        capital_investment_id: account_config?.capital_investment_id || "",
         account_bank_id: account_config?.account_bank_id || "",
         account_cash_id: account_config?.account_cash_id || "",
         account_category_id: account_config?.account_category_id || "",
@@ -247,13 +248,43 @@ function AccountingForm(props) {
                   label=""
                   placeholder={t("FinancialEndDate")}
                   required={false}
-                  nextField={"account_bank_id"}
+                  nextField={"capital_investment_id"}
                   form={form}
                   name={"financial_end_date"}
                   id={"financial_end_date"}
                   leftSection={<IconCalendar size={16} opacity={0.5} />}
                   rightSectionWidth={30}
                   closeIcon={true}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
+
+          <Box mt={"xs"}>
+            <Grid columns={24} gutter={{ base: 1 }}>
+              <Grid.Col span={12} fz={"sm"} mt={8}>
+                {t("CapitalInvestment")}
+              </Grid.Col>
+              <Grid.Col span={12}>
+                <SelectForm
+                    tooltip={t("ChooseCapitalInvestment")}
+                    label={""}
+                    placeholder={t("ChooseCapitalInvestment")}
+                    required={false}
+                    nextField={"account_bank_id"}
+                    name={"capital_investment_id"}
+                    form={form}
+                    dropdownValue={accountDropdownData}
+                    id={"capital_investment_id"}
+                    searchable={true}
+                    value={
+                      accountBankData
+                          ? String(accountBankData)
+                          : account_config?.capital_investment_id
+                          ? String(account_config.capital_investment_id)
+                          : null
+                    }
+                    changeValue={setAccountBankData}
                 />
               </Grid.Col>
             </Grid>

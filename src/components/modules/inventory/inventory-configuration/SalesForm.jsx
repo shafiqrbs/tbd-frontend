@@ -77,9 +77,7 @@ function SalesForm({ customerGroupDropdownData, height, id }) {
 
     try {
       setSaveCreateLoading(true);
-
       const result = await dispatch(storeEntityData(payload));
-
       if (storeEntityData.fulfilled.match(result) && result.payload?.data?.status === 200) {
         await fetchDomainConfig();
         showNotificationComponent(t("UpdateSuccessfully"), "teal");
