@@ -93,13 +93,13 @@ function ProductTable(props) {
   const [switchEnable, setSwitchEnable] = useState({});
 
   const handleSwitch = (event, item) => {
-    setSwitchEnable((prev) => ({ ...prev, [item.id]: true }));
+    setSwitchEnable((prev) => ({ ...prev, [item.product_id]: true }));
     const value = {
-      url: "inventory/product/status/inline-update/" + item.id,
+      url: "inventory/product/status/inline-update/" + item.product_id,
     };
     dispatch(getStatusInlineUpdateData(value));
     setTimeout(() => {
-      setSwitchEnable((prev) => ({ ...prev, [item.id]: false }));
+      setSwitchEnable((prev) => ({ ...prev, [item.product_id]: false }));
     }, 3000);
   };
 
@@ -221,7 +221,7 @@ function ProductTable(props) {
                   variant="subtle"
                   c="red.4"
                   onClick={() => {
-                    setId(item.id);
+                    setId(item.product_id);
                     setMeasurementDrawer(true);
                   }}
                   style={{ cursor: "pointer" }}
@@ -344,7 +344,7 @@ function ProductTable(props) {
               render: (item) => (
                 <Flex justify="center" align="center">
                   <Switch
-                    disabled={switchEnable[item.id] || false || item.parent_id}
+                    disabled={switchEnable[item.product_id] || false || item.parent_id}
                     defaultChecked={item.status == 1 ? true : false}
                     color="red"
                     radius="xs"
@@ -396,10 +396,10 @@ function ProductTable(props) {
                             onClick={() => {
                               dispatch(setInsertType("update"));
                               dispatch(
-                                editEntityData("inventory/product/" + data.id)
+                                editEntityData("inventory/product/" + data.product_id)
                               );
                               dispatch(setFormLoading(true));
-                              navigate(`/inventory/product/${data.id}`);
+                              navigate(`/inventory/product/${data.product_id}`);
                             }}
                           >
                             {t("Edit")}
@@ -410,7 +410,7 @@ function ProductTable(props) {
                         onClick={() => {
                           setViewModal(true);
                           dispatch(
-                            showEntityData("inventory/product/" + data.id)
+                            showEntityData("inventory/product/" + data.product_id)
                           );
                         }}
                         target="_blank"
@@ -421,7 +421,7 @@ function ProductTable(props) {
                       </Menu.Item>
                       <Menu.Item
                         onClick={() => {
-                          setId(data.id);
+                          setId(data.product_id);
                           setAddonDrawer(true);
                         }}
                         target="_blank"
@@ -462,7 +462,7 @@ function ProductTable(props) {
                                 confirmProps: { color: "red.6" },
                                 onCancel: () => console.log("Cancel"),
                                 onConfirm: () => {
-                                  productDeleteHandle(data.id);
+                                  productDeleteHandle(data.product_id);
                                 },
                               });
                             }}
