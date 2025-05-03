@@ -1,21 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { getSettingDropdown } from "../../../store/utility/utilitySlice.js";
 
 const useSettingParticularDropdownData = (type) => {
     const dispatch = useDispatch();
     const [settingDropdown, setSettingDropdown] = useState([]);
 
-    useEffect(() => {
-        const value = {
-            url: 'inventory/select/particular',
-            param: { 'dropdown-type': type },
-        };
-        dispatch(getSettingDropdown(value));
-    }, [dispatch, type]);
-
-    // Dropdown mappings based on type
-    const dropdownKeyMap = {
+    const dropdownKeyMap = useMemo(() => ({
         'product-unit': 'productUnitDropdown',
         'color': 'productColorDropdown',
         'product-grade': 'productGradeDropdown',
@@ -23,23 +15,41 @@ const useSettingParticularDropdownData = (type) => {
         'size': 'productSizeDropdown',
         'model': 'productModelDropdown',
         'table': 'posTableData',
-        'location' : 'ProductLocationDropdown',
-        'wearhouse' : 'wearhouseDropdown',
-    };
+        'location': 'ProductLocationDropdown',
+        'warehouse': 'warehouseDropdown',
+    }), []);
 
-    // Dynamically select dropdown data based on type
-    const dropdownData = useSelector((state) => {
-        const dynamicKey = dropdownKeyMap[type];
-        return state.utilityUtilitySlice[dynamicKey] || [];
-    });
+    const validKey = dropdownKeyMap[type];
+
+    const dropdownSelector = useMemo(() => {
+        if (!validKey) return () => [];
+        return createSelector(
+            (state) => state?.utilityUtilitySlice ?? {},
+            (utilityState) => utilityState[validKey] ?? []
+        );
+    }, [validKey]);
+
+    const dropdownData = useSelector(dropdownSelector);
 
     useEffect(() => {
-        if (dropdownData.length > 0) {
-            const transformedData = dropdownData.map(item => ({
+        if (!validKey) return;
+
+        const value = {
+            url: 'inventory/select/particular',
+            param: { 'dropdown-type': type },
+        };
+        dispatch(getSettingDropdown(value));
+    }, [dispatch, type, validKey]);
+
+    useEffect(() => {
+        if (dropdownData?.length > 0) {
+            const transformed = dropdownData.map(item => ({
                 label: item.name,
                 value: String(item.id),
             }));
-            setSettingDropdown(transformedData);
+            setSettingDropdown(transformed);
+        } else {
+            setSettingDropdown([]);
         }
     }, [dropdownData]);
 

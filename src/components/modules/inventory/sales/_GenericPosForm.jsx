@@ -333,7 +333,8 @@ function _GenericPosForm({domainConfigData}) {
             product.sales_price !== 0
         );
       }
-      return product.product_nature !== "raw-materials";
+      // return product.product_nature !== "raw-materials";
+      return product;
     });
 
     setProducts(filteredProducts);

@@ -67,7 +67,7 @@ const utilitySlice = createSlice({
     utilityDomainTypeDropdownData: [],
     productModelDropdown: [],
     posInvoiceModeDropdownData: [],
-    wearhouseDropdown: [],
+    warehouseDropdown: [],
   },
   reducers: {
     setFetching: (state, action) => {
@@ -136,7 +136,7 @@ const utilitySlice = createSlice({
         state.posInvoiceModeDropdownData = action.payload.data.data;
       }
       if (action.payload.type === "wearhouse") {
-        state.wearhouseDropdown = action.payload.data.data;
+        state.warehouseDropdown = action.payload.data.data;
       }
     });
 

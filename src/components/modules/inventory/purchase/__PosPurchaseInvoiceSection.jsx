@@ -113,6 +113,20 @@ export default function __PosPurchaseInvoiceSection(props) {
   const isReturn = remainingAmount < 0;
   const displayAmount = Math.abs(remainingAmount).toFixed(2);
 
+
+  /*START FOR TRANSACTION MODE DEFAULT SELECT*/
+  useEffect(() => {
+    if (transactionModeData && transactionModeData.length > 0) {
+      for (let mode of transactionModeData) {
+        if (mode.is_selected) {
+          form.setFieldValue('transaction_mode_id', form.values.transaction_mode_id ? form.values.transaction_mode_id : mode.id);
+          break;
+        }
+      }
+    }
+  }, [transactionModeData, form]);
+  /*END FOR TRANSACTION MODE DEFAULT SELECT*/
+
   return (
     <>
       <Box>

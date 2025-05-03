@@ -78,11 +78,11 @@ function StockTable(props) {
   const [id, setId] = useState("null");
 
   const handleSwtich = (event, item) => {
-    setChecked((prev) => ({ ...prev, [item.id]: !prev[item.id] }));
-    setSwitchEnable((prev) => ({ ...prev, [item.id]: true }));
+    setChecked((prev) => ({ ...prev, [item.product_id]: !prev[item.product_id] }));
+    setSwitchEnable((prev) => ({ ...prev, [item.product_id]: true }));
 
     setTimeout(() => {
-      setSwitchEnable((prev) => ({ ...prev, [item.id]: false }));
+      setSwitchEnable((prev) => ({ ...prev, [item.product_id]: false }));
     }, 5000);
   };
 
@@ -239,7 +239,7 @@ function StockTable(props) {
                   variant="subtle"
                   c="red.4"
                   onClick={() => {
-                    setId(item.id);
+                    setId(item.product_id);
                     setMeasurementDrawer(true);
                   }}
                   style={{ cursor: "pointer" }}
@@ -352,7 +352,7 @@ function StockTable(props) {
             },
             { accessor: "quantity", title: t("Quantity"), textAlign: "center" },
             {
-              accessor: "quantity",
+              accessor: "rem_quantity",
               title: t("RemainQuantity"),
               textAlign: "center",
             },
@@ -367,8 +367,8 @@ function StockTable(props) {
               render: (item) => (
                 <>
                   <Switch
-                    disabled={swtichEnable[item.id] || false}
-                    checked={checked[item.id] || item.status == 1}
+                    disabled={swtichEnable[item.product_id] || false}
+                    checked={checked[item.product_id] || item.status == 1}
                     color="red"
                     radius="xs"
                     size="md"
@@ -396,11 +396,11 @@ function StockTable(props) {
                     dropdownValue={locationData}
                     id={"location_id"}
                     searchable={true}
-                    value={locationMap[item.id] || null}
+                    value={locationMap[item.product_id] || null}
                     changeValue={(value) => {
                       setLocationMap((prev) => ({
                         ...prev,
-                        [item.id]: value,
+                        [item.product_id]: value,
                       }));
                     }}
                   />
@@ -423,7 +423,7 @@ function StockTable(props) {
                     color="red.3"
                     mr={"4"}
                     onClick={() => {
-                      dispatch(showEntityData("inventory/product/" + item.id));
+                      dispatch(showEntityData("inventory/product/" + item.product_id));
                       setViewModal(true);
                     }}
                   >
@@ -458,10 +458,10 @@ function StockTable(props) {
                         onClick={() => {
                           dispatch(setInsertType("update"));
                           dispatch(
-                            editEntityData("inventory/product/" + item.id)
+                            editEntityData("inventory/product/" + item.product_id)
                           );
                           dispatch(setFormLoading(true));
-                          navigate(`/inventory/product/${item.id}`);
+                          navigate(`/inventory/product/${item.product_id}`);
                         }}
                       >
                         {t("Edit")}

@@ -50,9 +50,9 @@ import { useHotkeys } from "@mantine/hooks";
 
 function _GenericInvoiceForm(props) {
   const { domainConfigData } = props;
-  console.log("domainConfigData", domainConfigData);
   let currencySymbol = domainConfigData?.inventory_config?.currency?.symbol;
-  let allowZeroPercentage = domainConfigData?.inventory_config?.zero_stock;
+  // let allowZeroPercentage = domainConfigData?.inventory_config?.zero_stock;
+  let allowZeroPercentage = true;
   let domainId = domainConfigData?.inventory_config?.domain_id;
   let isSMSActive = domainConfigData?.inventory_config?.is_active_sms;
   let isWarehouse =
@@ -171,7 +171,6 @@ function _GenericInvoiceForm(props) {
   useEffect(() => {
     if (stockProductRestore) {
       const local = productsDataStoreIntoLocalStorage();
-      console.log(local);
     }
   }, [stockProductRestore]);
 
@@ -384,7 +383,8 @@ function _GenericInvoiceForm(props) {
           product.purchase_price !== 0
         );
       }
-      return product.product_nature !== "raw-materials";
+      // return product.product_nature !== "raw-materials";
+      return product;
     });
 
     setProducts(filteredProducts);
@@ -1079,7 +1079,7 @@ function _GenericInvoiceForm(props) {
                                 type="number"
                                 tooltip={t("QuantityValidateMessage")}
                                 label=""
-                                placeholder={t("Quantity")}
+                                placeholder={'1'}
                                 required={true}
                                 nextField={"bonus_quantity"}
                                 form={form}
@@ -1100,7 +1100,7 @@ function _GenericInvoiceForm(props) {
                                 type="number"
                                 tooltip={t("PercentValidateMessage")}
                                 label=""
-                                placeholder={t("BonusQuantity")}
+                                placeholder={'0'}
                                 required={true}
                                 nextField={"percent"}
                                 form={form}
