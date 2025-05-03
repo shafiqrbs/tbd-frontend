@@ -98,17 +98,18 @@ function InventoryConfigarationForm() {
   let countryList = getCountryDropdownData();
   let businessModelList = getSettingBusinessModelDropdownData();
 
-  const { domainConfig, fetchDomainConfig } = getDomainConfig(true);
+  const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
 
-  let inventory_config = domainConfig?.inventory_config;
+
+  let inventory_config = domainConfigData?.inventory_config;
   let config_purchase = inventory_config?.config_purchase;
   let config_sales = inventory_config?.config_sales;
   let config_requisition = inventory_config?.config_requisition;
-  let account_config = domainConfig?.account_config;
-  let production_config = domainConfig?.production_config;
+  let account_config = domainConfigData?.account_config;
+  let production_config = domainConfigData?.production_config;
   let config_discount = inventory_config?.config_discount;
   let config_product = inventory_config?.config_product;
-  let id = domainConfig?.id;
+  let id = domainConfigData?.id;
 
   const navItems = [
     "Inventory",
@@ -189,7 +190,7 @@ function InventoryConfigarationForm() {
             height={height}
             config_sales={config_sales}
             id={id}
-            domainConfig={domainConfig}
+            domainConfigData={domainConfigData}
             fetchDomainConfig={fetchDomainConfig}
           />
         );
@@ -241,7 +242,6 @@ function InventoryConfigarationForm() {
         return (
           <PosForm
             height={height}
-            inventory_config={inventory_config}
             id={id}
           />
         );
@@ -406,7 +406,7 @@ function InventoryConfigarationForm() {
           </Box>
         </Grid.Col>
         <Grid.Col span={8}>
-          <_DomainDetailsSection height={height} domainConfig={domainConfig} />
+          <_DomainDetailsSection height={height} domainConfigData={domainConfigData} />
         </Grid.Col>
         <Grid.Col span={1}>
           <Box bg={"white"} className={"borderRadiusAll"} pt={"16"}>

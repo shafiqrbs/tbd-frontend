@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import { useTranslation } from "react-i18next";
 import {
   Box,
@@ -27,17 +27,29 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import getSettingPosInvoiceModeDropdownData from "../../../global-hook/dropdown/getSettingPosInvoiceModeDropdownData";
 import {storeEntityData} from "../../../../store/core/crudSlice";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function PosForm(props) {
 
-  const { height, inventory_config, invoiceModeList, id } = props;
+  const { height,id } = props;
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
+
+
+  const { domainConfig, fetchDomainConfig } = getDomainConfig();
+  const posInvoiceModeDropdown = getSettingPosInvoiceModeDropdownData();
+  const inventory_config = useMemo(() => domainConfig?.inventory_config || {}, [domainConfig]);
+
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [posInvoiceModeData, setPosInvoiceModeData] = useState(null);
-  const [posInvoiceModeId, setPosInvoiceModeId] = useState(inventory_config ?.pos_invoice_mode_id?.toString() || '');
-  console.log(posInvoiceModeId);
-  const posInvoiceModeDropdown = getSettingPosInvoiceModeDropdownData();
+  const [posInvoiceModeId, setPosInvoiceModeId] = useState(null);
+
+  useEffect(() => {
+    setPosInvoiceModeId(inventory_config?.pos_invoice_mode_id?.toString())
+  }, [domainConfig]);
+
+
   const form = useForm({
     initialValues: {
       pos_print: inventory_config?.pos_print || "",
@@ -59,7 +71,6 @@ function PosForm(props) {
   useEffect(() => {
     if (inventory_config) {
       form.setValues({
-
         pos_print: inventory_config?.pos_print || "",
         invoice_comment: inventory_config?.invoice_comment || "",
         is_pos: inventory_config?.is_pos || "",
@@ -129,6 +140,7 @@ function PosForm(props) {
           form.setErrors(errorObject);
         }
       }else if (storeEntityData.fulfilled.match(resultAction) && resultAction.payload?.data?.status === 200) {
+        await fetchDomainConfig();
         showNotificationComponent(t('CreateSuccessfully'),'teal','lightgray');
       }
     } catch (err) {
