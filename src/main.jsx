@@ -8,6 +8,8 @@ import { BrowserRouter } from "react-router-dom";
 import "./i18n.js";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import store from "./store";
+import Provider from "react-redux/es/components/Provider";
 
 const theme = createTheme({
   primaryColor: "indigo",
@@ -22,7 +24,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <MantineProvider theme={theme}>
       <Notifications />
       <BrowserRouter>
-        <App />
+          <Provider store={store}>
+              <App />
+          </Provider>
       </BrowserRouter>
     </MantineProvider>
   </React.StrictMode>

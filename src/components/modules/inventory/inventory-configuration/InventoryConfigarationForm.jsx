@@ -191,7 +191,6 @@ function InventoryConfigarationForm() {
             config_sales={config_sales}
             id={id}
             domainConfigData={domainConfigData}
-            fetchDomainConfig={fetchDomainConfig}
           />
         );
       case "Purchase":

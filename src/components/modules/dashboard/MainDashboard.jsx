@@ -42,19 +42,23 @@ import pos from "../../../assets/images/pos/pos.png";
 import getDomainConfig from "../../global-hook/config-data/getDomainConfig.js";
 
 function MainDashboard(props) {
+    const {t, i18n} = useTranslation();
+    const height = props.height - 105; //TabList height 104
     const {configData, fetchData} = getConfigData();
     const {domainConfig,fetchDomainConfig} = getDomainConfig();
 
+    const navigate = useNavigate();
+    const theme = useMantineTheme();
     /* start for user role check */
     const [userRole, setUserRole] = useState(() => {
         const userRoleData = localStorage.getItem("user");
         if (!userRoleData) return [];
-        
+
         try {
             const parsedUser = JSON.parse(userRoleData);
-            
+
             if (!parsedUser.access_control_role) return [];
-            
+
             if (Array.isArray(parsedUser.access_control_role)) {
                 return parsedUser.access_control_role;
             }
@@ -69,7 +73,7 @@ function MainDashboard(props) {
                     return [];
                 }
             }
-            
+
             return [];
         } catch (error) {
             console.error("Error parsing user data from localStorage:", error);
@@ -77,10 +81,7 @@ function MainDashboard(props) {
         }
     });
 
-    const {t, i18n} = useTranslation();
-    const height = props.height - 105; //TabList height 104
-    const navigate = useNavigate();
-    const theme = useMantineTheme();
+    console.log(domainConfig);
     useEffect(() => {
         const checkConfigData = () => {
             if (!configData) {

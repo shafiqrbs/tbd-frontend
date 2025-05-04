@@ -579,8 +579,6 @@ function _GenericPosForm({domainConfigData}) {
                       align="flex-end"
                   >
                     <Box
-                        pl={`8`}
-                        pr={8}
                         mb={"xs"}
                         className={"borderRadiusAll"}
                         w={"100%"}
@@ -817,7 +815,7 @@ function _GenericPosForm({domainConfigData}) {
                             />
                         )}
                       </Box>
-                      <Box className="borderRadiusAll">
+                      <Box pl={'xs'} pr={'xs'} pt={'0'}  className="borderRadiusAll bodyBackgroundLight">
                         {productSalesMode === "product" && (
                             <Box>
                               {salesConfig?.search_by_vendor === 1 && (
@@ -859,7 +857,8 @@ function _GenericPosForm({domainConfigData}) {
                                   </Box>
                               )}
                               {salesConfig?.search_by_category === 1 && (
-                                  <Box mt={"4"}>
+
+                                  <Box mt={"4"} className={genericClass.genericHighlightedBox}>
                                     <SelectForm
                                         tooltip={t("ChooseCategory")}
                                         label={""}

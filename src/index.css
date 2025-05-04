@@ -23,6 +23,10 @@
     background-color:#daaa5e;
 }
 
+.bodyBackgroundLight{
+    background-color: #f8eedf;
+}
+
 .boxBackground {
     /*background-color: rgba(208, 191, 191, 0.17) !important;*/
     background-color: #fbf7ef !important;

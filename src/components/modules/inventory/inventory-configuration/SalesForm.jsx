@@ -9,13 +9,17 @@ import { setValidationData, storeEntityData } from "../../../../store/core/crudS
 import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
 import SelectForm from "../../../form-builders/SelectForm";
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent";
+import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
 
 function SalesForm({ customerGroupDropdownData, height, id }) {
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [customerGroupData, setCustomerGroupData] = useState(null);
-  const { domainConfig, fetchDomainConfig } = getDomainConfig();
+
+  const domainConfig = JSON.parse(localStorage.getItem('domain-config-data'))
+ // const { domainConfig, fetchDomainConfig } = getDomainConfig();
 
   const salesConfig = useMemo(() => domainConfig?.inventory_config?.config_sales || {}, [domainConfig]);
 
@@ -79,7 +83,7 @@ function SalesForm({ customerGroupDropdownData, height, id }) {
       setSaveCreateLoading(true);
       const result = await dispatch(storeEntityData(payload));
       if (storeEntityData.fulfilled.match(result) && result.payload?.data?.status === 200) {
-        await fetchDomainConfig();
+      //  await fetchDomainConfig();
         showNotificationComponent(t("UpdateSuccessfully"), "teal");
       } else {
         showNotificationComponent(t("UpdateFailed"), "red");
@@ -132,33 +136,8 @@ function SalesForm({ customerGroupDropdownData, height, id }) {
 
             {/* Dynamic checkbox fields */}
             {fields.map((field, idx) => (
-                <Box key={idx} mt="xs">
-                  <Grid
-                      gutter={{ base: 1 }}
-                      style={{ cursor: "pointer" }}
-                      onClick={() =>
-                          form.setFieldValue(field.name, form.values[field.name] === 1 ? 0 : 1)
-                      }
-                  >
-                    <Grid.Col span={11} fz="sm" pt="1">
-                      {t(field.label)}
-                    </Grid.Col>
-                    <Grid.Col span={1}>
-                      <Checkbox
-                          pr="xs"
-                          checked={form.values[field.name] === 1}
-                          color="red"
-                          {...form.getInputProps(field.name, { type: "checkbox" })}
-                          onChange={(event) =>
-                              form.setFieldValue(
-                                  field.name,
-                                  event.currentTarget.checked ? 1 : 0
-                              )
-                          }
-                          styles={{ input: { borderColor: "red" } }}
-                      />
-                    </Grid.Col>
-                  </Grid>
+                <Box>
+                  <InputCheckboxForm form={form} label={t(field.label)} field={field.name}  name={field.name} />
                 </Box>
             ))}
 

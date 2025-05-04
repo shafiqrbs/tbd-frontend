@@ -5,7 +5,7 @@
       { "id": "role_accounting", "label": "Accounting" },
       { "id": "role_accounting_voucher_entry", "label": "Voucher Entry" },
       { "id": "role_accounting_voucher_approve", "label": "Voucher Approve" },
-      { "id": "role_accounting_admin", "label": "AccountingAdmin" }
+      { "id": "role_accounting_admin", "label": "Accounting Admin" }
     ]
   },
 

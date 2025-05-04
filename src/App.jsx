@@ -12,15 +12,13 @@ import AppRoute from "./AppRoute";
 function App() {
 
     return (
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <MantineProvider withNormalizeCSS withGlobalStyles>
-                    <ModalsProvider>
-                        <AppRoute/>
-                    </ModalsProvider>
-                </MantineProvider>
-            </PersistGate>
-        </Provider>
+    <PersistGate loading={null} persistor={persistor}>
+        <MantineProvider withNormalizeCSS withGlobalStyles>
+            <ModalsProvider>
+                <AppRoute/>
+            </ModalsProvider>
+        </MantineProvider>
+    </PersistGate>
     )
 }
 
