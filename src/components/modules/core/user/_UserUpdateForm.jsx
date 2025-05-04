@@ -86,7 +86,7 @@ function _UserUpdateForm() {
             about_me: entityEditData?.about_me || null,
         },
         validate: {
-            employee_group_id:isNotEmpty(),
+            employee_group_id: isNotEmpty(),
             name: (value) => {
                 if (!value) return t("NameRequiredMessage");
                 if (value.length < 2)
@@ -186,8 +186,8 @@ function _UserUpdateForm() {
     );
 
     const [defaultGroupData] = useState([
-        { Group: "Accounting", actions: [] },
-        { Group: "HR & Payroll", actions: [] },
+        {Group: "Accounting", actions: []},
+        {Group: "HR & Payroll", actions: []},
     ]);
 
     const [selectedAccessControlRoleData, setSelectedAccessControlRoleData] = useState(defaultGroupData);
@@ -285,8 +285,8 @@ function _UserUpdateForm() {
     );
 
     const [defaultAndroidGroupData] = useState([
-        { Group: "Android Accounting", actions: [] },
-        { Group: "Android HR & Payroll", actions: [] },
+        {Group: "Android Accounting", actions: []},
+        {Group: "Android HR & Payroll", actions: []},
     ]);
 
     const [selectedAndroidControlRoleData, setSelectedAndroidControlRoleData] = useState(defaultAndroidGroupData);
@@ -426,56 +426,56 @@ function _UserUpdateForm() {
                     form.values['android_control_role'] = selectedAndroidControlRoleData
 
                     modals.openConfirmModal({
-                      title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
-                      children: <Text size="sm"> {t("FormConfirmationMessage")}</Text>,
-                      labels: { confirm: t("Submit"), cancel: t("Cancel") },
-                      confirmProps: { color: "red" },
-                      onCancel: () => console.log("Cancel"),
-                      onConfirm: async () => {
-                          const value = {
-                              url: "core/user/" + entityEditData.id,
-                              data: values,
-                          };
+                        title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
+                        children: <Text size="sm"> {t("FormConfirmationMessage")}</Text>,
+                        labels: {confirm: t("Submit"), cancel: t("Cancel")},
+                        confirmProps: {color: "red"},
+                        onCancel: () => console.log("Cancel"),
+                        onConfirm: async () => {
+                            const value = {
+                                url: "core/user/" + entityEditData.id,
+                                data: values,
+                            };
 
-                          const resultAction = await dispatch(updateEntityData(value));
+                            const resultAction = await dispatch(updateEntityData(value));
 
-                          if (updateEntityData.rejected.match(resultAction)) {
-                              const fieldErrors = resultAction.payload.errors;
+                            if (updateEntityData.rejected.match(resultAction)) {
+                                const fieldErrors = resultAction.payload.errors;
 
-                              // Check if there are field validation errors and dynamically set them
-                              if (fieldErrors) {
-                                  const errorObject = {};
-                                  Object.keys(fieldErrors).forEach(key => {
-                                      errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
-                                  });
-                                  // Display the errors using your form's `setErrors` function dynamically
-                                  form.setErrors(errorObject);
-                              }
-                          } else if (updateEntityData.fulfilled.match(resultAction)) {
-                              notifications.show({
-                                  color: "teal",
-                                  title: t("UpdateSuccessfully"),
-                                  icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                                  loading: false,
-                                  autoClose: 700,
-                                  style: { backgroundColor: "lightgray" },
-                              });
+                                // Check if there are field validation errors and dynamically set them
+                                if (fieldErrors) {
+                                    const errorObject = {};
+                                    Object.keys(fieldErrors).forEach(key => {
+                                        errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                                    });
+                                    // Display the errors using your form's `setErrors` function dynamically
+                                    form.setErrors(errorObject);
+                                }
+                            } else if (updateEntityData.fulfilled.match(resultAction)) {
+                                notifications.show({
+                                    color: "teal",
+                                    title: t("UpdateSuccessfully"),
+                                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                    loading: false,
+                                    autoClose: 700,
+                                    style: {backgroundColor: "lightgray"},
+                                });
 
-                              setTimeout(() => {
-                                  form.reset();
-                                  dispatch(setInsertType("create"));
-                                  dispatch(setEditEntityData([]));
-                                  dispatch(setFetching(true));
-                                  setSaveCreateLoading(false);
-                                  navigate("/core/user", { replace: true });
-                              }, 700);
-                          }
-                      },
+                                setTimeout(() => {
+                                    form.reset();
+                                    dispatch(setInsertType("create"));
+                                    dispatch(setEditEntityData([]));
+                                    dispatch(setFetching(true));
+                                    setSaveCreateLoading(false);
+                                    navigate("/core/user", {replace: true});
+                                }, 700);
+                            }
+                        },
                     });
                 })}
             >
                 <Box>
-                    <Grid columns={24} gutter={{base: 8}}>
+                    <Grid columns={22} gutter={{base: 8}}>
                         {/* start 1st Box */}
                         <Grid.Col span={7}>
                             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
@@ -529,7 +529,7 @@ function _UserUpdateForm() {
                                                                     mt={8}
                                                                     id={'employee_group_id'}
                                                                     searchable={false}
-                                                                    value={employeeGroupData?employeeGroupData:String(entityEditData.employee_group_id)}
+                                                                    value={employeeGroupData ? employeeGroupData : String(entityEditData.employee_group_id)}
                                                                     changeValue={setEmployeeGroupData}
                                                                 />
                                                             </Box>
@@ -658,7 +658,7 @@ function _UserUpdateForm() {
                         {/* end 1st Box */}
 
                         {/* start 2nd Box */}
-                        <Grid.Col span={9}>
+                        <Grid.Col span={8}>
                             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                                 <Box bg={"white"}>
                                     <Box
@@ -959,7 +959,7 @@ function _UserUpdateForm() {
                         {/* end 2nd Box */}
 
                         {/* start 3rd Box */}
-                        <Grid.Col span={7}>
+                        <Grid.Col span={6}>
                             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                                 <Box bg={"white"}>
                                     <Box
@@ -1032,7 +1032,7 @@ function _UserUpdateForm() {
                                                 />
                                             </Box>
                                             <Box>
-                                                <Grid gutter={{base:2}}>
+                                                <Grid gutter={{base: 2}}>
                                                     <Grid.Col span={11}>
                                                         <Box mt={'8'}>
                                                             <SelectForm
@@ -1047,7 +1047,7 @@ function _UserUpdateForm() {
                                                                 mt={8}
                                                                 id={'designation_id'}
                                                                 searchable={false}
-                                                                value={designationData?designationData:String(entityEditData.designation_id)}
+                                                                value={designationData ? designationData : String(entityEditData.designation_id)}
                                                                 changeValue={setDesignationData}
                                                             />
                                                         </Box>
@@ -1093,7 +1093,7 @@ function _UserUpdateForm() {
                                                                 mt={8}
                                                                 id={'department_id'}
                                                                 searchable={false}
-                                                                value={departmentData?designationData:String(entityEditData.department_id)}
+                                                                value={departmentData ? designationData : String(entityEditData.department_id)}
                                                                 changeValue={setDepartmentData}
                                                             />
                                                         </Box>
@@ -1139,7 +1139,7 @@ function _UserUpdateForm() {
                                                                 mt={8}
                                                                 id={'location_id'}
                                                                 searchable={false}
-                                                                value={locationData?locationData:String(entityEditData.location_id)}
+                                                                value={locationData ? locationData : String(entityEditData.location_id)}
                                                                 changeValue={setLocationData}
                                                             />
                                                         </Box>
@@ -1224,7 +1224,7 @@ function _UserUpdateForm() {
                                                             const value = {
                                                                 url: "core/user/image-inline/" + entityEditData.id,
                                                                 data: {
-                                                                    profile_image :e[0]
+                                                                    profile_image: e[0]
                                                                 },
                                                             };
                                                             dispatch(updateEntityDataWithFile(value))
@@ -1235,12 +1235,13 @@ function _UserUpdateForm() {
                                                             {profileImage && profileImage.length > 0 && profileImage[0].path ? (
                                                                 profileImage[0].path
                                                             ) : (
-                                                                <span>{t("DropProfileImageHere")} (150 * 150){" "}<span style={{color: "red"}}>*</span></span>
+                                                                <span>{t("DropProfileImageHere")} (150 * 150){" "}<span
+                                                                    style={{color: "red"}}>*</span></span>
                                                             )}
                                                         </Text>
                                                     </Dropzone>
                                                 </Tooltip>
-                                                {profileImage.length > 0?previewsProfile:
+                                                {profileImage.length > 0 ? previewsProfile :
                                                     <Flex h={150} justify={"center"} align={"center"} mt={"xs"}>
                                                         <Image
                                                             h={150}
@@ -1280,7 +1281,7 @@ function _UserUpdateForm() {
                                                             const value = {
                                                                 url: "core/user/image-inline/" + entityEditData.id,
                                                                 data: {
-                                                                    digital_signature :e[0]
+                                                                    digital_signature: e[0]
                                                                 },
                                                             };
                                                             dispatch(updateEntityDataWithFile(value))
@@ -1291,12 +1292,13 @@ function _UserUpdateForm() {
                                                             {digitalSignature && digitalSignature.length > 0 && digitalSignature[0].path ? (
                                                                 digitalSignature[0].path
                                                             ) : (
-                                                                <span>{t("DropDigitalSignatureHere")} (150 * 150){" "}<span style={{color: "red"}}>*</span></span>
+                                                                <span>{t("DropDigitalSignatureHere")} (150 * 150){" "}<span
+                                                                    style={{color: "red"}}>*</span></span>
                                                             )}
                                                         </Text>
                                                     </Dropzone>
                                                 </Tooltip>
-                                                {digitalSignature.length > 0?previewsDigitalSignature:
+                                                {digitalSignature.length > 0 ? previewsDigitalSignature :
                                                     <Flex h={150} justify={"center"} align={"center"} mt={"xs"}>
                                                         <Image
                                                             h={150}
@@ -1333,7 +1335,8 @@ function _UserUpdateForm() {
                 </Box>
             </form>
             {groupDrawer &&
-                <CustomerGroupDrawer groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} saveId={'EntityDrawerSubmit'} />
+                <CustomerGroupDrawer groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer}
+                                     saveId={'EntityDrawerSubmit'}/>
             }
         </Box>
     );
