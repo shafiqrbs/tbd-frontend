@@ -69,6 +69,7 @@ import B2bUserIndex from "./components/modules/b2b/master-user/B2bUserIndex";
 import DiscountConfigIndex from "./components/modules/discount/config/DiscountConfigIndex";
 import VoucherCreateIndex from "./components/modules/accounting/voucher-create/VoucherCreateIndex.jsx";
 import DiscountDashboard from "./components/modules/discount/dashboard/DiscountDashboard";
+import IssueWarehouseIndex from "./components/modules/production/production-issue/warehouse/IssueWarehouseIndex.jsx";
 
 function AppRoute() {
   return (
@@ -160,11 +161,9 @@ function AppRoute() {
           <Route path="config" element={<ProductionConfigurationIndex />} />
           <Route path="batch" element={<BatchIndex />} />
           <Route path="batch/:id" element={<InhouseIndex />} />
-          <Route
-            path="issue-production-general"
-            element={<GeneralIssueIndex />}
-          />
+          <Route path="issue-production-general" element={<GeneralIssueIndex />}/>
           <Route path="issue-production-batch" element={<BatchIssueIndex />} />
+          <Route path="user-warehouse" element={<IssueWarehouseIndex />}/>
         </Route>
 
         <Route path="/domain/">

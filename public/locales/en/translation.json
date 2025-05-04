@@ -13,6 +13,8 @@
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
-    "address": "Address"
+    "address": "Address",
+    "UserWarehouse": "Warehouse",
+    "": ""
 
   }

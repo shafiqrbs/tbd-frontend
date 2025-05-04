@@ -35,13 +35,17 @@ import genericClass from "../../../../../assets/css/Generic.module.css";
 import GeneralIssueSubmitForm from "./GeneralIssueSubmitForm";
 import { notifications, showNotification } from "@mantine/notifications";
 export default function GeneralIssueForm(props) {
-  const { isWarehouse, currencySymbol, isMeasurement } = props;
+  const { domainConfigData } = props;
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 360;
   const form = useForm({
     initialValues: {},
   });
+
+  const isWarehouse = domainConfigData?.sku_warehouse;
+  const currencySymbol = domainConfigData?.currencySymbol;
+  const isMeasurement = domainConfigData?.isMeasurement;
   //warehosue dropdown data
   let warehouseDropdownData = getCoreWarehouseDropdownData();
 
@@ -102,7 +106,7 @@ export default function GeneralIssueForm(props) {
       <Box>
         <Grid columns={24} gutter={{ base: 8 }}>
           <Grid.Col span={1}>
-            <ProductionNavigation module={"production-issue"} type={""} />
+            <ProductionNavigation module={"production-issue"} type={"production-issue"} />
           </Grid.Col>
           <Grid.Col span={8}>
             <form
