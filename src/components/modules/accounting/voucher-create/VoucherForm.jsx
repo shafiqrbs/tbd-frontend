@@ -61,7 +61,8 @@ function VoucherForm(props) {
     },
     validate: {
       name: isNotEmpty(),
-      voucher_type_id : isNotEmpty()
+      voucher_type_id : isNotEmpty(),
+      short_code : isNotEmpty()
     },
   });
 
@@ -124,7 +125,6 @@ function VoucherForm(props) {
               try {
                 const action = await dispatch(storeEntityData(data));
                 const payload = action.payload;
-
                 if (payload?.status === 200 && payload?.data?.data?.id) {
                   showNotificationComponent(
                     t("Voucher created successfully"),

@@ -59,7 +59,7 @@ function VoucherCreateIndex() {
         ),
         navigate("/accounting/voucher-create"));
   }, [id, dispatch, navigate]);
-
+ console.log(insertType);
   return (
     <>
       {progress !== 100 && (

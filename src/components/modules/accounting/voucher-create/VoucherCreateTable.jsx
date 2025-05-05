@@ -60,7 +60,6 @@ function VoucherCreateTable(props) {
     const value = {
       url: "accounting/voucher",
       param: {
-        group: "ledger",
         term: searchKeyword,
         page: page,
         offset: perPage,
@@ -161,11 +160,11 @@ function VoucherCreateTable(props) {
                           dispatch(setInsertType("update"));
                           dispatch(
                             editEntityData(
-                              `accounting/voucher-create/${data.id}`
+                              `accounting/voucher/${data.id}`
                             )
                           );
                           dispatch(setFormLoading(true));
-                          navigate(`accounting/voucher-create/${data.id}`);
+                          navigate(`/accounting/create-voucher/${data.id}`);
                         }}
                       >
                         {t("Edit")}
@@ -177,7 +176,7 @@ function VoucherCreateTable(props) {
                           setVoucherCreateViewDrawer(true);
                           dispatch(
                             showEntityData(
-                              `accounting/voucher-create/${data.id}`
+                              `accounting/voucher/${data.id}`
                             )
                           );
                           // dispatch(showEntityData('core/customer/' + data.id))

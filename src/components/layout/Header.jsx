@@ -324,7 +324,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
           </Modal.Body>
         </Modal.Content>
       </Modal.Root>
-      <Box bg={"#905a23"} mb={"2"} pos={`relative`}>
+      <Box bg={"#C6AF9D"} mb={"2"} pos={`relative`}>
         <Grid columns={24} gutter={{ base: 2 }} justify="space-between">
           <Grid.Col span={3}>
             {configData?.path ? (
@@ -342,7 +342,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                       ? configData.domain.company_name
                       : ""
                   }
-                  className={"tooltipSecondaryBg"}
+                  color={'#C6AF9D'}
                   position="right"
                   withArrow
                 >
@@ -353,7 +353,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                       navigate("/");
                     }}
                     style={{
-                      backgroundColor: "#905a23",
+                      backgroundColor: "#C6AF9D",
                       color: "white",
                       fontWeight: 800,
                       transition: "background 1s",
@@ -372,13 +372,12 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                     ></Image>
                   </Anchor>
                 </Tooltip>
-                {configData?.domain && loginUser.user_group === "domain" && (
+                {/*{configData?.domain && loginUser.user_group === "domain" && (
                   <Tooltip
                     label={t("UpdateYourLogoAndOtherConfigs")}
-                    bg={`green`}
+                    bg={'#905a23'}
                     position="right"
                     withArrow
-                    className={"tooltipSecondaryBg"}
                   >
                     <ActionIcon
                       c={"grey"}
@@ -394,7 +393,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                       <IconEdit style={{ width: rem(18), height: rem(18) }} />
                     </ActionIcon>
                   </Tooltip>
-                )}
+                )}*/}
                 {/* <Text ml={4}>{configData.domain.company_name}</Text> */}
               </div>
             ) : (
@@ -402,7 +401,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                 component="button"
                 bg={"transparent"}
                 style={{
-                  backgroundColor: "#905a23",
+                  backgroundColor: "#C6AF9D",
                   color: "white",
                   fontWeight: 800,
                   transition: "background 1s",
