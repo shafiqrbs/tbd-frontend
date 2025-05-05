@@ -24,6 +24,7 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData.js";
 import getSettingModulesDropdownData from "../../../global-hook/dropdown/getSettingModulesDropdownData.js";
+import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
 
 function DomainForm(props) {
     const { t, i18n } = useTranslation();
@@ -104,11 +105,45 @@ function DomainForm(props) {
                             ),
                             labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red.5' },
                             onCancel: () => console.log('Cancel'),
-                            onConfirm: () => {
+                            onConfirm: async () => {
                                 const value = {
                                     url: 'domain/global',
                                     data: values
                                 }
+
+                                const resultAction = await dispatch(storeEntityData(value));
+                                if (storeEntityData.rejected.match(resultAction)) {
+                                    const fieldErrors = resultAction.payload.errors;
+
+                                    // Check if there are field validation errors and dynamically set them
+                                    if (fieldErrors) {
+                                        const errorObject = {};
+                                        Object.keys(fieldErrors).forEach(key => {
+                                            errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                                        });
+                                        // Display the errors using your form's `setErrors` function dynamically
+                                        form.setErrors(errorObject);
+                                    }
+                                } else if (storeEntityData.fulfilled.match(resultAction)) {
+                                    notifications.show({
+                                        color: 'teal',
+                                        title: t('CreateSuccessfully'),
+                                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                        loading: false,
+                                        autoClose: 700,
+                                        style: {backgroundColor: 'lightgray'},
+                                    });
+
+                                    setTimeout(() => {
+                                        form.reset()
+                                        setBusinessModelId(null)
+                                        setModuleChecked([])
+                                        dispatch(setFetching(true))
+                                    }, 700)
+                                }
+
+                                /*
+
                                 dispatch(storeEntityData(value))
                                 notifications.show({
                                     color: 'teal',
@@ -124,7 +159,7 @@ function DomainForm(props) {
                                     setBusinessModelId(null)
                                     setModuleChecked([])
                                     dispatch(setFetching(true))
-                                }, 700)
+                                }, 700)*/
                             },
                         });
                     })}>
