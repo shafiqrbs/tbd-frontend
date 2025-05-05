@@ -52,7 +52,7 @@ function StockTable(props) {
   const perPage = 50;
   const [page, setPage] = useState(1);
 
-  const fetching = useSelector((state) => state.productionCrudSlice.fetching);
+  const fetching = useSelector((state) => state.crudSlice.fetching);
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
   const [indexData, setIndexData] = useState([]);
   const productFilterData = useSelector(
@@ -119,8 +119,7 @@ function StockTable(props) {
     };
 
     fetchData();
-  }, [fetching, downloadStockXLS]);
-
+  }, [fetching, downloadStockXLS, searchKeyword, productFilterData, page]);
   useEffect(() => {
     dispatch(setDeleteMessage(""));
     if (entityDataDelete === "success") {
