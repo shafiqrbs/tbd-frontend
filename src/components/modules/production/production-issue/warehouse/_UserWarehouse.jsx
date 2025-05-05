@@ -1,234 +1,91 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useOutletContext } from "react-router-dom";
-import {
-  Grid,
-  Box,
-  Button,
-  Group,
-  TextInput,
-  LoadingOverlay,
-  Tooltip,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { DataTable } from "mantine-datatable";
-import { useTranslation } from "react-i18next";
-import { getHotkeyHandler } from "@mantine/hooks";
-
+import React, {useEffect, useState} from "react";
+import {useOutletContext, useParams} from "react-router-dom";
+import {Grid, Box} from "@mantine/core";
+import __Warehouse from "../../common/__Warehouse.jsx";
+import _Search from "../../../b2b/common/_Search.jsx";
+import {DataTable} from "mantine-datatable";
 import tableCss from "../../../../../assets/css/Table.module.css";
 import classes from "../../../../../assets/css/FeaturesCards.module.css";
-import __Warehouse from "../../common/__Warehouse.jsx";
+import {useTranslation} from "react-i18next";
 
-// ─── Reusable Input for Inline Percentage Fields ──────────────────────────────
-const EditableNumberInput = ({ item, field, value, onUpdate }) => {
-  const [inputValue, setInputValue] = useState(value);
+export default function _UserWarehouse() {
+    const {id} = useParams();
+    const {t, i18n} = useTranslation();
+    const {mainAreaHeight} = useOutletContext();
+    const height = mainAreaHeight - 120;
+    const perPage = 50;
 
-  useEffect(() => {
-    setInputValue(value);
-  }, [value]);
+    const [page, setPage] = useState(1);
+    const [reloadList, setReloadList] = useState(true);
+    const [fetching, setFetching] = useState(false);
+    const [selectWarehouseId, setWarehouseId] = useState(id);
+    const [productionItems, setProductionItems] = useState([]);
 
-  const handleChange = (e) => {
-    const val = e.currentTarget.value;
-    setInputValue(val);
-    onUpdate(item.id, field, val);
-  };
+    useEffect(() => {
+        const userData = JSON.parse(localStorage.getItem("user"));
+        let items = userData?.production_item || [];
 
-  return (
-      <TextInput
-          type="number"
-          size="xs"
-          id={`inline-update-${field}-${item.id}`}
-          value={inputValue}
-          onChange={handleChange}
-          onKeyDown={getHotkeyHandler([
-            [
-              "Enter",
-              () => {
-                document
-                    .getElementById(`inline-update-${field}-${item.id}`)
-                    .focus();
-              },
-            ],
-          ])}
-      />
-  );
-};
+        if (id != null) {
+            items = items.filter(item => item.user_warehouse_id == id);
+        }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
-export default function _UserWarehouse({ id }) {
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
-  const { mainAreaHeight } = useOutletContext();
+        setProductionItems(items);
+        setTimeout(() => {
+            setFetching(false);
+        }, 700);
+    }, [id]);
 
-  const height = mainAreaHeight - 120;
-  const perPage = 50;
+    return (
+        <Box style={{position: "relative"}}>
 
-  const [page, setPage] = useState(1);
-  const [reloadList, setReloadList] = useState(true);
-  const [onlyReloadSetting, setOnlyReloadSetting] = useState(false);
-  const [fetching, setFetching] = useState(false);
-  const [selectWarehouseId, setWarehouseId] = useState(id);
+            <Grid columns={24} gutter={{base: 8}}>
+                <Grid.Col span={4}>
+                    <__Warehouse
+                        classes={classes}
+                        setWarehouseId={setWarehouseId}
+                        selectWarehouseId={selectWarehouseId}
+                        setReloadList={setReloadList}
+                        id={id}
+                        module={"user-warehouse"}
+                        setFetching={setFetching}
+                    />
+                </Grid.Col>
 
-  return (
-      <Box style={{ position: "relative" }}>
-        {/*<LoadingOverlay visible={reloadList} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} loaderProps={{color : "red"}} />*/}
+                <Grid.Col span={20}>
+                    <Box p="xs" bg="white" className="borderRadiusAll">
+                        <Box pl="xs" pb="xs" pr={8} pt="xs" mb="xs" className="boxBackground borderRadiusAll">
+                            <_Search module="product"/>
+                        </Box>
 
-        <Grid columns={24} gutter={{ base: 8 }}>
-          <Grid.Col span={4}>
-            <__Warehouse
-                classes={classes}
-                setWarehouseId={setWarehouseId}
-                selectWarehouseId={selectWarehouseId}
-                setReloadList={setReloadList}
-                id={id}
-                module={"category"}
-            />
-          </Grid.Col>
-
-          <Grid.Col span={20}>
-            <Box p="xs" bg="white" className="borderRadiusAll">
-              {/*<Box pl="xs" pb="xs" pr={8} pt="xs" mb="xs" className="boxBackground borderRadiusAll">
-                <_Search module="product" />
-              </Box>
-
-              <Box className="borderRadiusAll">
-                <DataTable
-                    classNames={tableCss}
-                    records={subDomainCategoryData?.sub_domain_category || []}
-                    columns={[
-                      {
-                        accessor: "index",
-                        title: t("S/N"),
-                        textAlignment: "right",
-                        render: (item) =>
-                            subDomainCategoryData?.sub_domain_category.indexOf(item) +
-                            1 +
-                            (page - 1) * perPage,
-                      },
-                      { accessor: "category_name", title: t("Category") },
-
-                      {
-                        accessor: "percent_mode",
-                        title: t("Mode"),
-                        width: "220px",
-                        textAlign: "center",
-                        render: (item) => (
-                            <SelectForm
-                                tooltip={t("ChooseMode")}
-                                placeholder={t("ChooseMode")}
-                                required
-                                name="percent_mode"
-                                form={form}
-                                dropdownValue={["Increase", "Decrease"]}
-                                id={`percent_mode_${item.id}`}
-                                searchable
-                                value={modeMap[item.id] || null}
-                                changeValue={(value) => {
-                                  setModeMap((prev) => ({ ...prev, [item.id]: value }));
-                                  handleInlineUpdate(item.id, "percent_mode", value);
-                                }}
+                        <Box className="borderRadiusAll">
+                            <DataTable
+                                classNames={tableCss}
+                                records={productionItems || []}
+                                columns={[
+                                    {
+                                        accessor: "index",
+                                        title: t("S/N"),
+                                        textAlignment: "right",
+                                        render: (item) =>
+                                            productionItems.indexOf(item) +
+                                            1 +
+                                            (page - 1) * perPage,
+                                    },
+                                    {accessor: "item_name", title: t("Item")},
+                                    {accessor: "uom", title: t("Unit")},
+                                    {accessor: "closing_quantity", title: t("Stock")},
+                                    {accessor: "warehouse_name", title: t("Warehouse")},
+                                ]}
+                                fetching={fetching}
+                                loaderSize="xs"
+                                loaderColor="grape"
+                                height={height}
+                                scrollAreaProps={{type: "never"}}
                             />
-                        ),
-                      },
-                      {
-                        accessor: "purchase_percent",
-                        title: t("Purchase(%)"),
-                        textAlign: "center",
-                        width: "220px",
-                        render: (item) => (
-                            <EditableNumberInput
-                                item={item}
-                                field="purchase_percent"
-                                value={item.purchase_percent}
-                                onUpdate={handleInlineUpdate}
-                            />
-                        ),
-                      },
-                      {
-                        accessor: "mrp_percent",
-                        title: t("MRP(%)"),
-                        textAlign: "center",
-                        width: "220px",
-                        render: (item) => (
-                            <EditableNumberInput
-                                item={item}
-                                field="mrp_percent"
-                                value={item.mrp_percent}
-                                onUpdate={handleInlineUpdate}
-                            />
-                        ),
-                      },
-
-                      {
-                        accessor: "bonus_percent",
-                        title: t("Bonus(%)"),
-                        textAlign: "center",
-                        width: "220px",
-                        render: (item) => (
-                            <EditableNumberInput
-                                item={item}
-                                field="bonus_percent"
-                                value={item.bonus_percent}
-                                onUpdate={handleInlineUpdate}
-                            />
-                        ),
-                      },
-
-                      {
-                        accessor: "action",
-                        title: t("Action"),
-                        textAlign: "right",
-                        render: (item) => (
-                            <Group gap={4} justify="right" wrap="nowrap">
-
-                              <Button
-                                  size="compact-xs"
-                                  radius="xs"
-                                  variant="filled"
-                                  color={item.not_process === 1 ? "#905a23" : "red.3"}
-                                  fw={100}
-                                  fz={12}
-                                  disabled={item.not_process !== 1}
-                                  onClick={async () => {
-                                    setReloadList(true);
-                                    try {
-                                      const resultAction = await dispatch(
-                                          getIndexEntityData({
-                                            url: `domain/b2b/category-wise/price-update/${item.id}`,
-                                            param: {},
-                                          })
-                                      );
-
-                                      if (getIndexEntityData.fulfilled.match(resultAction)) {
-                                        showNotificationComponent(resultAction?.payload?.message, "red", "", "", true);
-                                      }
-                                    } catch (err) {
-                                      console.error("Update error", err);
-                                    } finally {
-                                      setReloadList(false);
-                                    }
-                                  }}
-                              >
-                                {t("Process")}
-                              </Button>
-                            </Group>
-                        ),
-                      },
-                    ]}
-                    fetching={fetching}
-                    totalRecords={subDomainCategoryData?.sub_domain_category?.length || 0}
-                    recordsPerPage={perPage}
-                    page={page}
-                    onPageChange={(p) => setPage(p)}
-                    loaderSize="xs"
-                    loaderColor="grape"
-                    height={height}
-                    scrollAreaProps={{ type: "never" }}
-                />
-              </Box>*/}
-            </Box>
-          </Grid.Col>
-        </Grid>
-      </Box>
-  );
+                        </Box>
+                    </Box>
+                </Grid.Col>
+            </Grid>
+        </Box>
+    );
 }

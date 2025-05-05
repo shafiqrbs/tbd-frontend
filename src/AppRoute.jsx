@@ -164,6 +164,7 @@ function AppRoute() {
           <Route path="issue-production-general" element={<GeneralIssueIndex />}/>
           <Route path="issue-production-batch" element={<BatchIssueIndex />} />
           <Route path="user-warehouse" element={<IssueWarehouseIndex />}/>
+          <Route path="user-warehouse/:id" element={<IssueWarehouseIndex />}/>
         </Route>
 
         <Route path="/domain/">
