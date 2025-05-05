@@ -18,16 +18,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import Navigation from "../common/Navigation.jsx";
 
 function UserIndex() {
-<<<<<<< HEAD
-    const {t, i18n} = useTranslation();
-    const dispatch = useDispatch();
-    const insertType = useSelector((state) => state.crudSlice.insertType);
-    const userFilterData = useSelector((state) => state.crudSlice.userFilterData);
-
-    const {id} = useParams();
-    const navigate = useNavigate();
-    const progress = getLoadingProgress();
-=======
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const insertType = useSelector((state) => state.crudSlice.insertType);
@@ -35,7 +25,6 @@ function UserIndex() {
   const { id } = useParams();
   const navigate = useNavigate();
   const progress = getLoadingProgress();
->>>>>>> 420ac5a (domain validation message)
 
     useEffect(() => {
         id
