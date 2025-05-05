@@ -23,6 +23,9 @@ import {
   Grid,
   Stack,
   Title,
+  ScrollArea,
+  TextInput,
+  CloseButton,
 } from "@mantine/core";
 
 import { useDisclosure, useFullscreen, useHotkeys } from "@mantine/hooks";
@@ -36,8 +39,11 @@ import {
   IconWifiOff,
   IconWifi,
   IconEdit,
+  IconX,
+  IconXboxX,
+  IconArrowRight,
 } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import HeaderStyle from "./../../assets/css/Header.module.css";
 import classes from "./../../assets/css/Header.module.css";
 import LanguagePickerStyle from "./../../assets/css/LanguagePicker.module.css";
@@ -59,14 +65,43 @@ const languages = [
   { label: "BN", value: "bn", flag: flagBD },
 ];
 
-export default function Header({ isOnline, configData }) {
+export default function Header({ isOnline, configData, mainAreaHeight }) {
   // console.log(configData);
+  const [userRole, setUserRole] = useState(() => {
+    const userRoleData = localStorage.getItem("user");
+    if (!userRoleData) return [];
 
+    try {
+      const parsedUser = JSON.parse(userRoleData);
+
+      if (!parsedUser.access_control_role) return [];
+
+      if (Array.isArray(parsedUser.access_control_role)) {
+        return parsedUser.access_control_role;
+      }
+
+      if (typeof parsedUser.access_control_role === "string") {
+        try {
+          if (parsedUser.access_control_role.trim() === "") return [];
+          return JSON.parse(parsedUser.access_control_role);
+        } catch (parseError) {
+          console.error("Error parsing access_control_role:", parseError);
+          return [];
+        }
+      }
+
+      return [];
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
+      return [];
+    }
+  });
   const [opened, { open, close }] = useDisclosure(false);
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useMantineTheme();
+  const height = mainAreaHeight - 140;
   const { toggle, fullscreen } = useFullscreen();
   const [languageOpened, setLanguageOpened] = useState(false);
   const [languageSelected, setLanguageSelected] = useState(
@@ -110,17 +145,13 @@ export default function Header({ isOnline, configData }) {
     localStorage.clear();
     navigate("/login");
   }
-  const list = getActions().reduce(
-    (acc, group) => [...acc, ...group.actions],
-    []
-  );
 
   useHotkeys(
     [
       [
         "alt+k",
         () => {
-          open();
+          setShortcutModalOpen(true);
         },
       ],
     ],
@@ -138,105 +169,6 @@ export default function Header({ isOnline, configData }) {
     []
   );
 
-  const shortcuts = (
-    <Stack spacing="xs">
-      {list
-        .reduce((groups, item) => {
-          const lastGroup = groups[groups.length - 1];
-          if (!lastGroup || item.group !== lastGroup.group) {
-            groups.push({ group: item.group, items: [item] });
-          } else {
-            lastGroup.items.push(item);
-          }
-          return groups;
-        }, [])
-        .map((groupData, groupIndex) => (
-          <Box key={groupIndex}>
-            <Text size="sm" fw="bold" c="#828282" pb={"xs"}>
-              {groupData.group}
-            </Text>
-
-            <SimpleGrid cols={2}>
-              {groupData.items.map((action, itemIndex) => (
-                <Link
-                  key={itemIndex}
-                  to={
-                    action.id === "inhouse"
-                      ? "#"
-                      : action.group === "Production" ||
-                        action.group === "প্রোডাকশন"
-                      ? `production/${action.id}`
-                      : action.group === "Core" || action.group === "কেন্দ্র"
-                      ? `core/${action.id}`
-                      : action.group === "Inventory" ||
-                        action.group === "ইনভেন্টরি"
-                      ? `inventory/${action.id}`
-                      : action.group === "Domain" || action.group === "ডোমেইন"
-                      ? `domain/${action.id}`
-                      : action.group === "Accounting" ||
-                        action.group === "একাউন্টিং"
-                      ? `accounting/${action.id}`
-                      : action.group === "Procurement"
-                      ? `procurement/${action.id}`
-                      : action.group === "Sales & Purchase"
-                      ? `inventory/${action.id}`
-                      : `/sitemap`
-                  }
-                  onClick={(e) => {
-                    navigate(
-                      action.group === "Production" ||
-                        action.group === "প্রোডাকশন"
-                        ? `production/${action.id}`
-                        : action.group === "Core" || action.group === "কেন্দ্র"
-                        ? `core/${action.id}`
-                        : action.group === "Inventory" ||
-                          action.group === "ইনভেন্টরি"
-                        ? `inventory/${action.id}`
-                        : action.group === "Domain" || action.group === "ডোমেইন"
-                        ? `domain/${action.id}`
-                        : action.group === "Accounting" ||
-                          action.group === "একাউন্টিং"
-                        ? `accounting/${action.id}`
-                        : action.group === "Sales & Purchase"
-                        ? `inventory/${action.id}`
-                        : `/sitemap`
-                    );
-                  }}
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <UnstyledButton className={HeaderStyle.subLink}>
-                    <Group
-                      wrap="nowrap"
-                      align="center"
-                      justify="center"
-                      gap={4}
-                    >
-                      <ThemeIcon size={18} variant="transparent" radius="md">
-                        <IconCircleCheck
-                          style={{ width: rem(14), height: rem(14) }}
-                          color={"green"}
-                        />
-                      </ThemeIcon>
-                      <div>
-                        <Center>
-                          <Text size="sm" fw={500}>
-                            {action.label}
-                          </Text>
-                        </Center>
-                        {/* <Text size="xs" c="dimmed">
-                          {action.description}
-                        </Text> */}
-                      </div>
-                    </Group>
-                  </UnstyledButton>
-                </Link>
-              ))}
-            </SimpleGrid>
-          </Box>
-        ))}
-    </Stack>
-  );
-
   useHotkeys(
     [
       [
@@ -248,6 +180,132 @@ export default function Header({ isOnline, configData }) {
     ],
     []
   );
+  const [shortcutModalOpen, setShortcutModalOpen] = useState(false);
+  const [value, setValue] = useState("");
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const filterList = (searchValue) => {
+    const updatedList = getActions().reduce((acc, group) => {
+      // Only include actions from groups the user has access to
+      if (hasAccessToGroup(group.group)) {
+        const filteredActions = group.actions.filter((action) =>
+          action.label.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        return [...acc, ...filteredActions];
+      }
+      return acc;
+    }, []);
+
+    setFilteredItems(updatedList);
+    setSelectedIndex(-1);
+  };
+
+  const clearSearch = () => {
+    setValue("");
+    const allActions = getActions().reduce(
+      (acc, group) => [...acc, ...group.actions],
+      []
+    );
+    setFilteredItems(allActions);
+    setSelectedIndex(0);
+  };
+
+  useHotkeys([["alt+c", clearSearch]], []);
+
+  const handleKeyDown = (event) => {
+    if (filteredItems.length === 0) return;
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setSelectedIndex((prevIndex) => (prevIndex + 1) % filteredItems.length);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setSelectedIndex((prevIndex) =>
+        prevIndex <= 0 ? filteredItems.length - 1 : prevIndex - 1
+      );
+    } else if (event.key === "Enter" && selectedIndex >= 0) {
+      const selectedAction = filteredItems[selectedIndex];
+      if (selectedAction) {
+        const path =
+          (selectedAction.group === "Domain" &&
+            selectedAction.id === "dashboard") ||
+          (selectedAction.group === "ডোমেইন" &&
+            selectedAction.id === "dashboard")
+            ? `b2b/${selectedAction.id}`
+            : selectedAction.group === "Production" ||
+              selectedAction.group === "প্রোডাকশন"
+            ? `production/${selectedAction.id}`
+            : selectedAction.group === "Core" ||
+              selectedAction.group === "কেন্দ্র"
+            ? `core/${selectedAction.id}`
+            : selectedAction.group === "Inventory" ||
+              selectedAction.group === "ইনভেন্টরি"
+            ? `inventory/${selectedAction.id}`
+            : selectedAction.group === "Domain" ||
+              selectedAction.group === "ডোমেইন"
+            ? `domain/${selectedAction.id}`
+            : selectedAction.group === "Accounting" ||
+              selectedAction.group === "একাউন্টিং"
+            ? `accounting/${selectedAction.id}`
+            : selectedAction.group === "Procurement"
+            ? `procurement/${selectedAction.id}`
+            : selectedAction.group === "Sales & Purchase"
+            ? `inventory/${selectedAction.id}`
+            : `/sitemap`;
+
+        navigate(path);
+        setShortcutModalOpen(false);
+      }
+    }
+  };
+  useEffect(() => {
+    if (selectedIndex >= 0 && filteredItems.length > 0) {
+      const selectedElement = document.getElementById(
+        `item-${filteredItems[selectedIndex].index}`
+      );
+      if (selectedElement) {
+        selectedElement.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      }
+    }
+  }, [selectedIndex, filteredItems]);
+  useEffect(() => {
+    const allActions = getActions().reduce(
+      (acc, group) => [...acc, ...group.actions],
+      []
+    );
+    setFilteredItems(allActions);
+  }, [shortcutModalOpen === true]);
+  const hasAccessToGroup = (group) => {
+    if (userRole.includes("role_domain")) return true;
+
+    switch (group) {
+      case "Production":
+      case "প্রোডাকশন":
+        return userRole.includes("role_production");
+      case "Core":
+      case "কেন্দ্র":
+        return userRole.includes("role_core");
+      case "Inventory":
+      case "ইনভেন্টরি":
+        return userRole.includes("role_inventory");
+      case "Domain":
+      case "ডোমেইন":
+        return userRole.includes("role_domain");
+      case "Accounting":
+      case "একাউন্টিং":
+        return userRole.includes("role_accounting");
+      case "Procurement":
+        return userRole.includes("role_procurement");
+      case "Sales & Purchase":
+        return userRole.includes("role_sales_purchase");
+      default:
+        return false;
+    }
+  };
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   return (
     <>
       <Modal.Root opened={opened} onClose={close} size="64%">
@@ -408,66 +466,308 @@ export default function Header({ isOnline, configData }) {
                 style={{ border: "1px solid #49362366" }}
                 color={"black"}
                 bg={"white"}
-                onClick={open}
+                onClick={() => setShortcutModalOpen(true)}
                 className="no-focus-outline"
               />
-              <HoverCard
-                width={400}
-                position="bottom"
+              {/* <Box onClick={() => setShortcutModalOpen(true)}>
+                <Center inline>
+                  <Box component="span" mr={"xs"} c={"white"} fw={"500"}>
+                    {t("Shortcut")}
+                  </Box>
+                  <IconChevronDown
+                    style={{ width: rem(16), height: rem(16) }}
+                    color={"white"}
+                  />
+                </Center>
+              </Box> */}
+              <Modal
+                opened={shortcutModalOpen}
+                onClose={() => setShortcutModalOpen(false)}
+                centered
+                size="25%"
+                padding="md"
                 radius="md"
-                shadow="md"
-                withinPortal
-                withArrow
-                arrowPosition="center"
-              >
-                <HoverCard.Target>
-                  <a href="#" className={classes.link}>
-                    <Center inline>
-                      <Box component="span" mr={"xs"} c={"white"} fw={"500"}>
-                        {t("Shortcut")}
-                      </Box>
-                      <IconChevronDown
-                        style={{ width: rem(16), height: rem(16) }}
-                        color={"white"}
+                styles={{
+                  title: {
+                    width: "100%",
+                    margin: 0,
+                    padding: 0,
+                  },
+                }}
+                overlayProps={{
+                  backgroundOpacity: 0.7,
+                  blur: 3,
+                }}
+                title={
+                  <Grid columns={12} gutter={{ base: 6 }}>
+                    <Grid.Col span={2}>
+                      <Text fw={500} fz={16} pt={"6"}>
+                        {configData && configData.domain
+                          ? configData.domain.company_name
+                          : ""}
+                      </Text>
+                    </Grid.Col>
+                    <Grid.Col span={10}>
+                      <TextInput
+                        w={"100%"}
+                        align={"center"}
+                        pr={"lg"}
+                        justify="space-between"
+                        data-autofocus
+                        leftSection={<IconSearch size={16} c={"red"} />}
+                        placeholder={t("SearchMenu")}
+                        value={value}
+                        rightSectionPointerEvents="all"
+                        rightSection={
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            {value ? (
+                              <>
+                                <CloseButton
+                                  ml={"-50"}
+                                  mr={"xl"}
+                                  icon={
+                                    <IconX
+                                      style={{ width: rem(20) }}
+                                      stroke={2.0}
+                                    />
+                                  }
+                                  aria-label="Clear input"
+                                  onClick={clearSearch}
+                                />
+                                <Kbd ml={"-xl"} h={"24"} c={"gray.8"} fz={"12"}>
+                                  Alt
+                                </Kbd>{" "}
+                                +{" "}
+                                <Kbd c={"gray.8"} h={"24"} fz={"12"} mr={"lg"}>
+                                  C
+                                </Kbd>
+                              </>
+                            ) : (
+                              <>
+                                <CloseButton
+                                  ml={"-50"}
+                                  mr={"lg"}
+                                  icon={
+                                    <IconXboxX
+                                      style={{ width: rem(20) }}
+                                      stroke={2.0}
+                                    />
+                                  }
+                                  aria-label="Close"
+                                  onClick={() => setShortcutModalOpen(false)}
+                                />
+                                <Kbd ml={"-lg"} h={"24"} c={"gray.8"} fz={"12"}>
+                                  Alt{" "}
+                                </Kbd>{" "}
+                                +{" "}
+                                <Kbd c={"gray.8"} h={"24"} fz={"12"} mr={"xl"}>
+                                  X
+                                </Kbd>
+                              </>
+                            )}
+                          </div>
+                        }
+                        onChange={(event) => {
+                          setValue(event.target.value);
+                          filterList(event.target.value);
+                        }}
+                        onKeyDown={handleKeyDown}
+                        className="no-focus-outline"
                       />
-                    </Center>
-                  </a>
-                </HoverCard.Target>
+                    </Grid.Col>
+                  </Grid>
+                }
+                transitionProps={{ transition: "fade", duration: 200 }}
+              >
+                <ScrollArea scrollbarSize={4} scrollbars="y" h={height}>
+                  <Divider my="sm" mt={0} />
+                  {filteredItems.length > 0 ? (
+                    <Stack spacing="xs">
+                      {filteredItems
+                        .reduce((groups, item) => {
+                          const existingGroup = groups.find(
+                            (g) => g.group === item.group
+                          );
+                          if (existingGroup) {
+                            existingGroup.items.push(item);
+                          } else {
+                            groups.push({ group: item.group, items: [item] });
+                          }
+                          return groups;
+                        }, [])
+                        .map((groupData, groupIndex) => (
+                          <Box key={groupIndex}>
+                            <Text size="sm" fw="bold" c="#828282" pb={"xs"}>
+                              {groupData.group}
+                            </Text>
 
-                <HoverCard.Dropdown style={{ overflow: "hidden" }}>
-                  <Group justify="space-between">
-                    <Text fw={500} fz={16}>
-                      {configData && configData.domain
-                        ? configData.domain.company_name
-                        : ""}
+                            <SimpleGrid cols={1}>
+                              {groupData.items.map((action, itemIndex) => {
+                                const isSelected =
+                                  filteredItems.indexOf(action) ===
+                                  selectedIndex;
+
+                                return (
+                                  <Link
+                                    className={`
+                                    ${
+                                      filteredItems.indexOf(action) ===
+                                      selectedIndex
+                                        ? "highlightedItem"
+                                        : ""
+                                    }
+                                    ${
+                                      hoveredIndex === action.index
+                                        ? "hoveredItem"
+                                        : ""
+                                    }
+                                `}
+                                    style={{
+                                      cursor: "pointer",
+                                      padding: "6px",
+                                      textDecoration: "none",
+                                      color: "inherit",
+                                    }}
+                                    key={itemIndex}
+                                    to={
+                                      action.id === "inhouse"
+                                        ? "#"
+                                        : action.group === "Production" ||
+                                          action.group === "প্রোডাকশন"
+                                        ? `production/${action.id}`
+                                        : action.group === "Core" ||
+                                          action.group === "কেন্দ্র"
+                                        ? `core/${action.id}`
+                                        : action.group === "Inventory" ||
+                                          action.group === "ইনভেন্টরি"
+                                        ? `inventory/${action.id}`
+                                        : action.group === "Domain" ||
+                                          action.group === "ডোমেইন"
+                                        ? `domain/${action.id}`
+                                        : action.group === "Accounting" ||
+                                          action.group === "একাউন্টিং"
+                                        ? `accounting/${action.id}`
+                                        : action.group === "Procurement"
+                                        ? `procurement/${action.id}`
+                                        : action.group === "Sales & Purchase"
+                                        ? `inventory/${action.id}`
+                                        : `/sitemap`
+                                    }
+                                    onClick={(e) => {
+                                      setShortcutModalOpen(false);
+                                      navigate(
+                                        action.group === "Production" ||
+                                          action.group === "প্রোডাকশন"
+                                          ? `production/${action.id}`
+                                          : action.group === "Core" ||
+                                            action.group === "কেন্দ্র"
+                                          ? `core/${action.id}`
+                                          : action.group === "Inventory" ||
+                                            action.group === "ইনভেন্টরি"
+                                          ? `inventory/${action.id}`
+                                          : action.group === "Domain" ||
+                                            action.group === "ডোমেইন"
+                                          ? `domain/${action.id}`
+                                          : action.group === "Accounting" ||
+                                            action.group === "একাউন্টিং"
+                                          ? `accounting/${action.id}`
+                                          : action.group === "Sales & Purchase"
+                                          ? `inventory/${action.id}`
+                                          : `/sitemap`
+                                      );
+                                    }}
+                                    onMouseEnter={() => {
+                                      setHoveredIndex(action.index);
+                                      setSelectedIndex(-1);
+                                    }}
+                                    onMouseLeave={() => setHoveredIndex(null)}
+                                  >
+                                    <UnstyledButton
+                                      mt={"4"}
+                                      className={HeaderStyle.subLink}
+                                      bg={isSelected ? "gray.2" : undefined}
+                                    >
+                                      <Group
+                                        wrap="nowrap"
+                                        align="center"
+                                        justify="center"
+                                        gap={4}
+                                      >
+                                        <ThemeIcon
+                                          size={18}
+                                          variant="transparent"
+                                          radius="md"
+                                        >
+                                          <IconArrowRight
+                                            style={{
+                                              width:
+                                                hoveredIndex === action.index
+                                                  ? rem(24)
+                                                  : rem(14),
+                                              height:
+                                                hoveredIndex === action.index
+                                                  ? rem(24)
+                                                  : rem(14),
+                                            }}
+                                            color={
+                                              hoveredIndex === action.index
+                                                ? "red"
+                                                : "green"
+                                            }
+                                          />
+                                        </ThemeIcon>
+                                        <div>
+                                          <Center>
+                                            <Text
+                                              size="sm"
+                                              fw={500}
+                                              className={`${
+                                                hoveredIndex === action.index
+                                                  ? classes.hoveredText
+                                                  : ""
+                                              }`}
+                                            >
+                                              {action.label}
+                                            </Text>
+                                          </Center>
+                                        </div>
+                                      </Group>
+                                    </UnstyledButton>
+                                  </Link>
+                                );
+                              })}
+                            </SimpleGrid>
+                          </Box>
+                        ))}
+                    </Stack>
+                  ) : (
+                    <Text align="center" mt="md" c="dimmed">
+                      {t("NoResultsFound")}
                     </Text>
-                  </Group>
-                  <Divider my="sm" />
-                  <SimpleGrid cols={1} spacing={0}>
-                    {shortcuts}
-                  </SimpleGrid>
-
-                  <div className={classes.dropdownFooter}>
-                    <Group justify="space-between" mt={"xs"}>
-                      <div>
-                        <Text fw={500} fz="sm">
-                          Sitemap
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          Sitemap Details
-                        </Text>
-                      </div>
-                      <Button
-                        className={"btnPrimaryBg"}
-                        size="xs"
-                        onClick={() => navigate("/")}
-                      >
+                  )}
+                </ScrollArea>
+                <div className={classes.dropdownFooter}>
+                  <Group justify="space-between" mt={"xs"}>
+                    <div>
+                      <Text fw={500} fz="sm">
                         Sitemap
-                      </Button>
-                    </Group>
-                  </div>
-                </HoverCard.Dropdown>
-              </HoverCard>
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        Sitemap Details
+                      </Text>
+                    </div>
+                    <Button
+                      className={"btnPrimaryBg"}
+                      size="xs"
+                      onClick={() => navigate("/")}
+                    >
+                      Sitemap
+                    </Button>
+                  </Group>
+                </div>
+              </Modal>
             </Group>
           </Grid.Col>
           <Grid.Col span={6}>

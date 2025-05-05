@@ -1,3 +1,9 @@
 .buttonHeader {
-    padding-left: 0 !important;
+  padding-left: 0 !important;
+}
+/* In Header.module.css */
+.hoveredText {
+  color: red !important; 
+  font-weight: 900 !important;
+  font-size: bold !important;
 }

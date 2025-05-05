@@ -66,7 +66,7 @@ const Layout = () => {
     return (
         <AppShell padding="0">
             <AppShell.Header height={headerHeight} bg='gray.0'>
-                <Header isOnline={isOnline} configData={configData}/>
+                <Header isOnline={isOnline} configData={configData} mainAreaHeight={mainAreaHeight}/>
             </AppShell.Header>
             <AppShell.Main>
                 {paramPath !== '/' ? <Outlet context={{isOnline, mainAreaHeight}}/> : <MainDashboard height={mainAreaHeight} />}
