@@ -573,7 +573,6 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                                 bg="var(--mantine-color-body)"
                                 justify="flex-start"
                                 align="stretch"
-                                justify="flex-start"
                                 gap="2"
                             >
                               {groupData.items.map((action, itemIndex) => {
@@ -638,7 +637,6 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                                         justify="left"
                                         pt={'4'}
                                         pb={'4'}
-
                                       >
                                         <ThemeIcon size={18} color={'#242424'} variant="transparent">
                                           <IconArrowRight/>
