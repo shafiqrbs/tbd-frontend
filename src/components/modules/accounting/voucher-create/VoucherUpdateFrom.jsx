@@ -232,7 +232,7 @@ function VoucherUpdateFrom(props) {
                               mt={8}
                               id={"voucher_type_id"}
                               searchable={false}
-                              value={voucherType}
+                              value={entityEditData.voucher_type_id ? String(entityEditData.voucher_type_id) : null}
                               changeValue={setVoucherType}
                             />
                           </Box>
@@ -291,7 +291,7 @@ function VoucherUpdateFrom(props) {
                               mt={8}
                               id={"mode"}
                               searchable={false}
-                              value={mode}
+                              value={entityEditData.mode ? String(entityEditData.mode) : null}
                               changeValue={setMode}
                             />
                           </Box>
