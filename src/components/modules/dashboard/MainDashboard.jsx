@@ -81,7 +81,7 @@ function MainDashboard(props) {
         }
     });
 
-    console.log(domainConfig);
+    // console.log(domainConfig);
     useEffect(() => {
         const checkConfigData = () => {
             if (!configData) {
