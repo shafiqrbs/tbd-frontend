@@ -253,7 +253,7 @@ input[type=radio]:checked + label>img {
     /*border-left: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)) !important;*/
 
     @mixin hover {
-       /* background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));*/
+        /* background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));*/
         color:  #905a23 !important;
         background-color: whitesmoke;
     }
