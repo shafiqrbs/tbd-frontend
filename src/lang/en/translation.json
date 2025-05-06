@@ -1112,5 +1112,7 @@
   "SitemapDetails" : "Sitemap Details",
   "xxxxxx": "xxxxxxx",
   "VoucherNavigation": "Voucher Navigation",
+  "UserWarehouse": "Warehouse",
+  "InvalidQuantity": "Enter quantity",
   "": ""
 }

@@ -18,7 +18,6 @@ import {
     IconRefresh,
     IconShoppingBag,
     IconDeviceFloppy,
-    IconPlus,
     IconSearch,
     IconX,
     IconInfoCircle,
@@ -28,12 +27,12 @@ import classes from "../../../../../assets/css/FeaturesCards.module.css";
 import tableCss from "../../../../../assets/css/Table.module.css";
 import {useTranslation} from "react-i18next";
 import {useOutletContext} from "react-router-dom";
-import getCoreWarehouseDropdownData from "../../../../global-hook/dropdown/core/getCoreWarehouseDropdownData";
 import {useEffect, useState, useMemo} from "react";
 import SelectForm from "../../../../form-builders/SelectForm";
 import genericClass from "../../../../../assets/css/Generic.module.css";
 import GeneralIssueSubmitForm from "./GeneralIssueSubmitForm";
 import {notifications, showNotification} from "@mantine/notifications";
+import {showNotificationComponent} from "../../../../core-component/showNotificationComponent.jsx";
 
 export default function GeneralIssueForm(props) {
     const {domainConfigData} = props;
@@ -44,13 +43,9 @@ export default function GeneralIssueForm(props) {
         initialValues: {},
     });
 
-    // console.log(domainConfigData);
 
     const isWarehouse = domainConfigData?.production_config?.is_warehouse;
-    const currencySymbol = domainConfigData?.config_sales?.currency?.symbol;
     const isMeasurement = domainConfigData?.isMeasurement;
-    //warehosue dropdown data
-    // let warehouseDropdownData = getCoreWarehouseDropdownData();
 
     const [warehouseDropdownDara, setWarehouseDataDropdown] = useState([]);
 
@@ -61,6 +56,10 @@ export default function GeneralIssueForm(props) {
             value: String(warehouse.id),
         }));
         setWarehouseDataDropdown(transformedWarehouses);
+        // Set data for the first warehouse (if available)
+        if (transformedWarehouses?.length > 0) {
+            setWarehouseData(userData.user_warehouse[0].id);
+        }
     }, []);
 
     //warehouse hook
@@ -68,40 +67,44 @@ export default function GeneralIssueForm(props) {
     const [searchValue, setSearchValue] = useState("");
 
     const [loadCardProducts, setLoadCardProducts] = useState(false);
-    const [productDropdown, setProductDropdown] = useState([]);
     //products hook
     const [products, setProducts] = useState([]);
 
-    //product filter based on warehouse id and set the dropdown value for product dropdown
     useEffect(() => {
         const storedProducts = localStorage.getItem("user");
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-        const filteredProducts = localProducts?.production_item.filter((product) => {
-            if (warehouseData) {
-                return (
-                    product.user_warehouse_id === Number(warehouseData)
-                );
-            }
-            return product
-        });
+
+        if (!localProducts?.production_item) {
+            setProducts([]);
+            return;
+        }
+
+        let filteredProducts = [];
+
+        if (warehouseData) {
+            filteredProducts = localProducts.production_item.filter(
+                product => product.user_warehouse_id === Number(warehouseData)
+            );
+        } else {
+            const firstWarehouseId = localProducts?.user_warehouse?.[0]?.id;
+            filteredProducts = localProducts.production_item.filter(
+                product => product.user_warehouse_id === firstWarehouseId
+            );
+        }
+
+        if (searchValue) {
+            const searchValueLower = searchValue.toLowerCase();
+
+            filteredProducts = filteredProducts.filter(product =>
+                product.item_name?.toString().toLowerCase().includes(searchValueLower) ||
+                product.uom?.toString().toLowerCase().includes(searchValueLower) ||
+                product.closing_quantity?.toString().toLowerCase().includes(searchValueLower)
+            );
+        }
 
         setProducts(filteredProducts);
+    }, [searchValue, warehouseData]);
 
-        /*// Transform product for dropdown
-        const transformedProducts = filteredProducts.map((product) => ({
-          label: `${product.display_name} [${product.quantity}] ${product.unit_name} - ${currencySymbol}${product.sales_price}`,
-          value: String(product.id),
-        }));
-        setProductDropdown(transformedProducts);*/
-    }, [warehouseData]);
-
-    //selected product group text to show in input
-    const inputGroupText = (
-        <Text
-            style={{textAlign: "right", width: "100%", paddingRight: 16}}
-            color={"gray"}
-        ></Text>
-    );
     // adding product from table
     const [productQuantities, setProductQuantities] = useState({});
 
@@ -114,7 +117,6 @@ export default function GeneralIssueForm(props) {
         );
     }, [products, searchValue]);
     const [measurement, setMeasurement] = useState({});
-
 
     return (
         <>
@@ -234,23 +236,23 @@ export default function GeneralIssueForm(props) {
                                     >
                                         <Box mt={"8"}></Box>
                                         {isWarehouse == 1 && (
-                                        <Box mt={"4"}>
-                                            <SelectForm
-                                                tooltip={t("Warehouse")}
-                                                label=""
-                                                placeholder={t("Warehouse")}
-                                                required={false}
-                                                nextField={"category_id"}
-                                                name={"warehouse_id"}
-                                                form={form}
-                                                dropdownValue={warehouseDropdownDara}
-                                                id={"warehouse_id"}
-                                                mt={1}
-                                                searchable={true}
-                                                value={warehouseData}
-                                                changeValue={setWarehouseData}
-                                            />
-                                        </Box>
+                                            <Box mt={"4"}>
+                                                <SelectForm
+                                                    tooltip={t("Warehouse")}
+                                                    label=""
+                                                    placeholder={t("Warehouse")}
+                                                    required={false}
+                                                    nextField={"category_id"}
+                                                    name={"warehouse_id"}
+                                                    form={form}
+                                                    dropdownValue={warehouseDropdownDara}
+                                                    id={"warehouse_id"}
+                                                    mt={1}
+                                                    searchable={true}
+                                                    value={String(warehouseData)}
+                                                    changeValue={setWarehouseData}
+                                                />
+                                            </Box>
                                         )}
                                         <Box mt={"xs"}>
                                             <DataTable
@@ -436,56 +438,114 @@ export default function GeneralIssueForm(props) {
                                                                                 "var(--mantine-radius-sm)",
                                                                         },
                                                                     }}
+                                                                    /*onClick={() => {
+                                                                        const quantity = productQuantities[data.id];
+
+                                                                        if (!quantity || isNaN(quantity) || Number(quantity) <= 0) {
+                                                                            showNotificationComponent(t('InvalidQuantity'), 'red');
+                                                                            return;
+                                                                        }
+
+                                                                        const cardProducts = localStorage.getItem('temp-production-issue');
+                                                                        const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+
+                                                                        const productToAdd = {
+                                                                            product_id: data.id,
+                                                                            display_name: data.item_name,
+                                                                            stock: data.closing_quantity,
+                                                                            quantity: Number(quantity),
+                                                                            unit_name: data.uom,
+                                                                            purchase_price: data.purchase_price,
+                                                                            sales_price: data.sales_price,
+                                                                            sub_total: Number(quantity) * Number(data.sales_price),
+                                                                        };
+
+                                                                        const alreadyAdded = myCardProducts.some(p => p.product_id === data.id);
+                                                                        if (!alreadyAdded) {
+                                                                            myCardProducts.push(productToAdd);
+
+                                                                            localStorage.setItem(
+                                                                                'temp-production-issue',
+                                                                                JSON.stringify(myCardProducts)
+                                                                            );
+
+                                                                            showNotificationComponent(t('ProductAdded'), 'teal');
+                                                                            setLoadCardProducts(true);
+
+                                                                            setProductQuantities(prev => ({
+                                                                                ...prev,
+                                                                                [data.id]: '',
+                                                                            }));
+                                                                        } else {
+                                                                            showNotificationComponent(t('ProductAlreadyAdded'), 'yellow');
+                                                                        }
+                                                                    }}*/
+
                                                                     onClick={() => {
                                                                         const quantity = productQuantities[data.id];
-                                                                        if (quantity && Number(quantity) > 0) {
-                                                                            const cardProducts = localStorage.getItem(
-                                                                                "temp-production-issue"
-                                                                            );
-                                                                            const myCardProducts = cardProducts
-                                                                                ? JSON.parse(cardProducts)
-                                                                                : [];
 
+                                                                        // Validate quantity
+                                                                        if (!quantity || isNaN(quantity) || Number(quantity) <= 0) {
+                                                                            showNotificationComponent(t('InvalidQuantity'), 'red');
+                                                                            return;
+                                                                        }
+
+                                                                        const parsedQuantity = Number(quantity);
+
+                                                                        // Get existing products from local storage
+                                                                        const cardProducts = localStorage.getItem('temp-production-issue');
+                                                                        let myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+
+                                                                        const existingProductIndex = myCardProducts.findIndex(
+                                                                            (p) => p.product_id === data.id
+                                                                        );
+
+                                                                        if (existingProductIndex !== -1) {
+                                                                            // ✅ Product already exists -> update quantity & subtotal
+                                                                            const existingProduct = myCardProducts[existingProductIndex];
+                                                                            const newQuantity = Number(existingProduct.quantity) + parsedQuantity;
+
+                                                                            myCardProducts[existingProductIndex] = {
+                                                                                ...existingProduct,
+                                                                                quantity: newQuantity,
+                                                                                sub_total: newQuantity * Number(data.sales_price),
+                                                                            };
+                                                                        } else {
+                                                                            // ✅ Product not in cart -> add new entry
                                                                             const productToAdd = {
                                                                                 product_id: data.id,
                                                                                 display_name: data.item_name,
                                                                                 stock: data.closing_quantity,
-                                                                                quantity: quantity,
+                                                                                quantity: parsedQuantity,
                                                                                 unit_name: data.uom,
                                                                                 purchase_price: data.purchase_price,
-                                                                                sub_total: Number(quantity) * Number(data.sales_price),
                                                                                 sales_price: data.sales_price,
+                                                                                sub_total: parsedQuantity * Number(data.sales_price),
                                                                             };
 
                                                                             myCardProducts.push(productToAdd);
-
-                                                                            localStorage.setItem("temp-production-issue", JSON.stringify(myCardProducts));
-
-                                                                            notifications.show({
-                                                                                color: "green",
-                                                                                title: t("ProductAdded"),
-                                                                                message: t("ProductAddedSuccessfully"),
-                                                                                autoClose: 1500,
-                                                                                withCloseButton: true,
-                                                                            });
-                                                                            //update the sales table
-                                                                            setLoadCardProducts(true);
-                                                                            // Reset quantity input for this specific product
-                                                                            setProductQuantities((prev) => ({
-                                                                                ...prev,
-                                                                                [data.id]: "",
-                                                                            }));
-                                                                        } else {
-                                                                            // Show error for invalid quantity
-                                                                            notifications.show({
-                                                                                color: "red",
-                                                                                title: t("InvalidQuantity"),
-                                                                                message: t("PleaseEnterValidQuantity"),
-                                                                                autoClose: 1500,
-                                                                                withCloseButton: true,
-                                                                            });
                                                                         }
+
+                                                                        // Save updated array to localStorage
+                                                                        localStorage.setItem(
+                                                                            'temp-production-issue',
+                                                                            JSON.stringify(myCardProducts)
+                                                                        );
+
+                                                                        // Notify and update UI
+                                                                        showNotificationComponent(t('ProductAdded'), 'teal');
+                                                                        // setLoadCardProducts(true);
+                                                                        setLoadCardProducts(prev => !prev);
+
+
+                                                                        // Clear input for this product
+                                                                        setProductQuantities((prev) => ({
+                                                                            ...prev,
+                                                                            [data.id]: '',
+                                                                        }));
                                                                     }}
+
+
                                                                 >
                                                                     <Flex direction={`column`} gap={0}>
                                                                         <IconShoppingBag size={12}/>
