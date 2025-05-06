@@ -638,7 +638,6 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                                         justify="left"
                                         pt={'4'}
                                         pb={'4'}
-
                                       >
                                         <ThemeIcon size={18} color={'#242424'} variant="transparent">
                                           <IconArrowRight/>
