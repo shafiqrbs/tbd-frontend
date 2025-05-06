@@ -84,7 +84,7 @@ function VoucherCreateIndex() {
             <Box p={"8"}>
               <Grid columns={24} gutter={{ base: 8 }}>
                 <Grid.Col span={1}>
-                    <Navigation module="voucher-entry"/>
+                    <Navigation module="voucher-create"/>
                 </Grid.Col>
                 <Grid.Col span={14}>
                   <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>

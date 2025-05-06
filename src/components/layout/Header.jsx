@@ -41,7 +41,8 @@ import {
   IconEdit,
   IconX,
   IconXboxX,
-  IconArrowRight, IconBackspace,
+  IconArrowRight,
+  IconBackspace,
 } from "@tabler/icons-react";
 import { Link, useOutletContext } from "react-router-dom";
 import HeaderStyle from "./../../assets/css/Header.module.css";
@@ -254,6 +255,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
             : `/sitemap`;
 
         navigate(path);
+        setValue("");
         setShortcutModalOpen(false);
       }
     }
@@ -305,7 +307,6 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
         return false;
     }
   };
-  const [hoveredIndex, setHoveredIndex] = useState(null);
   return (
     <>
       <Modal.Root opened={opened} onClose={close} size="64%">
@@ -342,7 +343,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                       ? configData.domain.company_name
                       : ""
                   }
-                  color={'#C6AF9D'}
+                  color={"#C6AF9D"}
                   position="right"
                   withArrow
                 >
@@ -487,69 +488,67 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                   blur: 3,
                 }}
                 title={
-                 <Box>
-                   <TextInput
-                       w={"100%"}
-                       align={"center"}
-                       pr={"lg"}
-                       justify="space-between"
-                       data-autofocus
-                       leftSection={<IconSearch size={16} c={"red"} />}
-                       placeholder={t("SearchMenu")}
-                       value={value}
-                       rightSectionPointerEvents="all"
-                       rightSection={
-                         <div
-                             style={{ display: "flex", alignItems: "center" }}
-                         >
-                           {value ? (
-                               <>
-                                 <CloseButton
-                                     ml={"-50"}
-                                     mr={"xl"}
-                                     icon={
-                                       <IconBackspace
-                                           style={{ width: rem(24) }}
-                                           stroke={1.5}
-                                       />
-                                     }
-                                     aria-label="Clear input"
-                                     onClick={clearSearch}
-                                 />
-                                 <Kbd ml={"-xl"} h={"24"} c={"gray.8"} fz={"12"}>
-                                   Alt
-                                 </Kbd>{" "}
-                                 +{" "}
-                                 <Kbd c={"gray.8"} h={"24"} fz={"12"} mr={"lg"}>
-                                   C
-                                 </Kbd>
-                               </>
-                           ) : (
-                               <>
-                                 <Kbd ml={"-lg"} h={"24"} c={"gray.8"} fz={"12"}>
-                                   Alt{" "}
-                                 </Kbd>{" "}
-                                 +{" "}
-                                 <Kbd c={"gray.8"} h={"24"} fz={"12"} mr={"lg"}>
-                                   X
-                                 </Kbd>
-                               </>
-                           )}
-                         </div>
-                       }
-                       onChange={(event) => {
-                         setValue(event.target.value);
-                         filterList(event.target.value);
-                       }}
-                       onKeyDown={handleKeyDown}
-                       className="no-focus-outline"
-                   />
-                 </Box>
+                  <Box>
+                    <TextInput
+                      w={"100%"}
+                      align={"center"}
+                      pr={"lg"}
+                      justify="space-between"
+                      data-autofocus
+                      leftSection={<IconSearch size={16} c={"red"} />}
+                      placeholder={t("SearchMenu")}
+                      value={value}
+                      rightSectionPointerEvents="all"
+                      rightSection={
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          {value ? (
+                            <>
+                              <CloseButton
+                                ml={"-50"}
+                                mr={"xl"}
+                                icon={
+                                  <IconBackspace
+                                    style={{ width: rem(24) }}
+                                    stroke={1.5}
+                                  />
+                                }
+                                aria-label="Clear input"
+                                onClick={clearSearch}
+                              />
+                              <Kbd ml={"-xl"} h={"24"} c={"gray.8"} fz={"12"}>
+                                Alt
+                              </Kbd>{" "}
+                              +{" "}
+                              <Kbd c={"gray.8"} h={"24"} fz={"12"} mr={"lg"}>
+                                C
+                              </Kbd>
+                            </>
+                          ) : (
+                            <>
+                              <Kbd ml={"-lg"} h={"24"} c={"gray.8"} fz={"12"}>
+                                Alt{" "}
+                              </Kbd>{" "}
+                              +{" "}
+                              <Kbd c={"gray.8"} h={"24"} fz={"12"} mr={"lg"}>
+                                X
+                              </Kbd>
+                            </>
+                          )}
+                        </div>
+                      }
+                      onChange={(event) => {
+                        setValue(event.target.value);
+                        filterList(event.target.value);
+                      }}
+                      onKeyDown={handleKeyDown}
+                      className="no-focus-outline"
+                    />
+                  </Box>
                 }
                 transitionProps={{ transition: "fade", duration: 200 }}
               >
                 <Divider my="sm" mt={0} />
-                <ScrollArea type={'never'} scrollbars="y" h={height}>
+                <ScrollArea type={"never"} scrollbars="y" h={height}>
                   {filteredItems.length > 0 ? (
                     <Stack spacing="xs">
                       {filteredItems
@@ -570,22 +569,27 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                               {groupData.group}
                             </Text>
                             <Stack
-                                bg="var(--mantine-color-body)"
-                                justify="flex-start"
-                                align="stretch"
-                                justify="flex-start"
-                                gap="2"
+                              bg="var(--mantine-color-body)"
+                              justify="flex-start"
+                              align="stretch"
+                              gap="2"
                             >
                               {groupData.items.map((action, itemIndex) => {
                                 const isSelected =
                                   filteredItems.indexOf(action) ===
                                   selectedIndex;
                                 return (
-                                  <Link className={'link'}
+                                  <Link
+                                    className={"link"}
                                     key={itemIndex}
                                     to={
                                       action.id === "inhouse"
                                         ? "#"
+                                        : (action.group === "Domain" &&
+                                            action.id === "dashboard") ||
+                                          (action.group === "ডোমেইন" &&
+                                            action.id === "dashboard")
+                                        ? `b2b/${action.id}`
                                         : action.group === "Production" ||
                                           action.group === "প্রোডাকশন"
                                         ? `production/${action.id}`
@@ -609,9 +613,20 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                                     }
                                     onClick={(e) => {
                                       setShortcutModalOpen(false);
+                                      setValue("");
                                       navigate(
-                                        action.group === "Production" ||
-                                          action.group === "প্রোডাকশন"
+                                        ((action.group === "Domain" &&
+                                          action.id === "dashboard") ||
+                                        (action.group === "ডোমেইন" &&
+                                          action.id === "dashboard")
+                                          ? `b2b/${action.id}`
+                                          : action.group === "Domain" &&
+                                            action.id === "dashboard") ||
+                                          (action.group === "ডোমেইন" &&
+                                            action.id === "dashboard")
+                                          ? `b2b/${action.id}`
+                                          : action.group === "Production" ||
+                                            action.group === "প্রোডাকশন"
                                           ? `production/${action.id}`
                                           : action.group === "Core" ||
                                             action.group === "কেন্দ্র"
@@ -630,23 +645,25 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                                           : `/sitemap`
                                       );
                                     }}
-
                                   >
-                                      <Group
-                                        wrap="nowrap"
-                                        align="center"
-                                        justify="left"
-                                        pt={'4'}
-                                        pb={'4'}
+                                    <Group
+                                      wrap="nowrap"
+                                      align="center"
+                                      justify="left"
+                                      pt={"4"}
+                                      pb={"4"}
+                                    >
+                                      <ThemeIcon
+                                        size={18}
+                                        color={"#242424"}
+                                        variant="transparent"
                                       >
-                                        <ThemeIcon size={18} color={'#242424'} variant="transparent">
-                                          <IconArrowRight/>
-                                        </ThemeIcon>
-                                        <Text size="sm" className={'link'} >
-                                          {action.label}
-                                        </Text>
-                                      </Group>
-
+                                        <IconArrowRight />
+                                      </ThemeIcon>
+                                      <Text size="sm" className={"link"}>
+                                        {action.label}
+                                      </Text>
+                                    </Group>
                                   </Link>
                                 );
                               })}
@@ -660,7 +677,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                     </Text>
                   )}
                 </ScrollArea>
-                <div className={'titleBackground'}>
+                <div className={"titleBackground"}>
                   <Group justify="space-between" mt={"xs"}>
                     <div>
                       <Text fw={500} fz="sm">
