@@ -164,7 +164,7 @@ function VoucherCreateTable(props) {
                             )
                           );
                           dispatch(setFormLoading(true));
-                          navigate(`/accounting/create-voucher/${data.id}`);
+                          navigate(`/accounting/voucher-create/${data.id}`);
                         }}
                       >
                         {t("Edit")}
