@@ -255,7 +255,7 @@ input[type=radio]:checked + label>img {
     @mixin hover {
        /* background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));*/
         color:  #905a23 !important;
-        text-decoration: underline !important;
+        background-color: whitesmoke;
     }
 }
 

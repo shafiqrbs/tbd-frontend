@@ -569,7 +569,13 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                             <Text size="sm" fw="bold" c="#828282" pb={"xs"}>
                               {groupData.group}
                             </Text>
-                            <SimpleGrid cols={1}>
+                            <Stack
+                                bg="var(--mantine-color-body)"
+                                justify="flex-start"
+                                align="stretch"
+                                justify="flex-start"
+                                gap="2"
+                            >
                               {groupData.items.map((action, itemIndex) => {
                                 const isSelected =
                                   filteredItems.indexOf(action) ===
@@ -630,10 +636,9 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                                         wrap="nowrap"
                                         align="center"
                                         justify="left"
-                                        gap={12}
-                                        pb={'2'}
-                                        pt={'2'}
-                                        pl={'4'}
+                                        pt={'4'}
+                                        pb={'4'}
+
                                       >
                                         <ThemeIcon size={18} color={'#242424'} variant="transparent">
                                           <IconArrowRight/>
@@ -646,7 +651,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                                   </Link>
                                 );
                               })}
-                            </SimpleGrid>
+                            </Stack>
                           </Box>
                         ))}
                     </Stack>
