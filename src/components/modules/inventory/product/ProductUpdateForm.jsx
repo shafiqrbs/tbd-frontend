@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import {useOutletContext, useParams} from "react-router-dom";
 import {
   Grid,
   Box,
@@ -11,7 +11,15 @@ import {
   Button,
   Flex, Group, ActionIcon, Input, Menu,
 } from "@mantine/core";
-import {IconDeviceFloppy, IconPencil, IconRefresh, IconShoppingBag} from "@tabler/icons-react";
+import {
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronUp,
+  IconDeviceFloppy,
+  IconPencil,
+  IconRefresh,
+  IconShoppingBag
+} from "@tabler/icons-react";
 import _UpdateProduct from "./_UpdateProduct.jsx";
 import _ProductMeasurement from "./_ProductMeasurement.jsx";
 import _ProductGallery from "./_ProductGallery.jsx";
@@ -23,12 +31,18 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
 import {notifications} from "@mantine/notifications";
 import {DataTable} from "mantine-datatable";
-import {editEntityData, setFormLoading, setInsertType} from "../../../../store/core/crudSlice";
-import {useDispatch} from "react-redux";
+import {editEntityData, getIndexEntityData, setFormLoading, setInsertType} from "../../../../store/core/crudSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {useNavigate} from "react-router";
+import _ProductSearch from "./_ProductSearch";
+import _ProductInlineSearch from "./_ProductInlineSearch";
+
+const PAGE_SIZE = 5;
 
 function ProductUpdateForm(props) {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { categoryDropdown, domainConfigData } = props;
   const product_config = domainConfigData?.inventory_config?.config_product;
@@ -45,16 +59,54 @@ function ProductUpdateForm(props) {
     { id: "vatManagement", displayName: "Vat Management" },
     { id: "skuManagement", displayName: "Sku Management" },
   ];
+  const perPage = 50;
+  const [page, setPage] = useState(1);
+
+
+
+
+
+  const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
+  const [indexData, setIndexData] = useState([]);
 
   useEffect(() => {
-    const storedProducts = localStorage.getItem("core-products");
-    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+    const fetchData = async () => {
+      const value = {
+        url: "inventory/product",
+        param: {
+          term: searchKeyword,
+          page: page,
+          offset: perPage,
+          type: "product",
+        },
+      };
+      try {
 
-    setProducts(localProducts);
-  }, []);
+        const resultAction = await dispatch(getIndexEntityData(value));
+        if (getIndexEntityData.rejected.match(resultAction)) {
+          console.error("Error:", resultAction);
+        } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+          setIndexData(resultAction.payload);
+        }
+      } catch (err) {
+        console.error("Unexpected error:", err);
+      }
+    };
 
-  console.log(products);
+    fetchData();
+  }, [
+    dispatch,
+    searchKeyword,
+    page,
+    perPage
 
+  ]);
+  console.log(indexData);
+  const start = page * perPage;
+  const end = start + perPage;
+  const pageData = indexData?.data?.slice(start, end);
+  const hasNext = end < indexData?.total;
+  const hasPrev = page > 0;
 
   const renderForm = () => {
     switch (activeTab) {
@@ -94,7 +146,7 @@ function ProductUpdateForm(props) {
   const [is_product_gallery, setIs_product_gallery] = useState(
     product_config?.is_product_gallery === 1
   );
-  console.log(domainConfigData?.inventory_config?.vat_enable);
+ // console.log(domainConfigData?.inventory_config?.vat_enable);
 
   useEffect(() => {
     setBrand(product_config?.is_brand === 1);
@@ -198,120 +250,102 @@ function ProductUpdateForm(props) {
                       footer: tableCss.footer,
                       pagination: tableCss.pagination,
                     }}
-                    records={products}
+                    records={indexData.data}
                     columns={[
                       {
-                        accessor: "display_name",
-                        title: t("Product"),
+                        accessor: "product_name",
+                        title:  <_ProductInlineSearch
+                            module={"product"}/>,
                         render: (data, index) => (
-                            <Text fz={11} fw={400}>
-                              {index + 1}. {data.display_name}
-                            </Text>
+
+                      <Group
+                          wrap="nowrap"
+                          w="100%"
+                          gap={0}
+                          mx="auto"
+                          justify="space-between"
+                      >
+                        <Text fz={11} fw={400} ta="left">
+                          {index + 1}. {data.product_name}
+                        </Text>
+                        <Button.Group>
+                        <Button
+                            size="compact-xs"
+                            color={"#f8eedf"}
+                            radius={0}
+                            w="50"
+                            styles={{
+                              root: {
+                                height: "26px",
+                                borderRadius: 0,
+                                borderTopColor: "#905923",
+                                borderBottomColor: "#905923",
+                                borderLeftColor: "#905923",
+                              },
+                            }}
+                            onClick={() => {
+                            }}
+                        >
+                          <Text fz={9} fw={400} c={"black"}>
+                            {data.unit_name}
+                          </Text>
+                        </Button>
+                        <Button
+                            size="compact-xs"
+                            className={genericClass.invoiceAdd}
+                            radius={0}
+                            w="30"
+                            onClick={() => {
+                              dispatch(setInsertType("update"));
+                              dispatch(
+                                  editEntityData("inventory/product/" + data.product_id)
+                              );
+                              dispatch(setFormLoading(true));
+                              navigate(`/inventory/product/${data.product_id}`);
+                            }}
+                            styles={{
+                              root: {
+                                height: "26px",
+                                borderRadius:0,
+                                borderTopRightRadius:
+                                    "var(--mantine-radius-sm)",
+                                borderBottomRightRadius:
+                                    "var(--mantine-radius-sm)",
+                              },
+                            }}
+
+                        >
+                          <Flex direction={`column`} gap={0}>
+                            <IconPencil size={12}/>
+                          </Flex>
+                        </Button>
+                        </Button.Group>
+                      </Group>
                         ),
-                      },
-                      {
-                        accessor: "qty",
-                        width: 200,
-                        title: (
-                            <Group
-                                justify={"flex-end"}
-                                spacing="xs"
-                                noWrap
-                                pl={"sm"}
-                                ml={"sm"}
-                            >
-                              <Box pl={"4"}>{t("")}</Box>
-                              <ActionIcon
-                                  mr={"sm"}
-                                  radius="xl"
-                                  variant="transparent"
-                                  color="grey"
-                                  size="xs"
-                                  onClick={() => {
-                                  }}
-                              >
-                                <IconRefresh
-                                    style={{width: "100%", height: "100%"}}
-                                    stroke={1.5}
-                                />
-                              </ActionIcon>
-                            </Group>
-                        ),
-                        textAlign: "right",
-                        render: (data) => (
-                            <Group
-                                wrap="nowrap"
-                                w="100%"
-                                gap={0}
-                                justify="flex-end"
-                                align="center"
-                                mx="auto"
-                            >
-
-                              <Button
-                                  size="compact-xs"
-                                  color={"#f8eedf"}
-                                  radius={0}
-                                  w="50"
-                                  styles={{
-                                    root: {
-                                      height: "26px",
-                                      borderRadius: 0,
-                                      borderTopColor: "#905923",
-                                      borderBottomColor: "#905923",
-                                      borderLeftColor: "#905923",
-                                    },
-                                  }}
-                                  onClick={() => {
-                                  }}
-                              >
-                                <Text fz={9} fw={400} c={"black"}>
-                                  {data.unit_name}
-                                </Text>
-                              </Button>
-                              <Button
-                                  size="compact-xs"
-                                  className={genericClass.invoiceAdd}
-                                  radius={0}
-                                  w="30"
-                                  onClick={() => {
-                                    dispatch(setInsertType("update"));
-                                    dispatch(
-                                        editEntityData("inventory/product/" + data.id)
-                                    );
-                                    dispatch(setFormLoading(true));
-                                    navigate(`/inventory/product/${data.id}`);
-                                  }}
-                                  styles={{
-                                    root: {
-                                      height: "26px",
-                                      borderRadius:0,
-                                      borderTopRightRadius:
-                                          "var(--mantine-radius-sm)",
-                                      borderBottomRightRadius:
-                                          "var(--mantine-radius-sm)",
-                                    },
-                                  }}
-
-                              >
-                                <Flex direction={`column`} gap={0}>
-                                  <IconPencil size={12}/>
-                                </Flex>
-                              </Button>
-
-
-                            </Group>
-                        ),
-                      },
+                      }
 
                     ]}
                     loaderSize="xs"
                     loaderColor="grape"
-                    height={height+50}
+                    height={height+14}
                     scrollAreaProps={{
                       scrollbarSize: 4,
                     }}
                 />
+                <Group wrap="nowrap"
+                       w="100%"
+                       gap={0}
+                       mx="auto"
+                       justify="center">
+                  <Button.Group mt={'4'} mb={'4'}  mr={'xs'}>
+                    <Button variant="default" size="xs" onClick={() => setPage((p) => p - 1)} disabled={!hasPrev}>
+                      <IconChevronLeft color="#905923" />
+                    </Button>
+                    <Button variant="default" size="xs" onClick={() => setPage((p) => p + 1)} disabled={!hasNext}>
+                      <IconChevronRight color="#905923" />
+                    </Button>
+                  </Button.Group>
+                </Group>
               </Box>
             </Box>
           </Box>

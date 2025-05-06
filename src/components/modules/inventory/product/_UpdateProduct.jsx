@@ -39,7 +39,7 @@ function _UpdateProduct(props) {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 104; //TabList height 104
+  const height = mainAreaHeight - 98; //TabList height 104
   const configData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];

@@ -88,10 +88,9 @@ function ProductTable(props) {
   const productFilterData = useSelector(
     (state) => state.inventoryCrudSlice.productFilterData
   );
+
   const fetchingReload = useSelector((state) => state.crudSlice.fetching);
-
   const [switchEnable, setSwitchEnable] = useState({});
-
   const handleSwitch = (event, item) => {
     setSwitchEnable((prev) => ({ ...prev, [item.product_id]: true }));
     const value = {
