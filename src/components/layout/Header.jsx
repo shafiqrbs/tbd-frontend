@@ -163,7 +163,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
       [
         "alt+x",
         () => {
-          close();
+          setShortcutModalOpen(false);
         },
       ],
     ],
@@ -580,6 +580,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                                   selectedIndex;
                                 return (
                                   <Link
+                                    id={`item-${action.index}`}
                                     className={"link"}
                                     key={itemIndex}
                                     to={
@@ -652,6 +653,14 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                                       justify="left"
                                       pt={"4"}
                                       pb={"4"}
+                                      className={`
+                                        ${
+                                          filteredItems.indexOf(action) ===
+                                          selectedIndex
+                                            ? "highlightedItem"
+                                            : ""
+                                        }
+                                    `}
                                     >
                                       <ThemeIcon
                                         size={18}
@@ -660,7 +669,18 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                                       >
                                         <IconArrowRight />
                                       </ThemeIcon>
-                                      <Text size="sm" className={"link"}>
+                                      <Text
+                                        size="sm"
+                                        className={`
+                                        ${
+                                          filteredItems.indexOf(action) ===
+                                          selectedIndex
+                                            ? "highlightedItem"
+                                            : ""
+                                        }
+                                            ${"link"}
+                                    `}
+                                      >
                                         {action.label}
                                       </Text>
                                     </Group>
