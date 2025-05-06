@@ -184,19 +184,17 @@ input[type=radio]:checked + label>img {
 }
 
 .highlightedItem {  
-    background-color: #f8d4d4 !important; 
+    background-color:#fbf7ef!important;
     /* border: 1px solid #f8bab4; */
-    border-radius: 4px;
 }
 
 .highlightedItem .title {
-    font-weight: bold !important;
-    color: #eb0f0f !important; 
+    color:#fbf7ef  !important;
     
 }
 
 .highlightedItem .description {
-    color: #e61d1d !important; 
+    color:#fbf7ef !important;
 }
 /* .invoiceBatchModal .mantine-Modal-body{
     background-color: '#f0f1f9';
@@ -240,5 +238,24 @@ input[type=radio]:checked + label>img {
 }
 .tooltipSecondaryBg {
     background-color: #905a23!important;
+}
+
+.link {
+
+   /* padding: var(--mantine-spacing-xs) var(--mantine-spacing-md) !important;
+    padding-left: var(--mantine-spacing-md) !important;
+    margin-left: var(--mantine-spacing-xl) !important;
+    font-size: var(--mantine-font-size-sm) !important;*/
+    color: var(--mantine-color-dark-7) !important;
+    text-decoration: none !important;
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+
+    /*border-left: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)) !important;*/
+
+    @mixin hover {
+       /* background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));*/
+        color:  #905a23 !important;
+        text-decoration: underline !important;
+    }
 }
 

@@ -62,10 +62,6 @@ function ProductUpdateForm(props) {
   const perPage = 50;
   const [page, setPage] = useState(1);
 
-
-
-
-
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
   const [indexData, setIndexData] = useState([]);
 
@@ -101,7 +97,7 @@ function ProductUpdateForm(props) {
     perPage
 
   ]);
-  console.log(indexData);
+
   const start = page * perPage;
   const end = start + perPage;
   const pageData = indexData?.data?.slice(start, end);
@@ -323,7 +319,6 @@ function ProductUpdateForm(props) {
                       </Group>
                         ),
                       }
-
                     ]}
                     loaderSize="xs"
                     loaderColor="grape"
@@ -336,7 +331,8 @@ function ProductUpdateForm(props) {
                        w="100%"
                        gap={0}
                        mx="auto"
-                       justify="center">
+                       justify="space-between" className={'bodyBackgroundLight'}>
+                  <Text  size="xs" pl={'xs'} >Page - {page} / {Math.ceil(indexData.total/perPage)}</Text>
                   <Button.Group mt={'4'} mb={'4'}  mr={'xs'}>
                     <Button variant="default" size="xs" onClick={() => setPage((p) => p - 1)} disabled={!hasPrev}>
                       <IconChevronLeft color="#905923" />

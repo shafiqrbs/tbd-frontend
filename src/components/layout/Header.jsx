@@ -41,7 +41,7 @@ import {
   IconEdit,
   IconX,
   IconXboxX,
-  IconArrowRight,
+  IconArrowRight, IconBackspace,
 } from "@tabler/icons-react";
 import { Link, useOutletContext } from "react-router-dom";
 import HeaderStyle from "./../../assets/css/Header.module.css";
@@ -468,22 +468,11 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                 onClick={() => setShortcutModalOpen(true)}
                 className="no-focus-outline"
               />
-              {/* <Box onClick={() => setShortcutModalOpen(true)}>
-                <Center inline>
-                  <Box component="span" mr={"xs"} c={"white"} fw={"500"}>
-                    {t("Shortcut")}
-                  </Box>
-                  <IconChevronDown
-                    style={{ width: rem(16), height: rem(16) }}
-                    color={"white"}
-                  />
-                </Center>
-              </Box> */}
               <Modal
                 opened={shortcutModalOpen}
                 onClose={() => setShortcutModalOpen(false)}
                 centered
-                size="25%"
+                size="450"
                 padding="md"
                 radius="md"
                 styles={{
@@ -498,90 +487,69 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                   blur: 3,
                 }}
                 title={
-                  <Grid columns={12} gutter={{ base: 6 }}>
-                    <Grid.Col span={2}>
-                      <Text fw={500} fz={16} pt={"6"}>
-                        {configData && configData.domain
-                          ? configData.domain.company_name
-                          : ""}
-                      </Text>
-                    </Grid.Col>
-                    <Grid.Col span={10}>
-                      <TextInput
-                        w={"100%"}
-                        align={"center"}
-                        pr={"lg"}
-                        justify="space-between"
-                        data-autofocus
-                        leftSection={<IconSearch size={16} c={"red"} />}
-                        placeholder={t("SearchMenu")}
-                        value={value}
-                        rightSectionPointerEvents="all"
-                        rightSection={
-                          <div
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            {value ? (
-                              <>
-                                <CloseButton
-                                  ml={"-50"}
-                                  mr={"xl"}
-                                  icon={
-                                    <IconX
-                                      style={{ width: rem(20) }}
-                                      stroke={2.0}
-                                    />
-                                  }
-                                  aria-label="Clear input"
-                                  onClick={clearSearch}
-                                />
-                                <Kbd ml={"-xl"} h={"24"} c={"gray.8"} fz={"12"}>
-                                  Alt
-                                </Kbd>{" "}
-                                +{" "}
-                                <Kbd c={"gray.8"} h={"24"} fz={"12"} mr={"lg"}>
-                                  C
-                                </Kbd>
-                              </>
-                            ) : (
-                              <>
-                                <CloseButton
-                                  ml={"-50"}
-                                  mr={"lg"}
-                                  icon={
-                                    <IconXboxX
-                                      style={{ width: rem(20) }}
-                                      stroke={2.0}
-                                    />
-                                  }
-                                  aria-label="Close"
-                                  onClick={() => setShortcutModalOpen(false)}
-                                />
-                                <Kbd ml={"-lg"} h={"24"} c={"gray.8"} fz={"12"}>
-                                  Alt{" "}
-                                </Kbd>{" "}
-                                +{" "}
-                                <Kbd c={"gray.8"} h={"24"} fz={"12"} mr={"xl"}>
-                                  X
-                                </Kbd>
-                              </>
-                            )}
-                          </div>
-                        }
-                        onChange={(event) => {
-                          setValue(event.target.value);
-                          filterList(event.target.value);
-                        }}
-                        onKeyDown={handleKeyDown}
-                        className="no-focus-outline"
-                      />
-                    </Grid.Col>
-                  </Grid>
+                 <Box>
+                   <TextInput
+                       w={"100%"}
+                       align={"center"}
+                       pr={"lg"}
+                       justify="space-between"
+                       data-autofocus
+                       leftSection={<IconSearch size={16} c={"red"} />}
+                       placeholder={t("SearchMenu")}
+                       value={value}
+                       rightSectionPointerEvents="all"
+                       rightSection={
+                         <div
+                             style={{ display: "flex", alignItems: "center" }}
+                         >
+                           {value ? (
+                               <>
+                                 <CloseButton
+                                     ml={"-50"}
+                                     mr={"xl"}
+                                     icon={
+                                       <IconBackspace
+                                           style={{ width: rem(24) }}
+                                           stroke={1.5}
+                                       />
+                                     }
+                                     aria-label="Clear input"
+                                     onClick={clearSearch}
+                                 />
+                                 <Kbd ml={"-xl"} h={"24"} c={"gray.8"} fz={"12"}>
+                                   Alt
+                                 </Kbd>{" "}
+                                 +{" "}
+                                 <Kbd c={"gray.8"} h={"24"} fz={"12"} mr={"lg"}>
+                                   C
+                                 </Kbd>
+                               </>
+                           ) : (
+                               <>
+                                 <Kbd ml={"-lg"} h={"24"} c={"gray.8"} fz={"12"}>
+                                   Alt{" "}
+                                 </Kbd>{" "}
+                                 +{" "}
+                                 <Kbd c={"gray.8"} h={"24"} fz={"12"} mr={"lg"}>
+                                   X
+                                 </Kbd>
+                               </>
+                           )}
+                         </div>
+                       }
+                       onChange={(event) => {
+                         setValue(event.target.value);
+                         filterList(event.target.value);
+                       }}
+                       onKeyDown={handleKeyDown}
+                       className="no-focus-outline"
+                   />
+                 </Box>
                 }
                 transitionProps={{ transition: "fade", duration: 200 }}
               >
-                <ScrollArea scrollbarSize={4} scrollbars="y" h={height}>
-                  <Divider my="sm" mt={0} />
+                <Divider my="sm" mt={0} />
+                <ScrollArea type={'never'} scrollbars="y" h={height}>
                   {filteredItems.length > 0 ? (
                     <Stack spacing="xs">
                       {filteredItems
@@ -601,34 +569,13 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                             <Text size="sm" fw="bold" c="#828282" pb={"xs"}>
                               {groupData.group}
                             </Text>
-
                             <SimpleGrid cols={1}>
                               {groupData.items.map((action, itemIndex) => {
                                 const isSelected =
                                   filteredItems.indexOf(action) ===
                                   selectedIndex;
-
                                 return (
-                                  <Link
-                                    className={`
-                                    ${
-                                      filteredItems.indexOf(action) ===
-                                      selectedIndex
-                                        ? "highlightedItem"
-                                        : ""
-                                    }
-                                    ${
-                                      hoveredIndex === action.index
-                                        ? "hoveredItem"
-                                        : ""
-                                    }
-                                `}
-                                    style={{
-                                      cursor: "pointer",
-                                      padding: "6px",
-                                      textDecoration: "none",
-                                      color: "inherit",
-                                    }}
+                                  <Link className={'link'}
                                     key={itemIndex}
                                     to={
                                       action.id === "inhouse"
@@ -677,63 +624,25 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                                           : `/sitemap`
                                       );
                                     }}
-                                    onMouseEnter={() => {
-                                      setHoveredIndex(action.index);
-                                      setSelectedIndex(-1);
-                                    }}
-                                    onMouseLeave={() => setHoveredIndex(null)}
+
                                   >
-                                    <UnstyledButton
-                                      mt={"4"}
-                                      className={HeaderStyle.subLink}
-                                      bg={isSelected ? "gray.2" : undefined}
-                                    >
                                       <Group
                                         wrap="nowrap"
                                         align="center"
-                                        justify="center"
-                                        gap={4}
+                                        justify="left"
+                                        gap={12}
+                                        pb={'2'}
+                                        pt={'2'}
+                                        pl={'4'}
                                       >
-                                        <ThemeIcon
-                                          size={18}
-                                          variant="transparent"
-                                          radius="md"
-                                        >
-                                          <IconArrowRight
-                                            style={{
-                                              width:
-                                                hoveredIndex === action.index
-                                                  ? rem(24)
-                                                  : rem(14),
-                                              height:
-                                                hoveredIndex === action.index
-                                                  ? rem(24)
-                                                  : rem(14),
-                                            }}
-                                            color={
-                                              hoveredIndex === action.index
-                                                ? "red"
-                                                : "green"
-                                            }
-                                          />
+                                        <ThemeIcon size={18} color={'#242424'} variant="transparent">
+                                          <IconArrowRight/>
                                         </ThemeIcon>
-                                        <div>
-                                          <Center>
-                                            <Text
-                                              size="sm"
-                                              fw={500}
-                                              className={`${
-                                                hoveredIndex === action.index
-                                                  ? classes.hoveredText
-                                                  : ""
-                                              }`}
-                                            >
-                                              {action.label}
-                                            </Text>
-                                          </Center>
-                                        </div>
+                                        <Text size="sm" className={'link'} >
+                                          {action.label}
+                                        </Text>
                                       </Group>
-                                    </UnstyledButton>
+
                                   </Link>
                                 );
                               })}
@@ -747,14 +656,14 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                     </Text>
                   )}
                 </ScrollArea>
-                <div className={classes.dropdownFooter}>
+                <div className={'titleBackground'}>
                   <Group justify="space-between" mt={"xs"}>
                     <div>
                       <Text fw={500} fz="sm">
-                        Sitemap
+                        {t("Sitemap")}
                       </Text>
                       <Text size="xs" c="dimmed">
-                        Sitemap Details
+                        {t("SitemapDetails")}
                       </Text>
                     </div>
                     <Button
@@ -762,7 +671,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
                       size="xs"
                       onClick={() => navigate("/")}
                     >
-                      Sitemap
+                      {t("Sitemap")}
                     </Button>
                   </Group>
                 </div>

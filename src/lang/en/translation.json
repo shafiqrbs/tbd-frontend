@@ -1108,6 +1108,9 @@
   "IsBatchInvoice": "Batch Invoice",
   "IsProvision": "Provision",
   "CapitalInvestment": "Capital Investment",
+  "NoResultsFound": "No Results Found",
+  "Sitemap" : "Sitemap",
+  "SitemapDetails" : "Sitemap Details",
   "xxxxxx": "xxxxxxx",
   "": ""
 }
