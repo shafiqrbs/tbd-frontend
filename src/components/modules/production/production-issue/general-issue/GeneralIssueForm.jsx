@@ -31,7 +31,6 @@ import {useEffect, useState, useMemo} from "react";
 import SelectForm from "../../../../form-builders/SelectForm";
 import genericClass from "../../../../../assets/css/Generic.module.css";
 import GeneralIssueSubmitForm from "./GeneralIssueSubmitForm";
-import {notifications, showNotification} from "@mantine/notifications";
 import {showNotificationComponent} from "../../../../core-component/showNotificationComponent.jsx";
 
 export default function GeneralIssueForm(props) {
@@ -135,22 +134,11 @@ export default function GeneralIssueForm(props) {
                                 );
 
                                 if (productsToAdd.length === 0) {
-                                    showNotification({
-                                        color: "pink",
-                                        title: t("WeNotifyYouThat"),
-                                        message: t("ZeroQuantityNotAllow"),
-                                        autoClose: 1500,
-                                        loading: true,
-                                        withCloseButton: true,
-                                        position: "top-center",
-                                        style: {backgroundColor: "mistyrose"},
-                                    });
+                                    showNotificationComponent(t("EnterProductQuantity"),'red')
                                     return;
                                 }
 
-                                const cardProducts = localStorage.getItem(
-                                    "temp-production-issue"
-                                );
+                                const cardProducts = localStorage.getItem("temp-production-issue");
                                 const myCardProducts = cardProducts
                                     ? JSON.parse(cardProducts)
                                     : [];
@@ -159,9 +147,12 @@ export default function GeneralIssueForm(props) {
                                     const quantity = productQuantities[data.id];
                                     const productToAdd = {
                                         product_id: data.id,
-                                        display_name: data.display_name,
+                                        display_name: data.item_name,
+                                        stock: data.closing_quantity,
+                                        product_warehouse_id: data.warehouse_id,
+                                        product_warehouse_name: data.warehouse_name,
                                         quantity: quantity,
-                                        unit_name: data.unit_name,
+                                        unit_name: data.uom,
                                         purchase_price: data.purchase_price,
                                         sub_total: Number(quantity) * Number(data.sales_price),
                                         sales_price: data.sales_price,
@@ -174,16 +165,9 @@ export default function GeneralIssueForm(props) {
                                     JSON.stringify(myCardProducts)
                                 );
 
-                                notifications.show({
-                                    color: "green",
-                                    title: t("ProductAdded"),
-                                    message: t("ProductAddedSuccessfully"),
-                                    autoClose: 1500,
-                                    withCloseButton: true,
-                                });
+                                showNotificationComponent(t("ProductAdded"),'green')
 
                                 setLoadCardProducts(true);
-
                                 setProductQuantities({});
                             })}
                         >
@@ -438,48 +422,6 @@ export default function GeneralIssueForm(props) {
                                                                                 "var(--mantine-radius-sm)",
                                                                         },
                                                                     }}
-                                                                    /*onClick={() => {
-                                                                        const quantity = productQuantities[data.id];
-
-                                                                        if (!quantity || isNaN(quantity) || Number(quantity) <= 0) {
-                                                                            showNotificationComponent(t('InvalidQuantity'), 'red');
-                                                                            return;
-                                                                        }
-
-                                                                        const cardProducts = localStorage.getItem('temp-production-issue');
-                                                                        const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
-
-                                                                        const productToAdd = {
-                                                                            product_id: data.id,
-                                                                            display_name: data.item_name,
-                                                                            stock: data.closing_quantity,
-                                                                            quantity: Number(quantity),
-                                                                            unit_name: data.uom,
-                                                                            purchase_price: data.purchase_price,
-                                                                            sales_price: data.sales_price,
-                                                                            sub_total: Number(quantity) * Number(data.sales_price),
-                                                                        };
-
-                                                                        const alreadyAdded = myCardProducts.some(p => p.product_id === data.id);
-                                                                        if (!alreadyAdded) {
-                                                                            myCardProducts.push(productToAdd);
-
-                                                                            localStorage.setItem(
-                                                                                'temp-production-issue',
-                                                                                JSON.stringify(myCardProducts)
-                                                                            );
-
-                                                                            showNotificationComponent(t('ProductAdded'), 'teal');
-                                                                            setLoadCardProducts(true);
-
-                                                                            setProductQuantities(prev => ({
-                                                                                ...prev,
-                                                                                [data.id]: '',
-                                                                            }));
-                                                                        } else {
-                                                                            showNotificationComponent(t('ProductAlreadyAdded'), 'yellow');
-                                                                        }
-                                                                    }}*/
 
                                                                     onClick={() => {
                                                                         const quantity = productQuantities[data.id];
@@ -503,7 +445,8 @@ export default function GeneralIssueForm(props) {
                                                                         if (existingProductIndex !== -1) {
                                                                             // ✅ Product already exists -> update quantity & subtotal
                                                                             const existingProduct = myCardProducts[existingProductIndex];
-                                                                            const newQuantity = Number(existingProduct.quantity) + parsedQuantity;
+                                                                            // const newQuantity = Number(existingProduct.quantity) + parsedQuantity;
+                                                                            const newQuantity = parsedQuantity;
 
                                                                             myCardProducts[existingProductIndex] = {
                                                                                 ...existingProduct,
@@ -516,6 +459,8 @@ export default function GeneralIssueForm(props) {
                                                                                 product_id: data.id,
                                                                                 display_name: data.item_name,
                                                                                 stock: data.closing_quantity,
+                                                                                product_warehouse_id: data.warehouse_id,
+                                                                                product_warehouse_name: data.warehouse_name,
                                                                                 quantity: parsedQuantity,
                                                                                 unit_name: data.uom,
                                                                                 purchase_price: data.purchase_price,
