@@ -12,11 +12,9 @@ import {
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useOutletContext } from "react-router-dom";
-import { IconDeviceFloppy, IconCalendar } from "@tabler/icons-react";
+import { IconDeviceFloppy } from "@tabler/icons-react";
 import { isNotEmpty, useForm } from "@mantine/form";
 import SelectForm from "../../../../form-builders/SelectForm";
-import _SelectForm from "../../../../form-builders/_SelectForm";
-import _InputForm from "../../../../form-builders/_InputForm";
 import InputNumberForm from "../../../../form-builders/InputNumberForm";
 
 export default function CustomerVoucherForm(props) {
@@ -26,8 +24,10 @@ export default function CustomerVoucherForm(props) {
   const height = mainAreaHeight - 174;
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [ledgerHead, setLedgerHead] = useState("");
-  const [paymentMode2, setPaymentMode2] = useState("");
   const [nextField, setNextField] = useState("amount");
+
+  const amountInputRef = useRef(null);
+  const chequeNoInputRef = useRef(null);
 
   const voucherForm = useForm({
     initialValues: {
@@ -47,7 +47,7 @@ export default function CustomerVoucherForm(props) {
       payment_mode: isNotEmpty(),
     },
   });
-  const paymentModeData2 = ["Cheque", "Cash", "Transfer"];
+
   const categorizedOptions = [
     {
       group: t("Arms&Ammunition"),
@@ -81,10 +81,6 @@ export default function CustomerVoucherForm(props) {
     },
   ];
 
-  const amountInputRef = useRef(null);
-  const chequeNoInputRef = useRef(null);
-  const payModeInputRef = useRef(null);
-
   useEffect(() => {
     if (ledgerHead && ledgerHead.startsWith("bank_account")) {
       chequeNoInputRef.current?.focus();
@@ -92,9 +88,7 @@ export default function CustomerVoucherForm(props) {
   }, [ledgerHead]);
 
   useEffect(() => {
-    if (nextField === "pay_mode" && payModeInputRef.current) {
-      payModeInputRef.current.focus();
-    } else if (nextField === "amount" && amountInputRef.current) {
+    if (nextField === "amount" && amountInputRef.current) {
       amountInputRef.current.focus();
     }
   }, [nextField]);
@@ -102,7 +96,6 @@ export default function CustomerVoucherForm(props) {
   const handleLedgerHeadChange = (value) => {
     voucherForm.setFieldValue("ledger_head", value);
     setLedgerHead(value);
-    setPaymentMode2("");
     if (value && value.startsWith("bank_account")) {
       setNextField("cheque_no");
     } else {
@@ -110,14 +103,13 @@ export default function CustomerVoucherForm(props) {
     }
   };
 
+  const handleSubmit = (values) => {
+    console.log("Form submitted with values:", values);
+  };
+
   return (
     <Box>
-      <form
-        id="voucherForm"
-        onSubmit={voucherForm.onSubmit((values) => {
-          console.log("Form submitted with values:", values);
-        })}
-      >
+      <form id="voucherForm" onSubmit={voucherForm.onSubmit(handleSubmit)}>
         <Box p={"xs"} pt={"0"} className={"borderRadiusAll"}>
           <Box
             pl={`xs`}
@@ -141,125 +133,28 @@ export default function CustomerVoucherForm(props) {
               <Grid columns={24}>
                 <Grid.Col span={"auto"}>
                   <ScrollArea
-                    h={height - 13}
+                    h={height - 158}
                     scrollbarSize={2}
                     scrollbars="y"
                     type="never"
                     pb={"xs"}
                   >
-                    <Box>
-                      <Box mt={"xs"}>
-                        <SelectForm
-                          tooltip={t("Head")}
-                          label={t("Head")}
-                          placeholder={t("ChooseHead")}
-                          required={true}
-                          nextField={nextField}
-                          name={"ledger_head"}
-                          form={voucherForm}
-                          dropdownValue={categorizedOptions}
-                          mt={8}
-                          id={"ledger_head"}
-                          searchable={true}
-                          value={ledgerHead}
-                          changeValue={handleLedgerHeadChange}
-                        />
-                      </Box>
-                      <Box mt={"xs"}>
-                        <SelectForm
-                          tooltip={t("LedgerHead")}
-                          label={t("LedgerHead")}
-                          placeholder={t("ChooseLedgerHead")}
-                          required={true}
-                          nextField={nextField}
-                          name={"ledger_head"}
-                          form={voucherForm}
-                          dropdownValue={categorizedOptions}
-                          mt={8}
-                          id={"ledger_head"}
-                          searchable={true}
-                          value={ledgerHead}
-                          changeValue={handleLedgerHeadChange}
-                        />
-                      </Box>
-                      {ledgerHead && ledgerHead.startsWith("bank_account") && (
-                        <>
-                          <Box mt={"xs"}>
-                            <_InputForm
-                              tooltip={t("ChequeNo")}
-                              label={t("ChequeNo")}
-                              placeholder={t("ChequeNo")}
-                              required={true}
-                              nextField={"pay_mode"}
-                              name={"cheque_no"}
-                              form={voucherForm}
-                              mt={0}
-                              id={"cheque_no"}
-                              ref={chequeNoInputRef}
-                            />
-                          </Box>
-                          <Box mt={"xs"}>
-                            <_SelectForm
-                              tooltip={t("PaymentMode")}
-                              label={t("PaymentMode")}
-                              placeholder={t("ChoosePaymentMode")}
-                              required={true}
-                              nextField={"bank_name"}
-                              name={"pay_mode"}
-                              form={voucherForm}
-                              dropdownValue={paymentModeData2}
-                              mt={8}
-                              id={"pay_mode"}
-                              searchable={false}
-                              value={paymentMode2}
-                              changeValue={(value) => {
-                                setPaymentMode2(value);
-                                voucherForm.setFieldValue("pay_mode", value);
-                              }}
-                              ref={payModeInputRef}
-                            />
-                          </Box>
-                          <Box mt={"xs"}>
-                            <_InputForm
-                              tooltip={t("BankName")}
-                              label={t("BankName")}
-                              placeholder={t("BankName")}
-                              required={true}
-                              nextField={"branch_name"}
-                              name={"bank_name"}
-                              form={voucherForm}
-                              mt={0}
-                              id={"bank_name"}
-                            />
-                          </Box>
-                          <Box mt={"xs"}>
-                            <_InputForm
-                              tooltip={t("BranchName")}
-                              label={t("BranchName")}
-                              placeholder={t("BranchName")}
-                              required={true}
-                              nextField={"received_from"}
-                              name={"branch_name"}
-                              form={voucherForm}
-                              mt={0}
-                              id={"branch_name"}
-                            />
-                          </Box>
-                          <Box mt={"xs"}>
-                            <_InputForm
-                              tooltip={t("ReceivedFrom")}
-                              label={t("ReceivedFrom")}
-                              placeholder={t("ReceivedFrom")}
-                              required={true}
-                              nextField={"narration"}
-                              name={"received_from"}
-                              form={voucherForm}
-                              mt={0}
-                              id={"received_from"}
-                            />
-                          </Box>
-                        </>
-                      )}
+                    <Box mt={"xs"}>
+                      <SelectForm
+                        tooltip={t("LedgerHead")}
+                        label={t("LedgerHead")}
+                        placeholder={t("ChooseLedgerHead")}
+                        required={true}
+                        nextField={nextField}
+                        name={"ledger_head"}
+                        form={voucherForm}
+                        dropdownValue={categorizedOptions}
+                        mt={8}
+                        id={"ledger_head"}
+                        searchable={true}
+                        value={ledgerHead}
+                        changeValue={handleLedgerHeadChange}
+                      />
                     </Box>
                   </ScrollArea>
                 </Grid.Col>
@@ -290,7 +185,7 @@ export default function CustomerVoucherForm(props) {
                 />
               </Grid.Col>
               <Grid.Col span={4}>
-                <Stack right align="flex-end">
+                <Stack justify="flex-end" align="flex-end">
                   {!saveCreateLoading && isOnline && (
                     <Button
                       mt={4}
