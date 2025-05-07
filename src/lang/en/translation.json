@@ -1115,5 +1115,9 @@
   "UserWarehouse": "Warehouse",
   "InvalidQuantity": "Enter quantity",
   "VoucherUpdate" : "Voucher Update",
+  "ProductAdded" : "Product added successfully",
+  "EnterProductQuantity" : "Enter product quantity",
+  "IssuedTo" : "Issue to",
+  "ChooseIssuedBy" : "Choose issued by",
   "": ""
 }

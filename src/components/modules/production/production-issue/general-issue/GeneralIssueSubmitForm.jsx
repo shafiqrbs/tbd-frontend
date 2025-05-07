@@ -20,9 +20,7 @@ import {
 } from "@tabler/icons-react";
 import {useOutletContext} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {notifications} from "@mantine/notifications";
-import {IconCheck, IconCalendar} from "@tabler/icons-react";
-import {rem} from "@mantine/core";
+import {IconCalendar} from "@tabler/icons-react";
 import {storeEntityData} from "../../../../../store/core/crudSlice.js";
 import genericClass from "../../../../../assets/css/Generic.module.css";
 import DatePickerForm from "../../../../form-builders/DatePicker.jsx";
@@ -152,6 +150,7 @@ export default function GeneralIssueSubmitForm(props) {
 
                     const transformedArray = items.map((product) => ({
                         product_id: product.product_id,
+                        product_warehouse_id: product?.product_warehouse_id || null,
                         display_name: product.display_name,
                         quantity: product.quantity,
                         unit_name: product.unit_name,
@@ -171,7 +170,7 @@ export default function GeneralIssueSubmitForm(props) {
                     } else if (issueType === "vendor") {
                         formValue["vendor_id"] = form.values.vendor_id;
                     } else if (issueType === "warehouse") {
-                        formValue["warehouse_id"] = form.values.warehouse_id;
+                        formValue["issue_warehouse_id"] = form.values.warehouse_id;
                     }
                     formValue["items"] = transformedArray;
                     formValue["narration"] = form.values.narration;
@@ -197,7 +196,7 @@ export default function GeneralIssueSubmitForm(props) {
                             form.setErrors(errorObject);
                         }
                     } else if (storeEntityData.fulfilled.match(resultAction)) {
-                                                
+
                         showNotificationComponent(t('CreateSuccessfully'),'teal')
 
                         setTimeout(() => {
@@ -211,7 +210,6 @@ export default function GeneralIssueSubmitForm(props) {
                             setLoadCardProducts(true);
                         }, 700)
                     }
-
                 })}
             >
                 <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
@@ -252,74 +250,10 @@ export default function GeneralIssueSubmitForm(props) {
                                     textAlign: "center",
                                 },
                                 {
-                                    accessor: "requirement_stock",
-                                    title: t("RequirementStock"),
+                                    accessor: "product_warehouse_name",
+                                    title: t("Warehouse"),
                                     textAlign: "center",
                                 },
-                                /*{
-                                  accessor: "quantity",
-                                  title: t("Quantity"),
-                                  textAlign: "center",
-                                  width: "100px",
-                                  render: (item) => {
-                                    const [editedQuantity, setEditedQuantity] = useState(
-                                      item.quantity
-                                    );
-
-                                    const handleQuantityChange = (e) => {
-                                      const editedQuantity = e.currentTarget.value;
-                                      setEditedQuantity(editedQuantity);
-
-                                      const tempCardProducts = localStorage.getItem(
-                                        "temp-production-issue"
-                                      );
-                                      const cardProducts = tempCardProducts
-                                        ? JSON.parse(tempCardProducts)
-                                        : [];
-
-                                      const updatedProducts = cardProducts.map((product) => {
-                                        if (product.product_id === item.product_id) {
-                                          return {
-                                            ...product,
-                                            quantity: e.currentTarget.value,
-                                            sub_total: e.currentTarget.value * item.sales_price,
-                                          };
-                                        }
-                                        return product;
-                                      });
-
-                                      localStorage.setItem(
-                                        "temp-production-issue",
-                                        JSON.stringify(updatedProducts)
-                                      );
-                                      setLoadCardProducts(true);
-                                    };
-
-                                    return (
-                                      <>
-                                        <TextInput
-                                          type="number"
-                                          label=""
-                                          size="xs"
-                                          value={editedQuantity}
-                                          onChange={handleQuantityChange}
-                                          onKeyDown={getHotkeyHandler([
-                                            [
-                                              "Enter",
-                                              (e) => {
-                                                document
-                                                  .getElementById(
-                                                    "inline-update-quantity-" + item.product_id
-                                                  )
-                                                  .focus();
-                                              },
-                                            ],
-                                          ])}
-                                        />
-                                      </>
-                                    );
-                                  },
-                                },*/
                                 {
                                     accessor: 'quantity',
                                     title: t('Quantity'),
@@ -398,13 +332,7 @@ export default function GeneralIssueSubmitForm(props) {
                                     label={t("")}
                                     placeholder={t("IssuedTo")}
                                     required={true}
-                                    nextField={
-                                        issueType === "factory"
-                                            ? "factory_id"
-                                            : issueType === "vendor"
-                                                ? "vendor_id"
-                                                : "warehouse_id"
-                                    }
+                                    nextField={'dynamic_id'}
                                     name={"issued_to_type"}
                                     form={form}
                                     dropdownValue={[
@@ -433,7 +361,7 @@ export default function GeneralIssueSubmitForm(props) {
                                             {label: t("FactoryOne"), value: "1"},
                                             {label: t("FactoryTwo"), value: "2"},
                                         ]}
-                                        id={"factory_id"}
+                                        id={"dynamic_id"}
                                         mt={1}
                                         searchable={true}
                                         value={factoryId}
@@ -453,7 +381,7 @@ export default function GeneralIssueSubmitForm(props) {
                                         name={"vendor_id"}
                                         form={form}
                                         dropdownValue={vendorDropdownData}
-                                        id={"vendor_id"}
+                                        id={"dynamic_id"}
                                         mt={1}
                                         searchable={true}
                                         value={vendorId}
@@ -473,7 +401,7 @@ export default function GeneralIssueSubmitForm(props) {
                                         name={"warehouse_id"}
                                         form={form}
                                         dropdownValue={warehouseDropdownData}
-                                        id={"warehouse_id"}
+                                        id={"dynamic_id"}
                                         mt={1}
                                         searchable={true}
                                         value={warehouseId}
