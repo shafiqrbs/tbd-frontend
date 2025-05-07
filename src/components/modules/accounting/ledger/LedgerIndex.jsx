@@ -32,7 +32,7 @@ function LedgerIndex() {
     useEffect(() => {
         id ? (
             dispatch(setInsertType('update')),
-            dispatch(editEntityData(`accounting/ledger/${id}`)),
+            dispatch(editEntityData(`accounting/account-head/${id}`)),
             dispatch(setFormLoading(true))
         ) : (
             dispatch(setInsertType('create')),

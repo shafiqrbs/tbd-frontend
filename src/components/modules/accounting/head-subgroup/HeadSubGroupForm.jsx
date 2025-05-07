@@ -43,7 +43,7 @@ function HeadSubGroupForm(props) {
    // const accountSubDropdown = useAccountHeadDropdownData(reloadTrigger, 'sub-head');
   //  console.log(accountDropdown,accountSubDropdown);
 
-
+    const [parentHead, setParentHead] = useState(null);
     const form = useForm({
         initialValues: {
             parent_id: '', name: '', code: '', status: true, head_group : 'sub-head'
@@ -104,7 +104,7 @@ function HeadSubGroupForm(props) {
                         } finally {
                             form.reset()
                             dispatch(setFetching(true))
-                            setMotherData(null)
+                            setParentHead(null)
                             setSaveCreateLoading(false)
                         }
                     },
@@ -158,8 +158,8 @@ function HeadSubGroupForm(props) {
                                                             dropdownValue={accountDropdown}
                                                             id={'parent_id'}
                                                             searchable={false}
-                                                            value={motherData}
-                                                            changeValue={setMotherData}
+                                                            value={parentHead}
+                                                            changeValue={setParentHead}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>

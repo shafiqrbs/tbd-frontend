@@ -80,7 +80,7 @@ function HeadSubGroupUpdateFrom(props) {
             parent_id: '', name: '', code: '', status: '', head_group : 'sub-head'
         },
         validate: {
-            mother_account_id: isNotEmpty(),
+            parent_id: isNotEmpty(),
             name: isNotEmpty(),
             code : isNotEmpty()
         }
@@ -116,49 +116,52 @@ function HeadSubGroupUpdateFrom(props) {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
 
+
+    const formSubmitHandle = (values) => {
+        dispatch(setValidationData(false));
+        modals.openConfirmModal({
+            title: (
+                <Text size="md"> {t("FormConfirmationTitle")}</Text>
+            ),
+            children: (
+                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+            ),
+            labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red' },
+            onCancel: () => console.log('Cancel'),
+            onConfirm: () => {
+                setSaveCreateLoading(true)
+                const value = {
+                    url: 'accounting/account-head/' + entityEditData.id,
+                    data: values
+                }
+                dispatch(updateEntityData(value))
+                notifications.show({
+                    color: 'teal',
+                    title: t('UpdateSuccessfully'),
+                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                    loading: false,
+                    autoClose: 700,
+                    style: { backgroundColor: 'lightgray' },
+                });
+
+                setTimeout(() => {
+                    form.reset()
+                    dispatch(setInsertType('create'))
+                    dispatch(setEditEntityData([]))
+                    dispatch(setFetching(true))
+                    setSaveCreateLoading(false)
+                    navigate('/accounting/head-subgroup', { replace: true })
+                }, 700)
+            },
+        });
+    }
+
     return (
         <Box>
-            <form onSubmit={form.onSubmit((values) => {
+            <form onSubmit={form.onSubmit(formSubmitHandle)}>
 
-                dispatch(setValidationData(false));
-                modals.openConfirmModal({
-                    title: (
-                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                    ),
-                    children: (
-                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                    ),
-                    labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red' },
-                    onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
-                        setSaveCreateLoading(true)
-                        const value = {
-                            url: 'accounting/account-head/' + entityEditData.id,
-                            data: values
-                        }
-                        dispatch(updateEntityData(value))
-                        notifications.show({
-                            color: 'teal',
-                            title: t('UpdateSuccessfully'),
-                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                            loading: false,
-                            autoClose: 700,
-                            style: { backgroundColor: 'lightgray' },
-                        });
 
-                        setTimeout(() => {
-                            form.reset()
-                            dispatch(setInsertType('create'))
-                            dispatch(setEditEntityData([]))
-                            dispatch(setFetching(true))
-                            setSaveCreateLoading(false)
-                            navigate('/accounting/head-subgroup', { replace: true })
-                        }, 700)
-                    },
-                });
-            })}>
-
-                <Grid columns={9} gutter={{ base: 8 }}>
+            <Grid columns={9} gutter={{ base: 8 }}>
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={'white'}>

@@ -48,7 +48,16 @@ function LedgerUpdateFrom(props) {
 
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [reloadTrigger, setReloadTrigger] = useState(false);
+
     const accountDropdown = useAccountHeadDropdownData(reloadTrigger, 'sub-head');
+
+    const [parentHead, setParentHead] = useState(null);
+
+    useEffect(() => {
+        setParentHead(entityEditData?.parent_id?.toString())
+        setFormLoad(true)
+        setFormDataForUpdate(true)
+    }, [dispatch, formLoading,entityEditData])
 
 
 
@@ -69,15 +78,10 @@ function LedgerUpdateFrom(props) {
 
     const { ledgerId } = useParams();
 
-    useEffect(() => {
-        if (ledgerId) {
-            dispatch(setEditEntityData(`/accounting/ledger${ledgerId}`))
-            dispatch(setFormLoading(true));
-        }
-    }, [ledgerId, dispatch]);
+
     const handleReset = () => {
         form.setValues({
-            parent_name: entityEditData.parent_name ? entityEditData.parent_name : '',
+            parent_id: entityEditData.parent_id ? entityEditData.parent_id : '',
             name: entityEditData.name ? entityEditData.name : '',
             code: entityEditData.code ? entityEditData.code : '',
             status: entityEditData.status ? entityEditData.status : true,
@@ -85,7 +89,7 @@ function LedgerUpdateFrom(props) {
     }
     useEffect(() => {
         form.setValues({
-            parent_name: entityEditData.parent_name ? entityEditData.parent_name : '',
+            parent_id: entityEditData.parent_id ? entityEditData.parent_id : '',
             name: entityEditData.name ? entityEditData.name : '',
             code: entityEditData.code ? entityEditData.code : '',
             status: entityEditData.status ? entityEditData.status : true,
@@ -101,7 +105,7 @@ function LedgerUpdateFrom(props) {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('parent_name').click()
+        document.getElementById('parent_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -196,14 +200,14 @@ function LedgerUpdateFrom(props) {
                                                             placeholder={t('ChooseHeadGroup')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'parent_name'}
+                                                            name={'parent_id'}
                                                             form={form}
                                                             dropdownValue={accountDropdown}
                                                             mt={8}
-                                                            id={'parent_name'}
+                                                            id={'parent_id'}
                                                             searchable={false}
-                                                            value={motherData ? String(motherData) : (entityEditData.mother_account_id ? String(entityEditData.mother_account_id) : null)}
-                                                            changeValue={setMotherData}
+                                                            value={parentHead}
+                                                            changeValue={setParentHead}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
