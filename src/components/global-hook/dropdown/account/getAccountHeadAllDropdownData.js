@@ -14,7 +14,7 @@ export default function useAccountHeadDropdownData(reloadTrigger, dropdownType) 
     // Choose the appropriate data based on the dropdownType
     const dropdownData = useMemo(() => {
         switch (dropdownType) {
-            case 'account-head':
+            case 'head':
                 return accountHeadDropdownData;
             case 'sub-head':
                 return accountSubHeadDropdownData;

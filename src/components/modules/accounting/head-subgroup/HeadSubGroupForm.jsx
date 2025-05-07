@@ -37,13 +37,11 @@ function HeadSubGroupForm(props) {
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
     const [opened, { open, close }] = useDisclosure(false);
-
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [motherData, setMotherData] = useState(null);
-
-    // const accountDropdown = getSettingMotherAccountDropdownData()
     const [reloadTrigger, setReloadTrigger] = useState(false);
-    const accountDropdown = useAccountHeadDropdownData(reloadTrigger, 'account-head');
+    const accountDropdown = useAccountHeadDropdownData(reloadTrigger, 'head');
+   // const accountSubDropdown = useAccountHeadDropdownData(reloadTrigger, 'sub-head');
+  //  console.log(accountDropdown,accountSubDropdown);
 
 
     const form = useForm({
@@ -150,9 +148,9 @@ function HeadSubGroupForm(props) {
                                                 <Box >
                                                     <Box mt={'8'}>
                                                         <SelectForm
-                                                            tooltip={t('ChooseMotherAccount')}
-                                                            label={t('MotherAccount')}
-                                                            placeholder={t('ChooseMotherAccount')}
+                                                            tooltip={t('ChooseAccountHead')}
+                                                            label={t('AccountHead')}
+                                                            placeholder={t('ChooseAccountHead')}
                                                             required={true}
                                                             nextField={'name'}
                                                             name={'parent_id'}

@@ -155,7 +155,6 @@ function VoucherCreateTable(props) {
                     </Menu.Target>
                     <Menu.Dropdown>
                       <Menu.Item
-                        // href={`/inventory/sales/edit/${data.id}`}
                         onClick={() => {
                           dispatch(setInsertType("update"));
                           dispatch(

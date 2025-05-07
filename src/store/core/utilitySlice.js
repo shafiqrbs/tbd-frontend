@@ -262,7 +262,7 @@ const utilitySlice = createSlice({
       if (action.payload.type == "ledger") {
         state.accountLedgerDropdownData = action.payload.data.data;
       }
-      if (action.payload.type == "account-head") {
+      if (action.payload.type == "head") {
         state.accountHeadDropdownData = action.payload.data.data;
       }
     });

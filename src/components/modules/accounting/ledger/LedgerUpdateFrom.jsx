@@ -30,9 +30,9 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
+import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/getAccountHeadAllDropdownData";
 
 function LedgerUpdateFrom(props) {
-    const {accountDropdown} = props;
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -47,15 +47,17 @@ function LedgerUpdateFrom(props) {
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
 
     const [setFormData, setFormDataForUpdate] = useState(false);
+    const [reloadTrigger, setReloadTrigger] = useState(false);
+    const accountDropdown = useAccountHeadDropdownData(reloadTrigger, 'sub-head');
 
 
 
     const form = useForm({
         initialValues: {
-            parent_name: '', name: '', code: '', status: true, head_group : 'ledger'
+            parent_id: '', name: '', code: '', status: true, head_group : 'ledger'
         },
         validate: {
-            parent_name: isNotEmpty(),
+            parent_id: isNotEmpty(),
             name: hasLength({ min: 2, max: 20 })
         }
     });

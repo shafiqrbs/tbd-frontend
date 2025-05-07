@@ -53,9 +53,18 @@ function VoucherUpdateFrom(props) {
   const height = mainAreaHeight - 100;
 
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-  const [voucherType, setVoucherType] = useState(null);
+
   const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
   const [mode, setMode] = useState(null);
+
+
+  const [voucherType, setVoucherType] = useState(null);
+
+  useEffect(() => {
+    setVoucherType(entityEditData?.voucher_type_id?.toString())
+    setMode(entityEditData?.mode?.toString() || 'credit')
+  }, [entityEditData]);
+
 
   const form = useForm({
     initialValues: {
@@ -67,8 +76,11 @@ function VoucherUpdateFrom(props) {
       voucher_type_id: entityEditData?.voucher_type_id || "",
     },
     validate: {
-      name: isNotEmpty(),
       voucher_type_id: isNotEmpty(),
+      name: isNotEmpty(),
+      short_name: isNotEmpty(),
+      short_code: isNotEmpty(),
+      mode: isNotEmpty(),
     },
   });
   useEffect(() => {
@@ -78,14 +90,13 @@ function VoucherUpdateFrom(props) {
         short_name: entityEditData?.short_name || "",
         short_code: entityEditData?.short_code || "",
         status: entityEditData?.status || "",
-        mode: entityEditData?.mode || "",
+        mode: entityEditData?.mode || "debit",
         voucher_type_id: entityEditData?.voucher_type_id || "",
       });
     }
     dispatch(setFormLoading(false));
     setTimeout(() => {
       setFormLoading(false);
-      setFormDataForUpdate(false);
     }, 500);
   }, [entityEditData, dispatch]);
 
@@ -183,7 +194,7 @@ function VoucherUpdateFrom(props) {
                   <Grid>
                     <Grid.Col span={6}>
                       <Title order={6} pt={"6"}>
-                        {t("Voucher")}
+                        {t("VoucherUpdate")}
                       </Title>
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -199,7 +210,7 @@ function VoucherUpdateFrom(props) {
                             >
                               <Flex direction={`column`} gap={0}>
                                 <Text fz={14} fw={400}>
-                                  {t("CreateAndSave")}
+                                  {t("UpdateAndSave")}
                                 </Text>
                               </Flex>
                             </Button>
@@ -232,7 +243,7 @@ function VoucherUpdateFrom(props) {
                               mt={8}
                               id={"voucher_type_id"}
                               searchable={false}
-                              value={entityEditData.voucher_type_id ? String(entityEditData.voucher_type_id) : null}
+                              value={voucherType}
                               changeValue={setVoucherType}
                             />
                           </Box>
@@ -291,7 +302,7 @@ function VoucherUpdateFrom(props) {
                               mt={8}
                               id={"mode"}
                               searchable={false}
-                              value={entityEditData.mode ? String(entityEditData.mode) : null}
+                              value={mode}
                               changeValue={setMode}
                             />
                           </Box>

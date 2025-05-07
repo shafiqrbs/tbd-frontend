@@ -47,7 +47,7 @@ function VoucherCreateIndex() {
   useEffect(() => {
     id
       ? (dispatch(setInsertType("update")),
-        dispatch(editEntityData(`accounting/voucher-create/${id}`)),
+        dispatch(editEntityData(`accounting/voucher/${id}`)),
         dispatch(setFormLoading(true)))
       : (dispatch(setInsertType("create")),
         dispatch(setSearchKeyword("")),

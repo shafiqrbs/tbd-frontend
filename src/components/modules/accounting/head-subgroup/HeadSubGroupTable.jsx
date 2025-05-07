@@ -73,8 +73,8 @@ function HeadSubGroupTable(props) {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
+                        { accessor: 'parent_name', title: t('AccountHead') },
                         { accessor: 'name', title: t('Name') },
-                        { accessor: 'mother_name', title: t('NatureOfGroup') },
                         { accessor: 'code', title: t('AccountCode') },
                         { accessor: 'amount', title: t('Amount') },
                         {

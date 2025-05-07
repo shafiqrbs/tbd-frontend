@@ -35,6 +35,7 @@ import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import getSettingMotherAccountDropdownData from "../../../global-hook/dropdown/getSettingMotherAccountDropdownData";
+import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/getAccountHeadAllDropdownData";
 
 function HeadSubGroupUpdateFrom(props) {
     const { t, i18n } = useTranslation();
@@ -51,13 +52,22 @@ function HeadSubGroupUpdateFrom(props) {
 
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
-    const [motherData, setMotherData] = useState(null);
-    const accountDropdown = getSettingMotherAccountDropdownData()
-    const [methodData, setMethodData] = useState(null);
+
+    const [parentHead, setParentHead] = useState(null);
+    useEffect(() => {
+        setParentHead(entityEditData?.parent_id?.toString())
+        setFormLoad(true)
+        setFormDataForUpdate(true)
+    }, [dispatch, formLoading,entityEditData])
+
+   // console.log(parentHead);
+
+    const [reloadTrigger, setReloadTrigger] = useState(false);
+    const accountDropdown = useAccountHeadDropdownData(reloadTrigger, 'head');
 
     const handleReset= () => {
         form.setValues({
-            mother_account_id: entityEditData.mother_account_id ? entityEditData.mother_account_id : '',
+            parent_id: entityEditData.parent_id ? entityEditData.parent_id : '',
             name: entityEditData.name ? entityEditData.name : '',
             code: entityEditData.code ? entityEditData.code : '',
             status: entityEditData.status ? entityEditData.status : '',
@@ -67,7 +77,7 @@ function HeadSubGroupUpdateFrom(props) {
 
     const form = useForm({
         initialValues: {
-            mother_account_id: '', name: '', code: '', status: '', head_group : 'sub-head'
+            parent_id: '', name: '', code: '', status: '', head_group : 'sub-head'
         },
         validate: {
             mother_account_id: isNotEmpty(),
@@ -77,14 +87,9 @@ function HeadSubGroupUpdateFrom(props) {
     });
 
     useEffect(() => {
-        setFormLoad(true)
-        setFormDataForUpdate(true)
-    }, [dispatch, formLoading])
-
-    useEffect(() => {
 
         form.setValues({
-            mother_account_id: entityEditData.mother_account_id ? entityEditData.mother_account_id : '',
+            parent_id: entityEditData.parent_id ? entityEditData.parent_id : '',
             name: entityEditData.name ? entityEditData.name : '',
             code: entityEditData.code ? entityEditData.code : '',
             status: entityEditData.status ? entityEditData.status : '',
@@ -100,7 +105,7 @@ function HeadSubGroupUpdateFrom(props) {
     }, [entityEditData, dispatch, setFormData])
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('mother_account_id').click()
+        document.getElementById('parent_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -114,6 +119,8 @@ function HeadSubGroupUpdateFrom(props) {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
+
+                dispatch(setValidationData(false));
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -195,13 +202,13 @@ function HeadSubGroupUpdateFrom(props) {
                                                             placeholder={t('ChooseHeadGroup')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'mother_account_id'}
+                                                            name={'parent_id'}
                                                             form={form}
                                                             dropdownValue={accountDropdown}
-                                                            id={'mother_account_id'}
+                                                            id={'parent_id'}
                                                             searchable={false}
-                                                            value={motherData ? String(motherData) : (entityEditData.mother_account_id ? String(entityEditData.mother_account_id) : null)}
-                                                            changeValue={setMotherData}
+                                                            value={parentHead}
+                                                            changeValue={setParentHead}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
