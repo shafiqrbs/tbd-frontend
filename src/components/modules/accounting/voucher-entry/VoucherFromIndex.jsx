@@ -24,7 +24,7 @@ import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
+import { notifications, showNotification } from "@mantine/notifications";
 import { DataTable } from "mantine-datatable";
 import {
   setFetching,
@@ -66,14 +66,51 @@ function VoucherFormIndex(props) {
 
   const [ledgerHead, setLedgerHead] = useState("");
   const [loadVoucher, setLoadVoucher] = useState(false);
+  const [currentEntryType, setCurrentEntryType] = useState("");
+
+  // Load vouchers from both local storage keys and merge them
   useEffect(() => {
-    const vouchers = localStorage.getItem("vouchers-entry");
-    setRecords(vouchers ? JSON.parse(vouchers) : []);
+    const mainVouchers =
+      JSON.parse(localStorage.getItem("vouchers-entry")) || [];
+    const formVouchers =
+      JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
+
+    // Combine both voucher sets
+    const combinedVouchers = [...mainVouchers, ...formVouchers];
+
+    // Sort vouchers: CR entries first, then DR entries
+    const sortedVouchers = combinedVouchers.sort((a, b) => {
+      // First prioritize CR entries
+      if (a.mode === "CR" && b.mode !== "CR") return -1;
+      if (a.mode !== "CR" && b.mode === "CR") return 1;
+      return 0;
+    });
+
+    setRecords(sortedVouchers);
   }, []);
+
+  // Reload vouchers when loadVoucher changes
   useEffect(() => {
-    const vouchers = localStorage.getItem("vouchers-entry");
-    setRecords(vouchers ? JSON.parse(vouchers) : []);
-    setLoadVoucher(false);
+    if (loadVoucher) {
+      const mainVouchers =
+        JSON.parse(localStorage.getItem("vouchers-entry")) || [];
+      const formVouchers =
+        JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
+
+      // Combine both voucher sets
+      const combinedVouchers = [...mainVouchers, ...formVouchers];
+
+      // Sort vouchers: CR entries first, then DR entries
+      const sortedVouchers = combinedVouchers.sort((a, b) => {
+        // First prioritize CR entries
+        if (a.mode === "CR" && b.mode !== "CR") return -1;
+        if (a.mode !== "CR" && b.mode === "CR") return 1;
+        return 0;
+      });
+
+      setRecords(sortedVouchers);
+      setLoadVoucher(false);
+    }
   }, [loadVoucher]);
 
   const categorizedOptions = [
@@ -90,70 +127,144 @@ function VoucherFormIndex(props) {
   ];
   const [bankDetails, setBankDetails] = useState(null);
   const [bankDrawer, setBankDrawer] = useState(false);
+
+  // Fix the null check in hasCREntry
+  const hasCREntry = () => {
+    const mainVouchers =
+      JSON.parse(localStorage.getItem("vouchers-entry")) || [];
+    const formVouchers =
+      JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
+
+    // Check both storage locations for CR entries with proper null checking
+    return (
+      mainVouchers.some((voucher) => voucher && voucher.mode === "CR") ||
+      formVouchers.some((voucher) => voucher && voucher.mode === "CR")
+    );
+  };
+
+  const showNotificationComponent = (message, color) => {
+    showNotification({
+      title: message,
+      color: color,
+    });
+  };
+
   useEffect(() => {
-    if (ledgerHead === "bank_account_sonali") {
-      setBankDetails({
-        account_number: "00115633005315",
-        account_name: "Sonali Bank, Gulshan Branch",
-        bank_name: "Sonali Bank",
-        branch_name: "Gulshan Branch",
-        opening_balance: 1002221,
-      });
+    if (ledgerHead) {
+      setCurrentEntryType(ledgerHead);
 
-      // Get current vouchers from local storage
-      const storedVouchers =
-        JSON.parse(localStorage.getItem("vouchers-entry")) || [];
+      if (ledgerHead === "bank_account_sonali") {
+        setBankDetails({
+          account_number: "00115633005315",
+          account_name: "Sonali Bank, Gulshan Branch",
+          bank_name: "Sonali Bank",
+          branch_name: "Gulshan Branch",
+          opening_balance: 1002221,
+        });
 
-      // Remove any existing bank entries
-      const filteredVouchers = storedVouchers.filter(
-        (voucher) => !voucher.name.startsWith("bank_account_")
-      );
+        // Get current vouchers from local storage
+        const storedVouchers =
+          JSON.parse(localStorage.getItem("vouchers-entry")) || [];
 
-      filteredVouchers.push({
-        name: ledgerHead,
-        debit: 0,
-        credit: 0,
-        mode: "CR",
-        to: "Sonali Bank, Gulshan Branch",
-        cheque_no: null,
-      });
+        // Remove any existing bank entries
+        const filteredVouchers = storedVouchers.filter(
+          (voucher) =>
+            !voucher.name || !voucher.name.startsWith("bank_account_")
+        );
 
-      // Save to local storage
-      localStorage.setItem("vouchers-entry", JSON.stringify(filteredVouchers));
-      setLoadVoucher(true);
-      setBankDrawer(true);
+        filteredVouchers.push({
+          name: ledgerHead,
+          debit: 0,
+          credit: 0,
+          mode: "CR",
+          to: "Sonali Bank, Gulshan Branch",
+          cheque_no: null,
+        });
+
+        // Save to local storage
+        localStorage.setItem(
+          "vouchers-entry",
+          JSON.stringify(filteredVouchers)
+        );
+        setLoadVoucher(true);
+        setBankDrawer(true);
+      } else if (ledgerHead === "bank_account_agrani") {
+        setBankDetails({
+          account_number: "00115633005315",
+          account_name: "Agrani Bank",
+          bank_name: "Agrani Bank",
+          branch_name: "Gulshan Branch",
+          opening_balance: 5000,
+        });
+
+        // Get current vouchers from local storage
+        const storedVouchers =
+          JSON.parse(localStorage.getItem("vouchers-entry")) || [];
+
+        // Remove any existing bank entries
+        const filteredVouchers = storedVouchers.filter(
+          (voucher) =>
+            !voucher.name || !voucher.name.startsWith("bank_account_")
+        );
+
+        filteredVouchers.push({
+          name: ledgerHead,
+          debit: 0,
+          credit: 0,
+          mode: "CR",
+          to: "Agrani Bank",
+          cheque_no: null,
+        });
+
+        localStorage.setItem(
+          "vouchers-entry",
+          JSON.stringify(filteredVouchers)
+        );
+        setLoadVoucher(true);
+        setBankDrawer(true);
+      }
     }
-    if (ledgerHead === "bank_account_agrani") {
-      setBankDetails({
-        account_number: "00115633005315",
-        account_name: "Agrani Bank",
-        bank_name: "Agrani Bank",
-        branch_name: "Gulshan Branch",
-        opening_balance: 5000,
-      });
-
-      // Get current vouchers from local storage
-      const storedVouchers =
-        JSON.parse(localStorage.getItem("vouchers-entry")) || [];
-
-      // Remove any existing bank entries
-      const filteredVouchers = storedVouchers.filter(
-        (voucher) => !voucher.name.startsWith("bank_account_")
-      );
-
-      filteredVouchers.push({
-        name: ledgerHead,
-        debit: 0,
-        credit: 0,
-        mode: "CR",
-        to: null,
-        cheque_no: null,
-      });
-
-      localStorage.setItem("vouchers-entry", JSON.stringify(filteredVouchers));
-    }
-    setBankDrawer(true);
   }, [ledgerHead]);
+
+  // Delete voucher entry handler
+  const handleDeleteVoucher = (index) => {
+    const updatedRecords = [...records];
+    const deletedVoucher = updatedRecords[index];
+    updatedRecords.splice(index, 1);
+
+    // Check if it's from the main vouchers or form vouchers
+    const mainVouchers =
+      JSON.parse(localStorage.getItem("vouchers-entry")) || [];
+    const formVouchers =
+      JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
+
+    // Update the appropriate storage
+    const isInMainVouchers = mainVouchers.some(
+      (v) => v.name === deletedVoucher.name && v.mode === deletedVoucher.mode
+    );
+
+    if (isInMainVouchers) {
+      const updatedMainVouchers = mainVouchers.filter(
+        (v, i) =>
+          !(v.name === deletedVoucher.name && v.mode === deletedVoucher.mode)
+      );
+      localStorage.setItem(
+        "vouchers-entry",
+        JSON.stringify(updatedMainVouchers)
+      );
+    } else {
+      const updatedFormVouchers = formVouchers.filter(
+        (v, i) =>
+          !(v.name === deletedVoucher.name && v.mode === deletedVoucher.mode)
+      );
+      localStorage.setItem(
+        "vouchers-entry-form",
+        JSON.stringify(updatedFormVouchers)
+      );
+    }
+
+    setRecords(updatedRecords);
+  };
 
   const form = useForm({
     initialValues: {
@@ -228,14 +339,27 @@ function VoucherFormIndex(props) {
     setRecords(updatedRecords);
   };
 
+  // Update to safely handle potentially null values
   const totalDebit = records.reduce(
-    (acc, record) => acc + parseFloat(record.debit || 0),
+    (acc, record) =>
+      acc +
+      (record && !isNaN(parseFloat(record.debit || 0))
+        ? parseFloat(record.debit || 0)
+        : 0),
     0
   );
   const totalCredit = records.reduce(
-    (acc, record) => acc + parseFloat(record.credit || 0),
+    (acc, record) =>
+      acc +
+      (record && !isNaN(parseFloat(record.credit || 0))
+        ? parseFloat(record.credit || 0)
+        : 0),
     0
   );
+
+  // Fix isBalanced calculation to handle floating point precision issues
+  const isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
+
   useEffect(() => {
     dispatch(setFetching(false));
   });
@@ -441,6 +565,7 @@ function VoucherFormIndex(props) {
                             width: 130,
                             render: (record, index) => (
                               <NumberInput
+                                disabled={record.mode === "CR"}
                                 hideControls
                                 ta={"right"}
                                 value={record.debit}
@@ -461,6 +586,7 @@ function VoucherFormIndex(props) {
                             resizable: true,
                             render: (record, index) => (
                               <NumberInput
+                                disabled={record.mode === "DR"}
                                 hideControls
                                 value={record.credit}
                                 onChange={(e) =>
@@ -477,12 +603,13 @@ function VoucherFormIndex(props) {
                             accessor: "action",
                             title: t("Action"),
                             textAlign: "right",
-                            render: (record) => (
+                            render: (record, index) => (
                               <Group gap={8} justify="right" wrap="nowrap">
                                 <ActionIcon
                                   size={"sm"}
                                   variant="transparent"
                                   color="red.5"
+                                  onClick={() => handleDeleteVoucher(index)}
                                 >
                                   <IconTrashX size="xs" stroke={1.5} />
                                 </ActionIcon>
@@ -582,7 +709,21 @@ function VoucherFormIndex(props) {
                           className={"boxBackground borderRadiusAll"}
                         >
                           <Grid>
-                            <Grid.Col span={9}></Grid.Col>
+                            <Grid.Col span={9}>
+                              <Text size="sm" weight={500}>
+                                {t("TotalDebit")}: {totalDebit.toFixed(2)} |{" "}
+                                {t("TotalCredit")}: {totalCredit.toFixed(2)}
+                              </Text>
+                              <Text
+                                size="sm"
+                                color={isBalanced ? "green" : "red"}
+                                weight={600}
+                              >
+                                {isBalanced
+                                  ? t("VoucherBalanced")
+                                  : t("VoucherNotBalanced")}
+                              </Text>
+                            </Grid.Col>
                             <Grid.Col span={3}>
                               <Stack right align="flex-end">
                                 {!saveCreateLoading && isOnline && (
@@ -593,6 +734,7 @@ function VoucherFormIndex(props) {
                                     form={"indexForm"}
                                     id="EntityFormSubmits"
                                     leftSection={<IconDeviceFloppy size={16} />}
+                                    disabled={!isBalanced || records.length < 2}
                                   >
                                     <Flex direction={"column"} gap={0}>
                                       <Text fz={14} fw={400}>
@@ -630,6 +772,8 @@ function VoucherFormIndex(props) {
           setBankDrawer={setBankDrawer}
           module={"VoucherEntry"}
           setLoadVoucher={setLoadVoucher}
+          sourceForm="main"
+          entryType={currentEntryType}
         />
       )}
     </Box>

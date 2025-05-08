@@ -14,8 +14,10 @@ import { useDispatch } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { isNotEmpty, useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
 import SelectForm from "../../../../form-builders/SelectForm";
 import InputNumberForm from "../../../../form-builders/InputNumberForm";
+import BankDrawer from "../../common/BankDrawer";
 
 export default function CustomerVoucherForm(props) {
   const { t } = useTranslation();
@@ -25,9 +27,12 @@ export default function CustomerVoucherForm(props) {
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [ledgerHead, setLedgerHead] = useState("");
   const [nextField, setNextField] = useState("amount");
+  const [bankDrawer, setBankDrawer] = useState(false);
+  const [loadVoucher, setLoadVoucher] = useState(false);
+  const [bankDetails, setBankDetails] = useState(null);
+  const [currentEntryType, setCurrentEntryType] = useState("");
 
   const amountInputRef = useRef(null);
-  const chequeNoInputRef = useRef(null);
 
   const voucherForm = useForm({
     initialValues: {
@@ -81,30 +86,110 @@ export default function CustomerVoucherForm(props) {
     },
   ];
 
-  useEffect(() => {
-    if (ledgerHead && ledgerHead.startsWith("bank_account")) {
-      chequeNoInputRef.current?.focus();
-    }
-  }, [ledgerHead]);
+  const hasCREntry = () => {
+    const mainVouchers = JSON.parse(localStorage.getItem("vouchers-entry")) || [];
+    const formVouchers = JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
+    
+    return mainVouchers.some((voucher) => voucher && voucher.mode === "CR") ||
+           formVouchers.some((voucher) => voucher && voucher.mode === "CR");
+  };
 
-  useEffect(() => {
-    if (nextField === "amount" && amountInputRef.current) {
-      amountInputRef.current.focus();
-    }
-  }, [nextField]);
+  const showNotificationComponent = (message, color) => {
+    showNotification({
+      title: message,
+      color: color,
+    });
+  };
 
   const handleLedgerHeadChange = (value) => {
+    if (!hasCREntry()) {
+      showNotificationComponent(t("PleaseSelectCREntryFirst"), "red");
+      setLedgerHead("");
+      voucherForm.setFieldValue("ledger_head", "");
+      return;
+    }
+    
     voucherForm.setFieldValue("ledger_head", value);
     setLedgerHead(value);
+    setCurrentEntryType(value);
+
     if (value && value.startsWith("bank_account")) {
       setNextField("cheque_no");
+      
+      if (value === "bank_account_sonali") {
+        setBankDetails({
+          account_number: "00115633005315",
+          account_name: "Sonali Bank, Gulshan Branch",
+          bank_name: "Sonali Bank",
+          branch_name: "Gulshan Branch",
+          opening_balance: 1002221,
+        });
+      } else if (value === "bank_account_agrani") {
+        setBankDetails({
+          account_number: "00115633005315",
+          account_name: "Agrani Bank",
+          bank_name: "Agrani Bank",
+          branch_name: "Gulshan Branch",
+          opening_balance: 5000,
+        });
+      }
+      setBankDrawer(true);
     } else {
       setNextField("amount");
     }
   };
 
   const handleSubmit = (values) => {
-    console.log("Form submitted with values:", values);
+    if (values.amount && values.ledger_head) {
+      if (!hasCREntry()) {
+        showNotificationComponent(t("PleaseSelectCREntryFirst"), "red");
+        return;
+      }
+
+      const storedVouchers = JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
+      const isLedgerBankAccount = values.ledger_head && values.ledger_head.startsWith("bank_account_");
+
+      if (isLedgerBankAccount) {
+        const newEntry = {
+          name: values.ledger_head,
+          debit: values.amount,
+          credit: 0,
+          mode: "DR",
+          to: values.ledger_head.includes("sonali")
+            ? "Sonali Bank, Gulshan Branch"
+            : values.ledger_head.includes("agrani")
+            ? "Agrani Bank"
+            : "",
+          cheque_no: null,
+        };
+
+        storedVouchers.push(newEntry);
+        localStorage.setItem(
+          "vouchers-entry-form",
+          JSON.stringify(storedVouchers)
+        );
+        setLoadVoucher(true);
+      } else {
+        const newEntry = {
+          name: values.ledger_head,
+          debit: values.amount,
+          credit: 0,
+          mode: "DR",
+          to: null,
+          cheque_no: null,
+        };
+
+        storedVouchers.push(newEntry);
+        localStorage.setItem(
+          "vouchers-entry-form",
+          JSON.stringify(storedVouchers)
+        );
+        setLoadVoucher(true);
+      }
+
+      voucherForm.reset();
+      setLedgerHead("");
+    }
   };
 
   return (
@@ -209,6 +294,16 @@ export default function CustomerVoucherForm(props) {
           </Box>
         </Box>
       </form>
+      {bankDrawer && (
+        <BankDrawer
+          bankDrawer={bankDrawer}
+          setBankDrawer={setBankDrawer}
+          module={"CustomerVoucher"}
+          setLoadVoucher={setLoadVoucher}
+          sourceForm="customerVoucher"
+          entryType={currentEntryType}
+        />
+      )}
     </Box>
   );
 }

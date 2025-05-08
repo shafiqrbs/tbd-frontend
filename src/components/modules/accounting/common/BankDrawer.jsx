@@ -13,28 +13,40 @@ import {
   Stack,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconX, IconDeviceFloppy } from "@tabler/icons-react";
+import {
+  IconX,
+  IconDeviceFloppy,
+  IconSortAscendingNumbers,
+} from "@tabler/icons-react";
 import { useDispatch } from "react-redux";
 import { useForm, isNotEmpty } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import _SelectForm from "../../../../components/form-builders/_SelectForm";
 import _InputForm from "../../../../components/form-builders/_InputForm";
+import InputForm from "../../../form-builders/InputForm";
 
 function BankDrawer(props) {
-  const { bankDrawer, setBankDrawer, module, setLoadVoucher } = props;
+  const {
+    bankDrawer,
+    setBankDrawer,
+    module,
+    setLoadVoucher,
+    sourceForm,
+    entryType,
+  } = props;
   const { isOnline, mainAreaHeight } = useOutletContext();
   const { t } = useTranslation();
   const height = mainAreaHeight - 100;
   const dispatch = useDispatch();
-  
+
   // Add refs for form inputs
   const chequeNoInputRef = useRef(null);
   const payModeInputRef = useRef(null);
-  
+
   // Add state for payment mode
   const [paymentMode2, setPaymentMode2] = useState("");
-  
+
   // Payment mode dropdown data
   const paymentModeData2 = [
     { value: "cash", label: t("Cash") },
@@ -82,15 +94,30 @@ function BankDrawer(props) {
   const handleSalesConfirmSubmit = async (values) => {
     try {
       // Get vouchers from local storage
-      const storedVouchers =
-        JSON.parse(localStorage.getItem("vouchers-entry")) || [];
+      const storageKey =
+        sourceForm === "customerVoucher"
+          ? "vouchers-entry-form"
+          : "vouchers-entry";
+      const storedVouchers = JSON.parse(localStorage.getItem(storageKey)) || [];
 
-      // Find bank entry and update it
+      // Find bank entry and update it with safe checks for null values
       const updatedVouchers = storedVouchers.map((voucher) => {
-        if (voucher.name && voucher.name.startsWith("bank_account_")) {
+        // Only update the bank entry with matching name with null check
+        if (voucher && voucher.name && voucher.name === entryType) {
           return {
             ...voucher,
-            credit: values.amount,
+            credit:
+              entryType &&
+              entryType.startsWith("bank_account_") &&
+              voucher.mode === "CR"
+                ? values.amount
+                : voucher.credit,
+            debit:
+              entryType &&
+              entryType.startsWith("bank_account_") &&
+              voucher.mode === "DR"
+                ? values.amount
+                : voucher.debit,
             cheque_no: values.cheque_no,
             pay_mode: values.pay_mode,
             bank_name: values.bank_name,
@@ -102,7 +129,7 @@ function BankDrawer(props) {
       });
 
       // Save updated vouchers to local storage
-      localStorage.setItem("vouchers-entry", JSON.stringify(updatedVouchers));
+      localStorage.setItem(storageKey, JSON.stringify(updatedVouchers));
 
       showNotificationComponent(t("UpdateSuccessfully"), "teal");
       setLoadVoucher(true);
@@ -190,7 +217,7 @@ function BankDrawer(props) {
                     <form onSubmit={bankForm.onSubmit(handleSalesFormSubmit)}>
                       <Box>
                         <Box mt={"xs"}>
-                          <_InputForm
+                          <InputForm
                             tooltip={t("ChequeNo")}
                             label={t("ChequeNo")}
                             placeholder={t("ChequeNo")}
@@ -200,11 +227,17 @@ function BankDrawer(props) {
                             form={bankForm}
                             mt={0}
                             id={"cheque_no"}
-                            ref={chequeNoInputRef}
+                            type="number"
+                            leftSection={
+                              <IconSortAscendingNumbers
+                                size={16}
+                                opacity={0.5}
+                              />
+                            }
                           />
                         </Box>
                         <Box mt={"xs"}>
-                          <_InputForm
+                          <InputForm
                             tooltip={t("Amount")}
                             label={t("Amount")}
                             placeholder={t("Amount")}
@@ -215,6 +248,12 @@ function BankDrawer(props) {
                             mt={0}
                             id={"amount"}
                             type="number"
+                            leftSection={
+                              <IconSortAscendingNumbers
+                                size={16}
+                                opacity={0.5}
+                              />
+                            }
                           />
                         </Box>
                         <Box mt={"xs"}>
@@ -270,7 +309,7 @@ function BankDrawer(props) {
                             label={t("ReceivedFrom")}
                             placeholder={t("ReceivedFrom")}
                             required={true}
-                            nextField={"narration"}
+                            nextField={"EntityBankFormSubmit"}
                             name={"received_from"}
                             form={bankForm}
                             mt={0}
