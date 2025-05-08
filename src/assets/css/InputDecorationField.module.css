@@ -1,0 +1,23 @@
+.label {
+    margin-bottom: 0px;
+}
+
+/* Input.module.css */
+.input {
+    border: 1px solid #daaa5e;
+}
+
+/* Style the placeholder */
+
+.input::placeholder {
+    color: #868e96;
+    opacity: 1;
+}
+
+.input {
+    transition: none;
+    &:focus-within {
+         border: 1px solid #343a40;
+         border-color:#343a40;
+     }
+}

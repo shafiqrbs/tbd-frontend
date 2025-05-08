@@ -80,7 +80,7 @@ export default function __PosCustomerSection(props) {
                     <SelectForm
                       tooltip={t("CustomerValidateMessage")}
                       label=""
-                      placeholder={t("Jhon Dee")}
+                      placeholder={t("SearchByCustomerNameOrMobile")}
                       required={false}
                       nextField={""}
                       name={"customer_id"}

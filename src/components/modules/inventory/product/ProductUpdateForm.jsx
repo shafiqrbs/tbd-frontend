@@ -77,7 +77,6 @@ function ProductUpdateForm(props) {
         },
       };
       try {
-
         const resultAction = await dispatch(getIndexEntityData(value));
         if (getIndexEntityData.rejected.match(resultAction)) {
           console.error("Error:", resultAction);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Box, Grid, Checkbox, ScrollArea, Button, Text } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import {hasLength, isNotEmpty, useForm} from "@mantine/form";
 import { useDispatch } from "react-redux";
 import { modals } from "@mantine/modals";
 import { useHotkeys } from "@mantine/hooks";
@@ -11,49 +11,66 @@ import SelectForm from "../../../form-builders/SelectForm";
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent";
 import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
 
-function SalesForm({ customerGroupDropdownData, height, id }) {
+
+function SalesForm({ customerGroupDropdownData, height, id ,config_sales }) {
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+  const {fetchDomainConfig} = getDomainConfig(false)
   const [customerGroupData, setCustomerGroupData] = useState(null);
 
-  const domainConfig = JSON.parse(localStorage.getItem('domain-config-data'))
- // const { domainConfig, fetchDomainConfig } = getDomainConfig();
+  useEffect(() => {
+    setCustomerGroupData(config_sales?.default_customer_group_id?.toString())
+  }, [id]);
 
-  const salesConfig = useMemo(() => domainConfig?.inventory_config?.config_sales || {}, [domainConfig]);
 
-  const fields = [
-    { name: "discount_with_customer", label: "DiscountWithCustomer" },
-    { name: "due_sales_without_customer", label: "DueSalesWithoutCustomer" },
-    { name: "is_measurement_enable", label: "MeasurementEnable" },
-    { name: "is_multi_price", label: "MultiPrice" },
-    { name: "is_sales_auto_approved", label: "SalesAutoApproved" },
-    { name: "is_zero_receive_allow", label: "ZeroReceiveAllow" },
-    { name: "item_sales_percent", label: "ItemSalesPercent" },
-    { name: "search_by_category", label: "SearchByCategory" },
-    { name: "search_by_product_nature", label: "SearchByProductNature" },
-    { name: "search_by_vendor", label: "SearchByVendor" },
-    { name: "search_by_warehouse", label: "SearchByWarehouse" },
-    { name: "show_product", label: "ShowProduct" },
-    { name: "zero_stock", label: "ZeroStock" },
-  ];
 
   const form = useForm({
     initialValues: {
-      default_customer_group_id: 0,
-      ...fields.reduce((acc, field) => ({ ...acc, [field.name]: 0 }), {})
+      default_customer_group_id: config_sales?.default_customer_group_id || "",
+      discount_with_customer: config_sales?.discount_with_customer || "",
+      due_sales_without_customer: config_sales?.due_sales_without_customer || "",
+      is_multi_price: config_sales?.is_multi_price || "",
+      is_sales_auto_approved: config_sales?.is_sales_auto_approved || "",
+      is_measurement_enable: config_sales?.is_measurement_enable || "",
+      is_zero_receive_allow: config_sales?.is_zero_receive_allow || "",
+      item_sales_percent: config_sales?.item_sales_percent || "",
+      search_by_category: config_sales?.search_by_category || "",
+      search_by_product_nature: config_sales?.search_by_product_nature || "",
+      search_by_vendor: config_sales?.search_by_vendor || "",
+      search_by_warehouse: config_sales?.search_by_warehouse || "",
+      show_product: config_sales?.show_product || "",
+      is_bonus_quantity: config_sales?.is_bonus_quantity || "",
+      zero_stock: config_sales?.zero_stock || "",
     },
+    validate: {
+      default_customer_group_id : isNotEmpty(),
+    }
   });
 
   useEffect(() => {
-    if (salesConfig) {
+    if (config_sales) {
       form.setValues({
-        default_customer_group_id: salesConfig.default_customer_group_id || 0,
-        ...fields.reduce((acc, field) => ({ ...acc, [field.name]: salesConfig[field.name] || 0 }), {})
+        default_customer_group_id: config_sales?.default_customer_group_id || 0,
+        discount_with_customer: config_sales?.discount_with_customer || 0,
+        due_sales_without_customer: config_sales?.due_sales_without_customer || 0,
+        is_multi_price: config_sales?.is_multi_price || 0,
+        is_sales_auto_approved: config_sales?.is_sales_auto_approved || 0,
+        is_measurement_enable: config_sales?.is_measurement_enable || 0,
+        is_zero_receive_allow: config_sales?.is_zero_receive_allow || 0,
+        item_sales_percent: config_sales?.item_sales_percent || 0,
+        search_by_category: config_sales?.search_by_category || 0,
+        search_by_product_nature: config_sales?.search_by_product_nature || 0,
+        search_by_vendor: config_sales?.search_by_vendor || 0,
+        search_by_warehouse: config_sales?.search_by_warehouse || 0,
+        show_product: config_sales?.show_product || 0,
+        is_bonus_quantity: config_sales?.is_bonus_quantity || 0,
+        zero_stock: config_sales?.zero_stock || 0,
       });
     }
-  }, [salesConfig]);
+  }, [dispatch, config_sales]);
+
 
   const handleSalesFormSubmit = (values) => {
     dispatch(setValidationData(false));
@@ -68,22 +85,38 @@ function SalesForm({ customerGroupDropdownData, height, id }) {
   };
 
   const handleSalesConfirmSubmit = async (values) => {
+
+    const properties = [
+      "discount_with_customer",
+      "due_sales_without_customer",
+      "is_multi_price",
+      "is_sales_auto_approved",
+      "is_zero_receive_allow",
+      "item_sales_percent",
+      "search_by_category",
+      "search_by_product_nature",
+      "search_by_vendor",
+      "search_by_warehouse",
+      "show_product",
+      "is_bonus_quantity",
+      "zero_stock",
+    ];
+
+    properties.forEach((property) => {
+      values[property] =
+          values[property] === true || values[property] == 1 ? 1 : 0;
+    });
+
     const payload = {
       url: `domain/config/inventory-sales/${id}`,
-      data: {
-        ...values,
-        ...fields.reduce((acc, field) => ({
-          ...acc,
-          [field.name]: values[field.name] === true || values[field.name] === 1 ? 1 : 0,
-        }), {})
-      }
+      data: values,
     };
 
     try {
       setSaveCreateLoading(true);
       const result = await dispatch(storeEntityData(payload));
       if (storeEntityData.fulfilled.match(result) && result.payload?.data?.status === 200) {
-      //  await fetchDomainConfig();
+        fetchDomainConfig()
         showNotificationComponent(t("UpdateSuccessfully"), "teal");
       } else {
         showNotificationComponent(t("UpdateFailed"), "red");
@@ -100,6 +133,7 @@ function SalesForm({ customerGroupDropdownData, height, id }) {
   useHotkeys([
     ["alt+s", () => document.getElementById("SalesFormSubmit")?.click()]
   ], []);
+
 
   return (
       <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
@@ -122,24 +156,51 @@ function SalesForm({ customerGroupDropdownData, height, id }) {
                     dropdownValue={customerGroupDropdownData}
                     id="default_customer_group_id"
                     searchable={false}
-                    value={
-                      customerGroupData
-                          ? String(customerGroupData)
-                          : salesConfig?.default_customer_group_id
-                              ? String(salesConfig.default_customer_group_id)
-                              : null
-                    }
+                    value={customerGroupData}
                     changeValue={setCustomerGroupData}
                 />
               </Grid.Col>
             </Grid>
 
-            {/* Dynamic checkbox fields */}
-            {fields.map((field, idx) => (
-                <Box>
-                  <InputCheckboxForm form={form} label={t(field.label)} field={field.name}  name={field.name} />
-                </Box>
-            ))}
+            <Box>
+              <InputCheckboxForm form={form} label={t('DiscountWithCustomer')} field={'discount_with_customer'}  name={'discount_with_customer'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('DueSalesWithoutCustomer')} field={'due_sales_without_customer'}  name={'due_sales_without_customer'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('MeasurementEnable')} field={'is_measurement_enable'}  name={'is_measurement_enable'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('MultiPrice')} field={'is_zero_receive_allow'}  name={'is_zero_receive_allow'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('SalesAutoApproved')} field={'is_sales_auto_approved'}  name={'is_sales_auto_approved'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('SearchByCategory')} field={'search_by_category'}  name={'search_by_category'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('SearchByProductNature')} field={'search_by_product_nature'}  name={'search_by_product_nature'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('SearchByVendor')} field={'search_by_vendor'}  name={'search_by_vendor'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('SearchByWarehouse')} field={'search_by_warehouse'}  name={'search_by_warehouse'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('ShowProduct')} field={'show_product'}  name={'show_product'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('BonusQuantity')} field={'is_bonus_quantity'}  name={'is_bonus_quantity'} />
+            </Box>
+             <Box>
+              <InputCheckboxForm form={form} label={t('ItemSalesPercent')} field={'item_sales_percent'}  name={'item_sales_percent'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('ZeroStock')} field={'zero_stock'}  name={'zero_stock'} />
+            </Box>
 
           </Box>
 

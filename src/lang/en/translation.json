@@ -1118,6 +1118,7 @@
   "EnterProductQuantity" : "Enter product quantity",
   "IssuedTo" : "Issue to",
   "ChooseIssuedBy" : "Choose issued by",
+  "SearchByCustomerNameOrMobile": "Search by customer name or mobile",
   "xxxxxx": "xxxxxxx",
   "": ""
 }
