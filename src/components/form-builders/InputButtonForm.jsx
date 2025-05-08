@@ -40,6 +40,7 @@ function InputButtonForm(props) {
                     <TextInput
                         type={props.type}
                         id={id}
+                        label={label}
                         classNames={inputCss}
                         size="sm"
                         placeholder={placeholder}

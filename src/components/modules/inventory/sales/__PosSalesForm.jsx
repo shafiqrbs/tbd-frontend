@@ -16,6 +16,8 @@ import {IconCheck} from "@tabler/icons-react";
 import {rem} from "@mantine/core";
 import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
+import inputInlineCss from "../../../../assets/css/InlineInputField.module.css";
+import inputCss from "../../../../assets/css/InlineInputField.module.css";
 
 export default function __PosSalesForm(props) {
     const {
@@ -446,16 +448,16 @@ export default function __PosSalesForm(props) {
                                             <TextInput
                                                 type="number"
                                                 label=""
+                                                classNames={inputCss}
                                                 size="xs"
                                                 value={editedQuantity}
                                                 onChange={handleQuantityChange}
                                                 onKeyDown={handleKeyDown} // Use direct handler instead of getHotkeyHandler
                                                 rightSection={<Text style={{textAlign: "right", width: "100%", paddingRight: 16}} fz={'xs'} color={"gray"}>
-                                                    {item?.measurement_unit?.unit_name?item?.measurement_unit.unit_name:item?.measurement_unit?.unit_name}
+                                                    {(item?.measurement_unit) ?  item?.measurement_unit?.unit_name?item?.measurement_unit.unit_name:item?.measurement_unit?.unit_name:item.unit_name}
                                                 </Text>}
                                                 rightSectionWidth={50}
                                             />
-
                                         );
                                     },
                                 },
@@ -538,6 +540,7 @@ export default function __PosSalesForm(props) {
                                                 <TextInput
                                                     type="number"
                                                     label=""
+                                                    classNames={inputCss}
                                                     size="xs"
                                                     id={"inline-update-quantity-" + item.product_id}
                                                     value={editedSalesPrice}
@@ -597,6 +600,7 @@ export default function __PosSalesForm(props) {
                                                 <TextInput
                                                     type="number"
                                                     label=""
+                                                    classNames={inputCss}
                                                     size="xs"
                                                     value={editedPercent}
                                                     onChange={handlePercentChange}

@@ -24,12 +24,15 @@ import InputForm from "../../../form-builders/InputForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
 import {storeEntityData} from "../../../../store/core/crudSlice";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 
 function VatForm(props) {
   const { height, inventory_config, id } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+  const {fetchDomainConfig} = getDomainConfig(false)
 
   const form = useForm({
     initialValues: {
@@ -91,38 +94,28 @@ function VatForm(props) {
       values[property] =
         values[property] === true || values[property] == 1 ? 1 : 0;
     });
+    const payload = {
+      url: `domain/config/inventory/`+id,
+      data: values,
+    };
 
     try {
       setSaveCreateLoading(true);
+      const result = await dispatch(storeEntityData(payload));
+      if (storeEntityData.fulfilled.match(result) && result.payload?.data?.status === 200) {
+        fetchDomainConfig()
+        showNotificationComponent(t("UpdateSuccessfully"), "teal");
+      } else {
+        showNotificationComponent(t("UpdateFailed"), "red");
+      }
 
-      const value = {
-        url: `domain/config/inventory/${id}`,
-        data: values,
-      };
-      await dispatch(storeEntityData(value));
-      notifications.show({
-        color: "teal",
-        title: t("UpdateSuccessfully"),
-        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-        loading: false,
-        autoClose: 700,
-        style: { backgroundColor: "lightgray" },
-      });
-      setTimeout(() => {
-        setSaveCreateLoading(false);
-      }, 700);
-    } catch (error) {
-      console.error("Error updating inventory config:", error);
-      notifications.show({
-        color: "red",
-        title: t("UpdateFailed"),
-        icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
-        loading: false,
-        autoClose: 700,
-        style: { backgroundColor: "lightgray" },
-      });
+    } catch (err) {
+      console.error(err);
+      showNotificationComponent(t("UpdateFailed"), "red");
+    } finally {
       setSaveCreateLoading(false);
     }
+
   };
 
   useHotkeys(

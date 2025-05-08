@@ -23,7 +23,7 @@ const getDomainConfig = (autoFetch = true) => {
 
     // Save domainConfig to localStorage whenever it changes
     useEffect(() => {
-        if (domainConfig) {
+        if (domainConfig && domainConfig?.id) {
             localStorage.setItem("domain-config-data", JSON.stringify(domainConfig));
         }
     }, [domainConfig]);

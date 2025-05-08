@@ -51,7 +51,7 @@ function InventoryConfigarationForm() {
   const inventoryConfigData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
-  const [activeTab, setActiveTab] = useState("Pos");
+  const [activeTab, setActiveTab] = useState("Sales");
 
   const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad);
 
@@ -99,7 +99,6 @@ function InventoryConfigarationForm() {
   let businessModelList = getSettingBusinessModelDropdownData();
 
   const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
-
 
   let inventory_config = domainConfigData?.inventory_config;
   let config_purchase = inventory_config?.config_purchase;

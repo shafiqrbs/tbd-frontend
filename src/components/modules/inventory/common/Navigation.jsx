@@ -24,7 +24,7 @@ export default function Navigation(props) {
   const { module, id } = props;
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 20;
+  const height = mainAreaHeight - 30;
   const { configData } = getConfigData();
   const navigate = useNavigate();
   return (
