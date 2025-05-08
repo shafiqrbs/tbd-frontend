@@ -342,15 +342,11 @@ function _SkuManagement(props) {
                 <Grid.Col span={12}>
                   <Stack
                       h={height}
-                      bg="var(--mantine-color-body)"
-                      align="stretch"
-                      justify="space-between"
                       className={"borderRadiusAll"}
                   >
-                    <Box variant="default">&nbsp;</Box>
                     <Box className={"boxBackground"}>
                       <Box p={'xs'}>
-                        <InputForm
+                        <EditableNumberInput
                             tooltip={t("BarcodeValidateMessage")}
                             placeholder={t("Barcode")}
                             required={false}
@@ -359,13 +355,7 @@ function _SkuManagement(props) {
                             name={"barcode"}
                             id={"barcode"}
                         />
-                        <EditableNumberInput
-                            item={item}
-                            field="sales_target"
-                            placeholder={t("SalesTarget")}
-                            value=""
-                            onChange={handleFieldChange}
-                        />
+
                       </Box>
                       {isColor && (
                           <Box p={'xs'}>

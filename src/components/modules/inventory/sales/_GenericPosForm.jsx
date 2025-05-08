@@ -66,7 +66,8 @@ function _GenericPosForm({domainConfigData}) {
   const itemFormheight = mainAreaHeight - 140;
 
   // State
-  const [productSalesMode, setProductSalesMode] = useState("product");
+
+  const [productSalesMode, setProductSalesMode] = useState("list");
   const [settingDrawer, setSettingDrawer] = useState(false);
   const [productDrawer, setProductDrawer] = useState(false);
   const [salesByBarcode, setSalesByBarcode] = useState(true);
@@ -89,7 +90,6 @@ function _GenericPosForm({domainConfigData}) {
   const [stockProductRestore, setStockProductRestore] = useState(false);
   const [selectUnitDetails, setSelectUnitDetails] = useState(null);
   const [selectMultiPriceItemDetails, setSelectMultiPriceItemDetails] = useState(null);
-
 
   // Data
   const warehouseDropdownData = getCoreWarehouseDropdownData();
@@ -186,36 +186,6 @@ function _GenericPosForm({domainConfigData}) {
       productsDataStoreIntoLocalStorage();
     }
   }, [stockProductRestore]);
-
-  useEffect(() => {
-    if (searchValue.length > 0) {
-      const storedProducts = localStorage.getItem("core-products");
-      const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-      const filteredProducts = localProducts.filter(
-          (product) => product.product_nature !== "raw-materials"
-      );
-
-      const lowerCaseSearchTerm = searchValue.toLowerCase();
-      const fieldsToSearch = ["product_name"];
-      const productFilterData = filteredProducts.filter((product) =>
-          fieldsToSearch.some(
-              (field) =>
-                  product[field] &&
-                  String(product[field]).toLowerCase().includes(lowerCaseSearchTerm)
-          )
-      );
-
-      const formattedProductData = productFilterData.map((product) => ({
-        label: product.product_name || "",
-        value: String(product.id),
-      }));
-
-      setProductDropdown(formattedProductData);
-    } else {
-      setProductDropdown([]);
-    }
-  }, [searchValue]);
 
   useEffect(() => {
     const priceItem = selectProductDetails?.multi_price.find((price) => price.id == form.values.multi_price);
@@ -323,20 +293,31 @@ function _GenericPosForm({domainConfigData}) {
     }
   }, [form.values.percent]);
 
+
   useEffect(() => {
     const storedProducts = localStorage.getItem("core-products");
     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-    const filteredProducts = localProducts.filter((product) => {
-      if (categoryData) {
+    let filteredProducts = localProducts.filter((product) => {
+     /*if (categoryData) {
         return (
             product.product_nature !== "raw-materials" &&
             product.category_id === Number(categoryData) &&
             product.sales_price !== 0
         );
-      }
+      }*/
       // return product.product_nature !== "raw-materials";
       return product;
     });
+
+    if (searchValue) {
+      const searchValueLower = searchValue.toLowerCase();
+
+      filteredProducts = filteredProducts.filter(product =>
+          product.name?.toString().toLowerCase().includes(searchValueLower) ||
+          product.unit_name?.toString().toLowerCase().includes(searchValueLower) ||
+          product.quantity?.toString().toLowerCase().includes(searchValueLower)
+      );
+    }
 
     setProducts(filteredProducts);
 
@@ -345,7 +326,7 @@ function _GenericPosForm({domainConfigData}) {
       value: String(product.id),
     }));
     setProductDropdown(transformedProducts);
-  }, [categoryData]);
+  }, [categoryData,searchValue]);
 
   useEffect(() => {
     const tempProducts = localStorage.getItem("temp-sales-products");
@@ -569,12 +550,12 @@ function _GenericPosForm({domainConfigData}) {
                     </Grid.Col>
                   </Grid>
                 </Box>
-                <Box className="bodyBackgroundLight">
+                <Box className="boxBackground">
                   <Box  pt={'0'}>
                     {productSalesMode === "product" && (
-                        <ScrollArea h={itemFormheight-4} scrollbarSize={2} scrollbars="y" type="never">
-                            <Box  p={"xs"}
-                                className={genericClass.genericHighlightedBox}>
+                        <ScrollArea h={itemFormheight-56} scrollbarSize={2} scrollbars="y" type="never">
+                          {salesConfig?.is_barcode === 1 && (
+                          <Box  p={"xs"} className={genericClass.genericHighlightedBox}>
                               <InputNumberForm
                                   tooltip={t("BarcodeValidateMessage")}
                                   label=""
@@ -587,6 +568,7 @@ function _GenericPosForm({domainConfigData}) {
                                   leftSection={<IconBarcode size={16} opacity={0.5}/>}
                               />
                             </Box>
+                          )}
                           <Box  pl={"xs"} pr={'xs'}>
                             {salesConfig?.search_by_vendor === 1 && (
                                 <Box mt={"4"}>
@@ -660,7 +642,7 @@ function _GenericPosForm({domainConfigData}) {
                                       label={""}
                                       placeholder={t("ChooseProduct")}
                                       required={true}
-                                      nextField={"quantity"}
+                                      nextField={"sales_price"}
                                       name={"product_id"}
                                       form={form}
                                       dropdownValue={productDropdown}
@@ -703,7 +685,7 @@ function _GenericPosForm({domainConfigData}) {
                             </Grid>
                           </Box>
                           <Box  p={"xs"} className={'boxBackground'}>
-                          {salesConfig?.is_multi_price != 1 && (
+                          {salesConfig?.is_multi_price == 1 && (
                               <Box>
                                 <Grid columns={24} gutter={{ base: 1 }}>
                                   <Grid.Col span={10} fz="sm" mt={8}>
@@ -713,7 +695,7 @@ function _GenericPosForm({domainConfigData}) {
                                     <SelectForm
                                         tooltip={t("MultiPriceValidateMessage")}
                                         label=""
-                                        placeholder={t("Price")}
+                                        placeholder={t("PriceMode")}
                                         required={false}
                                         nextField={""}
                                         name={"multi_price"}
@@ -809,13 +791,13 @@ function _GenericPosForm({domainConfigData}) {
                               <Box  mt={"4"}>
                                 <Grid columns={24} gutter={{ base: 1 }}>
                                   <Grid.Col span={10} fz="sm" mt={8}>
-                                    {t("Unit")}
+                                    {t("UnitMeasurement")}
                                   </Grid.Col>
                                   <Grid.Col span={14}>
                                     <SelectForm
                                         tooltip={t("UnitValidateMessage")}
                                         label=""
-                                        placeholder={t("Unit")}
+                                        placeholder={t("UnitMeasurement")}
                                         required={false}
                                         nextField={"quantity"}
                                         name={"unit_id"}
@@ -823,7 +805,7 @@ function _GenericPosForm({domainConfigData}) {
                                         dropdownValue={unitDropdown}
                                         id={"unit_id"}
                                         mt={1}
-                                        searchable={true}
+                                        searchable={false}
                                         value={unitType}
                                         changeValue={(e)=>{
                                           setUnitType(e)
@@ -843,7 +825,7 @@ function _GenericPosForm({domainConfigData}) {
                                     type="number"
                                     tooltip={t("PercentValidateMessage")}
                                     label=""
-                                    placeholder={t("quantity")}
+                                  placeholder={t("Quantity")}
                                     required={true}
                                     nextField={
                                       form.values.is_bonus_quantity
@@ -876,7 +858,7 @@ function _GenericPosForm({domainConfigData}) {
                                     type="number"
                                     tooltip={t("BonusValidateMessage")}
                                     label=""
-                                    placeholder={t("bonusQty")}
+                                    placeholder={t("BonusQuantity")}
                                     required={false}
                                     nextField={"EntityFormSubmit"}
                                     form={form}
@@ -896,44 +878,7 @@ function _GenericPosForm({domainConfigData}) {
                           </Box>
                           )}
                           </Box>
-                          <Box p={"xs"}
-                               className={genericClass.genericHighlightedBox}>
-                            <Grid columns={24} gutter={{ base: 1 }}>
-                              <Grid.Col span={10} fz="sm" fw={'800'} mt={8}>
-                                {t("SubTotal")}
-                              </Grid.Col>
-                              <Grid.Col span={14}>
-                                <Box style={{display: "none"}}>
-                                  <InputButtonForm
-                                      tooltip=""
-                                      label=""
-                                      type=""
-                                      placeholder={t("SubTotal")}
-                                      required={true}
-                                      nextField={"EntityFormSubmit"}
-                                      form={form}
-                                      name={"sub_total"}
-                                      id={"sub_total"}
-                                      leftSection={
-                                        <IconSum size={16} opacity={0.5}/>
-                                      }
-                                      rightSection={inputGroupCurrency}
-                                      disabled={
-                                        selectProductDetails &&
-                                        selectProductDetails.sub_total
-                                      }
-                                      closeIcon={false}
-                                  />
-                                </Box>
-                                <Text ta="right" mt={"8"} fw={'800'} pr={'xs'}>
-                                  {currencySymbol}{" "}
-                                  {selectProductDetails
-                                      ? selectProductDetails.sub_total
-                                      : 0}
-                                </Text>
-                              </Grid.Col>
-                            </Grid>
-                          </Box>
+
                         </ScrollArea>
                     )}
                     {productSalesMode === "list" && (
@@ -996,7 +941,7 @@ function _GenericPosForm({domainConfigData}) {
                                           mx="auto"
                                       >
                                         <Text fz={11} fw={400} pr={"xs"} w={70}>
-                                          {currencySymbol} {data.purchase_price}
+                                          {currencySymbol} {data.sales_price}
                                         </Text>
                                         <Input
                                             styles={{
@@ -1146,13 +1091,49 @@ function _GenericPosForm({domainConfigData}) {
                           </Box>
 
                         </>
-
                     )}
-
                   </Box>
                 </Box>
                   {productSalesMode === "product" && (
-                  <Box mt="2"  className="" pl={'xs'} pt={'4'} pb={'6'}>
+                      <>
+                      <Box p={"xs"} className={genericClass.genericHighlightedBox}>
+                        <Grid columns={24} gutter={{ base: 1 }}>
+                          <Grid.Col span={10} fz="sm" fw={'800'} mt={8}>
+                            {t("SubTotal")}
+                          </Grid.Col>
+                          <Grid.Col span={14}>
+                            <Box style={{display: "none"}}>
+                              <InputButtonForm
+                                  tooltip=""
+                                  label=""
+                                  type=""
+                                  placeholder={t("SubTotal")}
+                                  required={true}
+                                  nextField={"EntityFormSubmit"}
+                                  form={form}
+                                  name={"sub_total"}
+                                  id={"sub_total"}
+                                  leftSection={
+                                    <IconSum size={16} opacity={0.5}/>
+                                  }
+                                  rightSection={inputGroupCurrency}
+                                  disabled={
+                                    selectProductDetails &&
+                                    selectProductDetails.sub_total
+                                  }
+                                  closeIcon={false}
+                              />
+                            </Box>
+                            <Text ta="right" mt={"8"} fw={'800'} pr={'xs'}>
+                              {currencySymbol}{" "}
+                              {selectProductDetails
+                                  ? selectProductDetails.sub_total
+                                  : 0}
+                            </Text>
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
+                     <Box mt="2"  className="" pl={'xs'} pt={'4'} pb={'6'}>
                     <Grid
                         className={genericClass.genericBackground}
                         columns={12}
@@ -1182,11 +1163,11 @@ function _GenericPosForm({domainConfigData}) {
                               size="sm"
                               className={genericClass.invoiceAdd}
                               type="submit"
+                              id={'EntityFormSubmit'}
                               mt={0}
                               mr={"xs"}
                               w={"100%"}
-                              leftSection={<IconDeviceFloppy size={16}/>}
-                          >
+                              leftSection={<IconPlus size={16}/>}>
                             <Flex direction={`column`} gap={0}>
                               <Text fz={12} fw={400}>
                                 {t("Add")}
@@ -1198,6 +1179,7 @@ function _GenericPosForm({domainConfigData}) {
                       </Grid.Col>
                     </Grid>
                   </Box>
+                      </>
                   )}
                   {productSalesMode === "list" && (
                       <>

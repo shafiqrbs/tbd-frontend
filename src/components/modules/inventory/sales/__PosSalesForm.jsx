@@ -576,7 +576,6 @@ export default function __PosSalesForm(props) {
                                                         const discountAmount =
                                                             (item.price * editedPercent) / 100;
                                                         const salesPrice = item.price - discountAmount;
-
                                                         return {
                                                             ...product,
                                                             percent: editedPercent,

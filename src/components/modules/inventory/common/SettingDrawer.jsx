@@ -44,7 +44,7 @@ function SettingDrawer(props) {
   };
   const dispatch = useDispatch();
   const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad);
-
+  let config_sales = domainConfigData?.inventory_config?.config_sales;
   const dropdownData = useSelector(
     (state) => state.utilitySlice.customerGroupDropdownData
   );
@@ -87,9 +87,11 @@ function SettingDrawer(props) {
       case "Sales":
         return (
           <SalesForm
-            height={height + 56}
-            id={id}
             customerGroupDropdownData={groupDropdownData}
+            height={height + 56}
+            config_sales={config_sales}
+            id={id}
+            domainConfigData={domainConfigData}
           />
         );
       case "Purchase":
