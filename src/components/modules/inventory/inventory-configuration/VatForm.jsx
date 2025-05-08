@@ -26,19 +26,30 @@ import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
 import {storeEntityData} from "../../../../store/core/crudSlice";
 import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
+import SelectForm from "../../../form-builders/SelectForm";
 
 function VatForm(props) {
-  const { height, inventory_config, id } = props;
+
+
+  const { height,domainConfigData } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const {fetchDomainConfig} = getDomainConfig(false)
 
+  let id = domainConfigData?.id
+  let inventory_config = domainConfigData?.inventory_config?.config_vat
+  const [vatModeData, setVatModeData] = useState(null);
+  useEffect(() => {
+    setVatModeData(inventory_config?.vat_mode?.toString())
+  }, [id]);
+
   const form = useForm({
     initialValues: {
+      vat_reg_no: inventory_config?.vat_reg_no || "",
+      vat_mode: inventory_config?.vat_mode || "",
       vat_enable: inventory_config?.vat_enable || "",
       vat_percent: inventory_config?.vat_percent || "",
-      vat_reg_no: inventory_config?.vat_reg_no || "",
       vat_integration: inventory_config?.vat_integration || "",
       ait_enable: inventory_config?.ait_enable || "",
       ait_percent: inventory_config?.ait_percent || "",
@@ -53,9 +64,10 @@ function VatForm(props) {
   useEffect(() => {
     if (inventory_config) {
       form.setValues({
+        vat_reg_no: inventory_config?.vat_reg_no || "",
+        vat_mode: inventory_config?.vat_mode || "",
         vat_enable: inventory_config?.vat_enable || 0,
         vat_percent: inventory_config?.vat_percent || 0,
-        vat_reg_no: inventory_config?.vat_reg_no || "",
         vat_integration: inventory_config?.vat_integration || 0,
         ait_enable: inventory_config?.ait_enable || 0,
         ait_percent: inventory_config?.ait_percent || 0,
@@ -95,7 +107,7 @@ function VatForm(props) {
         values[property] === true || values[property] == 1 ? 1 : 0;
     });
     const payload = {
-      url: `domain/config/inventory/`+id,
+      url: `domain/config/inventory-vat/`+id,
       data: values,
     };
 
@@ -151,6 +163,28 @@ function VatForm(props) {
                     name={"vat_reg_no"}
                     form={form}
                     id={"vat_reg_no"}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
+          <Box mt={'4'}>
+            <Grid columns={24} gutter={{ base: 1 }}>
+              <Grid.Col span={12} fz="sm" mt={8}>
+                {t("VATMode")}
+              </Grid.Col>
+              <Grid.Col span={11}>
+                <SelectForm
+                    tooltip={t("ChooseCustomerGroup")}
+                    label=""
+                    placeholder={t("ChooseCustomerGroup")}
+                    required
+                    name="vat_mode"
+                    form={form}
+                    dropdownValue={['Including','Excluding']}
+                    id="vat_mode"
+                    searchable={false}
+                    value={vatModeData}
+                    changeValue={setVatModeData}
                 />
               </Grid.Col>
             </Grid>

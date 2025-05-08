@@ -62,12 +62,15 @@ export default function __PosInvoiceSection(props) {
     lastClicked,
     handleClick,
     entityEditData,
-      defa
+      data
   } = props;
 
   //common hooks
   const { isOnline, mainAreaHeight } = useOutletContext();
   const { t } = useTranslation();
+
+  const [hiddenValue, setHiddenValue] = useState('anotherHiddenValue');
+  const [isHidden, setIsHidden] = useState(true); // Control visibility
 
   // transaction mode array
   const transactionModeData = JSON.parse(
@@ -257,26 +260,30 @@ export default function __PosInvoiceSection(props) {
                   changeValue={setSalesByUser}
                 />
               </Box>
+              {salesConfig.is_sales_auto_approved !== 1 &&(
               <Box pt={4}>
-                <SelectForm
-                  tooltip={t("ChooseOrderProcess")}
-                  label=""
-                  placeholder={t("OrderProcess")}
-                  required={false}
-                  name={"order_process"}
-                  form={form}
-                  dropdownValue={
-                    localStorage.getItem("order-process")
-                      ? JSON.parse(localStorage.getItem("order-process"))
-                      : []
-                  }
-                  id={"order_process"}
-                  nextField={"narration"}
-                  searchable={false}
-                  value={orderProcess}
-                  changeValue={setOrderProcess}
-                />
+
+                    <SelectForm
+                        tooltip={t("ChooseOrderProcess")}
+                        label=""
+                        placeholder={t("OrderProcess")}
+                        required={false}
+                        name={"order_process"}
+                        form={form}
+                        dropdownValue={
+                          localStorage.getItem("order-process")
+                              ? JSON.parse(localStorage.getItem("order-process"))
+                              : []
+                        }
+                        id={"order_process"}
+                        nextField={"narration"}
+                        searchable={false}
+                        value={orderProcess}
+                        changeValue={setOrderProcess}
+                    />
+
               </Box>
+              )}
               <Box pt={4}>
                 <TextAreaForm
                   size="xs"

@@ -807,23 +807,7 @@ function _GenericRequisitionForm(props) {
                       height={height - 45}
                     />
                   </Box>
-                  <Box mt={"8"}>
-                    <SelectForm
-                      tooltip={t("VendorValidateMessage")}
-                      label=""
-                      placeholder={t("Vendor")}
-                      required={false}
-                      nextField={"warehouse_id"}
-                      name={"vendor_id"}
-                      form={form}
-                      dropdownValue={vendorsDropdownData}
-                      id={"vendor_id"}
-                      mt={1}
-                      searchable={true}
-                      value={vendorData}
-                      changeValue={setVendorData}
-                    />
-                  </Box>
+
                   <Box mt={"4"}>
                     <SelectForm
                       tooltip={t("ChooseCategory")}
@@ -842,6 +826,7 @@ function _GenericRequisitionForm(props) {
                     />
                   </Box>
                   {switchValue === "product" && (
+                      <>
                     <Box
                       p={"xs"}
                       mt={"8"}
@@ -901,6 +886,37 @@ function _GenericRequisitionForm(props) {
                         </Grid.Col>
                       </Grid>
                     </Box>
+                    <Box
+                      p={"xs"}
+                      mt={"8"}
+                      className={genericClass.genericHighlightedBox}
+                      ml={"-xs"}
+                      mr={-8}
+                    >
+                      <Grid gutter={{ base: 6 }}>
+                        <Grid.Col span={12}>
+                          <Box>
+                    <SelectForm
+                    tooltip={t("VendorValidateMessage")}
+                    label=""
+                    placeholder={t("warehouse")}
+                    required={false}
+                    nextField={"warehouse_id"}
+                    name={"vendor_id"}
+                    form={form}
+                    dropdownValue={vendorsDropdownData}
+                    id={"vendor_id"}
+                    mt={1}
+                    searchable={true}
+                    value={vendorData}
+                    changeValue={setVendorData}
+                    />
+                          </Box>
+                        </Grid.Col>
+
+                      </Grid>
+                    </Box>
+                    </>
                   )}
                   {switchValue === "barcode" && (
                     <Box

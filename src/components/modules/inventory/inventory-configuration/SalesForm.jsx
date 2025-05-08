@@ -42,6 +42,7 @@ function SalesForm({ customerGroupDropdownData, height, id ,config_sales }) {
       search_by_warehouse: config_sales?.search_by_warehouse || "",
       show_product: config_sales?.show_product || "",
       is_bonus_quantity: config_sales?.is_bonus_quantity || "",
+      is_barcode: config_sales?.is_barcode || "",
       zero_stock: config_sales?.zero_stock || "",
     },
     validate: {
@@ -66,6 +67,7 @@ function SalesForm({ customerGroupDropdownData, height, id ,config_sales }) {
         search_by_warehouse: config_sales?.search_by_warehouse || 0,
         show_product: config_sales?.show_product || 0,
         is_bonus_quantity: config_sales?.is_bonus_quantity || 0,
+        is_barcode: config_sales?.is_barcode || 0,
         zero_stock: config_sales?.zero_stock || 0,
       });
     }
@@ -99,6 +101,7 @@ function SalesForm({ customerGroupDropdownData, height, id ,config_sales }) {
       "search_by_warehouse",
       "show_product",
       "is_bonus_quantity",
+      "is_barcode",
       "zero_stock",
     ];
 
@@ -141,26 +144,28 @@ function SalesForm({ customerGroupDropdownData, height, id ,config_sales }) {
           <Box pt="xs" pl="xs">
 
             {/* CustomerGroup Field */}
-            <Grid columns={24} gutter={{ base: 1 }}>
-              <Grid.Col span={12} fz="sm" mt={8}>
-                {t("CustomerGroup")}
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <SelectForm
-                    tooltip={t("ChooseCustomerGroup")}
-                    label=""
-                    placeholder={t("ChooseCustomerGroup")}
-                    required
-                    name="default_customer_group_id"
-                    form={form}
-                    dropdownValue={customerGroupDropdownData}
-                    id="default_customer_group_id"
-                    searchable={false}
-                    value={customerGroupData}
-                    changeValue={setCustomerGroupData}
-                />
-              </Grid.Col>
-            </Grid>
+            <Box>
+              <Grid columns={24} gutter={{ base: 1 }}>
+                <Grid.Col span={12} fz="sm" mt={8}>
+                  {t("CustomerGroup")}
+                </Grid.Col>
+                <Grid.Col span={12}>
+                  <SelectForm
+                      tooltip={t("ChooseCustomerGroup")}
+                      label=""
+                      placeholder={t("ChooseCustomerGroup")}
+                      required
+                      name="default_customer_group_id"
+                      form={form}
+                      dropdownValue={customerGroupDropdownData}
+                      id="default_customer_group_id"
+                      searchable={false}
+                      value={customerGroupData}
+                      changeValue={setCustomerGroupData}
+                  />
+                </Grid.Col>
+              </Grid>
+            </Box>
 
             <Box>
               <InputCheckboxForm form={form} label={t('DiscountWithCustomer')} field={'discount_with_customer'}  name={'discount_with_customer'} />
@@ -169,10 +174,16 @@ function SalesForm({ customerGroupDropdownData, height, id ,config_sales }) {
               <InputCheckboxForm form={form} label={t('DueSalesWithoutCustomer')} field={'due_sales_without_customer'}  name={'due_sales_without_customer'} />
             </Box>
             <Box>
+              <InputCheckboxForm form={form} label={t('ShowBarcode')} field={'is_barcode'}  name={'is_barcode'} />
+            </Box>
+            <Box>
               <InputCheckboxForm form={form} label={t('MeasurementEnable')} field={'is_measurement_enable'}  name={'is_measurement_enable'} />
             </Box>
             <Box>
-              <InputCheckboxForm form={form} label={t('MultiPrice')} field={'is_zero_receive_allow'}  name={'is_zero_receive_allow'} />
+              <InputCheckboxForm form={form} label={t('ZeroReceiveAllow')} field={'is_zero_receive_allow'}  name={'is_zero_receive_allow'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('MultiPrice')} field={'is_multi_price'}  name={'is_multi_price'} />
             </Box>
             <Box>
               <InputCheckboxForm form={form} label={t('SalesAutoApproved')} field={'is_sales_auto_approved'}  name={'is_sales_auto_approved'} />
