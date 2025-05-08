@@ -1110,7 +1110,6 @@
   "CapitalInvestment": "Capital Investment",
   "NoResultsFound": "No Results Found",
   "SitemapDetails" : "Sitemap Details",
-  "xxxxxx": "xxxxxxx",
   "VoucherNavigation": "Voucher Navigation",
   "UserWarehouse": "Warehouse",
   "InvalidQuantity": "Enter quantity",
@@ -1119,5 +1118,6 @@
   "EnterProductQuantity" : "Enter product quantity",
   "IssuedTo" : "Issue to",
   "ChooseIssuedBy" : "Choose issued by",
+  "xxxxxx": "xxxxxxx",
   "": ""
 }
