@@ -36,10 +36,14 @@ import BatchIssueSubmitForm from "./BatchIssueSubmitForm";
 import { notifications, showNotification } from "@mantine/notifications";
 
 export default function BatchIssueForm(props) {
-  const { isWarehouse, currencySymbol, isMeasurement } = props;
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 360;
+
+  const { domainConfigData } = props;
+  const production_config = domainConfigData?.production_config;
+  const currencySymbol = domainConfigData?.inventory_config?.currency?.symbol;
+  console.log(production_config);
   const form = useForm({
     initialValues: {},
   });
@@ -215,7 +219,7 @@ export default function BatchIssueForm(props) {
                     className={"boxBackground borderRadiusAll"}
                   >
                     <Box mt={"8"}></Box>
-                    {isWarehouse == 1 && (
+                    {production_config?.is_warehouse == 1 && (
                       <Box mt={"4"}>
                         <SelectForm
                           tooltip={t("Warehouse")}
@@ -316,7 +320,7 @@ export default function BatchIssueForm(props) {
                                     {data.quantity}
                                   </Text>
                                 </Button>
-                                {isMeasurement === 1 ? (
+                                {production_config?.is_measurement === 1 ? (
                                   <Select
                                     size="xs"
                                     w={100}
@@ -482,7 +486,7 @@ export default function BatchIssueForm(props) {
                         ]}
                         loaderSize="xs"
                         loaderColor="grape"
-                        height={isWarehouse ? height + 90 : height + 135}
+                        height={production_config?.is_warehouse ? height + 90 : height + 135}
                       />
                     </Box>
                     <Box

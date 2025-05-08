@@ -42,6 +42,10 @@ import getVendorDropdownData from "../../../../global-hook/dropdown/getVendorDro
 import _NewBatchDrawer from "./_NewBatchDrawer.jsx";
 import classes from "../../../../../assets/css/FeaturesCards.module.css";
 import inputCss from "../../../../../assets/css/InputField.module.css";
+import useProductionBatchDropdownData
+  from "../../../../global-hook/dropdown/production/useProductionBatchDropdownData.js";
+import {showEntityData} from "../../../../../store/core/crudSlice.js";
+import {showNotificationComponent} from "../../../../core-component/showNotificationComponent.jsx";
 export default function BatchIssueSubmitForm(props) {
   const {
     isSMSActive,
@@ -64,12 +68,16 @@ export default function BatchIssueSubmitForm(props) {
   const [warehouseId, setWarehouseId] = useState("");
   const [issuedById, setIssuedById] = useState("");
 
+  const productionBatchDropdown = useProductionBatchDropdownData(true)
+
   const form = useForm({
     initialValues: {
       invoice_date: "",
+      batch_id:""
     },
     validate: {},
   });
+
 
   const [tempCardProducts, setTempCardProducts] = useState([]);
 
@@ -107,6 +115,25 @@ export default function BatchIssueSubmitForm(props) {
 
   const [warehouseData, setWarehouseData] = useState(null);
   const [batchDrawer, setBatchDrawer] = useState(false);
+
+
+  const [productionsRecipeItems, setProductionsRecipeItems] = useState([]);
+  useEffect(() => {
+    if (form.values.batch_id) {
+      const fetchData = async () => {
+        try {
+          const result = await dispatch(showEntityData("production/batch/recipe/" + form.values.batch_id)).unwrap();
+          if (result.data.status === 200) {
+            setProductionsRecipeItems(result.data.data);
+          }
+        } catch (error) {
+          showNotificationComponent(t('FailedToFetchData'), 'red', 'lightgray', null, false, 1000)
+        }
+      };
+
+      fetchData();
+    }
+  }, [form.values.batch_id]);
 
   return (
     <>
@@ -166,7 +193,7 @@ export default function BatchIssueSubmitForm(props) {
                     nextField={"issued_to_type"}
                     name={"batch_id"}
                     form={form}
-                    dropdownValue={warehouseDropdownData}
+                    dropdownValue={productionBatchDropdown}
                     id={"batch_id"}
                     mt={1}
                     searchable={true}
@@ -214,17 +241,18 @@ export default function BatchIssueSubmitForm(props) {
                 footer: tableCss.footer,
                 pagination: tableCss.pagination,
               }}
-              records={tempCardProducts}
+              // records={tempCardProducts}
+              records={productionsRecipeItems}
               columns={[
                 {
                   accessor: "index",
                   title: t("S/N"),
                   textAlignment: "right",
                   width: "50px",
-                  render: (item) => tempCardProducts.indexOf(item) + 1,
+                  render: (item) => productionsRecipeItems.indexOf(item) + 1,
                 },
                 {
-                  accessor: "display_name",
+                  accessor: "recipe_name",
                   title: t("Name"),
                   width: "200px",
                   footer: (
@@ -242,7 +270,7 @@ export default function BatchIssueSubmitForm(props) {
                   textAlign: "center",
                 },
                 {
-                  accessor: "batch_quantity",
+                  accessor: "total_quantity",
                   title: t("BatchQuantity"),
                   textAlign: "center",
                 },

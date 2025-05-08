@@ -183,6 +183,7 @@ const utilitySlice = createSlice({
     accountHeadDropdownData: [],
     accountSubHeadDropdownData: [],
     accountLedgerDropdownData: [],
+    productionBatchDropdownData: [],
   },
   reducers: {
     setFetching: (state, action) => {
@@ -264,6 +265,9 @@ const utilitySlice = createSlice({
       }
       if (action.payload.type == "head") {
         state.accountHeadDropdownData = action.payload.data.data;
+      }
+      if (action.payload.type == "production-batch") {
+        state.productionBatchDropdownData = action.payload.data.data;
       }
     });
   },

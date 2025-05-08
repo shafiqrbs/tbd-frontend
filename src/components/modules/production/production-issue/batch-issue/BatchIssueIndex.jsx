@@ -6,12 +6,11 @@ import BatchIssueForm from "./BatchIssueForm.jsx";
 import { getLoadingProgress } from "../../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../../global-hook/config-data/getConfigData.js";
 import ProductionHeaderNavbar from "../../common/ProductionHeaderNavbar.jsx";
+import getDomainConfig from "../../../../global-hook/config-data/getDomainConfig.js";
 export default function BatchIssueIndex() {
   const { t, i18n } = useTranslation();
-  const dispatch = useDispatch();
-  const insertType = useSelector((state) => state.crudSlice.insertType);
   const progress = getLoadingProgress();
-  const { configData, fetchData } = getConfigData();
+  const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
   return (
     <>
       {progress !== 100 && (
@@ -26,14 +25,14 @@ export default function BatchIssueIndex() {
       )}
       {progress === 100 && (
         <Box>
-          {configData && (
+          {domainConfigData && (
             <>
               <ProductionHeaderNavbar
                 pageTitle={t("BatchProdcutionIssue")}
                 roles={t("Roles")}
               />
               <Box p={"8"}>
-                <BatchIssueForm isWarehouse={configData?.sku_warehouse} />
+                <BatchIssueForm domainConfigData={domainConfigData} />
               </Box>
             </>
           )}
