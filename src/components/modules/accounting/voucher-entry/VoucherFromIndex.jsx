@@ -19,6 +19,7 @@ import {
   IconTrashX,
   IconDeviceFloppy,
   IconPlus,
+  IconSum,
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -277,23 +278,7 @@ function VoucherFormIndex(props) {
       account_owner: "",
       path: "",
     },
-    validate: {
-      method_id: isNotEmpty(),
-      name: hasLength({ min: 2, max: 20 }),
-      short_name: hasLength({ min: 2, max: 20 }),
-      authorised_mode_id: isNotEmpty(),
-      account_mode_id: isNotEmpty(),
-      path: isNotEmpty(),
-      service_charge: (value) => {
-        if (value) {
-          const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
-          if (!isNumberOrFractional) {
-            return true;
-          }
-        }
-        return null;
-      },
-    },
+    validate: {},
   });
 
   useHotkeys(
@@ -337,6 +322,51 @@ function VoucherFormIndex(props) {
       i === index ? { ...record, [field]: value } : record
     );
     setRecords(updatedRecords);
+
+    // Update local storage for CR or DR entry if changed
+    const changedRecord = updatedRecords[index];
+    if (
+      changedRecord &&
+      (changedRecord.mode === "CR" || changedRecord.mode === "DR")
+    ) {
+      // Try to update in main vouchers first
+      let mainVouchers =
+        JSON.parse(localStorage.getItem("vouchers-entry")) || [];
+      let formVouchers =
+        JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
+
+      let updated = false;
+      mainVouchers = mainVouchers.map((v) => {
+        if (
+          v &&
+          v.name === changedRecord.name &&
+          v.mode === changedRecord.mode
+        ) {
+          updated = true;
+          return { ...v, [field]: value };
+        }
+        return v;
+      });
+      if (updated) {
+        localStorage.setItem("vouchers-entry", JSON.stringify(mainVouchers));
+      } else {
+        // Try in form vouchers
+        formVouchers = formVouchers.map((v) => {
+          if (
+            v &&
+            v.name === changedRecord.name &&
+            v.mode === changedRecord.mode
+          ) {
+            return { ...v, [field]: value };
+          }
+          return v;
+        });
+        localStorage.setItem(
+          "vouchers-entry-form",
+          JSON.stringify(formVouchers)
+        );
+      }
+    }
   };
 
   // Update to safely handle potentially null values
@@ -368,7 +398,7 @@ function VoucherFormIndex(props) {
   const renderForm = () => {
     switch (activeTab) {
       case "Customer Voucher":
-        return <CustomerVoucherForm />;
+        return <CustomerVoucherForm setLoadVoucher={setLoadVoucher} />;
       case "Vendor Voucher":
         return <VendorVoucherForm />;
       case "Contra Voucher":
@@ -485,7 +515,10 @@ function VoucherFormIndex(props) {
                 <form
                   id="indexForm"
                   onSubmit={form.onSubmit((values) => {
-                    dispatch(setValidationData(false));
+                    // Log the table entries and form values on submit
+                    console.log("Table Entries (records):", records);
+                    console.log("Form Values:", values);
+
                     modals.openConfirmModal({
                       title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -569,11 +602,11 @@ function VoucherFormIndex(props) {
                                 hideControls
                                 ta={"right"}
                                 value={record.debit}
-                                onChange={(e) =>
+                                onChange={(value) =>
                                   handleInputChange(
                                     index,
                                     "debit",
-                                    e.target.value
+                                    value // use value directly, not value.target.value
                                   )
                                 }
                               />
@@ -589,11 +622,11 @@ function VoucherFormIndex(props) {
                                 disabled={record.mode === "DR"}
                                 hideControls
                                 value={record.credit}
-                                onChange={(e) =>
+                                onChange={(value) =>
                                   handleInputChange(
                                     index,
                                     "credit",
-                                    e.target.value
+                                    value // use value directly, not value.target.value
                                   )
                                 }
                               />
@@ -629,9 +662,32 @@ function VoucherFormIndex(props) {
                         }}
                         loaderSize="xs"
                         loaderColor="grape"
-                        height={height - 274}
+                        height={height - 310}
                         scrollAreaProps={{ type: "never" }}
                       />
+                      <Group
+                        h={34}
+                        justify="space-between"
+                        align="center"
+                        pt={0}
+                        bg={"#f8eedf"}
+                      >
+                        <Group spacing="xs" pl={"xs"}>
+                          <IconSum size="1.25em" />
+                          <Text mb={-2}>
+                            {t("TotalDebit")}: {totalDebit.toFixed(2)} |{" "}
+                            {t("TotalCredit")}: {totalCredit.toFixed(2)}
+                          </Text>
+                        </Group>
+                        <Group gap="10" align="center" mr={28}>
+                          <IconSum size="16" style={{ color: "black" }} />
+                          <Text fw={"600"} fz={"md"}>
+                            {isBalanced
+                              ? t("VoucherBalanced")
+                              : t("VoucherNotBalanced")}
+                          </Text>
+                        </Group>
+                      </Group>
                     </Box>
                   </Box>
                   <Box mt={4}>
@@ -708,44 +764,25 @@ function VoucherFormIndex(props) {
                           mb={"4"}
                           className={"boxBackground borderRadiusAll"}
                         >
-                          <Grid>
-                            <Grid.Col span={9}>
-                              <Text size="sm" weight={500}>
-                                {t("TotalDebit")}: {totalDebit.toFixed(2)} |{" "}
-                                {t("TotalCredit")}: {totalCredit.toFixed(2)}
-                              </Text>
-                              <Text
-                                size="sm"
-                                color={isBalanced ? "green" : "red"}
-                                weight={600}
+                          <Stack right align="flex-end">
+                            {!saveCreateLoading && isOnline && (
+                              <Button
+                                size="xs"
+                                color={"green.8"}
+                                type="submit"
+                                form={"indexForm"}
+                                id="EntityFormSubmits"
+                                leftSection={<IconDeviceFloppy size={16} />}
+                                disabled={!isBalanced || records.length < 2}
                               >
-                                {isBalanced
-                                  ? t("VoucherBalanced")
-                                  : t("VoucherNotBalanced")}
-                              </Text>
-                            </Grid.Col>
-                            <Grid.Col span={3}>
-                              <Stack right align="flex-end">
-                                {!saveCreateLoading && isOnline && (
-                                  <Button
-                                    size="xs"
-                                    color={"green.8"}
-                                    type="submit"
-                                    form={"indexForm"}
-                                    id="EntityFormSubmits"
-                                    leftSection={<IconDeviceFloppy size={16} />}
-                                    disabled={!isBalanced || records.length < 2}
-                                  >
-                                    <Flex direction={"column"} gap={0}>
-                                      <Text fz={14} fw={400}>
-                                        {t("AddVoucher")}
-                                      </Text>
-                                    </Flex>
-                                  </Button>
-                                )}
-                              </Stack>
-                            </Grid.Col>
-                          </Grid>
+                                <Flex direction={"column"} gap={0}>
+                                  <Text fz={14} fw={400}>
+                                    {t("AddVoucher")}
+                                  </Text>
+                                </Flex>
+                              </Button>
+                            )}
+                          </Stack>
                         </Box>
                       </Box>
                     </Box>

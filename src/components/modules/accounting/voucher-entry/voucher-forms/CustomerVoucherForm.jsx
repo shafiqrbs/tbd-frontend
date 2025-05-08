@@ -20,6 +20,7 @@ import InputNumberForm from "../../../../form-builders/InputNumberForm";
 import BankDrawer from "../../common/BankDrawer";
 
 export default function CustomerVoucherForm(props) {
+  const { setLoadVoucher } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -28,7 +29,6 @@ export default function CustomerVoucherForm(props) {
   const [ledgerHead, setLedgerHead] = useState("");
   const [nextField, setNextField] = useState("amount");
   const [bankDrawer, setBankDrawer] = useState(false);
-  const [loadVoucher, setLoadVoucher] = useState(false);
   const [bankDetails, setBankDetails] = useState(null);
   const [currentEntryType, setCurrentEntryType] = useState("");
 
@@ -49,7 +49,6 @@ export default function CustomerVoucherForm(props) {
     validate: {
       amount: (value) => (value ? null : "Amount is required"),
       ledger_head: isNotEmpty(),
-      payment_mode: isNotEmpty(),
     },
   });
 
@@ -87,11 +86,15 @@ export default function CustomerVoucherForm(props) {
   ];
 
   const hasCREntry = () => {
-    const mainVouchers = JSON.parse(localStorage.getItem("vouchers-entry")) || [];
-    const formVouchers = JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
-    
-    return mainVouchers.some((voucher) => voucher && voucher.mode === "CR") ||
-           formVouchers.some((voucher) => voucher && voucher.mode === "CR");
+    const mainVouchers =
+      JSON.parse(localStorage.getItem("vouchers-entry")) || [];
+    const formVouchers =
+      JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
+
+    return (
+      mainVouchers.some((voucher) => voucher && voucher.mode === "CR") ||
+      formVouchers.some((voucher) => voucher && voucher.mode === "CR")
+    );
   };
 
   const showNotificationComponent = (message, color) => {
@@ -108,14 +111,14 @@ export default function CustomerVoucherForm(props) {
       voucherForm.setFieldValue("ledger_head", "");
       return;
     }
-    
+
     voucherForm.setFieldValue("ledger_head", value);
     setLedgerHead(value);
     setCurrentEntryType(value);
 
     if (value && value.startsWith("bank_account")) {
       setNextField("cheque_no");
-      
+
       if (value === "bank_account_sonali") {
         setBankDetails({
           account_number: "00115633005315",
@@ -146,36 +149,25 @@ export default function CustomerVoucherForm(props) {
         return;
       }
 
-      const storedVouchers = JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
-      const isLedgerBankAccount = values.ledger_head && values.ledger_head.startsWith("bank_account_");
+      const storedVouchers =
+        JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
+      const isLedgerBankAccount =
+        values.ledger_head && values.ledger_head.startsWith("bank_account_");
 
-      if (isLedgerBankAccount) {
+      if (!isLedgerBankAccount) {
+        // Find the label for the selected ledger head
+        let headLabel = "";
+        categorizedOptions.forEach(group => {
+          const found = group.items.find(item => item.value === values.ledger_head);
+          if (found) headLabel = found.label;
+        });
+
         const newEntry = {
           name: values.ledger_head,
           debit: values.amount,
           credit: 0,
           mode: "DR",
-          to: values.ledger_head.includes("sonali")
-            ? "Sonali Bank, Gulshan Branch"
-            : values.ledger_head.includes("agrani")
-            ? "Agrani Bank"
-            : "",
-          cheque_no: null,
-        };
-
-        storedVouchers.push(newEntry);
-        localStorage.setItem(
-          "vouchers-entry-form",
-          JSON.stringify(storedVouchers)
-        );
-        setLoadVoucher(true);
-      } else {
-        const newEntry = {
-          name: values.ledger_head,
-          debit: values.amount,
-          credit: 0,
-          mode: "DR",
-          to: null,
+          to: headLabel, // show label in the table like bank entries
           cheque_no: null,
         };
 

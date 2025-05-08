@@ -93,16 +93,40 @@ function BankDrawer(props) {
 
   const handleSalesConfirmSubmit = async (values) => {
     try {
-      // Get vouchers from local storage
+      if (sourceForm === "customerVoucher") {
+        // Add a new DR entry for customer voucher
+        const storedVouchers =
+          JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
+        storedVouchers.push({
+          name: entryType,
+          debit: values.amount,
+          credit: 0,
+          mode: "DR",
+          to: values.bank_name,
+          cheque_no: values.cheque_no,
+          pay_mode: values.pay_mode,
+          bank_name: values.bank_name,
+          branch_name: values.branch_name,
+          received_from: values.received_from,
+        });
+        localStorage.setItem(
+          "vouchers-entry-form",
+          JSON.stringify(storedVouchers)
+        );
+        showNotificationComponent(t("UpdateSuccessfully"), "teal");
+        setLoadVoucher(true);
+        closeDrawer();
+        return;
+      }
+
+      // For main (CR) entries, update existing
       const storageKey =
         sourceForm === "customerVoucher"
           ? "vouchers-entry-form"
           : "vouchers-entry";
       const storedVouchers = JSON.parse(localStorage.getItem(storageKey)) || [];
 
-      // Find bank entry and update it with safe checks for null values
       const updatedVouchers = storedVouchers.map((voucher) => {
-        // Only update the bank entry with matching name with null check
         if (voucher && voucher.name && voucher.name === entryType) {
           return {
             ...voucher,
@@ -128,9 +152,7 @@ function BankDrawer(props) {
         return voucher;
       });
 
-      // Save updated vouchers to local storage
       localStorage.setItem(storageKey, JSON.stringify(updatedVouchers));
-
       showNotificationComponent(t("UpdateSuccessfully"), "teal");
       setLoadVoucher(true);
       closeDrawer();
