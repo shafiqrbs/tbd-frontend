@@ -311,7 +311,6 @@ function _GenericPosForm({domainConfigData}) {
 
     if (searchValue) {
       const searchValueLower = searchValue.toLowerCase();
-
       filteredProducts = filteredProducts.filter(product =>
           product.name?.toString().toLowerCase().includes(searchValueLower) ||
           product.unit_name?.toString().toLowerCase().includes(searchValueLower) ||
@@ -1096,7 +1095,7 @@ function _GenericPosForm({domainConfigData}) {
                 </Box>
                   {productSalesMode === "product" && (
                       <>
-                      <Box p={"xs"} className={genericClass.genericHighlightedBox}>
+                        <Box p={"xs"} className={genericClass.genericHighlightedBox}>
                         <Grid columns={24} gutter={{ base: 1 }}>
                           <Grid.Col span={10} fz="sm" fw={'800'} mt={8}>
                             {t("SubTotal")}
@@ -1133,7 +1132,7 @@ function _GenericPosForm({domainConfigData}) {
                           </Grid.Col>
                         </Grid>
                       </Box>
-                     <Box mt="2"  className="" pl={'xs'} pt={'4'} pb={'6'}>
+                       <Box mt="2"  className="" pl={'xs'} pt={'4'} pb={'6'}>
                     <Grid
                         className={genericClass.genericBackground}
                         columns={12}

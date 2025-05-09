@@ -24,6 +24,7 @@ export default function __PosPurchaseForm(props) {
         tempCardProducts,
         setLoadCardProducts,
         isWarehouse,
+        domainConfigData,
     } = props;
 
     //common hooks
@@ -480,6 +481,7 @@ export default function __PosPurchaseForm(props) {
                 </Box>
                 <Box>
                     <__PosPurchaseInvoiceSection
+                        domainConfigData={domainConfigData}
                         setVendorsDropdownData={setVendorsDropdownData}
                         vendorsDropdownData={vendorsDropdownData}
                         form={form}

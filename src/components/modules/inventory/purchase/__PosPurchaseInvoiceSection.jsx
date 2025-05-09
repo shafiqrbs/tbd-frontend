@@ -29,7 +29,7 @@ import {
   IconDeviceFloppy,
   IconPercentage,
 } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
@@ -59,6 +59,7 @@ export default function __PosPurchaseInvoiceSection(props) {
     setLastClicked,
     handleClick,
     isWarehouse,
+    domainConfigData
   } = props;
 
   //common hooks
@@ -228,14 +229,13 @@ export default function __PosPurchaseInvoiceSection(props) {
                     closeIcon={true}
                   />
                 </Box>
-                {isWarehouse == 1 && (
+                { domainConfigData?.inventory_config?.config_purchase?.is_warehouse == 1 && (
                   <Box mt={"4"}>
                     <SelectForm
                       tooltip={t("Warehouse")}
                       label=""
                       placeholder={t("Warehouse")}
                       required={false}
-                      nextField={"category_id"}
                       name={"warehouse_id"}
                       form={form}
                       dropdownValue={warehouseDropdownData}

@@ -913,7 +913,6 @@ function _GenericRequisitionForm(props) {
                     />
                           </Box>
                         </Grid.Col>
-
                       </Grid>
                     </Box>
                     </>
