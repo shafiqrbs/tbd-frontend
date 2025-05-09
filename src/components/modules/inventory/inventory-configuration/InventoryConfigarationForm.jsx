@@ -197,8 +197,7 @@ function InventoryConfigarationForm() {
           <PurchaseForm
             vendorGroupDropdownData={groupVendorDropdownData}
             height={height}
-            config_purchase={config_purchase}
-            id={id}
+            domainConfigData={domainConfigData}
           />
         );
       case "Requisition":

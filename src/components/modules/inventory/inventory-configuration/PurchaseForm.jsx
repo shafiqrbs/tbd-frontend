@@ -21,12 +21,21 @@ import {
   storeEntityData,
 } from "../../../../store/core/crudSlice.js";
 import SelectForm from "../../../form-builders/SelectForm";
+import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+
 
 function PurchaseForm(props) {
-  const { vendorGroupDropdownData, height, config_purchase, id } = props;
 
+  const { vendorGroupDropdownData, height,domainConfigData} = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const {fetchDomainConfig} = getDomainConfig(false)
+
+  let config_purchase = domainConfigData?.inventory_config?.config_purchase
+  let id = domainConfigData?.id
+
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [vendorGroupData, setVendorGroupData] = useState(null);
 
@@ -35,17 +44,19 @@ function PurchaseForm(props) {
       search_by_vendor: config_purchase?.search_by_vendor || "",
       search_by_product_nature: config_purchase?.search_by_product_nature || "",
       search_by_category: config_purchase?.search_by_category || "",
-      show_product: config_purchase?.show_product || "",
+      is_barcode: config_purchase?.is_barcode || "",
       is_measurement_enable: config_purchase?.is_measurement_enable || "",
       is_purchase_auto_approved: config_purchase?.is_purchase_auto_approved || "",
       default_vendor_group_id: config_purchase?.default_vendor_group_id || 0,
-      search_by_warehouse: config_purchase?.search_by_warehouse || "",
+      is_warehouse: config_purchase?.is_warehouse || "",
+      is_bonus_quantity: config_purchase?.is_bonus_quantity || "",
+      is_purchase_by_purchase_price: config_purchase?.is_purchase_by_purchase_price || "",
+      item_percent: config_purchase?.item_percent || "",
     },
   });
 
   const handlePurchaseFormSubmit = (values) => {
     dispatch(setValidationData(false));
-
     modals.openConfirmModal({
       title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
       children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
@@ -61,50 +72,42 @@ function PurchaseForm(props) {
       "search_by_vendor",
       "search_by_product_nature",
       "search_by_category",
-      "show_product",
+      "is_barcode",
       "is_measurement_enable",
       "is_purchase_auto_approved",
-      "search_by_warehouse",
+      "is_bonus_quantity",
+      "is_purchase_by_purchase_price",
+      "item_percent",
+      "is_warehouse",
     ];
 
     properties.forEach((property) => {
       values[property] =
         values[property] === true || values[property] === 1 ? 1 : 0;
     });
+    const payload = {
+      url: `domain/config/inventory-purchase/${id}`,
+      data: values,
+      type: "POST",
+    };
 
     try {
       setSaveCreateLoading(true);
-      const value = {
-        url: `domain/config/inventory-purchase/${id}`,
-        data: values,
-        type: "POST",
-      };
-      console.log("value", values);
-      await dispatch(storeEntityData(value));
-      notifications.show({
-        color: "teal",
-        title: t("UpdateSuccessfully"),
-        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-        loading: false,
-        autoClose: 700,
-        style: { backgroundColor: "lightgray" },
-      });
-      setTimeout(() => {
-        setSaveCreateLoading(false);
-      }, 700);
-    } catch (error) {
-      console.error("Error updating purchase config_purchase:", error);
-      notifications.show({
-        color: "red",
-        title: t("UpdateFailed"),
-        icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
-        loading: false,
-        autoClose: 700,
-        style: { backgroundColor: "lightgray" },
-      });
+      const result = await dispatch(storeEntityData(payload));
+      if (storeEntityData.fulfilled.match(result) && result.payload?.data?.status === 200) {
+        fetchDomainConfig()
+        showNotificationComponent(t("UpdateSuccessfully"), "teal");
+      } else {
+        showNotificationComponent(t("UpdateFailed"), "red");
+      }
 
+    } catch (err) {
+      console.error(err);
+      showNotificationComponent(t("UpdateFailed"), "red");
+    } finally {
       setSaveCreateLoading(false);
     }
+
   };
 
   useHotkeys(
@@ -146,267 +149,37 @@ function PurchaseForm(props) {
               </Grid.Col>
             </Grid>
           </Box>
-          <Box mt={"xs"}>
-            <Grid
-              gutter={{ base: 1 }}
-              style={{ cursor: "pointer" }}
-              onClick={() =>
-                form.setFieldValue(
-                  "search_by_vendor",
-                  form.values.search_by_vendor === 1 ? 0 : 1
-                )
-              }
-            >
-              <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("SearchByVendor")}
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Checkbox
-                  pr="xs"
-                  checked={form.values.search_by_vendor === 1}
-                  color="red"
-                  {...form.getInputProps("search_by_vendor", {
-                    type: "checkbox",
-                  })}
-                  onChange={(event) =>
-                    form.setFieldValue(
-                      "search_by_vendor",
-                      event.currentTarget.checked ? 1 : 0
-                    )
-                  }
-                  styles={(theme) => ({
-                    input: {
-                      borderColor: "red",
-                    },
-                  })}
-                />
-              </Grid.Col>
-            </Grid>
+          <Box>
+            <InputCheckboxForm form={form} label={t('PurchaseByPurchasePrice')} field={'is_purchase_by_purchase_price'}  name={'is_purchase_by_purchase_price'} />
           </Box>
-          <Box mt={"xs"}>
-            <Grid
-              gutter={{ base: 1 }}
-              style={{ cursor: "pointer" }}
-              onClick={() =>
-                form.setFieldValue(
-                  "search_by_product_nature",
-                  form.values.search_by_product_nature === 1 ? 0 : 1
-                )
-              }
-            >
-              <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("SearchByProductNature")}
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Checkbox
-                  pr="xs"
-                  checked={form.values.search_by_product_nature === 1}
-                  color="red"
-                  {...form.getInputProps("search_by_product_nature", {
-                    type: "checkbox",
-                  })}
-                  onChange={(event) =>
-                    form.setFieldValue(
-                      "search_by_product_nature",
-                      event.currentTarget.checked ? 1 : 0
-                    )
-                  }
-                  styles={(theme) => ({
-                    input: {
-                      borderColor: "red",
-                    },
-                  })}
-                />
-              </Grid.Col>
-            </Grid>
+          <Box>
+            <InputCheckboxForm form={form} label={t('SearchByVendor')} field={'search_by_vendor'}  name={'search_by_vendor'} />
           </Box>
-          <Box mt={"xs"}>
-            <Grid
-              gutter={{ base: 1 }}
-              style={{ cursor: "pointer" }}
-              onClick={() =>
-                form.setFieldValue(
-                  "search_by_category",
-                  form.values.search_by_category === 1 ? 0 : 1
-                )
-              }
-            >
-              <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("SearchByCategory")}
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Checkbox
-                  pr="xs"
-                  checked={form.values.search_by_category === 1}
-                  color="red"
-                  {...form.getInputProps("search_by_category", {
-                    type: "checkbox",
-                  })}
-                  onChange={(event) =>
-                    form.setFieldValue(
-                      "search_by_category",
-                      event.currentTarget.checked ? 1 : 0
-                    )
-                  }
-                  styles={(theme) => ({
-                    input: {
-                      borderColor: "red",
-                    },
-                  })}
-                />
-              </Grid.Col>
-            </Grid>
+          <Box>
+            <InputCheckboxForm form={form} label={t('SearchByProductNature')} field={'search_by_product_nature'}  name={'search_by_product_nature'} />
           </Box>
-          <Box mt={"xs"}>
-            <Grid
-              gutter={{ base: 1 }}
-              style={{ cursor: "pointer" }}
-              onClick={() =>
-                form.setFieldValue(
-                  "show_product",
-                  form.values.show_product === 1 ? 0 : 1
-                )
-              }
-            >
-              <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("ShowProduct")}
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Checkbox
-                  pr="xs"
-                  checked={form.values.show_product === 1}
-                  color="red"
-                  {...form.getInputProps("show_product", {
-                    type: "checkbox",
-                  })}
-                  onChange={(event) =>
-                    form.setFieldValue(
-                      "show_product",
-                      event.currentTarget.checked ? 1 : 0
-                    )
-                  }
-                  styles={(theme) => ({
-                    input: {
-                      borderColor: "red",
-                    },
-                  })}
-                />
-              </Grid.Col>
-            </Grid>
+          <Box>
+            <InputCheckboxForm form={form} label={t('SearchByCategory')} field={'search_by_category'}  name={'search_by_category'} />
           </Box>
-          <Box mt={"xs"}>
-            <Grid
-              gutter={{ base: 1 }}
-              style={{ cursor: "pointer" }}
-              onClick={() =>
-                form.setFieldValue(
-                  "is_measurement_enable",
-                  form.values.is_measurement_enable === 1 ? 0 : 1
-                )
-              }
-            >
-              <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("MeasurementEnabled")}
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Checkbox
-                  pr="xs"
-                  checked={form.values.is_measurement_enable === 1}
-                  color="red"
-                  {...form.getInputProps("is_measurement_enable", {
-                    type: "checkbox",
-                  })}
-                  onChange={(event) =>
-                    form.setFieldValue(
-                      "is_measurement_enable",
-                      event.currentTarget.checked ? 1 : 0
-                    )
-                  }
-                  styles={(theme) => ({
-                    input: {
-                      borderColor: "red",
-                    },
-                  })}
-                />
-              </Grid.Col>
-            </Grid>
+          <Box>
+            <InputCheckboxForm form={form} label={t('IsBarcode')} field={'is_barcode'}  name={'is_barcode'} />
           </Box>
-          <Box mt={"xs"}>
-            <Grid
-              gutter={{ base: 1 }}
-              style={{ cursor: "pointer" }}
-              onClick={() =>
-                form.setFieldValue(
-                  "is_purchase_auto_approved",
-                  form.values.is_purchase_auto_approved === 1 ? 0 : 1
-                )
-              }
-            >
-              <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("PurchaseAutoApproved")}
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Checkbox
-                  pr="xs"
-                  checked={form.values.is_purchase_auto_approved === 1}
-                  color="red"
-                  {...form.getInputProps("is_purchase_auto_approved", {
-                    type: "checkbox",
-                  })}
-                  onChange={(event) =>
-                    form.setFieldValue(
-                      "is_purchase_auto_approved",
-                      event.currentTarget.checked ? 1 : 0
-                    )
-                  }
-                  styles={(theme) => ({
-                    input: {
-                      borderColor: "red",
-                    },
-                  })}
-                />
-              </Grid.Col>
-            </Grid>
+          <Box>
+            <InputCheckboxForm form={form} label={t('MeasurementEnabled')} field={'is_measurement_enable'}  name={'is_measurement_enable'} />
           </Box>
-          <Box mt={"xs"}>
-            <Grid
-              gutter={{ base: 1 }}
-              style={{ cursor: "pointer" }}
-              onClick={() =>
-                form.setFieldValue(
-                  "search_by_warehouse",
-                  form.values.search_by_warehouse === 1 ? 0 : 1
-                )
-              }
-            >
-              <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("SearchByWarehouse")}
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Checkbox
-                  pr="xs"
-                  checked={form.values.search_by_warehouse === 1}
-                  color="red"
-                  {...form.getInputProps("search_by_warehouse", {
-                    type: "checkbox",
-                  })}
-                  onChange={(event) =>
-                    form.setFieldValue(
-                      "search_by_warehouse",
-                      event.currentTarget.checked ? 1 : 0
-                    )
-                  }
-                  styles={(theme) => ({
-                    input: {
-                      borderColor: "red",
-                    },
-                  })}
-                />
-              </Grid.Col>
-            </Grid>
+          <Box>
+            <InputCheckboxForm form={form} label={t('PurchaseAutoApproved')} field={'is_purchase_auto_approved'}  name={'is_purchase_auto_approved'} />
+          </Box>
+          <Box>
+            <InputCheckboxForm form={form} label={t('Warehouse')} field={'is_warehouse'}  name={'is_warehouse'} />
+          </Box>
+          <Box>
+            <InputCheckboxForm form={form} label={t('BonusQuantity')} field={'is_bonus_quantity'}  name={'is_bonus_quantity'} />
+          </Box>
+          <Box>
+            <InputCheckboxForm form={form} label={t('ItemPercent')} field={'item_percent'}  name={'item_percent'} />
           </Box>
         </Box>
-
         <Button
           id="PurchaseFormSubmit"
           type="submit"
