@@ -157,6 +157,7 @@ export default function GeneralIssueSubmitForm(props) {
                         purchase_price: product.purchase_price,
                         sub_total: product.sub_total,
                         sales_price: product.sales_price,
+                        type: 'general_issue',
                     }));
                     const options = {year: "numeric", month: "2-digit", day: "2-digit"};
                     const formValue = {};

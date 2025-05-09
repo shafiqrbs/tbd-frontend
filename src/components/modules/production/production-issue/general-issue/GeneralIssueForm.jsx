@@ -46,7 +46,7 @@ export default function GeneralIssueForm(props) {
     const isWarehouse = domainConfigData?.production_config?.is_warehouse;
     const isMeasurement = domainConfigData?.isMeasurement;
 
-    const [warehouseDropdownDara, setWarehouseDataDropdown] = useState([]);
+    const [warehouseDropdownData, setWarehouseDataDropdown] = useState([]);
 
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem("user"));
@@ -229,7 +229,7 @@ export default function GeneralIssueForm(props) {
                                                     nextField={"category_id"}
                                                     name={"warehouse_id"}
                                                     form={form}
-                                                    dropdownValue={warehouseDropdownDara}
+                                                    dropdownValue={warehouseDropdownData}
                                                     id={"warehouse_id"}
                                                     mt={1}
                                                     searchable={true}
