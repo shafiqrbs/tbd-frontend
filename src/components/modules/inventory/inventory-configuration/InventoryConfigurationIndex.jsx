@@ -6,6 +6,7 @@ import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavb
 import Navigation from "../common/Navigation.jsx";
 import InventoryConfigarationForm from "./InventoryConfigarationForm.jsx";
 import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
+import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar";
 
 function InventoryConfigurationIndex() {
 
@@ -13,8 +14,11 @@ function InventoryConfigurationIndex() {
 
   const progress = getLoadingProgress();
 
-  const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
 
+  const domainConfigData = JSON.parse(
+      localStorage.getItem("domain-config-data")
+  );
+  let configData = domainConfigData?.inventory_config
 
   return (
     <>
@@ -23,11 +27,13 @@ function InventoryConfigurationIndex() {
       )}
       {progress === 100 && (
         <>
-          <InventoryHeaderNavbar
-            pageTitle={t("ProductConfiguration")}
-            roles={t("Roles")}
-            allowZeroPercentage=""
-            currencySymbol=""
+
+          <_SalesPurchaseHeaderNavbar
+              pageTitle={t('ManageSales')}
+              roles={t('Roles')}
+              configData={configData}
+              allowZeroPercentage={configData?.zero_stock}
+              currancySymbol={configData?.currency?.symbol}
           />
           <Box p={"8"}>
             <Grid columns={24} gutter={{ base: 8 }}>

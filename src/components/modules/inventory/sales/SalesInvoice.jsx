@@ -20,8 +20,9 @@ function SalesInvoice() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const progress = getLoadingProgress()
     const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
-
+    let configData = domainConfigData?.inventory_config
     // console.log(domainConfigData?.inventory_config?.business_model)
+
     return (
         <>
             {progress !== 100 &&
@@ -34,6 +35,7 @@ function SalesInvoice() {
                             <_SalesPurchaseHeaderNavbar
                                 pageTitle={t('SalesInvoice')}
                                 roles={t('Roles')}
+                                configData={configData}
                                 allowZeroPercentage={domainConfigData?.inventory_config?.zero_stock}
                                 currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
                             />

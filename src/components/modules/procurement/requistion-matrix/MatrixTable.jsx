@@ -24,11 +24,12 @@ import {getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
 import {storeEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import {modals} from "@mantine/modals";
+import RequisitionNavigation from "../common/RequisitionNavigation";
 
 export default function MatrixTable(props) {
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const tableHeight = mainAreaHeight - 106;
+    const tableHeight = mainAreaHeight - 160;
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [generateButton, setGenerateButton] = useState(false);
     const leftTableRef = useRef(null);
@@ -214,84 +215,41 @@ export default function MatrixTable(props) {
                             mb={4}
                             className={"boxBackground borderRadiusAll"}
                         >
-                            <Grid>
-                                <Grid.Col>
-
-                                    <Grid columns={24} justify="flex-start" align="flex-end">
-                                        <Grid.Col span={15}>
-                                            <Grid columns={24}>
-
-                                                <Grid.Col span={18}>
-                                                    <Tooltip
-                                                        label={t("ExpectedDate")}
-                                                        opened={startDateTooltip}
-                                                        px={16}
-                                                        py={2}
-                                                        position="top-end"
-                                                        color="red"
-                                                        withArrow
-                                                        offset={2}
-                                                        zIndex={100}
-                                                        transitionProps={{
-                                                            transition: "pop-bottom-left",
-                                                            duration: 5000,
-                                                        }}
-                                                    >
-                                                        <DateInput
-                                                            disabled={fetching}
-                                                            clearable
-                                                            maxDate={new Date()}
-                                                            onChange={(e) => {
-                                                                setExpectedDate(e)
-                                                                e != ""
-                                                                    ? setStartDateTooltip(false)
-                                                                    : (setStartDateTooltip(true),
-                                                                        setTimeout(() => {
-                                                                            setStartDateTooltip(false);
-                                                                        }, 1000));
-                                                            }}
-                                                            value={expectedDate}
-                                                            placeholder={t("ExpectedDate")}
-                                                        />
-                                                    </Tooltip>
-                                                </Grid.Col>
-
-                                                <Grid.Col span={6}>
-                                                    <ActionIcon.Group mt={"1"} justify="center">
-                                                        <ActionIcon
-                                                            disabled={fetching}
-                                                            variant="default"
-                                                            c={"red.4"}
-                                                            size="lg"
-                                                            aria-label="Filter"
-                                                            onClick={() => {
-                                                                expectedDate ? setFetching(true) : setStartDateTooltip(true)
-                                                            }}
-                                                        >
-                                                            <Tooltip
-                                                                label={t("SearchButton")}
-                                                                px={16}
-                                                                py={2}
-                                                                withArrow
-                                                                position={"bottom"}
-                                                                c={"red"}
-                                                                bg={`red.1`}
-                                                                transitionProps={{
-                                                                    transition: "pop-bottom-left",
-                                                                    duration: 500,
-                                                                }}
-                                                            >
-                                                                <IconSearch style={{width: rem(30)}} stroke={1.5}/>
-                                                            </Tooltip>
-                                                        </ActionIcon>
-
-                                                    </ActionIcon.Group>
-                                                </Grid.Col>
-
-                                            </Grid>
-                                        </Grid.Col>
-                                    </Grid>
-
+                            <Grid columns={24} gutter={{base: 8}}>
+                                <Grid.Col span={1}></Grid.Col>
+                                <Grid.Col span={23}>
+                                    <Tooltip
+                                        label={t("ExpectedDate")}
+                                        opened={startDateTooltip}
+                                        px={16}
+                                        py={2}
+                                        position="top-end"
+                                        color="red"
+                                        withArrow
+                                        offset={2}
+                                        zIndex={100}
+                                        transitionProps={{
+                                            transition: "pop-bottom-left",
+                                            duration: 5000,
+                                        }}
+                                    >
+                                        <DateInput
+                                            disabled={fetching}
+                                            clearable
+                                            maxDate={new Date()}
+                                            onChange={(e) => {
+                                                setExpectedDate(e)
+                                                e != ""
+                                                    ? setStartDateTooltip(false)
+                                                    : (setStartDateTooltip(true),
+                                                        setTimeout(() => {
+                                                            setStartDateTooltip(false);
+                                                        }, 1000));
+                                            }}
+                                            value={expectedDate}
+                                            placeholder={t("ExpectedDate")}
+                                        />
+                                    </Tooltip>
                                 </Grid.Col>
                             </Grid>
                         </Box>
@@ -300,11 +258,14 @@ export default function MatrixTable(props) {
             </Box>
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
-                    <Grid.Col span={24}>
+                    <Grid.Col span={1}>
+                        <RequisitionNavigation module={'requisition'} />
+                    </Grid.Col>
+                    <Grid.Col span={23}>
                         <Box bg={"white"} p={"xs"} className="borderRadiusAll">
                             <Box className="borderRadiusAll">
-                                <Grid columns={12} gutter={0}>
-                                    <Grid.Col span={2}>
+                                <Grid columns={24} gutter={0}>
+                                    <Grid.Col span={4}>
                                         <DataTable
                                             scrollViewportRef={leftTableRef}
                                             classNames={{
@@ -327,13 +288,11 @@ export default function MatrixTable(props) {
                                             loaderSize="xs"
                                             fetching={fetching}
                                             loaderColor="grape"
-                                            height={tableHeight - 46}
+                                            height={tableHeight}
                                             scrollAreaProps={{type: "never"}}
                                         />
                                     </Grid.Col>
-
-                                    <Grid.Col span={8}>
-
+                                    <Grid.Col span={14}>
                                         <DataTable
                                             scrollAreaProps={{type: "hover", scrollHideDelay: 1}}
                                             scrollViewportRef={centerTableRef}
@@ -368,11 +327,10 @@ export default function MatrixTable(props) {
                                             fetching={fetching}
                                             loaderSize="xs"
                                             loaderColor="grape"
-                                            height={tableHeight - 46}
+                                            height={tableHeight}
                                         />
                                     </Grid.Col>
-
-                                    <Grid.Col span={2}>
+                                    <Grid.Col span={6}>
                                         <DataTable
                                             scrollAreaProps={{type: "never"}}
                                             scrollViewportRef={rightTableRef}
@@ -407,7 +365,7 @@ export default function MatrixTable(props) {
                                             loaderSize="xs"
                                             loaderColor="grape"
                                             fetching={fetching}
-                                            height={tableHeight - 46}
+                                            height={tableHeight}
                                         />
                                     </Grid.Col>
                                 </Grid>

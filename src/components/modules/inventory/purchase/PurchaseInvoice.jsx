@@ -32,6 +32,7 @@ function PurchaseInvoice() {
               <_SalesPurchaseHeaderNavbar
                 pageTitle={t("PurchaseInvoice")}
                 roles={t("Roles")}
+                configData={domainConfigData?.inventory_config}
                 allowZeroPercentage={
                   domainConfigData?.inventory_config?.zero_stock
                 }

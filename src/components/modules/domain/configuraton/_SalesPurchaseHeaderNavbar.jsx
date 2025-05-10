@@ -31,20 +31,22 @@ import {
 import {useLocation, useNavigate} from "react-router-dom";
 
 function _SalesPurchaseHeaderNavbar(props) {
+
   const { t, i18n } = useTranslation();
+
+  const { pageTitle,configData } = props;
+  const dispatch = useDispatch();
+  const [opened, { toggle }] = useDisclosure(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   const links = [
+    configData?.is_batch_invoice === 1 ??
     { link: "/inventory/invoice-batch", label: t("InvoiceBatch") },
     { link: "/inventory/sales", label: t("Sales") },
     { link: "/inventory/sales-invoice", label: t("NewSales") },
     { link: "/inventory/purchase", label: t("Purchase") },
     { link: "/inventory/purchase-invoice", label: t("NewPurchase") },
   ];
-  const { pageTitle } = props;
-  const dispatch = useDispatch();
-  const [opened, { toggle }] = useDisclosure(false);
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const items = links.map((link) => (
     <a
       key={link.label}

@@ -32,6 +32,7 @@ import {deleteEntityData, getIndexEntityData} from "../../../../store/inventory/
 import {PrintNormal} from "../requisition-print/PrintNormal.jsx";
 import {modals} from "@mantine/modals";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import RequisitionNavigation from "../common/RequisitionNavigation";
 
 export default function _RequisitionTable(props) {
     const printRef = useRef();
@@ -166,7 +167,10 @@ export default function _RequisitionTable(props) {
             </Box>
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
-                    <Grid.Col span={15}>
+                    <Grid.Col span={1}>
+                        <RequisitionNavigation module={'requisition'} />
+                    </Grid.Col>
+                    <Grid.Col span={14}>
                         <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                             <Box className="borderRadiusAll">
                                 <DataTable

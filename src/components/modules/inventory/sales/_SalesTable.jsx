@@ -15,7 +15,7 @@ import {
     rem,
     Checkbox,
     Tooltip,
-    LoadingOverlay
+    LoadingOverlay, List
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -46,7 +46,8 @@ import {showNotificationComponent} from "../../../core-component/showNotificatio
 import Navigation from "../common/Navigation.jsx";
 
 function _SalesTable(props) {
-    const {isWarehouse} = props
+    const {isWarehouse,configData} = props
+    console.log(configData);
     const navigate = useNavigate();
     const printRef = useRef()
     const dispatch = useDispatch();
@@ -247,6 +248,11 @@ function _SalesTable(props) {
                                             title: t('S/N'),
                                             textAlignment: 'right',
                                             render: (item) => (
+                                                <>
+                                                {configData?.is_batch_invoice !== 1 &&(
+                                                    indexData.data.indexOf(item) + 1
+                                                )}
+                                                {configData?.is_batch_invoice ===1 &&(
                                                 <Tooltip color="green" withArrow={'center'} label={item.invoice + ' - ' + item.customerName}>
                                                     <Checkbox
                                                         value={item.id}
@@ -260,6 +266,8 @@ function _SalesTable(props) {
                                                         disabled={item?.invoice_batch_id ? true : false}
                                                     />
                                                 </Tooltip>
+                                                )}
+                                                </>
                                             )
                                         },
 

@@ -10,7 +10,7 @@ import {
   Button,
   Group,
   Text,
-  Flex,
+  Flex, SimpleGrid, Card,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import DatePickerForm from "../../../form-builders/DatePicker";
@@ -27,8 +27,10 @@ import {
   IconMessage,
   IconEyeEdit,
 } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
+import classes from "../../../../assets/css/FeaturesCards.module.css";
+import inputCss from "../../../../assets/css/InputField.module.css";
 
 export default function __RequistionInvoiceSection(props) {
   const {
@@ -113,35 +115,13 @@ export default function __RequistionInvoiceSection(props) {
   return (
     <>
       <Box>
-        <Grid columns={24} gutter={{ base: 6 }} pt={"6"}>
-          <Grid.Col span={8}>
-            {/* outstading section */}
-            <Box p={"xs"} className={genericClass.genericSecondaryBg}>
-              <Flex
-                h={140}
-                justify="flex-end"
-                align="flex-end"
-                direction={"column"}
-              >
-                <Box></Box>
-              </Flex>
-            </Box>
-          </Grid.Col>
-          <Grid.Col
-            span={8}
-            style={{ borderRadius: 4 }}
-            className={genericClass.genericSecondaryBg}
-            mt={3}
-            mb={3}
-          >
-            <Box pl={"4"} pr={"4"}>
-              <Box
-                style={{ borderRadius: 4 }}
-                className={genericClass.genericHighlightedBox}
-              >
-                <Grid gutter={{ base: 6 }} mt={8} columns={24}>
-                  <Grid.Col span={19} pl={"8"}>
-                    <SelectForm
+        <SimpleGrid cols={{base: 1, md: 3}}  mt={'2'} spacing="xs" mb={"xs"}>
+          <Card shadow="md" radius="4" className={`${classes.card} ${genericClass.genericBackground}`}
+                padding="xs">
+            <Box>
+              <Grid gutter={{ base: 6 }} mt={8}>
+                <Grid.Col span={12}>
+                  <SelectForm
                       tooltip={t("ChooseVendor")}
                       label=""
                       placeholder={t("ChooseVendor")}
@@ -155,227 +135,141 @@ export default function __RequistionInvoiceSection(props) {
                       searchable={true}
                       value={vendorData}
                       changeValue={setVendorData}
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={5}>
-                    <Box
-                      mr={"12"}
-                      mt={"4"}
-                      style={{ textAlign: "right", float: "right" }}
-                    >
-                      <Group gap={4} justify="center" wrap="nowrap">
-                        <Tooltip
-                          multiline
-                          bg={"orange.8"}
-                          position="top"
-                          ta={"center"}
-                          withArrow
-                          transitionProps={{ duration: 200 }}
-                          label={
-                            vendorData && vendorData != defaultVendorId
-                              ? isSMSActive
-                                ? t("SendSms")
-                                : t("PleasePurchaseAsmsPackage")
-                              : t("ChooseCustomer")
-                          }
-                        >
-                          <ActionIcon
-                            bg={"white"}
-                            variant="outline"
-                            color={"red"}
-                            disabled={
-                              !vendorData || vendorData == defaultVendorId
-                            }
-                            onClick={(e) => {
-                              if (isSMSActive) {
-                                notifications.show({
-                                  withCloseButton: true,
-                                  autoClose: 1000,
-                                  title: t("smsSendSuccessfully"),
-                                  message: t("smsSendSuccessfully"),
-                                  icon: <IconTallymark1 />,
-                                  className: "my-notification-class",
-                                  style: {},
-                                  loading: true,
-                                });
-                              } else {
-                                setIsShowSMSPackageModel(true);
-                              }
-                            }}
-                          >
-                            <IconMessage size={18} stroke={1.5} />
-                          </ActionIcon>
-                        </Tooltip>
-                        <Tooltip
-                          multiline
-                          bg={"orange.8"}
-                          position="top"
-                          withArrow
-                          offset={{ crossAxis: "-45", mainAxis: "5" }}
-                          ta={"center"}
-                          transitionProps={{ duration: 200 }}
-                          label={
-                            vendorData && vendorData != defaultVendorId
-                              ? t("CustomerDetails")
-                              : t("ChooseCustomer")
-                          }
-                        >
-                          <ActionIcon
-                            variant="filled"
-                            color={"red"}
-                            disabled={
-                              !vendorData || vendorData == defaultVendorId
-                            }
-                            onClick={() => {
-                              setViewDrawer(true);
-                            }}
-                          >
-                            <IconEyeEdit size={18} stroke={1.5} />
-                          </ActionIcon>
-                        </Tooltip>
-                      </Group>
-                    </Box>
-                  </Grid.Col>
-                </Grid>
-              </Box>
-              <Box
-                pl={"4"}
-                pr={"4"}
-                mt={"4"}
-                pt={"8"}
-                pb={"4"}
-                style={{ borderRadius: 4 }}
-              >
-                <Grid columns={18} gutter={{ base: 2 }} pt={"xs"}>
-                  <Grid.Col span={4}>
-                    <Text
-                      pl={"md"}
+                  />
+                </Grid.Col>
+              </Grid>
+            </Box>
+            <Box className={"borderRadiusAll"}>
+              <Grid columns={18} gutter={{ base: 2 }} pt={"xs"}>
+                <Grid.Col span={8}>
+                  <Text
+                      pl={"xs"}
                       className={genericClass.genericPrimaryFontColor}
                       fz={"xs"}
-                    >
-                      {t("Outstanding")}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={5}>
-                    <Text fz={"sm"} order={1} fw={"800"}>
-                      {currencySymbol + " "}
-                      {vendorData &&
-                      vendorObject &&
-                      vendorData != defaultVendorId
+                  >
+                    {t("Outstanding")}
+                  </Text>
+                </Grid.Col>
+                <Grid.Col span={10}>
+                  <Text fz={"sm"} order={1} fw={"800"}>
+                    {currencySymbol + " "}
+                    {vendorData &&
+                    vendorObject &&
+                    vendorData != defaultVendorId
                         ? Number(vendorObject.balance).toFixed(2)
                         : "0.00"}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={4} pt={2}>
-                    <Text ta="left" size="xs" pl={"md"}>
-                      {t("Sales")}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={5}>
-                    <Text ta="left" size="sm">
-                      {" "}
-                      {currencySymbol} {vendorObject?.sales}
-                    </Text>
-                  </Grid.Col>
-                </Grid>
-                <Grid columns={18} gutter={{ base: 2 }} pt={"xs"}>
-                  <Grid.Col span={4}>
-                    <Text ta="left" size="xs" pl={"md"}>
-                      {t("Discount")}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={5}>
-                    <Text ta="left" size="sm">
-                      {" "}
-                      {currencySymbol} {vendorObject?.discount}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={4}>
-                    <Text ta="left" size="xs" pl={"md"}>
-                      {t("Receive")}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={5}>
-                    <Text ta="left" size="sm">
-                      {" "}
-                      {currencySymbol} {vendorObject?.receive}
-                    </Text>
-                  </Grid.Col>
-                </Grid>
-                <Grid columns={18} gutter={{ base: 2 }} pt={"xs"}>
-                  <Grid.Col span={4}>
-                    <Text ta="left" size="xs" pl={"md"}>
-                      {t("CreditLimit")}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={5}>
-                    <Text ta="left" size="sm">
-                      {" "}
-                      {currencySymbol} {vendorObject?.credit_limit}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={4}>
-                    <Text ta="left" size="xs" pl={"md"}>
-                      {t("EarnPoint")}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={5}>
-                    <Text ta="left" size="sm">
-                      {" "}
-                      {currencySymbol} {vendorObject?.earn_point}
-                    </Text>
-                  </Grid.Col>
-                </Grid>
-              </Box>
+                  </Text>
+                </Grid.Col>
+              </Grid>
+              <Grid columns={18} gutter={{ base: 2 }} pt={"xs"}>
+                <Grid.Col span={8}>
+                  <Text ta="left" size="xs" pl={"xs"}>
+                    {t("Discount")}
+                  </Text>
+                </Grid.Col>
+                <Grid.Col span={10}>
+                  <Text ta="left" size="sm">
+                    {" "}
+                    {currencySymbol} {vendorObject?.discount}
+                  </Text>
+                </Grid.Col>
+
+              </Grid>
+
             </Box>
-          </Grid.Col>
-          <Grid.Col span={8}>
-            <Box className={genericClass.genericSecondaryBg} p={"xs"} h={160}>
+          </Card>
+          <Card shadow="md" radius="4" className={`${classes.card} ${genericClass.genericBackground}`} padding="xs">
+            <Box className={"borderRadiusAll"}>
+              <Grid columns={18} gutter={{ base: 2 }} pt={"xs"}>
+                <Grid.Col span={8} pt={2}>
+                  <Text ta="left" size="xs" pl={"xs"}>
+                    {t("Purchase")}
+                  </Text>
+                </Grid.Col>
+                <Grid.Col span={10}>
+                  <Text ta="left" size="sm">
+                    {" "}
+                    {currencySymbol} {vendorObject?.sales}
+                  </Text>
+                </Grid.Col>
+              </Grid>
+              <Grid columns={18} gutter={{ base: 2 }} pt={"xs"}>
+                <Grid.Col span={8}>
+                  <Text ta="left" size="xs" pl={"xs"}>
+                    {t("Payment")}
+                  </Text>
+                </Grid.Col>
+                <Grid.Col span={10}>
+                  <Text ta="left" size="sm">
+                    {" "}
+                    {currencySymbol} {vendorObject?.receive}
+                  </Text>
+                </Grid.Col>
+              </Grid>
+              <Grid columns={18} gutter={{ base: 2 }} pt={"xs"}>
+                <Grid.Col span={8}>
+                  <Text ta="left" size="xs" pl={"xs"}>
+                    {t("CreditLimit")}
+                  </Text>
+                </Grid.Col>
+                <Grid.Col span={10}>
+                  <Text ta="left" size="sm">
+                    {" "}
+                    {currencySymbol} {vendorObject?.credit_limit}
+                  </Text>
+                </Grid.Col>
+              </Grid>
+            </Box>
+          </Card>
+          <Card shadow="md" radius="4" className={`${classes.card} ${genericClass.genericBackground}`}
+                padding="xs">
+            <Box>
               <Box>
                 <DatePickerForm
-                  tooltip={t("SelectInvoiceDate")}
-                  label=""
-                  placeholder={t("InvoiceDate")}
-                  required={true}
-                  nextField={"expected_date"}
-                  form={form}
-                  name={"invoice_date"}
-                  id={"invoice_date"}
-                  leftSection={<IconCalendar size={16} opacity={0.5} />}
-                  closeIcon={true}
+                    tooltip={t("SelectInvoiceDate")}
+                    label=""
+                    placeholder={t("InvoiceDate")}
+                    required={true}
+                    nextField={"expected_date"}
+                    form={form}
+                    name={"invoice_date"}
+                    id={"invoice_date"}
+                    leftSection={<IconCalendar size={16} opacity={0.5} />}
+                    closeIcon={true}
                 />
               </Box>
               <Box mt={4}>
                 <DatePickerForm
-                  tooltip={t("SelectExpectedDate")}
-                  label=""
-                  placeholder={t("ExpectedDate")}
-                  required={true}
-                  nextField={"narration"}
-                  form={form}
-                  name={"expected_date"}
-                  id={"expected_date"}
-                  disable={true}
-                  leftSection={<IconCalendar size={16} opacity={0.5} />}
-                  closeIcon={true}
+                    tooltip={t("SelectExpectedDate")}
+                    label=""
+                    placeholder={t("ExpectedDate")}
+                    required={true}
+                    nextField={"narration"}
+                    form={form}
+                    name={"expected_date"}
+                    id={"expected_date"}
+                    disable={true}
+                    leftSection={<IconCalendar size={16} opacity={0.5} />}
+                    closeIcon={true}
                 />
               </Box>
               <Box pt={4}>
                 <TextAreaForm
-                  size="xs"
-                  tooltip={t("NarrationValidateMessage")}
-                  label=""
-                  placeholder={t("Narration")}
-                  required={false}
-                  nextField={"save"}
-                  name={"narration"}
-                  form={form}
-                  id={"narration"}
+                    size="xs"
+                    tooltip={t("NarrationValidateMessage")}
+                    label=""
+                    placeholder={t("Narration")}
+                    required={false}
+                    nextField={"save"}
+                    name={"narration"}
+                    form={form}
+                    id={"narration"}
                 />
               </Box>
             </Box>
-          </Grid.Col>
-        </Grid>
+
+          </Card>
+        </SimpleGrid>
         <Box mt={"8"} pb={"xs"} pr={"xs"}>
           <Button.Group>
             <Button

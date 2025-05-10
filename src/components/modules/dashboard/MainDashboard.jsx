@@ -45,7 +45,13 @@ function MainDashboard(props) {
     const {t, i18n} = useTranslation();
     const height = props.height - 105; //TabList height 104
     const {configData, fetchData} = getConfigData();
-    const {domainConfig,fetchDomainConfig} = getDomainConfig();
+
+    const domainConfig = JSON.parse(
+        localStorage.getItem("domain-config-data")
+    );
+
+  //  const {configData} = domainConfig?.inventory_config
+
 
     const navigate = useNavigate();
     const theme = useMantineTheme();
@@ -360,35 +366,39 @@ function MainDashboard(props) {
                                                     }}
                                                 />
                                             </List.Item>
-                                            <List.Item
-                                                pl={"xs"}
-                                                icon={
-                                                    <ThemeIcon
-                                                        color="teal.6"
-                                                        size={20}
-                                                        radius="xl"
-                                                        variant="outline"
-                                                    >
-                                                        <IconList/>
-                                                    </ThemeIcon>
-                                                }
-                                            >
-                                                <NavLink
-                                                    pl={"md"}
-                                                    href="/inventory/invoice-batch"
-                                                    label={t("InvoiceBatch")}
-                                                    component="button"
-                                                    onClick={(e) => {
-                                                        navigate("inventory/invoice-batch");
-                                                    }}
-                                                    onAuxClick={(e) => {
-                                                        // Handle middle mouse button click for browsers that support it
-                                                        if (e.button === 1) {
-                                                            window.open("/inventory/invoice-batch", "_blank");
-                                                        }
-                                                    }}
-                                                />
-                                            </List.Item>
+                                            {configData?.is_batch_invoice ===1 &&(
+                                                <List.Item
+                                                    pl={"xs"}
+                                                    icon={
+                                                        <ThemeIcon
+                                                            color="teal.6"
+                                                            size={20}
+                                                            radius="xl"
+                                                            variant="outline"
+                                                        >
+                                                            <IconList/>
+                                                        </ThemeIcon>
+                                                    }
+                                                >
+                                                    <NavLink
+                                                        pl={"md"}
+                                                        href="/inventory/invoice-batch"
+                                                        label={t("InvoiceBatch")}
+                                                        component="button"
+                                                        onClick={(e) => {
+                                                            navigate("inventory/invoice-batch");
+                                                        }}
+                                                        onAuxClick={(e) => {
+                                                            // Handle middle mouse button click for browsers that support it
+                                                            if (e.button === 1) {
+                                                                window.open("/inventory/invoice-batch", "_blank");
+                                                            }
+                                                        }}
+                                                    />
+                                                </List.Item>
+                                            )}
+
+
                                             <List.Item
                                                 pl={"xs"}
                                                 icon={

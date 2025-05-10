@@ -78,7 +78,7 @@ export default function __PosVendorSection(props) {
                     <SelectForm
                       tooltip={t("VendorValidateMessage")}
                       label=""
-                      placeholder={t("Vendor/Supplier")}
+                      placeholder={t("SearchVendorSupplier")}
                       required={false}
                       nextField={""}
                       name={"vendor_id"}

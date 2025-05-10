@@ -16,7 +16,11 @@ function PurchaseIndex() {
     const progress = getLoadingProgress()
 
     // Use the getConfigData hook
-    const {configData} = getConfigData()
+
+    const domainConfigData = JSON.parse(
+        localStorage.getItem("domain-config-data")
+    );
+    let configData = domainConfigData?.inventory_config
 
     return (
         <>
@@ -30,6 +34,7 @@ function PurchaseIndex() {
                             <_SalesPurchaseHeaderNavbar
                                 pageTitle={t('ManagePurchase')}
                                 roles={t('Roles')}
+                                configData={configData}
                                 allowZeroPercentage={configData?.zero_stock}
                                 currancySymbol={configData?.currency?.symbol}
                             />

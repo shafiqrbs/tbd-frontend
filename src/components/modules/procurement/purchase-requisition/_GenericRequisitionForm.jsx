@@ -11,7 +11,7 @@ import {
   Tooltip,
   SegmentedControl,
   Center,
-  Input,
+  Input, TextInput, ScrollArea,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -26,7 +26,7 @@ import {
   IconPlus,
   IconShoppingBag,
   IconRefresh,
-  IconDotsVertical,
+  IconDotsVertical, IconSearch, IconX, IconInfoCircle,
 } from "@tabler/icons-react";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { notifications, showNotification } from "@mantine/notifications";
@@ -47,6 +47,7 @@ import { useHotkeys } from "@mantine/hooks";
 import AddProductDrawer from "../../inventory/sales/drawer-form/AddProductDrawer.jsx";
 import SettingDrawer from "../../inventory/common/SettingDrawer.jsx";
 import Navigation from "../../inventory/common/Navigation.jsx";
+import RequisitionNavigation from "../common/RequisitionNavigation";
 
 function _GenericRequisitionForm(props) {
   const {
@@ -61,6 +62,8 @@ function _GenericRequisitionForm(props) {
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 360;
+  const itemFormHeight = mainAreaHeight - 210;
+  const itemListHeight = mainAreaHeight - 154;
 
   //segmented control
   const [switchValue, setSwitchValue] = useState("product");
@@ -467,7 +470,7 @@ function _GenericRequisitionForm(props) {
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
         <Grid.Col span={1}>
-          <Navigation />
+          <RequisitionNavigation />
         </Grid.Col>
         <Grid.Col span={7}>
           <form
@@ -515,7 +518,7 @@ function _GenericRequisitionForm(props) {
                     </Grid.Col>
                     <Grid.Col span={5} align="center">
                       <Group justify="flex-end" align="center" gap={4}>
-                        {salesByBarcode && (
+
                           <SegmentedControl
                             size="xs"
                             styles={{
@@ -550,11 +553,10 @@ function _GenericRequisitionForm(props) {
                                     />
                                   </Center>
                                 ),
-                                value: "barcode",
+                                value: "list",
                               },
                             ]}
                           />
-                        )}
                         <Tooltip
                           multiline
                           bg={"#905923"}
@@ -586,12 +588,11 @@ function _GenericRequisitionForm(props) {
                   </Grid>
                 </Box>
                 <Box
-                  pl={`8`}
-                  pr={8}
                   mb={"xs"}
                   className={"boxBackground borderRadiusAll"}
                 >
-                  <Box mt={switchValue === "product" ? "xs" : "xs"}>
+                  {switchValue === "list" && (
+                  <Box>
                     <DataTable
                       classNames={{
                         root: tableCss.root,
@@ -804,201 +805,191 @@ function _GenericRequisitionForm(props) {
                       ]}
                       loaderSize="xs"
                       loaderColor="grape"
-                      height={height - 45}
+                      height={itemListHeight}
                     />
                   </Box>
+                  )}
 
-                  <Box mt={"4"}>
-                    <SelectForm
-                      tooltip={t("ChooseCategory")}
-                      label={""}
-                      placeholder={t("ChooseCategory")}
-                      required={true}
-                      nextField={"product_id"}
-                      name={"category_id"}
-                      form={form}
-                      dropdownValue={getSettingCategoryDropdownData()}
-                      id={"category_id"}
-                      searchable={true}
-                      value={categoryData}
-                      changeValue={setCategoryData}
-                      comboboxProps={{ withinPortal: false }}
-                    />
-                  </Box>
                   {switchValue === "product" && (
                       <>
-                    <Box
-                      p={"xs"}
-                      mt={"8"}
-                      className={genericClass.genericHighlightedBox}
-                      ml={"-xs"}
-                      mr={-8}
-                    >
-                      <Grid gutter={{ base: 6 }}>
-                        <Grid.Col span={11}>
-                          <Box>
-                            <SelectForm
-                              tooltip={t("ChooseProduct")}
-                              label={""}
-                              placeholder={t("ChooseProduct")}
-                              required={true}
-                              nextField={"quantity"}
-                              name={"product_id"}
-                              form={form}
-                              dropdownValue={productDropdown}
-                              id={"product_id"}
-                              searchable={true}
-                              value={product}
-                              changeValue={(val) => {
-                                setProduct(val);
-                              }}
-                              comboboxProps={{ withinPortal: false }}
-                            />
-                          </Box>
-                        </Grid.Col>
-                        <Grid.Col span={1}>
-                          <Box>
-                            <Tooltip
-                              multiline
-                              className={genericClass.genericPrimaryBg}
-                              position="top"
-                              withArrow
-                              ta={"center"}
-                              offset={{ crossAxis: "-50", mainAxis: "5" }}
-                              transitionProps={{ duration: 200 }}
-                              label={t("InstantProductCreate")}
-                            >
-                              <ActionIcon
-                                variant="outline"
-                                radius="xl"
-                                size={"sm"}
-                                mt={"8"}
-                                ml={"8"}
-                                color="white"
-                                aria-label="Settings"
-                                bg={"#905923"}
-                                onClick={() => setProductDrawer(true)}
+                      <Box className="boxBackground">
+                        <Box  pt={'0'}>
+                            <ScrollArea h={itemFormHeight} scrollbarSize={2} scrollbars="y" type="never">
+                              <Box
+                                  p={"xs"}
+                                  mt={"4"}
+                                  className={genericClass.genericHighlightedBox}
                               >
-                                <IconPlus stroke={1} />
-                              </ActionIcon>
-                            </Tooltip>
-                          </Box>
-                        </Grid.Col>
-                      </Grid>
-                    </Box>
-                    <Box
-                      p={"xs"}
-                      mt={"8"}
-                      className={genericClass.genericHighlightedBox}
-                      ml={"-xs"}
-                      mr={-8}
-                    >
-                      <Grid gutter={{ base: 6 }}>
-                        <Grid.Col span={12}>
-                          <Box>
-                    <SelectForm
-                    tooltip={t("VendorValidateMessage")}
-                    label=""
-                    placeholder={t("warehouse")}
-                    required={false}
-                    nextField={"warehouse_id"}
-                    name={"vendor_id"}
-                    form={form}
-                    dropdownValue={vendorsDropdownData}
-                    id={"vendor_id"}
-                    mt={1}
-                    searchable={true}
-                    value={vendorData}
-                    changeValue={setVendorData}
-                    />
-                          </Box>
-                        </Grid.Col>
-                      </Grid>
-                    </Box>
+                          <InputNumberForm
+                              tooltip={t("BarcodeValidateMessage")}
+                              label=""
+                              placeholder={t("Barcode")}
+                              required={true}
+                              nextField={""}
+                              form={form}
+                              name={"barcode"}
+                              id={"barcode"}
+                              leftSection={<IconBarcode size={16} opacity={0.5} />}
+                          />
+                        </Box>
+                              <Box
+                                p={"xs"}
+                                mt={"4"}
+                                className={genericClass.genericHighlightedBox}>
+                                  <Grid gutter={{ base: 6 }}>
+                            <Grid.Col span={11}>
+                              <Box>
+                                <SelectForm
+                                  tooltip={t("ChooseProduct")}
+                                  label={""}
+                                  placeholder={t("ChooseProduct")}
+                                  required={true}
+                                  nextField={"quantity"}
+                                  name={"product_id"}
+                                  form={form}
+                                  dropdownValue={productDropdown}
+                                  id={"product_id"}
+                                  searchable={true}
+                                  value={product}
+                                  changeValue={(val) => {
+                                    setProduct(val);
+                                  }}
+                                  comboboxProps={{ withinPortal: false }}
+                                />
+                              </Box>
+                            </Grid.Col>
+                            <Grid.Col span={1}>
+                              <Box>
+                                <Tooltip
+                                  multiline
+                                  className={genericClass.genericPrimaryBg}
+                                  position="top"
+                                  withArrow
+                                  ta={"center"}
+                                  offset={{ crossAxis: "-50", mainAxis: "5" }}
+                                  transitionProps={{ duration: 200 }}
+                                  label={t("InstantProductCreate")}
+                                >
+                                  <ActionIcon
+                                    variant="outline"
+                                    radius="xl"
+                                    size={"sm"}
+                                    mt={"8"}
+                                    ml={"8"}
+                                    color="white"
+                                    aria-label="Settings"
+                                    bg={"#905923"}
+                                    onClick={() => setProductDrawer(true)}
+                                  >
+                                    <IconPlus stroke={1} />
+                                  </ActionIcon>
+                                </Tooltip>
+                              </Box>
+                            </Grid.Col>
+                          </Grid>
+                              </Box>
+                              <Box p={"xs"} className={'boxBackground'}>
+                                <Box mt={'4'}>
+                                  <Grid columns={24} gutter={{ base: 1 }}>
+                                    <Grid.Col span={10} fz="sm" mt={8}>
+                                      {t("Warehouse")}
+                                    </Grid.Col>
+                                    <Grid.Col span={14}>
+                                      <SelectForm
+                                          tooltip={t("VendorValidateMessage")}
+                                          label=""
+                                          placeholder={t("SelectWarehouse")}
+                                          required={false}
+                                          nextField={"warehouse_id"}
+                                          name={"vendor_id"}
+                                          form={form}
+                                          dropdownValue={vendorsDropdownData}
+                                          id={"vendor_id"}
+                                          mt={1}
+                                          searchable={true}
+                                          value={vendorData}
+                                          changeValue={setVendorData}
+                                      />
+                                    </Grid.Col>
+                                  </Grid>
+                                </Box>
+                                <Box mt={'4'}>
+                                  <Grid columns={24} gutter={{ base: 1 }}>
+                                    <Grid.Col span={10} fz="sm" mt={8}>
+                                      {t("RequestQuantity")}
+                                    </Grid.Col>
+                                    <Grid.Col span={14}>
+                                      <InputButtonForm
+                                          tooltip={t("QuantityValidateMessage")}
+                                          label=""
+                                          placeholder={t("Quantity")}
+                                          required={true}
+                                          nextField={"EntityFormSubmit"}
+                                          form={form}
+                                          name={"quantity"}
+                                          id={"quantity"}
+                                          type={"number"}
+                                          onChange={changeSubTotalByQuantity}
+                                          rightSection={inputGroupText}
+                                          rightSectionWidth={50}
+                                          leftSection={
+                                            <IconSortAscendingNumbers
+                                                size={16}
+                                                opacity={0.5}
+                                            />
+                                          }
+                                      />
+                                    </Grid.Col>
+                                  </Grid>
+                                </Box>
+                                <Box mt={'4'}>
+                                  <Grid columns={24} gutter={{ base: 1 }}>
+                                    <Grid.Col span={10} fz="sm" mt={8}>
+                                      {t("PurchasePrice")}
+                                    </Grid.Col>
+                                    <Grid.Col span={14}>
+                                      <InputNumberForm
+                                          type="number"
+                                          tooltip={t("PurchasePriceValidateMessage")}
+                                          label=""
+                                          placeholder={t("PurchasePrice")}
+                                          required={true}
+                                          form={form}
+                                          name={"purchase_price"}
+                                          id={"purchase_price"}
+                                          rightIcon={
+                                            <IconCurrency size={16} opacity={0.5} />
+                                          }
+                                          closeIcon={true}
+                                          disabled={true}
+                                          onChange={changeSubTotalByPrice}
+                                          leftSection={
+                                            <IconCoinMonero size={16} opacity={0.5} />
+                                          }
+                                      />
+                                    </Grid.Col>
+                                  </Grid>
+                                </Box>
+                              </Box>
+                      </ScrollArea>
+                        </Box>
+                      </Box>
+
+
                     </>
                   )}
-                  {switchValue === "barcode" && (
-                    <Box
-                      p={"xs"}
-                      mt={"8"}
-                      className={genericClass.genericHighlightedBox}
-                      ml={"-xs"}
-                      mr={-8}
-                    >
-                      <InputNumberForm
-                        tooltip={t("BarcodeValidateMessage")}
-                        label=""
-                        placeholder={t("Barcode")}
-                        required={true}
-                        nextField={""}
-                        form={form}
-                        name={"barcode"}
-                        id={"barcode"}
-                        leftSection={<IconBarcode size={16} opacity={0.5} />}
-                      />
-                    </Box>
-                  )}
-                  {switchValue === "product" && (
-                    <Box
-                      ml={"-xs"}
-                      p={"xs"}
-                      mr={-8}
-                      className={genericClass.genericBackground}
-                    >
-                      <Box mt={"4"}>
-                        <Grid columns={12} gutter={{ base: 8 }}>
-                          <Grid.Col span={6}>
+                </Box>
+              </Box>
+              {switchValue === "product" && (
+                  <>
+                    <Box p={"xs"} className={genericClass.genericHighlightedBox}>
+                      <Grid columns={24} gutter={{ base: 1 }}>
+                        <Grid.Col span={10} fz="sm" fw={'800'} mt={8}>
+                          {t("SubTotal")}
+                        </Grid.Col>
+                        <Grid.Col span={14}>
+                          <Box style={{display: "none"}}>
                             <InputButtonForm
-                              tooltip={t("QuantityValidateMessage")}
-                              label=""
-                              placeholder={t("Quantity")}
-                              required={true}
-                              nextField={"EntityFormSubmit"}
-                              form={form}
-                              name={"quantity"}
-                              id={"quantity"}
-                              type={"number"}
-                              onChange={changeSubTotalByQuantity}
-                              rightSection={inputGroupText}
-                              rightSectionWidth={50}
-                              leftSection={
-                                <IconSortAscendingNumbers
-                                  size={16}
-                                  opacity={0.5}
-                                />
-                              }
-                            />
-                          </Grid.Col>
-                          <Grid.Col span={6}>
-                            <InputNumberForm
-                              type="number"
-                              tooltip={t("PurchasePriceValidateMessage")}
-                              label=""
-                              placeholder={t("PurchasePrice")}
-                              required={true}
-                              form={form}
-                              name={"purchase_price"}
-                              id={"purchase_price"}
-                              rightIcon={
-                                <IconCurrency size={16} opacity={0.5} />
-                              }
-                              closeIcon={true}
-                              disabled={true}
-                              onChange={changeSubTotalByPrice}
-                              leftSection={
-                                <IconCoinMonero size={16} opacity={0.5} />
-                              }
-                            />
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                      <Box>
-                        <Grid columns={12} gutter={{ base: 8 }}>
-                          <Grid.Col span={4}></Grid.Col>
-                          <Grid.Col span={4}></Grid.Col>
-                          <Grid.Col span={4}>
-                            <Box style={{ display: "none" }}>
-                              <InputButtonForm
                                 tooltip=""
                                 label=""
                                 type=""
@@ -1009,7 +1000,7 @@ function _GenericRequisitionForm(props) {
                                 name={"sub_total"}
                                 id={"sub_total"}
                                 leftSection={
-                                  <IconSum size={16} opacity={0.5} />
+                                  <IconSum size={16} opacity={0.5}/>
                                 }
                                 rightSection={inputGroupCurrency}
                                 disabled={
@@ -1017,65 +1008,156 @@ function _GenericRequisitionForm(props) {
                                   selectProductDetails.sub_total
                                 }
                                 closeIcon={false}
-                              />
-                            </Box>
-                            <Text ta="right" mt={"8"}>
-                              {currencySymbol}{" "}
-                              {selectProductDetails
+                            />
+                          </Box>
+                          <Text ta="right" mt={"8"} fw={'800'} pr={'xs'}>
+                            {currencySymbol}{" "}
+                            {selectProductDetails
                                 ? selectProductDetails.sub_total
                                 : 0}
-                            </Text>
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                    </Box>
-                  )}
-                </Box>
-              </Box>
-              <Box mb="xs">
-                <Grid
-                  className={genericClass.genericBackground}
-                  columns={12}
-                  justify="space-between"
-                  align="center"
-                >
-                  <Grid.Col span={6}>
-                    <Box pl={"xs"}>
-                      <ActionIcon
-                        variant="transparent"
-                        size={"lg"}
-                        color="grey.6"
-                        mt={"1"}
-                        onClick={() => {}}
-                      >
-                        <IconRefresh
-                          style={{ width: "100%", height: "70%" }}
-                          stroke={1.5}
-                        />
-                      </ActionIcon>
-                    </Box>
-                  </Grid.Col>
-                  <Grid.Col span={4}>
-                    <Box pr={"xs"}>
-                      <Button
-                        size="sm"
-                        className={genericClass.invoiceAdd}
-                        type="submit"
-                        mt={0}
-                        mr={"xs"}
-                        w={"100%"}
-                        leftSection={<IconDeviceFloppy size={16} />}
-                      >
-                        <Flex direction={`column`} gap={0}>
-                          <Text fz={12} fw={400}>
-                            {t("Add")}
                           </Text>
-                        </Flex>
-                      </Button>
+                        </Grid.Col>
+                      </Grid>
                     </Box>
-                  </Grid.Col>
-                </Grid>
-              </Box>
+                    <Box mt="2"  className="" pl={'xs'} pt={'4'} pb={'6'}>
+                      <Grid
+                          className={genericClass.genericBackground}
+                          columns={12}
+                          justify="space-between"
+                          align="center"
+                      >
+                        <Grid.Col span={6}>
+                          <Box pl={"xs"}>
+                            <ActionIcon
+                                variant="transparent"
+                                size={"lg"}
+                                color="grey.6"
+                                mt={"1"}
+                                onClick={() => {
+                                }}
+                            >
+                              <IconRefresh
+                                  style={{width: "100%", height: "70%"}}
+                                  stroke={1.5}
+                              />
+                            </ActionIcon>
+                          </Box>
+                        </Grid.Col>
+                        <Grid.Col span={4}>
+                          <Box pr={"xs"}>
+                            <Button
+                                size="sm"
+                                className={genericClass.invoiceAdd}
+                                type="submit"
+                                id={'EntityFormSubmit'}
+                                mt={0}
+                                mr={"xs"}
+                                w={"100%"}
+                                leftSection={<IconPlus size={16}/>}>
+                              <Flex direction={`column`} gap={0}>
+                                <Text fz={12} fw={400}>
+                                  {t("Add")}
+                                </Text>
+                                <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+a</Flex>
+                              </Flex>
+                            </Button>
+                          </Box>
+                        </Grid.Col>
+                      </Grid>
+                    </Box>
+                  </>
+              )}
+              {switchValue === "list" && (
+                  <>
+                    <Box mt="2"  className="" pl={'xs'} pt={'4'} pb={'6'}>
+                      <Grid
+                          className={genericClass.genericBackground}
+                          columns={12}
+                          justify="space-between"
+                          align="center"
+                      >
+                        <Grid.Col span={8}>
+                          <Box>
+                            <Tooltip
+                                label={t("EnterSearchAnyKeyword")}
+                                px={16}
+                                py={2}
+                                position="top-end"
+                                color="red"
+                                withArrow
+                                offset={2}
+                                zIndex={100}
+                                transitionProps={{
+                                  transition: "pop-bottom-left",
+                                  duration: 1000,
+                                }}
+                            >
+                              <TextInput
+                                  leftSection={
+                                    <IconSearch size={16} opacity={0.5} />
+                                  }
+                                  size="sm"
+                                  placeholder={t("ChooseProduct")}
+                                  onChange={(e) => {
+                                    setSearchValue(e.target.value);
+                                  }}
+                                  value={searchValue}
+                                  id={"SearchKeyword"}
+                                  rightSection={
+                                    searchValue ? (
+                                        <Tooltip
+                                            label={t("Close")}
+                                            withArrow
+                                            bg={`red.5`}
+                                        >
+                                          <IconX
+                                              color={`red`}
+                                              size={16}
+                                              opacity={0.5}
+                                              onClick={() => {
+                                                setSearchValue("");
+                                              }}
+                                          />
+                                        </Tooltip>
+                                    ) : (
+                                        <Tooltip
+                                            label={t("FieldIsRequired")}
+                                            withArrow
+                                            position={"bottom"}
+                                            c={"red"}
+                                            bg={`red.1`}
+                                        >
+                                          <IconInfoCircle size={16} opacity={0.5} />
+                                        </Tooltip>
+                                    )
+                                  }
+                              />
+                            </Tooltip>
+                          </Box>
+                        </Grid.Col>
+                        <Grid.Col span={4}>
+                          <Box pr={"xs"}>
+                            <Button
+                                size="sm"
+                                className={genericClass.invoiceAdd}
+                                type="submit"
+                                mt={0}
+                                mr={"xs"}
+                                w={"100%"}
+                                leftSection={<IconDeviceFloppy size={16} />}
+                            >
+                              <Flex direction={`column`} gap={0}>
+                                <Text fz={12} fw={400}>
+                                  {t("AddAll")}
+                                </Text>
+                              </Flex>
+                            </Button>
+                          </Box>
+                        </Grid.Col>
+                      </Grid>
+                    </Box>
+                  </>
+              )}
             </Box>
           </form>
         </Grid.Col>
