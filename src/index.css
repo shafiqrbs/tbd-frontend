@@ -248,9 +248,6 @@ input[type=radio]:checked + label>img {
     font-size: var(--mantine-font-size-sm) !important;*/
     color: var(--mantine-color-dark-7) !important;
     text-decoration: none !important;
-    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
-
-    /*border-left: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)) !important;*/
 
     @mixin hover {
         /* background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));*/

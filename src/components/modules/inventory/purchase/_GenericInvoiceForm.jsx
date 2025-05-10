@@ -72,7 +72,7 @@ function _GenericInvoiceForm(props) {
   const itemFromHeight = mainAreaHeight - 198;
 
   //segmented control
-  const [switchValue, setSwitchValue] = useState("list");
+  const [switchValue, setSwitchValue] = useState("product");
 
   //setting drawer control
   const [settingDrawer, setSettingDrawer] = useState(false);
@@ -80,8 +80,7 @@ function _GenericInvoiceForm(props) {
   //product drawer control
   const [productDrawer, setProductDrawer] = useState(false);
 
-  //sales by barcode comes from backend now static value
-  const [salesByBarcode, setSalesByBarcode] = useState(true);
+
 
   //warehosue dropdown data
   let warehouseDropdownData = getCoreWarehouseDropdownData();
@@ -511,13 +510,12 @@ function _GenericInvoiceForm(props) {
                   <Grid columns={12} gutter={{ base: 2 }}>
                     <Grid.Col span={7}>
                       <Text fz="md" fw={500} className={classes.cardTitle}>
-                        {t("Customer Purchase Invoice")}
+                        {t("VendorPurchaseInvoice")}
                       </Text>
                     </Grid.Col>
                     <Grid.Col span={5} align="center">
                       <Group justify="flex-end" align="center" gap={4}>
-                        {salesByBarcode && (
-                          <SegmentedControl
+                        <SegmentedControl
                             size="xs"
                             styles={{
                               label: { color: "#140d05" },
@@ -531,31 +529,30 @@ function _GenericInvoiceForm(props) {
                             data={[
                               {
                                 label: (
-                                  <Center pl={"8"} pr={"8"} style={{ gap: 10 }}>
-                                    <IconCoinMonero
-                                      height={"18"}
-                                      width={"18"}
-                                      stroke={1.5}
-                                    />
-                                  </Center>
+                                    <Center pl={"8"} pr={"8"} style={{ gap: 10 }}>
+                                      <IconCoinMonero
+                                          height={"18"}
+                                          width={"18"}
+                                          stroke={1.5}
+                                      />
+                                    </Center>
                                 ),
                                 value: "product",
                               },
                               {
                                 label: (
-                                  <Center pl={"8"} pr={"8"} style={{ gap: 10 }}>
-                                    <IconBarcode
-                                      height={"18"}
-                                      width={"18"}
-                                      stroke={1.5}
-                                    />
-                                  </Center>
+                                    <Center pl={"8"} pr={"8"} style={{ gap: 10 }}>
+                                      <IconBarcode
+                                          height={"18"}
+                                          width={"18"}
+                                          stroke={1.5}
+                                      />
+                                    </Center>
                                 ),
                                 value: "list",
                               },
                             ]}
-                          />
-                        )}
+                        />
                         <Tooltip
                           multiline
                           bg={"#905923"}

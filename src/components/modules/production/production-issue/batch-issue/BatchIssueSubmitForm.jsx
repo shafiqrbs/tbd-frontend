@@ -495,7 +495,6 @@ export default function BatchIssueSubmitForm(props) {
 
                         </Card>
                     </SimpleGrid>
-
                     <Box mt={"8"} pb={"xs"}>
                         <Button.Group>
                             <Button

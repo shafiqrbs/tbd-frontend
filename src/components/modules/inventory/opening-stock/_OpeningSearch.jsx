@@ -66,7 +66,7 @@ function _OpeningSearch(props) {
   return (
     <>
       <Grid columns={14} justify="flex-end" align="flex-end">
-        <Grid.Col span={11}>
+        <Grid.Col span={10}>
           <Tooltip
             label={t("EnterSearchAnyKeyword")}
             opened={searchKeywordTooltip}
@@ -131,76 +131,7 @@ function _OpeningSearch(props) {
             />
           </Tooltip>
         </Grid.Col>
-        {/* <Grid.Col span={2}>
-          <Tooltip
-            label={t("StartDate")}
-            opened={startDateTooltip}
-            px={16}
-            py={2}
-            position="top-end"
-            color="red"
-            withArrow
-            offset={2}
-            zIndex={100}
-            transitionProps={{ transition: "pop-bottom-left", duration: 5000 }}
-          >
-            <DateInput
-              key={resetKey}
-              clearable
-              onChange={(e) => {
-                dispatch(
-                  setPurchaseItemsFilterData({
-                    ...purchaseItemsFilterData,
-                    ["start_date"]: e,
-                  })
-                );
-                e !== ""
-                  ? setStartDateTooltip(false)
-                  : (setStartDateTooltip(true),
-                    setTimeout(() => {
-                      setStartDateTooltip(false);
-                    }, 1000));
-              }}
-              value={purchaseItemsFilterData.start_date}
-              placeholder={t("StartDate")}
-            />
-          </Tooltip>
-        </Grid.Col>
         <Grid.Col span={2}>
-          <Tooltip
-            label={t("EndDate")}
-            opened={endDateTooltip}
-            px={16}
-            py={2}
-            position="top-end"
-            color="red"
-            withArrow
-            offset={2}
-            zIndex={100}
-            transitionProps={{ transition: "pop-bottom-left", duration: 5000 }}
-          >
-            <DateInput
-              key={resetKey}
-              clearable
-              onChange={(e) => {
-                dispatch(
-                  setPurchaseItemsFilterData({
-                    ...purchaseItemsFilterData,
-                    ["end_date"]: e,
-                  })
-                );
-                e !== ""
-                  ? setEndDateTooltip(false)
-                  : (setEndDateTooltip(true),
-                    setTimeout(() => {
-                      setEndDateTooltip(false);
-                    }, 1000));
-              }}
-              placeholder={t("EndDate")}
-            />
-          </Tooltip>
-        </Grid.Col> */}
-        <Grid.Col span={1}>
           <ActionIcon.Group mt={"1"}>
             <ActionIcon
               variant="transparent"
@@ -277,26 +208,6 @@ function _OpeningSearch(props) {
             </ActionIcon>
           </ActionIcon.Group>
         </Grid.Col>
-
-        {/* <Grid.Col span={2}>
-                    <Flex
-                        justify="flex-end"
-                        align="center"
-                    >
-                    <Button onClick={(e) => {
-                        setUploadOpeningStockModel(true)
-                    }}
-                            size="sm"
-                            color={`red.8`}
-                            variant="outline"
-                            mt={0}
-                            rightSection={<IconArrowRight size={16} />}
-                    >
-                        {t("Upload")}
-                    </Button>
-                    </Flex>
-                </Grid.Col> */}
-
         <Grid.Col span={2}>
           <Flex justify="flex-end" align="center" gap={"xs"}>
             <Button

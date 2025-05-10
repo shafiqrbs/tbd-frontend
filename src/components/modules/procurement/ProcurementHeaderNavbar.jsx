@@ -84,21 +84,7 @@ export default function ProcurementHeaderNavbar(props) {
                     />
                   }
                 >
-                  {t("Requisition")}
-                </Menu.Item>
-                <Menu.Item
-                  component="button"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    navigate("/procurement/new-requisition");
-                  }}
-                  leftSection={
-                    <IconCreditCard
-                      style={{ height: rem(12), width: rem(12) }}
-                    />
-                  }
-                >
-                  {t("NewRequisition")}
+                  {t("Setting")}
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>

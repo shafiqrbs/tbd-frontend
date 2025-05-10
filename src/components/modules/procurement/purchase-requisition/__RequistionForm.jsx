@@ -289,7 +289,7 @@ export default function __RequistionForm(props) {
               recordsPerPage={10}
               loaderSize="xs"
               loaderColor="grape"
-              height={height - 98} // 17
+              height={height - 88} // 17
               scrollAreaProps={{ type: "never" }}
             />
           </Box>

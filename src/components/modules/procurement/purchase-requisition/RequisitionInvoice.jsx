@@ -9,7 +9,11 @@ import _GenericRequisitionForm from "./_GenericRequisitionForm";
 export default function RequisitionInvoice() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
-  const {configData} = getConfigData();
+
+ // const {configData} = getConfigData();
+  const domainConfigData = JSON.parse(localStorage.getItem("domain-config-data"));
+  const configData = domainConfigData.inventory_config;
+
   
   return (
     <>
@@ -30,6 +34,7 @@ export default function RequisitionInvoice() {
               <ProcurementHeaderNavbar
                 pageTitle={t("NewRequisition")}
                 roles={t("Roles")}
+                configData={configData}
               />
               <Box p={8}>
                 {  (

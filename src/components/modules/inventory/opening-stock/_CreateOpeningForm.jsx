@@ -363,7 +363,6 @@ function _CreateOpeningForm(props) {
                                                     leftSection={<IconBarcode size={16} opacity={0.5} />}
                                                 />
                                             </Grid.Col>
-
                                             <Grid.Col span={8}>
                                                 <SelectServerSideForm
                                                     tooltip={t('ChooseStockProduct')}
@@ -380,7 +379,7 @@ function _CreateOpeningForm(props) {
                                                     dropdownValue={productDropdown}
                                                 />
                                             </Grid.Col>
-                                            <Grid.Col span={3}>
+                                            <Grid.Col span={2}>
                                                 <InputForm
                                                     tooltip={t('QuantityValidateMessage')}
                                                     label=''
@@ -460,7 +459,7 @@ function _CreateOpeningForm(props) {
 
                                                 />
                                             </Grid.Col>
-                                            <Grid.Col span={6}>
+                                            <Grid.Col span={7}>
                                                 <Box>
                                                     <Group justify="right" gap={0}>
                                                         <Button
@@ -812,7 +811,6 @@ function _CreateOpeningForm(props) {
                                 scrollAreaProps={{ type: 'never' }}
                             />
                         </Box>
-
                     </Box>
                 </Grid.Col>
 
