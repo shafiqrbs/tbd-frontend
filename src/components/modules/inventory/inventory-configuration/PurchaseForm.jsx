@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 import {
   Box,
@@ -39,6 +39,10 @@ function PurchaseForm(props) {
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [vendorGroupData, setVendorGroupData] = useState(null);
 
+  useEffect(() => {
+    setVendorGroupData(config_purchase?.default_vendor_group_id?.toString())
+  }, [id]);
+
   const form = useForm({
     initialValues: {
       search_by_vendor: config_purchase?.search_by_vendor || "",
@@ -47,13 +51,31 @@ function PurchaseForm(props) {
       is_barcode: config_purchase?.is_barcode || "",
       is_measurement_enable: config_purchase?.is_measurement_enable || "",
       is_purchase_auto_approved: config_purchase?.is_purchase_auto_approved || "",
-      default_vendor_group_id: config_purchase?.default_vendor_group_id || 0,
+      default_vendor_group_id: config_purchase?.default_vendor_group_id || '',
       is_warehouse: config_purchase?.is_warehouse || "",
       is_bonus_quantity: config_purchase?.is_bonus_quantity || "",
       is_purchase_by_purchase_price: config_purchase?.is_purchase_by_purchase_price || "",
       item_percent: config_purchase?.item_percent || "",
     },
   });
+
+  useEffect(() => {
+    if (config_purchase) {
+      form.setValues({
+        search_by_vendor: config_purchase?.search_by_vendor || 0,
+        search_by_product_nature: config_purchase?.search_by_product_nature || 0,
+        search_by_category: config_purchase?.search_by_category || 0,
+        is_barcode: config_purchase?.is_barcode || 0,
+        is_measurement_enable: config_purchase?.is_measurement_enable || 0,
+        is_purchase_auto_approved: config_purchase?.is_purchase_auto_approved || 0,
+        default_vendor_group_id: config_purchase?.default_vendor_group_id || null,
+        is_warehouse: config_purchase?.is_warehouse || 0,
+        is_bonus_quantity: config_purchase?.is_bonus_quantity || 0,
+        is_purchase_by_purchase_price: config_purchase?.is_purchase_by_purchase_price || 0,
+        item_percent: config_purchase?.item_percent || 0,
+      });
+    }
+  }, [dispatch, config_purchase]);
 
   const handlePurchaseFormSubmit = (values) => {
     dispatch(setValidationData(false));
@@ -86,7 +108,7 @@ function PurchaseForm(props) {
         values[property] === true || values[property] === 1 ? 1 : 0;
     });
     const payload = {
-      url: `domain/config/inventory-purchase/${id}`,
+      url: `domain/config/inventory-purchase/`+id,
       data: values,
       type: "POST",
     };
@@ -131,7 +153,7 @@ function PurchaseForm(props) {
               <Grid.Col span={12} fz={"sm"} mt={8}>
                 {t("VendorGroup")}
               </Grid.Col>
-              <Grid.Col span={12}>
+              <Grid.Col span={11}>
                 <SelectForm
                   tooltip={t("ChooseVendorGroup")}
                   label={""}
@@ -143,7 +165,7 @@ function PurchaseForm(props) {
                   dropdownValue={vendorGroupDropdownData}
                   id={"default_vendor_group_id"}
                   searchable={false}
-                  value={ vendorGroupData ? String(vendorGroupData) : config_purchase?.default_vendor_group_id ? String(config_purchase?.default_vendor_group_id) : null}
+                  value={vendorGroupData}
                   changeValue={setVendorGroupData}
                 />
               </Grid.Col>

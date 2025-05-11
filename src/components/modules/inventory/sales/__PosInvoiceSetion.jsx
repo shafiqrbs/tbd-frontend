@@ -260,7 +260,7 @@ export default function __PosInvoiceSection(props) {
                   changeValue={setSalesByUser}
                 />
               </Box>
-              {salesConfig.is_sales_auto_approved !== 1 &&(
+              {salesConfig?.is_sales_auto_approved !== 1 &&(
               <Box pt={4}>
 
                     <SelectForm

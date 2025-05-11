@@ -53,7 +53,7 @@ function SalesForm({ customerGroupDropdownData, height, id ,config_sales }) {
   useEffect(() => {
     if (config_sales) {
       form.setValues({
-        default_customer_group_id: config_sales?.default_customer_group_id || 0,
+        default_customer_group_id: config_sales?.default_customer_group_id || null,
         discount_with_customer: config_sales?.discount_with_customer || 0,
         due_sales_without_customer: config_sales?.due_sales_without_customer || 0,
         is_multi_price: config_sales?.is_multi_price || 0,

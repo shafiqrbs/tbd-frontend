@@ -36,6 +36,7 @@ function SettingDrawer(props) {
     config_requisition,
     id,
   } = props;
+
   const { isOnline, mainAreaHeight } = useOutletContext();
   const { t, i18n } = useTranslation();
   const height = mainAreaHeight - 100; //TabList height 104
@@ -97,8 +98,8 @@ function SettingDrawer(props) {
       case "Purchase":
         return (
           <PurchaseForm
-            height={height}
-            config_purchase={config_purchase}
+            height={height+60}
+            domainConfigData={domainConfigData}
             id={id}
             vendorGroupDropdownData={groupVendorDropdownData}
           />

@@ -50,6 +50,7 @@ import { useHotkeys } from "@mantine/hooks";
 
 function _GenericInvoiceForm(props) {
  // const { domainConfigData } = props;
+
   const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
 
   let currencySymbol = domainConfigData?.inventory_config?.currency?.symbol;
@@ -65,6 +66,7 @@ function _GenericInvoiceForm(props) {
   let inventory_config = domainConfigData?.inventory_config;
   let config_purchase = inventory_config?.config_purchase;
   let id = domainConfigData?.id;
+
   //common hooks and variables
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
