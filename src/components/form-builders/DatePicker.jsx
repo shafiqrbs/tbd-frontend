@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-// import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DateInput } from '@mantine/dates';
 import {TextInput, Tooltip} from "@mantine/core";
 import {getHotkeyHandler} from "@mantine/hooks";
@@ -7,9 +5,6 @@ import {IconInfoCircle, IconX} from "@tabler/icons-react";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import inputCss from "../../assets/css/InputField.module.css";
-
-
-// dayjs.extend(customParseFormat);
 
 function DatePickerForm(props) {
     const {

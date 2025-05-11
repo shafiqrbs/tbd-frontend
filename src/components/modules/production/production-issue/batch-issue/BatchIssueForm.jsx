@@ -26,7 +26,7 @@ import {DataTable} from "mantine-datatable";
 import classes from "../../../../../assets/css/FeaturesCards.module.css";
 import tableCss from "../../../../../assets/css/Table.module.css";
 import {useTranslation} from "react-i18next";
-import {useOutletContext} from "react-router-dom";
+import {useOutletContext, useParams} from "react-router-dom";
 import {useEffect, useState, useMemo} from "react";
 import SelectForm from "../../../../form-builders/SelectForm";
 import genericClass from "../../../../../assets/css/Generic.module.css";
@@ -36,7 +36,8 @@ import {showNotificationComponent} from "../../../../core-component/showNotifica
 import {useDispatch} from "react-redux";
 
 export default function BatchIssueForm(props) {
-
+    const { id } = useParams();
+    console.log(id)
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -54,9 +55,36 @@ export default function BatchIssueForm(props) {
     const [loadCardProducts, setLoadCardProducts] = useState(false);
     const [products, setProducts] = useState([]);
 
+    const [productionsRecipeItems, setProductionsRecipeItems] = useState([]);
+    const [productionsIssueData, setProductionsIssueData] = useState({});
+
+
     const form = useForm({
         initialValues: {},
     });
+
+    // batch issue data
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // setFormLoad(true);
+                const result = await dispatch(showEntityData("production/issue/" + id)).unwrap();
+                // console.log(result.data.data.issue_items)
+                if (result.data.status === 200) {
+                    setProductionsIssueData(result?.data?.data)
+                    setProductionsRecipeItems(result?.data?.data?.issue_items)
+                }
+            } catch (error) {
+                showNotificationComponent(t('FailedToFetchData'), 'red', 'lightgray', null, false, 1000)
+            } finally {
+                // setFormLoad(false);
+            }
+        };
+
+        fetchData();
+    }, [dispatch, id]);
+
+    console.log(productionsIssueData,productionsRecipeItems)
 
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem("user"));
@@ -119,7 +147,6 @@ export default function BatchIssueForm(props) {
     }, [products, searchValue]);
     const [measurement, setMeasurement] = useState({});
 
-    const [productionsRecipeItems, setProductionsRecipeItems] = useState([]);
     useEffect(() => {
         if (batchId) {
             const fetchData = async () => {
@@ -174,7 +201,7 @@ export default function BatchIssueForm(props) {
                                             purchase_price: data.purchase_price,
                                             sales_price: data.sales_price,
                                             stock_quantity: data.stock_quantity,
-                                            type: 'general_issue',
+                                            // type: 'general_issue',
                                         };
 
                                         const existingIndex = updatedItems.findIndex(
@@ -632,6 +659,7 @@ export default function BatchIssueForm(props) {
                             setBatchId={setBatchId}
                             productionsRecipeItems={productionsRecipeItems}
                             setProductionsRecipeItems={setProductionsRecipeItems}
+                            productionsIssueData={productionsIssueData}
                         />
                     </Grid.Col>
                 </Grid>

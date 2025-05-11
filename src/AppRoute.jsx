@@ -161,8 +161,10 @@ function AppRoute() {
           <Route path="config" element={<ProductionConfigurationIndex />} />
           <Route path="batch" element={<BatchIndex />} />
           <Route path="batch/:id" element={<InhouseIndex />} />
-          <Route path="issue-production-general" element={<GeneralIssueIndex />}/>
-          <Route path="issue-production-batch" element={<BatchIssueIndex />} />
+          {/*<Route path="issue-production-general" element={<GeneralIssueIndex />}/>*/}
+          <Route path="issue-production-general/:id" element={<GeneralIssueIndex />}/>
+          {/*<Route path="issue-production-batch" element={<BatchIssueIndex />} />*/}
+          <Route path="issue-production-batch/:id" element={<BatchIssueIndex />} />
           <Route path="user-warehouse" element={<IssueWarehouseIndex />}/>
           <Route path="user-warehouse/:id" element={<IssueWarehouseIndex />}/>
         </Route>

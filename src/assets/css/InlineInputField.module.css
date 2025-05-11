@@ -1,13 +1,11 @@
 
 /* Input.module.css */
-
 .input {
     border: 1px solid #905a23;
     background: #fbf7ef;
     text-align: center;
 
 }
-
 /* Style the placeholder */
 
 .input::placeholder {
@@ -15,10 +13,6 @@
     opacity: 1;
 }
 
-&:focus-within {
-     border: 1px solid #b1aba1;
-     background-color: #f7f7f5
- }
 .input{
     transition: none;
 }

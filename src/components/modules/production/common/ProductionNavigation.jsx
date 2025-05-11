@@ -18,42 +18,64 @@ const navItems = [
     icon: <IconDashboard size={16} color="white"/>,
     color: "#E53935",
     path: "/production/user-warehouse",
+    create:false,
+    route:''
   },
   {
     labelKey: "GeneralProductionIssue",
     icon: <IconDashboard size={16} color="white"/>,
     color: "#4CAF50",
     path: "/production/issue-production-general",
+    create:true,
+    route:'production/issue'
   },
   {
     labelKey: "BatchProdcutionIssue",
     icon: <IconDashboard size={16} color="white"/>,
     color: "#6f1225",
     path: "/production/issue-production-batch",
+    create: true,
+    route:'production/issue'
+  },
+  {
+    labelKey: "NewBatch",
+    icon: <IconCategory size={16} color="white"/>,
+    color: "#10B981",
+    path: "/production/batch",
+    create: true,
+    route:'production/batch'
   },
   {
     labelKey: "ProductionBatch",
     icon: <IconIcons size={16} color="white"/>,
     color: "#3F51B5",
     path: "/production/batch",
+    create: false,
+    route:''
   },
   {
     labelKey: "ProductionItems",
     icon: <IconShoppingBag size={16} color="white"/>,
     color: "#F59E0B",
     path: "/production/items",
+    create: false,
+    route:''
   },
   {
     labelKey: "ProductionSetting",
     icon: <IconShoppingCart size={16} color="white"/>,
     color: "#06B6D4",
     path: "/production/setting",
+    create: false,
+    route:''
   },
   {
     labelKey: "ProductionConfig",
     icon: <IconCopyCheck size={16} color="white"/>,
     color: "#10B981",
     path: "/production/config",
+    create: false,
+    route:''
   },
 ];
 
@@ -100,31 +122,62 @@ export default function ProductionNavigation() {
   const {mainAreaHeight} = useOutletContext();
   const height = mainAreaHeight - 20;
 
-  const CallProductionBatchCreateApi = (e) => {
-    e.preventDefault();
-    axios({
-      method: "POST",
-      url: `${import.meta.env.VITE_API_GATEWAY_URL}production/batch`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "X-Api-Key": import.meta.env.VITE_API_KEY,
-        "X-Api-User": JSON.parse(localStorage.getItem("user")).id,
-      },
-      data: {
-        mode: "in-house",
-      },
-    })
-        .then((res) => {
-          if (res.data.status === 200) {
-            navigate("/production/batch/" + res.data.data.id);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error);
-        });
+  const productionCreateApiCall = async (route, path) => {
+    try {
+      // Initialize data based on path
+      let data = {};
+      switch (path) {
+        case "/production/batch":
+          data = { mode: "in-house" };
+          break;
+        case "/production/issue-production-batch":
+          data = { type: "batch" };
+          break;
+        case "/production/issue-production-general":
+          data = { type: "general" };
+          break;
+        default:
+          data = {};
+      }
+
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+      const response = await axios({
+        method: "POST",
+        url: `${import.meta.env.VITE_API_GATEWAY_URL}${route}`,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "X-Api-Key": import.meta.env.VITE_API_KEY,
+          "X-Api-User": user.id,
+        },
+        data,
+      });
+
+      const res = response.data;
+
+      // Handle successful response
+      if ([200].includes(res.status) && res.data?.id) {
+        const navigationMap = {
+          "production/issue": {
+            "/production/issue-production-general": `/production/issue-production-general/${res.data.id}`,
+            "/production/issue-production-batch": `/production/issue-production-batch/${res.data.id}`,
+          },
+          "production/batch": `/production/batch/${res.data.id}`,
+        };
+
+        const navigateTo = navigationMap[route]?.[path] || navigationMap[route];
+        if (navigateTo) {
+          navigate(navigateTo);
+        }
+      } else {
+        throw new Error(res.message || "Unexpected response from server.");
+      }
+    } catch (error) {
+      console.error("API call failed:", error);
+      const message = error.response?.data?.message || error.message || "Something went wrong.";
+    }
   };
 
   return (
@@ -136,16 +189,15 @@ export default function ProductionNavigation() {
                   icon={item.icon}
                   label={item.labelKey}
                   color={item.color}
-                  onClick={() => navigate(item.path)}
+                  onClick={() =>{
+                    if (item.create && item.route) {
+                      productionCreateApiCall(item.route,item.path)
+                    }else {
+                      navigate(item.path)
+                    }
+                  }}
               />
           ))}
-
-          <NavButton
-              icon={<IconCategory size={16} color="white"/>}
-              label="NewBatch"
-              color="#E53935"
-              onClick={CallProductionBatchCreateApi}
-          />
         </Flex>
       </ScrollArea>
   );
