@@ -44,14 +44,8 @@ import getDomainConfig from "../../global-hook/config-data/getDomainConfig.js";
 function MainDashboard(props) {
     const {t, i18n} = useTranslation();
     const height = props.height - 105; //TabList height 104
-    const {configData, fetchData} = getConfigData();
-
-    const domainConfig = JSON.parse(
-        localStorage.getItem("domain-config-data")
-    );
-
-  //  const {configData} = domainConfig?.inventory_config
-
+    const {domainConfig,fetchDomainConfig} = getDomainConfig();
+    let configData = domainConfig?.inventory_config
 
     const navigate = useNavigate();
     const theme = useMantineTheme();
@@ -87,16 +81,17 @@ function MainDashboard(props) {
         }
     });
 
+
     // console.log(domainConfig);
     useEffect(() => {
-        const checkConfigData = () => {
+        const checkDomainConfig = () => {
             if (!configData) {
                 navigate("/login");
             }
         };
 
         // Adding a short delay before checking localStorage (e.g., 500ms)
-        const timeoutId = setTimeout(checkConfigData, 500);
+        const timeoutId = setTimeout(checkDomainConfig, 500);
 
         return () => clearTimeout(timeoutId); // Clear the timeout if the component unmounts
     }, [navigate]);  // Notice we're also adding `navigate` dependency here
@@ -220,9 +215,8 @@ function MainDashboard(props) {
                 </SimpleGrid>
                 <ScrollArea h={height} scrollbarSize={2} type="never">
                     <SimpleGrid cols={{base: 1, md: 4}} spacing="xs">
-                        
                         {
-                            configData?.domain?.modules?.includes("sales-purchase") && ["role_sales_purchase","role_domain"].some((value) => userRole.includes(value)) && (
+                            domainConfig?.modules?.includes("sales-purchase") && ["role_sales_purchase","role_domain"].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -465,7 +459,7 @@ function MainDashboard(props) {
                         }
                         
                         {
-                            configData?.domain?.modules?.includes("accounting") && ["role_accounting", "role_domain"].some((value) => userRole.includes(value)) && (
+                            domainConfig?.modules?.includes("accounting") && ["role_accounting", "role_domain"].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -655,7 +649,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("procurement") && ["role_procurement","role_domain"].some((value) => userRole.includes(value)) && ( 
+                            domainConfig?.modules?.includes("procurement") && ["role_procurement","role_domain"].some((value) => userRole.includes(value)) && ( 
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -772,7 +766,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("inventory") && ["role_inventory","role_domain"].some((value) => userRole.includes(value)) && (
+                            domainConfig?.modules?.includes("inventory") && ["role_inventory","role_domain"].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -1091,7 +1085,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("domain") && ["role_domain", "role_core_admin"].some((value) => userRole.includes(value)) && (
+                            domainConfig?.modules?.includes("domain") && ["role_domain", "role_core_admin"].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -1211,7 +1205,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("core") && ["role_core","role_domain"]?.some((value) => userRole.includes(value)) && (
+                            domainConfig?.modules?.includes("core") && ["role_core","role_domain"]?.some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -1402,7 +1396,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("production") && ["role_production","role_domain"].some((value) => userRole.includes(value)) && (
+                            domainConfig?.modules?.includes("production") && ["role_production","role_domain"].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>

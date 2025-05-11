@@ -67,7 +67,7 @@ function _GenericPosForm({domainConfigData}) {
 
   // State
 
-  const [productSalesMode, setProductSalesMode] = useState("list");
+  const [productSalesMode, setProductSalesMode] = useState("product");
   const [settingDrawer, setSettingDrawer] = useState(false);
   const [productDrawer, setProductDrawer] = useState(false);
   const [salesByBarcode, setSalesByBarcode] = useState(true);
