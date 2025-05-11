@@ -40,8 +40,8 @@ function _SalesPurchaseHeaderNavbar(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const links = [
-    configData?.is_batch_invoice === 1 ??
-    { link: "/inventory/invoice-batch", label: t("InvoiceBatch") },
+    configData?.is_batch_invoice === 1 ?
+    { link: "/inventory/invoice-batch", label: t("InvoiceBatch") }:'',
     { link: "/inventory/sales", label: t("Sales") },
     { link: "/inventory/sales-invoice", label: t("NewSales") },
     { link: "/inventory/purchase", label: t("Purchase") },
