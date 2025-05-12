@@ -132,17 +132,23 @@ export default function __PosSalesForm(props) {
 
     //discount type hook
     const [discountType, setDiscountType] = useToggle(["Flat", "Percent"]);
-
+    const [discount,setDiscount] = useState('')
     // calculate sales total amount after discount and vat change
     useEffect(() => {
-        let discountAmount = 0;
+        let discountAmount = '';
         if (form.values.discount && Number(form.values.discount) > 0) {
             if (discountType === "Flat") {
                 discountAmount = Number(form.values.discount);
+                setDiscount(form.values.discount)
             } else if (discountType === "Percent") {
-                discountAmount =
-                    (salesSubTotalAmount * Number(form.values.discount)) / 100;
+                if (form.values.discount.length<3){
+                discountAmount = (salesSubTotalAmount * Number(form.values.discount)) / 100;
+                setDiscount(form.values.discount)
+                }else {
+                    setDiscount('')
+                }
             }
+
         }
         setSalesDiscountAmount(discountAmount);
 
@@ -724,6 +730,8 @@ export default function __PosSalesForm(props) {
                         salesConfig={salesConfig}
                         salesDueAmount={salesDueAmount}
                         setLoadCardProducts={setLoadCardProducts}
+                        discount={discount}
+                        setDiscount={setDiscount}
                     />
                 </Box>
             </form>

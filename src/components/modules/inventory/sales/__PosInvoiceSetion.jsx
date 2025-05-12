@@ -62,6 +62,7 @@ export default function __PosInvoiceSection(props) {
     lastClicked,
     handleClick,
     entityEditData,
+      discount,setDiscount,
       data
   } = props;
 
@@ -381,7 +382,7 @@ export default function __PosInvoiceSection(props) {
                             type="number"
                             style={{ textAlign: "right" }}
                             placeholder={t("Discount")}
-                            value={salesDiscountAmount}
+                            value={discount}
                             size={"sm"}
                             classNames={{ input: classes.input }}
                             onChange={(event) => {
@@ -390,8 +391,11 @@ export default function __PosInvoiceSection(props) {
                                 event.target.value
                               );
                               const newValue = event.target.value;
-                              setSalesDiscountAmount(newValue);
-                              form.setFieldValue("discount", newValue);
+                              if (discountType==='Percent' && event.target.value.length<3){
+                                form.setFieldValue("discount", newValue);
+                              }else {
+                                form.setFieldValue("discount", newValue);
+                              }
                             }}
                             rightSection={
                               <ActionIcon
