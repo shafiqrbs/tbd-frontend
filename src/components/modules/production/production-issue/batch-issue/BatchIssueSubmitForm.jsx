@@ -21,10 +21,10 @@ import {
     IconDeviceFloppy,
     IconPlus,
 } from "@tabler/icons-react";
-import {useOutletContext} from "react-router-dom";
+import {useOutletContext, useParams} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {IconCalendar} from "@tabler/icons-react";
-import {storeEntityData} from "../../../../../store/inventory/crudSlice.js";
+import {storeEntityData, updateEntityData} from "../../../../../store/inventory/crudSlice.js";
 import genericClass from "../../../../../assets/css/Generic.module.css";
 import DatePickerForm from "../../../../form-builders/DatePicker.jsx";
 import SelectForm from "../../../../form-builders/SelectForm.jsx";
@@ -39,13 +39,13 @@ import {showNotificationComponent} from "../../../../core-component/showNotifica
 import TextAreaForm from "../../../../form-builders/TextAreaForm.jsx";
 
 import dayjs from 'dayjs';
-import { DateInput } from '@mantine/dates';
 
 export default function BatchIssueSubmitForm(props) {
     const {
-        setLoadCardProducts, loadCardProducts, batchId, setBatchId, productionsRecipeItems, setProductionsRecipeItems,productionsIssueData
+        setLoadCardProducts, batchId, setBatchId, productionsRecipeItems, setProductionsRecipeItems,productionsIssueData
     } = props;
 
+    const { id } = useParams();
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 170;
@@ -62,39 +62,42 @@ export default function BatchIssueSubmitForm(props) {
 
     const form = useForm({
         initialValues: {
-            invoice_date: "",
-            batch_id: "",
-            issued_to_type: "",
-            factory_id: "",
-            vendor_id: "",
-            warehouse_id: "",
-            issued_by: "",
-            narration: "",
+            invoice_date: '',
+            batch_id: '',
+            issued_to_type: '',
+            factory_id: '',
+            vendor_id: '',
+            warehouse_id: '',
+            issued_by: '',
+            narration: '',
         },
         validate: {
-            batch_id: isNotEmpty(t('ChooseBatch')),
-            issued_to_type: isNotEmpty(t('ChooseIssueType'))
+            // batch_id: isNotEmpty(t('ChooseBatch')),
+            // issued_to_type: isNotEmpty(t('ChooseIssueType')),
         },
     });
 
-
     useEffect(() => {
-        setIssueType(String(productionsIssueData?.issue_type) || null)
-        setWarehouseId(String(productionsIssueData?.issue_warehouse_id) || null)
-        setVendorId(String(productionsIssueData?.vendor_id) || null)
-        setIssuedById(String(productionsIssueData?.created_by_id) || null)
         if (productionsIssueData) {
+            setBatchId(String(productionsIssueData.production_batch_id) || null);
+            setIssueType(String(productionsIssueData.issue_type) || null);
+            setWarehouseId(String(productionsIssueData.issue_warehouse_id) || null);
+            setVendorId(String(productionsIssueData.vendor_id) || null);
+            setIssuedById(String(productionsIssueData.created_by_id) || null);
+
             form.setValues({
-                invoice_date: productionsIssueData.invoice_date ? dayjs(productionsIssueData.invoice_date, "DD-MM-YYYY").toDate() : new Date(),
-                issued_to_type: productionsIssueData.issued_to_type ? productionsIssueData.issued_to_type : '',
-                batch_id: productionsIssueData.batch_id ? productionsIssueData.batch_id : '',
-                vendor_id: productionsIssueData.vendor_id ? productionsIssueData.vendor_id : '',
-                warehouse_id: productionsIssueData.warehouse_id ? productionsIssueData.warehouse_id : '',
-                issued_by: productionsIssueData.issued_by ? productionsIssueData.issued_by : '',
-                narration: productionsIssueData.narration ? productionsIssueData.narration : '',
-            })
+                invoice_date: productionsIssueData.invoice_date
+                    ? dayjs(productionsIssueData.invoice_date, 'DD-MM-YYYY').toDate()
+                    : new Date(),
+                issued_to_type: productionsIssueData.issued_to_type || '',
+                batch_id: productionsIssueData.production_batch_id || '',
+                vendor_id: productionsIssueData.vendor_id || '',
+                warehouse_id: productionsIssueData.warehouse_id || '',
+                issued_by: productionsIssueData.issued_by || '',
+                narration: productionsIssueData.narration || '',
+            });
         }
-    },[productionsIssueData])
+    }, [productionsIssueData]);
 
 
     const [issueByDropdownData, setIssueByDropdownData] = useState(null);
@@ -167,7 +170,7 @@ export default function BatchIssueSubmitForm(props) {
                     const newQuantity = Number(e.currentTarget.value);
                     setProductionsRecipeItems((prevItems) =>
                         prevItems.map((product) =>
-                            product.product_id === item.product_id
+                            product.stock_item_id === item.stock_item_id
                                 ? {...product, quantity: newQuantity}
                                 : product
                         )
@@ -225,8 +228,8 @@ export default function BatchIssueSubmitForm(props) {
 
     const handleFormSubmit = async (values) => {
         const transformedArray = productionsRecipeItems.map((product) => ({
-            product_id: product.product_id,
-            product_warehouse_id: product?.product_warehouse_id || null,
+            stock_item_id: product.stock_item_id,
+            product_warehouse_id: product?.warehouse_id || null,
             display_name: product.display_name,
             quantity: product.quantity,
             batch_quantity: product?.total_quantity || null,
@@ -234,7 +237,7 @@ export default function BatchIssueSubmitForm(props) {
             purchase_price: product.purchase_price,
             sub_total: product.quantity * product.sales_price,
             sales_price: product.sales_price,
-            type: product.type,
+            // type: product.type,
         }));
         const options = {year: "numeric", month: "2-digit", day: "2-digit"};
         const formValue = {};
@@ -243,6 +246,8 @@ export default function BatchIssueSubmitForm(props) {
             : new Date().toLocaleDateString("en-CA");
         formValue["issued_by"] = form.values.issued_by;
         formValue["issue_type"] = issueType;
+        formValue["production_batch_id"] = batchId;
+        formValue["type"] = 'batch';
         if (issueType === "factory") {
             formValue["factory_id"] = form.values.factory_id;
         } else if (issueType === "vendor") {
@@ -256,12 +261,12 @@ export default function BatchIssueSubmitForm(props) {
         formValue["items"] = transformedArray;
 
         const value = {
-            url: 'production/issue',
+            url: 'production/issue/'+id,
             data: formValue
         }
 
-        const resultAction = await dispatch(storeEntityData(value));
-        if (storeEntityData.rejected.match(resultAction)) {
+        const resultAction = await dispatch(updateEntityData(value));
+        if (updateEntityData.rejected.match(resultAction)) {
             const fieldErrors = resultAction.payload.errors;
 
             // Check if there are field validation errors and dynamically set them
@@ -273,7 +278,7 @@ export default function BatchIssueSubmitForm(props) {
                 // Display the errors using your form's `setErrors` function dynamically
                 form.setErrors(errorObject);
             }
-        } else if (storeEntityData.fulfilled.match(resultAction)) {
+        } else if (updateEntityData.fulfilled.match(resultAction)) {
 
             showNotificationComponent(t('CreateSuccessfully'), 'teal')
 
@@ -385,7 +390,6 @@ export default function BatchIssueSubmitForm(props) {
                                     name={"issued_to_type"}
                                     form={form}
                                     dropdownValue={[
-                                        // {label: t("Factory"), value: "factory"},
                                         {label: t("Vendor"), value: "vendor"},
                                         {label: t("Warehouse"), value: "warehouse"},
                                     ]}

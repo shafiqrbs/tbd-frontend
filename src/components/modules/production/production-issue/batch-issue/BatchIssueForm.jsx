@@ -35,17 +35,48 @@ import {showEntityData} from "../../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../../core-component/showNotificationComponent.jsx";
 import {useDispatch} from "react-redux";
 
+// ➤ Debounce hook
+function useDebouncedValue(value, delay) {
+    const [debounced, setDebounced] = useState(value);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setDebounced(value), delay);
+        return () => clearTimeout(timer);
+    }, [value, delay]);
+
+    return debounced;
+}
+
+// ➤ Helper functions
+const getUserData = () => {
+    try {
+        return JSON.parse(localStorage.getItem("user") || "{}");
+    } catch (e) {
+        console.error("Error parsing localStorage user:", e);
+        return {};
+    }
+};
+
+const getCoreProducts = () => {
+    try {
+        return JSON.parse(localStorage.getItem("core-products") || "[]");
+    } catch (e) {
+        console.error("Error parsing core-products:", e);
+        return [];
+    }
+};
+
 export default function BatchIssueForm(props) {
+
     const { id } = useParams();
-    console.log(id)
     const dispatch = useDispatch();
-    const {t, i18n} = useTranslation();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { t } = useTranslation();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 360;
 
-    const {domainConfigData} = props;
+    const { domainConfigData } = props;
     const production_config = domainConfigData?.production_config;
-    const isWarehouse = domainConfigData?.production_config?.is_warehouse;
+    const isWarehouse = production_config?.is_warehouse;
     const isMeasurement = domainConfigData?.isMeasurement;
 
     const [batchId, setBatchId] = useState("");
@@ -53,117 +84,114 @@ export default function BatchIssueForm(props) {
     const [warehouseData, setWarehouseData] = useState(null);
     const [searchValue, setSearchValue] = useState("");
     const [loadCardProducts, setLoadCardProducts] = useState(false);
-    const [products, setProducts] = useState([]);
-
     const [productionsRecipeItems, setProductionsRecipeItems] = useState([]);
     const [productionsIssueData, setProductionsIssueData] = useState({});
-
+    const [productQuantities, setProductQuantities] = useState({});
+    const [measurement, setMeasurement] = useState({});
 
     const form = useForm({
         initialValues: {},
     });
 
-    // batch issue data
+    const debouncedSearchValue = useDebouncedValue(searchValue, 250);
+
+    // Cache user data & core products using memo
+    const userData = useMemo(() => getUserData(), []);
+    const coreProducts = useMemo(() => getCoreProducts(), []);
+
+    // Load warehouse dropdown data
+    useEffect(() => {
+        if (isWarehouse && userData?.user_warehouse?.length > 0) {
+            const transformed = userData.user_warehouse.map((wh) => ({
+                label: `${wh.warehouse_name} [${wh.warehouse_location}]`,
+                value: String(wh.id),
+            }));
+            setWarehouseDataDropdown(transformed);
+            setWarehouseData(userData.user_warehouse[0].id);
+        }
+    }, [isWarehouse, userData]);
+
+    // Load issue data from API
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                // setFormLoad(true);
-                const result = await dispatch(showEntityData("production/issue/" + id)).unwrap();
-                // console.log(result.data.data.issue_items)
-                if (result.data.status === 200) {
-                    setProductionsIssueData(result?.data?.data)
-                    setProductionsRecipeItems(result?.data?.data?.issue_items)
+            if (id) {
+                try {
+                    const result = await dispatch(showEntityData(`production/issue/${id}`)).unwrap();
+                    if (result.data.status === 200) {
+                        setProductionsIssueData(result.data.data);
+                        setProductionsRecipeItems(result.data.data.issue_items);
+                    } else {
+                        showNotificationComponent(t("FailedToFetchData"), "red", "lightgray", null, false, 1000);
+                    }
+                } catch (error) {
+                    console.error("Fetch issue data error:", error);
                 }
-            } catch (error) {
-                showNotificationComponent(t('FailedToFetchData'), 'red', 'lightgray', null, false, 1000)
-            } finally {
-                // setFormLoad(false);
             }
         };
 
         fetchData();
-    }, [dispatch, id]);
+    }, [dispatch, id, t]);
 
-    console.log(productionsIssueData,productionsRecipeItems)
-
-    useEffect(() => {
-        const userData = JSON.parse(localStorage.getItem("user"));
-        const transformedWarehouses = userData?.user_warehouse.map((warehouse) => ({
-            label: `${warehouse.warehouse_name} [${warehouse.warehouse_location}]`,
-            value: String(warehouse.id),
-        }));
-        setWarehouseDataDropdown(transformedWarehouses);
-        // Set data for the first warehouse (if available)
-        if (transformedWarehouses?.length > 0) {
-            setWarehouseData(userData.user_warehouse[0].id);
-        }
-    }, []);
-
-    useEffect(() => {
-        const storedProducts = localStorage.getItem("user");
-        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-        if (!localProducts?.production_item) {
-            setProducts([]);
-            return;
-        }
-
-        let filteredProducts = [];
-
-        if (warehouseData) {
-            filteredProducts = localProducts.production_item.filter(
-                product => product.user_warehouse_id === Number(warehouseData)
-            );
-        } else {
-            const firstWarehouseId = localProducts?.user_warehouse?.[0]?.id;
-            filteredProducts = localProducts.production_item.filter(
-                product => product.user_warehouse_id === firstWarehouseId
-            );
-        }
-
-        if (searchValue) {
-            const searchValueLower = searchValue.toLowerCase();
-
-            filteredProducts = filteredProducts.filter(product =>
-                product.item_name?.toString().toLowerCase().includes(searchValueLower) ||
-                product.uom?.toString().toLowerCase().includes(searchValueLower) ||
-                product.closing_quantity?.toString().toLowerCase().includes(searchValueLower)
-            );
-        }
-
-        setProducts(filteredProducts);
-    }, [searchValue, warehouseData]);
-
-    // adding product from table
-    const [productQuantities, setProductQuantities] = useState({});
-
-    // Filtered products for table display (useMemo for performance)
-    const filteredTableProducts = useMemo(() => {
-        if (!searchValue) return products;
-        const lower = searchValue.toLowerCase();
-        return products.filter((product) =>
-            product.display_name?.toLowerCase().includes(lower)
-        );
-    }, [products, searchValue]);
-    const [measurement, setMeasurement] = useState({});
-
+    // Fetch batch recipe data if batchId is selected
     useEffect(() => {
         if (batchId) {
-            const fetchData = async () => {
+            const fetchRecipe = async () => {
                 try {
-                    const result = await dispatch(showEntityData("production/batch/recipe/" + batchId)).unwrap();
+                    const result = await dispatch(showEntityData(`production/batch/recipe/${batchId}`)).unwrap();
                     if (result.data.status === 200) {
                         setProductionsRecipeItems(result.data.data);
+                    } else {
+                        showNotificationComponent(t("FailedToFetchData"), "red", "lightgray", null, false, 1000);
                     }
                 } catch (error) {
-                    console.log(error)
-                    showNotificationComponent(t('FailedToFetchData'), 'red', 'lightgray', null, false, 1000)
+                    console.error("Fetching batch recipe failed:", error);
                 }
             };
 
-            fetchData();
+            fetchRecipe();
         }
-    }, [batchId]);
+    }, [batchId, dispatch, t]);
+
+    // ➤ Memoized filtered products
+    const filteredProducts = useMemo(() => {
+        let filtered = [];
+
+        if (isWarehouse) {
+            const warehouseId = warehouseData || userData?.user_warehouse?.[0]?.id;
+            const prodItems = userData?.production_item || [];
+
+            filtered = prodItems.filter((product) => product.user_warehouse_id === Number(warehouseId));
+
+            if (debouncedSearchValue) {
+                const search = debouncedSearchValue.toLowerCase();
+                filtered = filtered.filter((product) =>
+                    `${product.item_name} ${product.uom} ${product.closing_quantity}`
+                        .toLowerCase()
+                        .includes(search)
+                );
+            }
+        } else {
+            filtered = coreProducts.filter((product) => product.product_nature === "raw-materials");
+
+            if (debouncedSearchValue) {
+                const search = debouncedSearchValue.toLowerCase();
+                filtered = filtered.filter((product) =>
+                    `${product.name} ${product.unit_name} ${product.quantity}`.toLowerCase().includes(search)
+                );
+            }
+        }
+
+        return filtered;
+    }, [isWarehouse, warehouseData, debouncedSearchValue, userData, coreProducts]);
+
+    // ➤ Filter table products by name/display_name (optional)
+    const filteredTableProducts = useMemo(() => {
+        const lower = debouncedSearchValue.toLowerCase();
+        return filteredProducts.filter((product) =>
+            (product.display_name || product.item_name || product.name || "").toLowerCase().includes(lower)
+        );
+    }, [filteredProducts, debouncedSearchValue]);
+
     return (
         <>
             <Box>
@@ -194,18 +222,20 @@ export default function BatchIssueForm(props) {
 
                                         const productToAdd = {
                                             id: data.id,
-                                            product_id: data.id,
-                                            display_name: data.item_name,
+                                            // product_id: data.id,
+                                            stock_item_id: isWarehouse ? data.stock_item_id : data.stock_id,
+                                            display_name: isWarehouse ? data.item_name : data.display_name,
                                             quantity: Number(quantity),
-                                            unit_name: data.uom,
+                                            unit_name: isWarehouse ? data.uom : data.unit_name,
                                             purchase_price: data.purchase_price,
                                             sales_price: data.sales_price,
-                                            stock_quantity: data.stock_quantity,
+                                            stock_quantity: isWarehouse ? data.stock_quantity : data.quantity,
+                                            warehouse_id: isWarehouse ? data.warehouse_id : null,
                                             // type: 'general_issue',
                                         };
 
                                         const existingIndex = updatedItems.findIndex(
-                                            (item) => String(item.product_id) === String(productToAdd.product_id)
+                                            (item) => String(item.stock_item_id) === String(productToAdd.stock_item_id)
                                         );
 
                                         if (existingIndex !== -1) {
@@ -272,7 +302,7 @@ export default function BatchIssueForm(props) {
                                         className={"boxBackground borderRadiusAll"}
                                     >
                                         <Box mt={"8"}></Box>
-                                        {production_config?.is_warehouse == 1 && (
+                                        {isWarehouse == 1 && (
                                             <Box mt={"4"}>
                                                 <SelectForm
                                                     tooltip={t("Warehouse")}
@@ -300,19 +330,19 @@ export default function BatchIssueForm(props) {
                                                     footer: tableCss.footer,
                                                     pagination: tableCss.pagination,
                                                 }}
-                                                records={products}
+                                                records={filteredTableProducts}
                                                 columns={[
                                                     {
-                                                        accessor: "item_name",
+                                                        accessor: isWarehouse ? "item_name" : "display_name",
                                                         title: t("Product"),
                                                         render: (data, index) => (
                                                             <Text fz={11} fw={400}>
-                                                                {index + 1}. {data.item_name}
+                                                                {index + 1}. {isWarehouse ? data.item_name : data.display_name}
                                                             </Text>
                                                         ),
                                                     },
                                                     {
-                                                        accessor: "closing_quantity",
+                                                        accessor: isWarehouse ? "closing_quantity" : "quantity",
                                                         width: 300,
                                                         title: (
                                                             <Group
@@ -370,7 +400,7 @@ export default function BatchIssueForm(props) {
                                                                     }}
                                                                 >
                                                                     <Text fz={9} fw={400} c={"black"}>
-                                                                        {data.closing_quantity}
+                                                                        {isWarehouse ? data.closing_quantity : data.quantity}
                                                                     </Text>
                                                                 </Button>
                                                                 {isMeasurement === 1 ? (
@@ -418,11 +448,9 @@ export default function BatchIssueForm(props) {
                                                                                 borderRightColor: "#905923",
                                                                             },
                                                                         }}
-                                                                        onClick={() => {
-                                                                        }}
                                                                     >
                                                                         <Text fz={9} fw={400} c={"black"}>
-                                                                            {data.uom}
+                                                                            {isWarehouse ? data.uom : data.unit_name}
                                                                         </Text>
                                                                     </Button>
                                                                 )}
@@ -478,23 +506,26 @@ export default function BatchIssueForm(props) {
 
                                                                     onClick={() => {
                                                                         const quantity = productQuantities[data.id];
+                                                                        // console.log(data)
 
                                                                         if (quantity && Number(quantity) > 0) {
                                                                             const productToAdd = {
                                                                                 id: data.id,
-                                                                                product_id: data.id,
-                                                                                display_name: data.item_name,
+                                                                                // product_id: data.id,
+                                                                                stock_item_id: isWarehouse ? data.stock_item_id : data.stock_id,
+                                                                                display_name: isWarehouse ? data.item_name : data.display_name,
                                                                                 quantity: Number(quantity),
-                                                                                unit_name: data.uom,
+                                                                                unit_name: isWarehouse ? data.uom : data.unit_name,
                                                                                 purchase_price: data.purchase_price,
                                                                                 sales_price: data.sales_price,
-                                                                                stock_quantity: data.stock_quantity,
-                                                                                type: 'general_issue',
+                                                                                stock_quantity: isWarehouse ? data.stock_quantity : data.quantity,
+                                                                                warehouse_id: isWarehouse ? data.warehouse_id : null,
+                                                                                // type: 'general_issue',
                                                                             };
 
                                                                             setProductionsRecipeItems(prevItems => {
                                                                                 const existingIndex = prevItems.findIndex(
-                                                                                    item => String(item.product_id) === String(productToAdd.product_id)
+                                                                                    item => String(item.stock_item_id) === String(productToAdd.stock_item_id)
                                                                                 );
 
                                                                                 if (existingIndex !== -1) {
