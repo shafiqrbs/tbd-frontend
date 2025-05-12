@@ -81,7 +81,6 @@ function MainDashboard(props) {
         }
     });
 
-
     // console.log(domainConfig);
     useEffect(() => {
         const checkDomainConfig = () => {

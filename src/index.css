@@ -233,6 +233,12 @@ input[type=radio]:checked + label>img {
     background-color: #905a23!important;
 }
 
+.btnPrimaryBgOutline {
+    color: #905a23!important;
+    background-color: transparent!important;
+    border:  #905a23!important;
+}
+
 .tooltipPrimaryBg {
     background-color: #905a23!important;
 }
