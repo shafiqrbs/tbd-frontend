@@ -133,24 +133,12 @@ function InventoryConfigarationForm() {
           document.getElementById("SalesFormSubmit").click();
         },
       ],
-    ],
-    []
-  );
-
-  useHotkeys(
-    [
       [
-        "alt+p",
+        "alt+p", 
         () => {
           document.getElementById("PurchaseFormSubmit").click();
         },
       ],
-    ],
-    []
-  );
-
-  useHotkeys(
-    [
       [
         "alt+r",
         () => {

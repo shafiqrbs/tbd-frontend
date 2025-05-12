@@ -28,7 +28,7 @@ import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
 
 function PurchaseForm(props) {
 
-  const { vendorGroupDropdownData, height,domainConfigData} = props;
+  const { vendorGroupDropdownData, height, domainConfigData, closeDrawer} = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const {fetchDomainConfig} = getDomainConfig(false)
@@ -119,6 +119,9 @@ function PurchaseForm(props) {
       if (storeEntityData.fulfilled.match(result) && result.payload?.data?.status === 200) {
         fetchDomainConfig()
         showNotificationComponent(t("UpdateSuccessfully"), "teal");
+        setTimeout(() => {
+          closeDrawer();
+        }, 1000);
       } else {
         showNotificationComponent(t("UpdateFailed"), "red");
       }
@@ -147,10 +150,11 @@ function PurchaseForm(props) {
   return (
     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
       <form onSubmit={form.onSubmit(handlePurchaseFormSubmit)}>
-        <Box pt={"xs"} pl={"xs"}>
+        <Box pt={"xs"}>
+          {/* Vendor Group Selection */}
           <Box>
             <Grid columns={24} gutter={{ base: 1 }}>
-              <Grid.Col span={12} fz={"sm"} mt={8}>
+              <Grid.Col span={12} fz={"sm"} mt={8} pl="xs">
                 {t("VendorGroup")}
               </Grid.Col>
               <Grid.Col span={11}>
@@ -171,35 +175,63 @@ function PurchaseForm(props) {
               </Grid.Col>
             </Grid>
           </Box>
-          <Box>
-            <InputCheckboxForm form={form} label={t('PurchaseByPurchasePrice')} field={'is_purchase_by_purchase_price'}  name={'is_purchase_by_purchase_price'} />
+
+          {/* Purchase Settings */}
+          <Box bg="gray.1" px="sm" py="xs" mt="xs">
+            <Text fz={14} fw={600}>Purchase Settings</Text>
           </Box>
-          <Box>
-            <InputCheckboxForm form={form} label={t('SearchByVendor')} field={'search_by_vendor'}  name={'search_by_vendor'} />
+          <Box pl="sm">
+            <Box>
+              <InputCheckboxForm form={form} label={t('PurchaseByPurchasePrice')} field={'is_purchase_by_purchase_price'}  name={'is_purchase_by_purchase_price'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('PurchaseAutoApproved')} field={'is_purchase_auto_approved'}  name={'is_purchase_auto_approved'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('BonusQuantity')} field={'is_bonus_quantity'}  name={'is_bonus_quantity'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('ItemPercent')} field={'item_percent'}  name={'item_percent'} />
+            </Box>
           </Box>
-          <Box>
-            <InputCheckboxForm form={form} label={t('SearchByProductNature')} field={'search_by_product_nature'}  name={'search_by_product_nature'} />
+
+          {/* Product & Configuration */}
+          <Box bg="gray.1" px="sm" py="xs" mt="xs">
+            <Text fz={14} fw={600}>Product & Configuration</Text>
           </Box>
-          <Box>
-            <InputCheckboxForm form={form} label={t('SearchByCategory')} field={'search_by_category'}  name={'search_by_category'} />
+          <Box pl="sm">
+            <Box>
+              <InputCheckboxForm form={form} label={t('IsBarcode')} field={'is_barcode'}  name={'is_barcode'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('MeasurementEnabled')} field={'is_measurement_enable'}  name={'is_measurement_enable'} />
+            </Box>
           </Box>
-          <Box>
-            <InputCheckboxForm form={form} label={t('IsBarcode')} field={'is_barcode'}  name={'is_barcode'} />
+
+          {/* Search & Filtering */}
+          <Box bg="gray.1" px="sm" py="xs" mt="xs">
+            <Text fz={14} fw={600}>Search & Filtering</Text>
           </Box>
-          <Box>
-            <InputCheckboxForm form={form} label={t('MeasurementEnabled')} field={'is_measurement_enable'}  name={'is_measurement_enable'} />
+          <Box pl="sm">
+            <Box>
+              <InputCheckboxForm form={form} label={t('SearchByVendor')} field={'search_by_vendor'}  name={'search_by_vendor'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('SearchByProductNature')} field={'search_by_product_nature'}  name={'search_by_product_nature'} />
+            </Box>
+            <Box>
+              <InputCheckboxForm form={form} label={t('SearchByCategory')} field={'search_by_category'}  name={'search_by_category'} />
+            </Box>
           </Box>
-          <Box>
-            <InputCheckboxForm form={form} label={t('PurchaseAutoApproved')} field={'is_purchase_auto_approved'}  name={'is_purchase_auto_approved'} />
+
+          {/* Inventory & Storage */}
+          <Box bg="gray.1" px="sm" py="xs" mt="xs">
+            <Text fz={14} fw={600}>Inventory & Storage</Text>
           </Box>
-          <Box>
-            <InputCheckboxForm form={form} label={t('Warehouse')} field={'is_warehouse'}  name={'is_warehouse'} />
-          </Box>
-          <Box>
-            <InputCheckboxForm form={form} label={t('BonusQuantity')} field={'is_bonus_quantity'}  name={'is_bonus_quantity'} />
-          </Box>
-          <Box>
-            <InputCheckboxForm form={form} label={t('ItemPercent')} field={'item_percent'}  name={'item_percent'} />
+          <Box pl="sm">
+            <Box>
+              <InputCheckboxForm form={form} label={t('Warehouse')} field={'is_warehouse'}  name={'is_warehouse'} />
+            </Box>
           </Box>
         </Box>
         <Button

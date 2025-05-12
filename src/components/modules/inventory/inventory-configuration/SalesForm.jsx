@@ -117,8 +117,8 @@ function SalesForm({ customerGroupDropdownData, height, id, config_sales, closeD
       setSaveCreateLoading(true);
       const result = await dispatch(storeEntityData(payload));
       if (storeEntityData.fulfilled.match(result) && result.payload?.data?.status === 200) {
-        showNotificationComponent(t("UpdateSuccessfully"), "teal");
         fetchDomainConfig()
+        showNotificationComponent(t("UpdateSuccessfully"), "teal");
         setTimeout(() => {
           closeDrawer()
         }, 1000)

@@ -1,8 +1,8 @@
 import { t } from "i18next";
 import { useEffect, useState } from "react";
 import genericClass from "../../../../assets/css/Generic.module.css";
-import { Box, Grid, Tooltip, ActionIcon, Group, Text } from "@mantine/core";
-import { IconMessage, IconEyeEdit, IconUserCircle } from "@tabler/icons-react";
+import { Box, Grid, Tooltip, ActionIcon, Group, Text, Overlay  } from "@mantine/core";
+import { IconMessage, IconEyeEdit, IconUserCircle, IconUserPlus } from "@tabler/icons-react";
 import InputForm from "../../../form-builders/InputForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput";
 import { useTranslation } from "react-i18next";
@@ -25,7 +25,7 @@ export default function __PosVendorSection(props) {
     setDefaultVendorId,
   } = props;
   const { t, i18n } = useTranslation();
-
+  const [openAddVendorGroup, setOpenAddVendorGroup] = useState(false);
   //fetching customer dropdownData
   useEffect(() => {
     const fetchVendors = async () => {
@@ -62,6 +62,7 @@ export default function __PosVendorSection(props) {
 
       if (foundVendors) {
         setVendorObject(foundVendors);
+        setOpenAddVendorGroup(false);
       }
     }
   }, [vendorData]);
@@ -96,7 +97,7 @@ export default function __PosVendorSection(props) {
                       mt={"4"}
                       style={{ textAlign: "right", float: "right" }}
                     >
-                      <Group>
+                      <Group gap="8">
                         <Tooltip
                           multiline
                           bg={"orange.8"}
@@ -166,6 +167,31 @@ export default function __PosVendorSection(props) {
                             <IconEyeEdit size={18} stroke={1.5} />
                           </ActionIcon>
                         </Tooltip>
+                        <Tooltip
+													multiline
+													bg={"orange.8"}
+													position="top"
+													withArrow
+													offset={{ crossAxis: "-45", mainAxis: "5" }}
+													ta={"center"}
+													transitionProps={{ duration: 200 }}
+													label={t("Select Vendor Group")}
+												>
+													<ActionIcon
+														variant="filled"
+														style={{ backgroundColor: "white" }}
+														onClick={() => {
+															setOpenAddVendorGroup(true);
+														}}
+														disabled={vendorData}
+													>
+														<IconUserPlus
+															size={18}
+															stroke={1.5}
+															color="gray"
+														/>
+													</ActionIcon>
+												</Tooltip>
                       </Group>
                     </Box>
                   </Grid.Col>
@@ -262,7 +288,17 @@ export default function __PosVendorSection(props) {
             </Box>
           </Grid.Col>
           <Grid.Col span={8} style={{ borderRadius:4}} className={genericClass.genericSecondaryBg}>
-            <Box pl={"4"} pr={"4"}>
+            <Box pl={"4"} pr={"4"} pos="relative">
+              <Overlay
+								hidden={openAddVendorGroup}
+								opacity={0.8}
+								zIndex={30}
+								pos="absolute"
+								top={0}
+								backgroundOpacity={0.1}
+								blur={1.2}
+								radius="sm"
+							/>
               <Box mt={"4"}>
                 <InputForm
                   tooltip={t("NameValidateMessage")}
