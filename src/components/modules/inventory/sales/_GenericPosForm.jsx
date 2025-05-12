@@ -481,7 +481,8 @@ function _GenericPosForm({domainConfigData}) {
                     </Grid.Col>
                     <Grid.Col span={5} align="center">
                       <Group justify="flex-end" align="center" gap={4}>
-                        {salesByBarcode && (
+                        
+                        {salesByBarcode && salesConfig?.show_product && (
                             <SegmentedControl
                                 size="xs"
                                 styles={{

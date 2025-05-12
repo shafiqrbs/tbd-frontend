@@ -717,5 +717,6 @@
   "Core Manager" : "কোর ম্যানেজার",
   "Core Admin" : "কোর অ্যাডমিন",
   "Inventory & Product" : "ইনভেন্টরি এবং প্রোডাক্ট",
-  "" : ""
+  "ItemPercent" : "আইটেম পার্সেন্ট",
+  "EarnPoint": "পয়েন্ট আর্ন"
 }

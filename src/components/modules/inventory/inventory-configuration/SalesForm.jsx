@@ -11,9 +11,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent";
 import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
 
-
-function SalesForm({ customerGroupDropdownData, height, id ,config_sales }) {
-
+function SalesForm({ customerGroupDropdownData, height, id, config_sales, closeDrawer }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -119,8 +117,11 @@ function SalesForm({ customerGroupDropdownData, height, id ,config_sales }) {
       setSaveCreateLoading(true);
       const result = await dispatch(storeEntityData(payload));
       if (storeEntityData.fulfilled.match(result) && result.payload?.data?.status === 200) {
-        fetchDomainConfig()
         showNotificationComponent(t("UpdateSuccessfully"), "teal");
+        fetchDomainConfig()
+        setTimeout(() => {
+          closeDrawer()
+        }, 1000)
       } else {
         showNotificationComponent(t("UpdateFailed"), "red");
       }
@@ -141,10 +142,10 @@ function SalesForm({ customerGroupDropdownData, height, id ,config_sales }) {
   return (
       <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
         <form onSubmit={form.onSubmit(handleSalesFormSubmit)}>
-          <Box pt="xs" pl="xs">
+          <Box pt="xs">
 
             {/* CustomerGroup Field */}
-            <Box>
+            <Box pl="sm">
               <Grid columns={24} gutter={{ base: 1 }}>
                 <Grid.Col span={12} fz="sm" mt={8}>
                   {t("CustomerGroup")}
@@ -167,50 +168,73 @@ function SalesForm({ customerGroupDropdownData, height, id ,config_sales }) {
               </Grid>
             </Box>
 
-            <Box>
-              <InputCheckboxForm form={form} label={t('DiscountWithCustomer')} field={'discount_with_customer'}  name={'discount_with_customer'} />
+            <Box bg="gray.1" px="sm" py="xs" mt="xs">
+              <Text fz={14} fw={600}>Customer Settings</Text>
             </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('DueSalesWithoutCustomer')} field={'due_sales_without_customer'}  name={'due_sales_without_customer'} />
+            <Box pl="sm">
+              <Box>
+                <InputCheckboxForm form={form} label={t('DiscountWithCustomer')} field={'discount_with_customer'}  name={'discount_with_customer'} />
+              </Box>
+              <Box>
+                <InputCheckboxForm form={form} label={t('DueSalesWithoutCustomer')} field={'due_sales_without_customer'}  name={'due_sales_without_customer'} />
+              </Box>
+              <Box>
+                <InputCheckboxForm form={form} label={t('BonusQuantity')} field={'is_bonus_quantity'}  name={'is_bonus_quantity'} />
+              </Box>
             </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('ShowBarcode')} field={'is_barcode'}  name={'is_barcode'} />
+
+            <Box bg="gray.1" px="sm" py="xs" mt="xs">
+              <Text fz={14} fw={600}>Sales & Pricing Settings</Text>
             </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('MeasurementEnable')} field={'is_measurement_enable'}  name={'is_measurement_enable'} />
+            <Box pl="sm">
+              <Box>
+                <InputCheckboxForm form={form} label={t('MultiPrice')} field={'is_multi_price'}  name={'is_multi_price'} />
+              </Box>
+              <Box>
+                <InputCheckboxForm form={form} label={t('SalesAutoApproved')} field={'is_sales_auto_approved'}  name={'is_sales_auto_approved'} />
+              </Box>
+              <Box>
+                <InputCheckboxForm form={form} label={t('ItemSalesPercent')} field={'item_sales_percent'}  name={'item_sales_percent'} />
+              </Box>
+              <Box>
+                <InputCheckboxForm form={form} label={t('ZeroReceiveAllow')} field={'is_zero_receive_allow'}  name={'is_zero_receive_allow'} />
+              </Box>
+              <Box>
+                <InputCheckboxForm form={form} label={t('ZeroStock')} field={'zero_stock'}  name={'zero_stock'} />
+              </Box>
             </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('ZeroReceiveAllow')} field={'is_zero_receive_allow'}  name={'is_zero_receive_allow'} />
+
+            <Box bg="gray.1" px="sm" py="xs" mt="xs">
+              <Text fz={14} fw={600}>Product Display & Search Options</Text>
             </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('MultiPrice')} field={'is_multi_price'}  name={'is_multi_price'} />
+            <Box pl="sm">
+              <Box>
+                <InputCheckboxForm form={form} label={t('ShowProduct')} field={'show_product'}  name={'show_product'} />
+              </Box>
+              <Box>
+                <InputCheckboxForm form={form} label={t('ShowBarcode')} field={'is_barcode'}  name={'is_barcode'} />
+              </Box>
+              <Box>
+                <InputCheckboxForm form={form} label={t('SearchByCategory')} field={'search_by_category'}  name={'search_by_category'} />
+              </Box>
+              <Box>
+                <InputCheckboxForm form={form} label={t('SearchByProductNature')} field={'search_by_product_nature'}  name={'search_by_product_nature'} />
+              </Box>
+              <Box>
+                <InputCheckboxForm form={form} label={t('SearchByVendor')} field={'search_by_vendor'}  name={'search_by_vendor'} />
+              </Box>
+              <Box>
+                <InputCheckboxForm form={form} label={t('SearchByWarehouse')} field={'search_by_warehouse'}  name={'search_by_warehouse'} />
+              </Box>
             </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('SalesAutoApproved')} field={'is_sales_auto_approved'}  name={'is_sales_auto_approved'} />
+
+            <Box bg="gray.1" px="sm" py="xs" mt="xs">
+              <Text fz={14} fw={600}>Product Configuration</Text>
             </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('SearchByCategory')} field={'search_by_category'}  name={'search_by_category'} />
-            </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('SearchByProductNature')} field={'search_by_product_nature'}  name={'search_by_product_nature'} />
-            </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('SearchByVendor')} field={'search_by_vendor'}  name={'search_by_vendor'} />
-            </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('SearchByWarehouse')} field={'search_by_warehouse'}  name={'search_by_warehouse'} />
-            </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('ShowProduct')} field={'show_product'}  name={'show_product'} />
-            </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('BonusQuantity')} field={'is_bonus_quantity'}  name={'is_bonus_quantity'} />
-            </Box>
-             <Box>
-              <InputCheckboxForm form={form} label={t('ItemSalesPercent')} field={'item_sales_percent'}  name={'item_sales_percent'} />
-            </Box>
-            <Box>
-              <InputCheckboxForm form={form} label={t('ZeroStock')} field={'zero_stock'}  name={'zero_stock'} />
+            <Box pl="sm">
+              <Box>
+                <InputCheckboxForm form={form} label={t('MeasurementEnable')} field={'is_measurement_enable'}  name={'is_measurement_enable'} />
+              </Box>
             </Box>
 
           </Box>
