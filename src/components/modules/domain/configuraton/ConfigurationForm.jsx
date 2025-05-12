@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {useOutletContext, useParams} from "react-router-dom";
-import {Button, Flex, Grid, Box, ScrollArea, Text, Title, Stack, LoadingOverlay} from "@mantine/core";
+import {Button, Flex, Grid, Group, Box, ScrollArea, Text, Title, Stack, LoadingOverlay, rem} from "@mantine/core";
 import {useTranslation} from 'react-i18next';
-import { IconDeviceFloppy} from "@tabler/icons-react";
-import {useHotkeys} from "@mantine/hooks";
+import {IconCheck, IconDeviceFloppy, IconRestore} from "@tabler/icons-react";
+import {useDisclosure, useHotkeys} from "@mantine/hooks";
 import {useDispatch} from "react-redux";
 import {isNotEmpty, useForm} from "@mantine/form";
 import Shortcut from "../../shortcut/Shortcut.jsx";
@@ -21,13 +21,16 @@ import {showEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import getSettingPosInvoiceModeDropdownData
     from "../../../global-hook/dropdown/getSettingPosInvoiceModeDropdownData.js";
+import {modals} from "@mantine/modals";
+import {deleteEntityData} from "../../../../store/inventory/crudSlice";
+import {notifications} from "@mantine/notifications";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
 
 function ConfigurationForm() {
     const {id} = useParams()
     const [configData, setConfigData] = useState(null);
     const [formLoad, setFormLoad] = useState(true);
     const dispatch = useDispatch();
-
     const [countryId, setCountryId] = useState(configData?.country_id?.toString() || '');
     const [businessModelId, setBusinessModelId] = useState(configData?.business_model_id?.toString() || '');
     const [posInvoiceModeId, setPosInvoiceModeId] = useState(configData?.pos_invoice_mode_id?.toString() || '');
@@ -67,7 +70,7 @@ function ConfigurationForm() {
     const businessModelDropdown = getSettingBusinessModelDropdownData()
     const countryDropdown = getCountryDropdownData()
     const currencyDropdown = getCurrencyDropdownData()
-
+    const [configFetching,setConfigFetching] = useState(true)
     const [setFormData, setFormDataForUpdate] = useState(false);
 
     const [files, setFiles] = useState([]);
@@ -145,7 +148,7 @@ function ConfigurationForm() {
         setFormDataForUpdate(true)
     }, [dispatch])
 
-
+    const [loading, { toggle }] = useDisclosure();
     useHotkeys([['alt+n', () => {
         document.getElementById('BusinessModel').click()
     }]], []);
@@ -970,8 +973,8 @@ function ConfigurationForm() {
                                                 <Grid.Col span={6}>
                                                     <Stack right align="flex-end">
                                                         <>
-                                                            {
-                                                                !saveCreateLoading && isOnline &&
+                                                            {!saveCreateLoading && isOnline &&(
+                                                            <Group>
                                                                 <Button
                                                                     size="xs"
                                                                     className={"btnPrimaryBg"}
@@ -982,11 +985,51 @@ function ConfigurationForm() {
 
                                                                     <Flex direction={`column`} gap={0}>
                                                                         <Text fz={14} fw={400}>
-                                                                            {t("UpdateAndSave")}
+                                                                            {t("Save")}
                                                                         </Text>
                                                                     </Flex>
                                                                 </Button>
-                                                            }
+                                                                <Button
+                                                                    size="xs"
+                                                                    className={"btnPrimaryBgOutline"}
+                                                                    onClick={() => {
+                                                                        modals.openConfirmModal({
+                                                                            title: (
+                                                                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                            ),
+                                                                            children: (
+                                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                            ),
+                                                                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                            confirmProps: {color: 'red.6'},
+                                                                            onCancel: () => console.log('Cancel'),
+                                                                            onConfirm: () => {
+                                                                                dispatch(showEntityData('domain/restore/' + configData.domain_id))
+                                                                                setConfigFetching(true)
+                                                                                notifications.show({
+                                                                                    color: 'teal',
+                                                                                    title: t('Restore'),
+                                                                                    icon: <IconCheck
+                                                                                        style={{width: rem(18), height: rem(18)}}/>,
+                                                                                    loading: false,
+                                                                                    autoClose: 700,
+                                                                                    style: {backgroundColor: 'lightgray'},
+                                                                                });
+                                                                            },
+                                                                        });
+                                                                    }}
+                                                                    id="EntityFormSubmit"
+                                                                    leftSection={<IconRestore size={16}/>}
+                                                                >
+
+                                                                    <Flex direction={`column`} gap={0}>
+                                                                        <Text fz={14} fw={400}>
+                                                                            {t("Restore")}
+                                                                        </Text>
+                                                                    </Flex>
+                                                                </Button>
+                                                            </Group>
+                                                            )}
                                                         </>
                                                     </Stack>
                                                 </Grid.Col>
