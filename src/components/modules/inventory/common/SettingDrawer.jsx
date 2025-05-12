@@ -24,7 +24,6 @@ import FormGeneric from "../inventory-configuration/FormGeneric.jsx";
 import { coreSettingDropdown } from "../../../../store/core/utilitySlice.js";
 import { setDropdownLoad } from "../../../../store/core/crudSlice.js";
 import { useDispatch, useSelector } from "react-redux";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function SettingDrawer(props) {
   const {
@@ -93,6 +92,7 @@ function SettingDrawer(props) {
             config_sales={config_sales}
             id={id}
             domainConfigData={domainConfigData}
+            closeDrawer={closeDrawer}
           />
         );
       case "Purchase":
@@ -102,6 +102,7 @@ function SettingDrawer(props) {
             domainConfigData={domainConfigData}
             id={id}
             vendorGroupDropdownData={groupVendorDropdownData}
+            closeDrawer={closeDrawer}
           />
         );
       case "Requisition":
@@ -110,11 +111,12 @@ function SettingDrawer(props) {
             height={height}
             config_requisition={config_requisition}
             id={id}
+            closeDrawer={closeDrawer}
           />
         );
       default:
         return (
-          <FormGeneric height={height} salesConfig={domainConfigData?.inventory_config?.config_sales} id={id} />
+          <FormGeneric height={height} salesConfig={domainConfigData?.inventory_config?.config_sales} id={id} closeDrawer={closeDrawer} />
         );
     }
   };
@@ -204,7 +206,7 @@ function SettingDrawer(props) {
                     </Grid.Col>
                   </Grid>
                 </Box>
-                <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
+                <Box className={"borderRadiusAll"}>
                   {renderForm()}
                 </Box>
               </Box>

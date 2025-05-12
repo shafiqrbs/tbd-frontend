@@ -13,7 +13,12 @@
     opacity: 1;
 }
 
-.input{
+
+.input {
+    &:focus-within {
+        border: 1px solid #343a40;
+        border-color: #343a40;
+    }
     transition: none;
 }
 
