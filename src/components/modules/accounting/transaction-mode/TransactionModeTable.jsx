@@ -100,65 +100,43 @@ function TransactionModeTable(props) {
                             title: t("Action"),
                             textAlign: "right",
                             render: (data) => (
-                                <Group gap={4} justify="right" wrap="nowrap">
-                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
-                                        <Menu.Target>
-                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
-                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
-                                            </ActionIcon>
-                                        </Menu.Target>
-                                        <Menu.Dropdown>
-                                            <Menu.Item
-                                                onClick={() => {
-                                                    dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('accounting/transaction-mode/' + data.id))
-                                                    dispatch(setFormLoading(true))
-                                                    navigate(`/accounting/transaction-mode/${data.id}`);
-                                                }}
-                                            >
-                                                {t('Edit')}
-                                            </Menu.Item>
+                                <>
+                                {data.is_private !== 1 &&(
+                                        <Group gap={4} justify="right" wrap="nowrap">
+                                            <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                                <Menu.Target>
+                                                    <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
+                                                        <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </Menu.Target>
+                                                <Menu.Dropdown>
+                                                    <Menu.Item
+                                                        onClick={() => {
+                                                            dispatch(setInsertType('update'))
+                                                            dispatch(editEntityData('accounting/transaction-mode/' + data.id))
+                                                            dispatch(setFormLoading(true))
+                                                            navigate(`/accounting/transaction-mode/${data.id}`);
+                                                        }}
+                                                    >
+                                                        {t('Edit')}
+                                                    </Menu.Item>
 
-                                            <Menu.Item
-                                                onClick={() => {
-                                                    console.log('ok')
-                                                }}
-                                                target="_blank"
-                                                component="a"
-                                                w={'200'}
-                                            >
-                                                {t('Show')}
-                                            </Menu.Item>
-                                            {/*<Menu.Item
-                                                target="_blank"
-                                                component="a"
-                                                w={'200'}
-                                                mt={'2'}
-                                                bg={'red.1'}
-                                                c={'red.6'}
-                                                onClick={() => {
-                                                    modals.openConfirmModal({
-                                                        title: (
-                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                        ),
-                                                        children: (
-                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                        ),
-                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                        onCancel: () => console.log('Cancel'),
-                                                        onConfirm: () => {
-                                                            dispatch(deleteEntityData('core/customer/' + data.id))
-                                                            dispatch(setFetching(true))
-                                                        },
-                                                    });
-                                                }}
-                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
-                                            >
-                                                {t('Delete')}
-                                            </Menu.Item>*/}
-                                        </Menu.Dropdown>
-                                    </Menu>
-                                </Group>
+                                                    <Menu.Item
+                                                        onClick={() => {
+                                                            console.log('ok')
+                                                        }}
+                                                        target="_blank"
+                                                        component="a"
+                                                        w={'200'}
+                                                    >
+                                                        {t('Show')}
+                                                    </Menu.Item>
+                                                </Menu.Dropdown>
+                                            </Menu>
+                                        </Group>
+                                    )}
+                                    </>
+
                             ),
                         },
                     ]

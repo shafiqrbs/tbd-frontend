@@ -159,6 +159,8 @@ function SettingsTable(props) {
                             title: t("Action"),
                             textAlign: "right",
                             render: (data) => (
+                                <>
+                                {data.is_private !== 1 &&(
                                 <Group gap={4} justify="right" wrap="nowrap">
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                         <Menu.Target>
@@ -230,6 +232,8 @@ function SettingsTable(props) {
                                         </Menu.Dropdown>
                                     </Menu>
                                 </Group>
+                                )}
+                                </>
                             ),
                         },
                     ]
