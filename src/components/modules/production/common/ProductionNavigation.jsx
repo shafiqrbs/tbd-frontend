@@ -21,13 +21,31 @@ const navItems = [
     create:false,
     route:''
   },
+
+  {
+    labelKey: "GeneralIssue",
+    icon: <IconDashboard size={16} color="white"/>,
+    color: "#4CAF50",
+    path: "/production/issue-production/general",
+    create:false,
+    route:''
+  },
   {
     labelKey: "GeneralProductionIssue",
     icon: <IconDashboard size={16} color="white"/>,
-    color: "#4CAF50",
+    color: "#F59E0B",
     path: "/production/issue-production-general",
     create:true,
     route:'production/issue'
+  },
+
+  {
+    labelKey: "BatchIssue",
+    icon: <IconDashboard size={16} color="white"/>,
+    color: "#4CAF50",
+    path: "/production/issue-production/batch",
+    create:false,
+    route:''
   },
   {
     labelKey: "BatchProdcutionIssue",

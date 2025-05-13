@@ -1128,5 +1128,12 @@
   "ItemPercent": "Item Percent",
   "EarnPoint": "Earn Point",
   "AccountOpeningStockData": "Account Opening Stock",
-  "xxxxxx": "xxxxxxx"
+  "LoadingProducts": "Product loading...",
+  "IssueBy": "Issue by",
+  "IssueType": "Issue type",
+  "IssueIndex": "Production issue",
+  "GeneralIssue": "General issue",
+  "BatchIssue": "Batch issue",
+  "xxxxxx": "xxxxxxx",
+  "": ""
 }

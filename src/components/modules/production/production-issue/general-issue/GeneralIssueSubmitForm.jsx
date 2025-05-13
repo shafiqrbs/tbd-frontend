@@ -1,5 +1,5 @@
 import {useForm} from "@mantine/form";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {
     Box,
     Text,
@@ -18,10 +18,9 @@ import {
     IconPrinter,
     IconDeviceFloppy
 } from "@tabler/icons-react";
-import {useOutletContext} from "react-router-dom";
+import {useOutletContext, useParams} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {IconCalendar} from "@tabler/icons-react";
-import {storeEntityData} from "../../../../../store/core/crudSlice.js";
 import genericClass from "../../../../../assets/css/Generic.module.css";
 import DatePickerForm from "../../../../form-builders/DatePicker.jsx";
 import SelectForm from "../../../../form-builders/SelectForm.jsx";
@@ -31,12 +30,16 @@ import classes from "../../../../../assets/css/FeaturesCards.module.css";
 import TextAreaForm from "../../../../form-builders/TextAreaForm";
 import inputCss from "../../../../../assets/css/InputField.module.css";
 import {showNotificationComponent} from "../../../../core-component/showNotificationComponent.jsx";
+import dayjs from "dayjs";
+import {updateEntityData} from "../../../../../store/core/crudSlice.js";
 
 export default function GeneralIssueSubmitForm(props) {
     const {
-        setLoadCardProducts,
-        loadCardProducts,
+        productionsRecipeItems,
+        productionsIssueData,
+        setProductionsRecipeItems
     } = props;
+    const {id} = useParams();
 
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -45,19 +48,39 @@ export default function GeneralIssueSubmitForm(props) {
     const dispatch = useDispatch();
 
     const form = useForm({
-        initialValues: {},
-        validate: {},
+        initialValues: {
+            invoice_date: '',
+            issued_to_type: '',
+            factory_id: '',
+            vendor_id: '',
+            warehouse_id: '',
+            issued_by_id: '',
+            narration: '',
+        },
+        validate: {
+            // issued_to_type: isNotEmpty(t('ChooseIssueType')),
+        },
     });
-    // temp cart product hook
-    const [tempCardProducts, setTempCardProducts] = useState([]);
 
-    //load cart products from local storage
     useEffect(() => {
-        const tempProducts = localStorage.getItem("temp-production-issue");
-        setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        setLoadCardProducts(false);
-    }, [loadCardProducts]);
+        if (productionsIssueData) {
+            setIssueType(String(productionsIssueData.issue_type) || null);
+            setWarehouseId(String(productionsIssueData.issue_warehouse_id) || null);
+            setVendorId(String(productionsIssueData.vendor_id) || null);
+            setIssuedById(String(productionsIssueData.issued_by_id) || null);
 
+            form.setValues({
+                invoice_date: productionsIssueData.invoice_date
+                    ? dayjs(productionsIssueData.invoice_date, 'DD-MM-YYYY').toDate()
+                    : new Date(),
+                issued_to_type: productionsIssueData.issued_to_type || '',
+                vendor_id: productionsIssueData.vendor_id || '',
+                warehouse_id: productionsIssueData.warehouse_id || '',
+                issued_by_id: productionsIssueData.issued_by_id || '',
+                narration: productionsIssueData.narration || '',
+            });
+        }
+    }, [productionsIssueData]);
 
     // sales by user hook
     const [salesByDropdownData, setSalesByDropdownData] = useState(null);
@@ -76,12 +99,6 @@ export default function GeneralIssueSubmitForm(props) {
         }
     }, []);
 
-    const [lastClicked, setLastClicked] = useState(null);
-    const handleClick = (event) => {
-        const clickedButton = event.currentTarget.name;
-        setLastClicked(clickedButton);
-    };
-
     let warehouseDropdownData = getCoreWarehouseDropdownData();
     let vendorDropdownData = getVendorDropdownData();
     const [issueType, setIssueType] = useState("");
@@ -90,129 +107,167 @@ export default function GeneralIssueSubmitForm(props) {
     const [warehouseId, setWarehouseId] = useState("");
     const [issuedById, setIssuedById] = useState("");
 
+    const columns = useMemo(() => [
+        {
+            accessor: "index",
+            title: t("S/N"),
+            textAlignment: "right",
+            width: "50px",
+            render: (item) => productionsRecipeItems.indexOf(item) + 1,
+        },
+        {
+            accessor: "display_name",
+            title: t("Name"),
+            width: "200px",
+            footer: (
+                <Group spacing="xs">
+                    <IconSum size="1.25em"/>
+                    <Text mb={-2}>
+                        {productionsRecipeItems.length} {t("Items")}
+                    </Text>
+                </Group>
+            ),
+        },
+        {
+            accessor: "stock_quantity",
+            title: t("Stock"),
+            textAlign: "center",
+        },
+        {
+            accessor: "quantity",
+            title: t("Quantity"),
+            textAlign: "center",
+            width: "100px",
+            render: (item) => {
+                const handleQuantityChange = (e) => {
+                    const newQuantity = Number(e.currentTarget.value);
+                    setProductionsRecipeItems((prevItems) =>
+                        prevItems.map((product) =>
+                            product.stock_item_id === item.stock_item_id
+                                ? {...product, quantity: newQuantity}
+                                : product
+                        )
+                    );
+                };
 
-    const EditableQuantityCell = ({item, setLoadCardProducts}) => {
-        const [editedQuantity, setEditedQuantity] = useState(item.quantity);
+                return (
+                    <TextInput
+                        type="number"
+                        size="xs"
+                        value={item.quantity ?? ""}
+                        onChange={handleQuantityChange}
+                    />
+                );
+            },
+        },
+        {
+            accessor: "unit_name",
+            title: t("UOM"),
+            textAlign: "center",
+        },
+        {
+            accessor: "action",
+            title: t("Action"),
+            textAlign: "right",
+            render: (item) => (
+                <Group gap={4} justify="right" wrap="nowrap">
+                    <ActionIcon
+                        size="sm"
+                        variant="outline"
+                        radius="xl"
+                        color="red"
+                        onClick={() => {
+                            // const dataString = localStorage.getItem("temp-production-issue");
+                            // let data = dataString ? JSON.parse(dataString) : [];
+                            //
+                            // data = data.filter((d) => d.product_id !== item.product_id);
+                            //
+                            // const updatedDataString = JSON.stringify(data);
 
-        useEffect(() => {
-            setEditedQuantity(item.quantity); // re-sync with parent data update
-        }, [item.quantity]);
+                            // localStorage.setItem("temp-production-issue", updatedDataString);
+                        }}
+                    >
+                        <IconX
+                            size={16}
+                            style={{width: "70%", height: "70%"}}
+                            stroke={1.5}
+                        />
+                    </ActionIcon>
+                </Group>
+            ),
+        },
+    ], [productionsRecipeItems, setProductionsRecipeItems]);
 
-        const handleQuantityChange = (e) => {
-            const newQuantity = e.currentTarget.value;
-            setEditedQuantity(newQuantity);
+    const handleFormSubmit = async (values) => {
+        const transformedArray = productionsRecipeItems.map((product) => ({
+            stock_item_id: product.stock_item_id,
+            product_warehouse_id: product?.warehouse_id || null,
+            display_name: product.display_name,
+            quantity: product.quantity,
+            batch_quantity: product?.total_quantity || null,
+            unit_name: product.unit_name,
+            purchase_price: product.purchase_price,
+            sub_total: product.quantity * product.sales_price,
+            sales_price: product.sales_price,
+        }));
+        const options = {year: "numeric", month: "2-digit", day: "2-digit"};
+        const formValue = {};
+        formValue["issue_date"] = values.invoice_date
+            ? new Date(values.invoice_date).toLocaleDateString("en-CA", options)
+            : new Date().toLocaleDateString("en-CA");
+        formValue["issued_by_id"] = form.values.issued_by_id;
+        formValue["issue_type"] = issueType;
+        formValue["type"] = 'general';
+        if (issueType === "factory") {
+            formValue["factory_id"] = form.values.factory_id;
+        } else if (issueType === "vendor") {
+            formValue["vendor_id"] = form.values.vendor_id;
+        } else if (issueType === "warehouse") {
+            formValue["issue_warehouse_id"] = form.values.warehouse_id;
+        }
+        formValue["items"] = transformedArray;
+        formValue["narration"] = form.values.narration;
 
-            // Update localStorage
-            const tempCardProducts = localStorage.getItem("temp-production-issue");
-            const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+        formValue["items"] = transformedArray;
 
-            const updatedProducts = cardProducts.map((product) => {
-                if (product.product_id === item.product_id) {
-                    return {
-                        ...product,
-                        quantity: newQuantity,
-                        sub_total: newQuantity * item.sales_price,
-                    };
-                }
-                return product;
-            });
+        const value = {
+            url: 'production/issue/' + id,
+            data: formValue
+        }
 
-            localStorage.setItem("temp-production-issue", JSON.stringify(updatedProducts));
+        const resultAction = await dispatch(updateEntityData(value));
+        if (updateEntityData.rejected.match(resultAction)) {
+            const fieldErrors = resultAction.payload.errors;
 
-            // Force reload of parent data
-            setLoadCardProducts(prev => !prev); // toggle works best
-        };
+            // Check if there are field validation errors and dynamically set them
+            if (fieldErrors) {
+                const errorObject = {};
+                Object.keys(fieldErrors).forEach(key => {
+                    errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                });
+                // Display the errors using your form's `setErrors` function dynamically
+                form.setErrors(errorObject);
+            }
+        } else if (updateEntityData.fulfilled.match(resultAction)) {
 
-        return (
-            <TextInput
-                type="number"
-                size="xs"
-                value={editedQuantity}
-                onChange={handleQuantityChange}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        document.getElementById(
-                            "inline-update-quantity-" + item.product_id
-                        )?.focus();
-                    }
-                }}
-            />
-        );
-    };
+            showNotificationComponent(t('CreateSuccessfully'), 'teal')
+
+            setTimeout(() => {
+                setFactoryId(null)
+                setVendorId(null)
+                setIssueType(null)
+                setWarehouseId(null)
+                setIssuedById(null)
+                setProductionsRecipeItems([])
+                form.reset();
+            }, 700)
+        }
+    }
 
 
     return (
         <>
-            <form
-                onSubmit={form.onSubmit(async (values) => {
-                    const tempProducts = localStorage.getItem("temp-production-issue");
-                    const items = tempProducts ? JSON.parse(tempProducts) : [];
-
-                    const transformedArray = items.map((product) => ({
-                        product_id: product.product_id,
-                        product_warehouse_id: product?.product_warehouse_id || null,
-                        display_name: product.display_name,
-                        quantity: product.quantity,
-                        unit_name: product.unit_name,
-                        purchase_price: product.purchase_price,
-                        sub_total: product.sub_total,
-                        sales_price: product.sales_price,
-                        type: 'general_issue',
-                    }));
-                    const options = {year: "numeric", month: "2-digit", day: "2-digit"};
-                    const formValue = {};
-                    formValue["issue_date"] = values.invoice_date
-                        ? new Date(values.invoice_date).toLocaleDateString("en-CA", options)
-                        : new Date().toLocaleDateString("en-CA");
-                    formValue["issued_by"] = form.values.issued_by;
-                    formValue["issue_type"] = issueType;
-                    if (issueType === "factory") {
-                        formValue["factory_id"] = form.values.factory_id;
-                    } else if (issueType === "vendor") {
-                        formValue["vendor_id"] = form.values.vendor_id;
-                    } else if (issueType === "warehouse") {
-                        formValue["issue_warehouse_id"] = form.values.warehouse_id;
-                    }
-                    formValue["items"] = transformedArray;
-                    formValue["narration"] = form.values.narration;
-
-                    formValue["items"] = transformedArray;
-
-                    const value = {
-                        url: 'production/issue',
-                        data: formValue
-                    }
-
-                    const resultAction = await dispatch(storeEntityData(value));
-                    if (storeEntityData.rejected.match(resultAction)) {
-                        const fieldErrors = resultAction.payload.errors;
-
-                        // Check if there are field validation errors and dynamically set them
-                        if (fieldErrors) {
-                            const errorObject = {};
-                            Object.keys(fieldErrors).forEach(key => {
-                                errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
-                            });
-                            // Display the errors using your form's `setErrors` function dynamically
-                            form.setErrors(errorObject);
-                        }
-                    } else if (storeEntityData.fulfilled.match(resultAction)) {
-
-                        showNotificationComponent(t('CreateSuccessfully'),'teal')
-
-                        setTimeout(() => {
-                            setFactoryId(null)
-                            setVendorId(null)
-                            setIssueType(null)
-                            setWarehouseId(null)
-                            setIssuedById(null)
-                            localStorage.removeItem("temp-production-issue");
-                            form.reset();
-                            setLoadCardProducts(true);
-                        }, 700)
-                    }
-                })}
-            >
+            <form onSubmit={form.onSubmit(handleFormSubmit)}>
                 <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                     <Box className={"borderRadiusAll"}>
                         <DataTable
@@ -223,97 +278,8 @@ export default function GeneralIssueSubmitForm(props) {
                                 footer: tableCss.footer,
                                 pagination: tableCss.pagination,
                             }}
-                            records={tempCardProducts}
-                            columns={[
-                                {
-                                    accessor: "index",
-                                    title: t("S/N"),
-                                    textAlignment: "right",
-                                    width: "50px",
-                                    render: (item) => tempCardProducts.indexOf(item) + 1,
-                                },
-                                {
-                                    accessor: "display_name",
-                                    title: t("Name"),
-                                    width: "200px",
-                                    footer: (
-                                        <Group spacing="xs">
-                                            <IconSum size="1.25em"/>
-                                            <Text mb={-2}>
-                                                {tempCardProducts.length} {t("Items")}
-                                            </Text>
-                                        </Group>
-                                    ),
-                                },
-                                {
-                                    accessor: "stock",
-                                    title: t("Stock"),
-                                    textAlign: "center",
-                                },
-                                {
-                                    accessor: "product_warehouse_name",
-                                    title: t("Warehouse"),
-                                    textAlign: "center",
-                                },
-                                {
-                                    accessor: 'quantity',
-                                    title: t('Quantity'),
-                                    textAlign: 'center',
-                                    width: '100px',
-                                    render: (item) => (
-                                        <EditableQuantityCell item={item} setLoadCardProducts={setLoadCardProducts}/>
-                                    ),
-                                },
-                                {
-                                    accessor: "sub_total",
-                                    title: t("Price"),
-                                    textAlign: "center",
-                                },
-                                {
-                                    accessor: "unit_name",
-                                    title: t("UOM"),
-                                    textAlign: "center",
-                                },
-                                {
-                                    accessor: "action",
-                                    title: t("Action"),
-                                    textAlign: "right",
-                                    render: (item) => (
-                                        <Group gap={4} justify="right" wrap="nowrap">
-                                            <ActionIcon
-                                                size="sm"
-                                                variant="outline"
-                                                radius="xl"
-                                                color="red"
-                                                onClick={() => {
-                                                    const dataString = localStorage.getItem(
-                                                        "temp-production-issue"
-                                                    );
-                                                    let data = dataString ? JSON.parse(dataString) : [];
-
-                                                    data = data.filter(
-                                                        (d) => d.product_id !== item.product_id
-                                                    );
-
-                                                    const updatedDataString = JSON.stringify(data);
-
-                                                    localStorage.setItem(
-                                                        "temp-production-issue",
-                                                        updatedDataString
-                                                    );
-                                                    setLoadCardProducts(true);
-                                                }}
-                                            >
-                                                <IconX
-                                                    size={16}
-                                                    style={{width: "70%", height: "70%"}}
-                                                    stroke={1.5}
-                                                />
-                                            </ActionIcon>
-                                        </Group>
-                                    ),
-                                },
-                            ]}
+                            records={productionsRecipeItems}
+                            columns={columns}
                             fetching={fetching}
                             totalRecords={100}
                             recordsPerPage={10}
@@ -435,10 +401,10 @@ export default function GeneralIssueSubmitForm(props) {
                                         label=""
                                         placeholder={t("ChooseIssuedBy")}
                                         required={false}
-                                        name={"issued_by"}
+                                        name={"issued_by_id"}
                                         form={form}
                                         dropdownValue={salesByDropdownData}
-                                        id={"issued_by"}
+                                        id={"issued_by_id"}
                                         nextField={"save"}
                                         searchable={false}
                                         value={issuedById}
@@ -486,7 +452,6 @@ export default function GeneralIssueSubmitForm(props) {
                                 fullWidth={true}
                                 variant="filled"
                                 type={"submit"}
-                                onClick={handleClick}
                                 name="print"
                                 leftSection={<IconPrinter size={14}/>}
                                 className={genericClass.invoicePrint}
@@ -500,7 +465,6 @@ export default function GeneralIssueSubmitForm(props) {
                                 fullWidth={true}
                                 className={genericClass.invoiceSave}
                                 type={"submit"}
-                                onClick={handleClick}
                                 name="save"
                                 variant="filled"
                                 leftSection={<IconDeviceFloppy size={14}/>}
