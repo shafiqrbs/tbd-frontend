@@ -1089,7 +1089,6 @@ function _GenericPosForm({domainConfigData}) {
                               }}
                           />
                           </Box>
-
                         </>
                     )}
                   </Box>
@@ -1133,7 +1132,7 @@ function _GenericPosForm({domainConfigData}) {
                           </Grid.Col>
                         </Grid>
                       </Box>
-                       <Box mt="2"  className="" pl={'xs'} pt={'4'} pb={'6'}>
+                         <Box mt="2"  className="" pl={'xs'} pt={'4'} pb={'6'}>
                     <Grid
                         className={genericClass.genericBackground}
                         columns={12}

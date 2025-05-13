@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Button, ActionIcon, TextInput, Grid, Box, Group, Text,
-    Tooltip,Menu, rem
+    Tooltip, Menu, rem, SegmentedControl, Center, Flex, ScrollArea
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -10,12 +10,12 @@ import {
     IconPlus, IconDotsVertical, IconCheck,
     IconSortAscendingNumbers,
     IconPlusMinus,
-    IconSum
+    IconSum, IconCoinMonero, IconRefresh
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
+import {notifications, showNotification} from "@mantine/notifications";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
@@ -36,6 +36,9 @@ import FileUploadModel from "../../../core-component/FileUploadModel.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
 import Navigation from "../common/Navigation.jsx";
+import classes from "../../../../assets/css/FeaturesCards.module.css";
+import genericClass from "../../../../assets/css/Generic.module.css";
+import SelectForm from "../../../form-builders/SelectForm";
 
 function _CreateOpeningForm(props) {
     const { currencySymbol } = props
@@ -43,7 +46,8 @@ function _CreateOpeningForm(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const height = mainAreaHeight - 52; //TabList height 104
+    const itemFormheight = mainAreaHeight - 160; //TabList height 104
     const [fetching, setFetching] = useState(true);
 
     const perPage = 15;
@@ -56,7 +60,7 @@ function _CreateOpeningForm(props) {
     const purchaseItemsFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseItemsFilterData)
     const [uploadOpeningStockModel, setUploadOpeningStockModel] = useState(false)
     const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
-
+    const [invoiceProductMode, setInvoiceProductMode] = useState("product");
     useEffect(() => {
             dispatch(setDeleteMessage(''))
             if (entityDataDelete?.message === 'delete') {
@@ -322,6 +326,24 @@ function _CreateOpeningForm(props) {
             {currencySymbol}
         </Text>
     );
+
+    const handleSubmit = ((values) => {
+        if (!values.barcode && !values.product_id) {
+            form.setFieldError('barcode', true);
+            form.setFieldError('product_id', true);
+            setTimeout(() => { }, 1000)
+        } else {
+            const storedProducts = localStorage.getItem('core-products');
+            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+            if (values.product_id && !values.barcode) {
+                handleAddProductByProductId(values, localProducts);
+            } else if (!values.product_id && values.barcode) {
+                handleAddProductByBarcode(values, localProducts);
+            }
+        }
+    });
+
     return (
         <Box>
             <Grid columns={24} gutter={{ base: 8 }}>
@@ -330,487 +352,586 @@ function _CreateOpeningForm(props) {
                 </Grid.Col>
                 <Grid.Col span={22} >
                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                        <Box>
-                            <form onSubmit={form.onSubmit((values) => {
-                                if (!values.barcode && !values.product_id) {
-                                    form.setFieldError('barcode', true);
-                                    form.setFieldError('product_id', true);
-                                    setTimeout(() => { }, 1000)
-                                } else {
-                                    const storedProducts = localStorage.getItem('core-products');
-                                    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+                    <form onSubmit={form.onSubmit((handleSubmit))}>
+                        <Grid columns={24} gutter={{ base: 8 }}>
+                            <Grid.Col span={7} >
+                                <Box bg={"white"} p={"md"} pb="0" className={"borderRadiusAll"}>
+                                    <Box mb={"xs"}>
+                                    <Grid columns={12} gutter={{base: 2}}>
+                                        <Grid.Col span={7}>
+                                            <Text fz="md" fw={500} className={classes.cardTitle}>
+                                                {t("Opening Stock")}
+                                            </Text>
+                                        </Grid.Col>
+                                        <Grid.Col span={5} align="center">
+                                            <Group justify="flex-end" align="center" gap={4}>
 
-                                    if (values.product_id && !values.barcode) {
-                                        handleAddProductByProductId(values, localProducts);
-                                    } else if (!values.product_id && values.barcode) {
-                                        handleAddProductByBarcode(values, localProducts);
-                                    }
-                                }
-                            })}>
-                                <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
-                                    <Box pb={'xs'}>
-                                        <Grid columns={27} gutter={{ base: 6 }}>
-                                            <Grid.Col span={4}>
-                                                <InputNumberForm
-                                                    tooltip={t('BarcodeValidateMessage')}
-                                                    label=''
-                                                    placeholder={t('Barcode')}
-                                                    required={true}
-                                                    nextField={'EntityFormSubmit'}
-                                                    form={form}
-                                                    name={'barcode'}
-                                                    id={'barcode'}
-                                                    leftSection={<IconBarcode size={16} opacity={0.5} />}
+                                                <SegmentedControl
+                                                    size="xs"
+                                                    styles={{
+                                                        label: {color: "#140d05"},
+                                                    }}
+                                                    className={genericClass.genericHighlightedBox}
+                                                    withItemsBorders={false}
+                                                    fullWidth
+                                                    color={"#f8eedf"}
+                                                    value={invoiceProductMode}
+                                                    onChange={setInvoiceProductMode}
+                                                    data={[
+                                                        {
+                                                            label: (
+                                                                <Center pl={"8"} pr={"8"} style={{gap: 10}}>
+                                                                    <IconCoinMonero
+                                                                        height={"18"}
+                                                                        width={"18"}
+                                                                        stroke={1.5}
+                                                                    />
+                                                                </Center>
+                                                            ),
+                                                            value: "product",
+                                                        },
+                                                        {
+                                                            label: (
+                                                                <Center pl={"8"} pr={"8"} style={{gap: 10}}>
+                                                                    <IconBarcode
+                                                                        height={"18"}
+                                                                        width={"18"}
+                                                                        stroke={1.5}
+                                                                    />
+                                                                </Center>
+                                                            ),
+                                                            value: "list",
+                                                        },
+                                                    ]}
                                                 />
-                                            </Grid.Col>
-                                            <Grid.Col span={8}>
-                                                <SelectServerSideForm
-                                                    tooltip={t('ChooseStockProduct')}
-                                                    label=''
-                                                    placeholder={t('ChooseStockProduct')}
-                                                    required={false}
-                                                    nextField={'opening_quantity'}
-                                                    name={'product_id'}
-                                                    form={form}
-                                                    id={'product_id'}
-                                                    searchable={true}
-                                                    searchValue={searchValue}
-                                                    setSearchValue={setSearchValue}
-                                                    dropdownValue={productDropdown}
-                                                />
-                                            </Grid.Col>
-                                            <Grid.Col span={2}>
-                                                <InputForm
-                                                    tooltip={t('QuantityValidateMessage')}
-                                                    label=''
-                                                    placeholder={t('Quantity')}
-                                                    required={true}
-                                                    nextField={'purchase_price'}
-                                                    form={form}
-                                                    name={'opening_quantity'}
-                                                    id={'opening_quantity'}
-                                                    type={'number'}
-                                                    leftSection={
-                                                        <IconSortAscendingNumbers 
-                                                        size={16} opacity={0.5} />
-                                                    }
-                                                    rightSection={inputGroupText}
-                                                    rightSectionWidth={50}
-                                                />
-                                            </Grid.Col>
-                                            <Grid.Col span={2}>
-                                                <InputForm
-                                                    tooltip={t('PurchasePriceValidateMessage')}
-                                                    label=''
-                                                    placeholder={t('PurchasePrice')}
-                                                    required={true}
-                                                    nextField={'sales_price'}
-                                                    form={form}
-                                                    name={'purchase_price'}
-                                                    id={'purchase_price'}
-                                                    type={'number'}
-                                                    leftSection={
-                                                        <IconPlusMinus 
-                                                        size={16} opacity={0.5} />
-                                                    }
-                                                    rightSection={inputGroupCurrency}
-                                                    closeIcon={true}
+                                                <Tooltip
+                                                    multiline
+                                                    bg={"#905923"}
+                                                    position="top"
+                                                    withArrow
+                                                    ta={"center"}
+                                                    transitionProps={{duration: 200}}
+                                                    label={t("Settings")}
+                                                >
+                                                    <ActionIcon
+                                                        radius={"xl"}
+                                                        variant="transparent"
+                                                        size={"md"}
+                                                        color="gray"
+                                                        mt={"1"}
+                                                        aria-label="Settings"
+                                                        onClick={() => setSettingDrawer(true)}
+                                                    >
+                                                        <IconDotsVertical
+                                                            style={{width: "100%", height: "70%"}}
+                                                            stroke={1.5}
+                                                        />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            </Group>
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                                </Box>
+                                <Box className="boxBackground">
+                                    <Box  pt={'0'}>
 
-                                                />
-                                            </Grid.Col>
-                                            <Grid.Col span={2}>
-                                                <InputForm
-                                                    tooltip={t('PurchasePriceValidateMessage')}
-                                                    label=''
-                                                    placeholder={t('SalesPrice')}
-                                                    required={true}
-                                                    nextField={'EntityFormSubmit'}
-                                                    form={form}
-                                                    name={'sales_price'}
-                                                    id={'sales_price'}
-                                                    type={'number'}
-                                                    leftSection={
-                                                        <IconPlusMinus 
-                                                        size={16} opacity={0.5} />
-                                                    }
-                                                    rightSection={inputGroupCurrency}
-                                                    closeIcon={true}
+                                        <ScrollArea h={itemFormheight-56} scrollbarSize={2} scrollbars="y" type="never">
+                                        <Box  p={"xs"} className={genericClass.genericHighlightedBox}>
+                                            <InputNumberForm
+                                                tooltip={t("BarcodeValidateMessage")}
+                                                label=""
+                                                placeholder={t("Barcode")}
+                                                required={true}
+                                                nextField={""}
+                                                form={form}
+                                                name={"barcode"}
+                                                id={"barcode"}
+                                                leftSection={<IconBarcode size={16} opacity={0.5}/>}
+                                            />
+                                        </Box>
+                                        <Box  p={"xs"} className={genericClass.genericHighlightedBox}>
+                                            <SelectServerSideForm
+                                                tooltip={t('ChooseStockProduct')}
+                                                label=''
+                                                placeholder={t('ChooseStockProduct')}
+                                                required={false}
+                                                nextField={'opening_quantity'}
+                                                name={'product_id'}
+                                                form={form}
+                                                id={'product_id'}
+                                                searchable={true}
+                                                searchValue={searchValue}
+                                                setSearchValue={setSearchValue}
+                                                dropdownValue={productDropdown}
+                                            />
+                                        </Box>
+                                        <Box  p={"xs"} className={'boxBackground'}>
+                                            <Box mt={'4'}>
+                                                <Grid columns={24} gutter={{ base: 1 }}>
+                                                    <Grid.Col span={10} fz="sm" mt={8}>
+                                                        {t("PriceMode")}
+                                                    </Grid.Col>
+                                                    <Grid.Col span={14}>
+                                                        <InputForm
+                                                            tooltip={t('QuantityValidateMessage')}
+                                                            label=''
+                                                            placeholder={t('Quantity')}
+                                                            required={true}
+                                                            nextField={'purchase_price'}
+                                                            form={form}
+                                                            name={'opening_quantity'}
+                                                            id={'opening_quantity'}
+                                                            type={'number'}
+                                                            leftSection={
+                                                                <IconSortAscendingNumbers
+                                                                    size={16} opacity={0.5} />
+                                                            }
+                                                            rightSection={inputGroupText}
+                                                            rightSectionWidth={50}
+                                                        />
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={'4'}>
+                                                <Grid columns={24} gutter={{ base: 1 }}>
+                                                    <Grid.Col span={10} fz="sm" mt={8}>
+                                                        {t("PriceMode")}
+                                                    </Grid.Col>
+                                                    <Grid.Col span={14}>
+                                                        <InputForm
+                                                            tooltip={t('PurchasePriceValidateMessage')}
+                                                            label=''
+                                                            placeholder={t('PurchasePrice')}
+                                                            required={true}
+                                                            nextField={'sales_price'}
+                                                            form={form}
+                                                            name={'purchase_price'}
+                                                            id={'purchase_price'}
+                                                            type={'number'}
+                                                            leftSection={
+                                                                <IconPlusMinus
+                                                                    size={16} opacity={0.5} />
+                                                            }
+                                                            rightSection={inputGroupCurrency}
+                                                            closeIcon={true}
 
-                                                />
-                                            </Grid.Col>
-                                            <Grid.Col span={2}>
-                                                <InputForm
-                                                    tooltip={t('SubTotalValidateMessage')}
-                                                    label=''
-                                                    placeholder={t('SubTotal')}
-                                                    required={true}
-                                                    nextField={'EntityFormSubmit'}
-                                                    form={form}
-                                                    name={'sub_total'}
-                                                    type={'number'}
-                                                    leftSection={
-                                                        <IconSum 
-                                                        size={16} opacity={0.5} />
-                                                    }
-                                                    id={'sub_total'}
-                                                    rightSection={inputGroupCurrency}
-                                                    closeIcon={false}
-                                                    disabled={true}
+                                                        />
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={'4'}>
+                                                <Grid columns={24} gutter={{ base: 1 }}>
+                                                    <Grid.Col span={10} fz="sm" mt={8}>
+                                                        {t("PriceMode")}
+                                                    </Grid.Col>
+                                                    <Grid.Col span={14}>
+                                                        <InputForm
+                                                            tooltip={t('PurchasePriceValidateMessage')}
+                                                            label=''
+                                                            placeholder={t('SalesPrice')}
+                                                            required={true}
+                                                            nextField={'EntityFormSubmit'}
+                                                            form={form}
+                                                            name={'sales_price'}
+                                                            id={'sales_price'}
+                                                            type={'number'}
+                                                            leftSection={
+                                                                <IconPlusMinus
+                                                                    size={16} opacity={0.5} />
+                                                            }
+                                                            rightSection={inputGroupCurrency}
+                                                            closeIcon={true}
 
-                                                />
-                                            </Grid.Col>
-                                            <Grid.Col span={7}>
-                                                <Box>
-                                                    <Group justify="right" gap={0}>
-                                                        <Button
-                                                            size="sm"
-                                                            color={`red.5`}
-                                                            type="submit"
-                                                            mt={0}
-                                                            mr={'sm'}
-                                                            id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16} />}
-                                                        >
-                                                            {t("Add")}
-                                                        </Button>
+                                                        />
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={'4'}>
+                                                <Grid columns={24} gutter={{ base: 1 }}>
+                                                    <Grid.Col span={10} fz="sm" mt={8}>
+                                                        {t("PriceMode")}
+                                                    </Grid.Col>
+                                                    <Grid.Col span={14}>
+                                                        <InputForm
+                                                            tooltip={t('SubTotalValidateMessage')}
+                                                            label=''
+                                                            placeholder={t('SubTotal')}
+                                                            required={true}
+                                                            nextField={'EntityFormSubmit'}
+                                                            form={form}
+                                                            name={'sub_total'}
+                                                            type={'number'}
+                                                            leftSection={
+                                                                <IconSum
+                                                                    size={16} opacity={0.5} />
+                                                            }
+                                                            id={'sub_total'}
+                                                            rightSection={inputGroupCurrency}
+                                                            closeIcon={false}
+                                                            disabled={true}
 
-                                                        <Tooltip
-                                                            multiline
-                                                            bg={'orange.8'}
-                                                            position="top"
-                                                            withArrow
-                                                            ta={'center'}
-                                                            offset={{ crossAxis: '-50', mainAxis: '5' }}
-                                                            transitionProps={{ duration: 200 }}
-                                                            label={t('InstantProductCreate')}
-                                                        >
-                                                            <ActionIcon
-                                                                mr={'sm'}
-                                                                variant="outline"
-                                                                size={'lg'}
-                                                                color="red.5"
-                                                                aria-label="Settings"
-                                                                onClick={() => setProductDrawer(true)}
-                                                            >
-                                                                <IconPlus style={{ width: '100%', height: '70%' }}
-                                                                    stroke={1.5} />
-                                                            </ActionIcon>
-                                                        </Tooltip>
-                                                        <Button onClick={(e) => {
-                                                            dispatch(setPurchaseItemsFilterData({...purchaseItemsFilterData, ['searchKeyword']: ''}))
-                                                            navigate('/inventory/opening-approve-stock')
-                                                        }}
-                                                            size="sm"
-                                                            c={"red.8"}
-                                                            variant="link"
-                                                            bg={"#f7f4f4"}
-                                                            rightSection={<IconArrowRight size={16} />}
-                                                        >
-                                                            {t("ApproveStock")}
-                                                        </Button>
-                                                        <Menu
-                                                            position="bottom-end"
-                                                            offset={3}
-                                                            withArrow
-                                                            trigger="hover"
-                                                            openDelay={100}
-                                                            closeDelay={400}
-                                                            >
-                                                            <Menu.Target>
-                                                                <ActionIcon
-                                                                size="md"
-                                                                variant="transparent"
-                                                                color="red"
-                                                                aria-label="Settings"
-                                                                >
-                                                                <IconDotsVertical height={"20"} width={"20"} stroke={1.5} />
-                                                                </ActionIcon>
-                                                            </Menu.Target>
-                                                            <Menu.Dropdown>
-                                                                <Menu.Item
-                                                                onClick={(e) => {
-                                                                    setUploadOpeningStockModel(true);
-                                                                }}
-                                                                component="a"
-                                                                bg={"#d7e8cd"}
-                                                                w={"200"}
-                                                                rightSection={
-                                                                    <IconLoader style={{ width: rem(14), height: rem(14) }} />
-                                                                }
-                                                                >
-                                                                {t("Upload")}
-                                                                </Menu.Item>
-                                                            </Menu.Dropdown>
-                                                        </Menu>
-                                                    </Group>
-                                                </Box>
-                                            </Grid.Col>
-                                        </Grid>
+                                                        />
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                        </Box>
+                                        </ScrollArea>
                                     </Box>
                                 </Box>
-                            </form>
-                        </Box>
-                        <Box className={'borderRadiusAll'}>
-                            <DataTable
-                                classNames={{
-                                    root: tableCss.root,
-                                    table: tableCss.table,
-                                    header: tableCss.header,
-                                    footer: tableCss.footer,
-                                    pagination: tableCss.pagination,
-                                }}
-                                records={indexData.data}
-                                columns={[
-                                    {
-                                        accessor: 'index',
-                                        title: t('S/N'),
-                                        textAlignment: 'right',
-                                        render: (item) => (indexData.data.indexOf(item) + 1)
-                                    },
-                                    {
-                                        accessor: 'created',
-                                        title: t("CreatedDate"),
-                                        width: '10%',
-                                    },
-                                    {
-                                        accessor: 'product_name',
-                                        title: t("Name"),
-                                        width: '25%',
-                                    },
-                                    {
-                                        accessor: 'unit_name',
-                                        title: t('UOM'),
-                                        width: '10%',
-                                        textAlign: "center"
-                                    },
-                                    {
-                                        accessor: 'opening_quantity',
-                                        title: t('Quantity'),
-                                        width: '10%',
-                                        textAlign: "right",
-                                        render: (item) => {
-                                            const [editedQuantity, setEditedQuantity] = useState(item.opening_quantity);
+                                {invoiceProductMode === "product" && (
+                                    <>
+                                        <Box p={"xs"} className={genericClass.genericHighlightedBox}>
+                                            <Grid columns={24} gutter={{ base: 1 }}>
+                                                <Grid.Col span={10} fz="sm" fw={'800'} mt={8}>
+                                                    {t("SubTotal")}
+                                                </Grid.Col>
+                                                <Grid.Col span={14}>
+                                                    <Box style={{display: "none"}}>
+                                                        <InputButtonForm
+                                                            tooltip=""
+                                                            label=""
+                                                            type=""
+                                                            placeholder={t("SubTotal")}
+                                                            required={true}
+                                                            nextField={"EntityFormSubmit"}
+                                                            form={form}
+                                                            name={"sub_total"}
+                                                            id={"sub_total"}
+                                                            leftSection={
+                                                                <IconSum size={16} opacity={0.5}/>
+                                                            }
+                                                            rightSection={inputGroupCurrency}
+                                                            disabled={
+                                                                selectProductDetails &&
+                                                                selectProductDetails.sub_total
+                                                            }
+                                                            closeIcon={false}
+                                                        />
+                                                    </Box>
+                                                    <Text ta="right" mt={"8"} fw={'800'} pr={'xs'}>
+                                                        {currencySymbol}{" "}
+                                                        {selectProductDetails
+                                                            ? selectProductDetails.sub_total
+                                                            : 0}
+                                                    </Text>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt="2"  className="" pl={'xs'} pt={'4'} pb={'6'}>
+                                            <Grid
+                                                className={genericClass.genericBackground}
+                                                columns={12}
+                                                justify="space-between"
+                                                align="center"
+                                            >
+                                                <Grid.Col span={6}>
+                                                    <Box pl={"xs"}>
+                                                        <ActionIcon
+                                                            variant="transparent"
+                                                            size={"lg"}
+                                                            color="grey.6"
+                                                            mt={"1"}
+                                                            onClick={() => {
+                                                            }}
+                                                        >
+                                                            <IconRefresh
+                                                                style={{width: "100%", height: "70%"}}
+                                                                stroke={1.5}
+                                                            />
+                                                        </ActionIcon>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={4}>
+                                                    <Box pr={"xs"}>
+                                                        <Button
+                                                            size="sm"
+                                                            className={genericClass.invoiceAdd}
+                                                            type="submit"
+                                                            id={'EntityFormSubmit'}
+                                                            mt={0}
+                                                            mr={"xs"}
+                                                            w={"100%"}
+                                                            leftSection={<IconPlus size={16}/>}>
+                                                            <Flex direction={`column`} gap={0}>
+                                                                <Text fz={12} fw={400}>
+                                                                    {t("Add")}
+                                                                </Text>
+                                                                <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+a</Flex>
+                                                            </Flex>
+                                                        </Button>
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                    </>
+                                )}
+                            </Grid.Col>
+                            <Grid.Col span={17} >
+                                <Box className={'borderRadiusAll'}>
+                                    <DataTable
+                                        classNames={{
+                                            root: tableCss.root,
+                                            table: tableCss.table,
+                                            header: tableCss.header,
+                                            footer: tableCss.footer,
+                                            pagination: tableCss.pagination,
+                                        }}
+                                        records={indexData.data}
+                                        columns={[
+                                            {
+                                                accessor: 'index',
+                                                title: t('S/N'),
+                                                textAlignment: 'right',
+                                                render: (item) => (indexData.data.indexOf(item) + 1)
+                                            },
+                                            {
+                                                accessor: 'created',
+                                                title: t("CreatedDate"),
+                                                width: '10%',
+                                            },
+                                            {
+                                                accessor: 'product_name',
+                                                title: t("Name"),
+                                                width: '25%',
+                                            },
+                                            {
+                                                accessor: 'unit_name',
+                                                title: t('UOM'),
+                                                width: '10%',
+                                                textAlign: "center"
+                                            },
+                                            {
+                                                accessor: 'opening_quantity',
+                                                title: t('Quantity'),
+                                                width: '10%',
+                                                textAlign: "right",
+                                                render: (item) => {
+                                                    const [editedQuantity, setEditedQuantity] = useState(item.opening_quantity);
 
-                                            const handlQuantityChange = (e) => {
-                                                const editedQuantity = e.currentTarget.value;
-                                                setEditedQuantity(editedQuantity);
+                                                    const handlQuantityChange = (e) => {
+                                                        const editedQuantity = e.currentTarget.value;
+                                                        setEditedQuantity(editedQuantity);
 
-                                                let purchasePriceElement = document.getElementById('inline-update-purchase-price-' + item.id);
-                                                let purchasePrice = parseFloat(purchasePriceElement.value);
-                                                let subTotal = Number(editedQuantity) * purchasePrice;
+                                                        let purchasePriceElement = document.getElementById('inline-update-purchase-price-' + item.id);
+                                                        let purchasePrice = parseFloat(purchasePriceElement.value);
+                                                        let subTotal = Number(editedQuantity) * purchasePrice;
 
-                                                setEditedSubtotal(prevSubTotal => ({
-                                                    ...prevSubTotal,
-                                                    [item.id]: subTotal
-                                                }));
+                                                        setEditedSubtotal(prevSubTotal => ({
+                                                            ...prevSubTotal,
+                                                            [item.id]: subTotal
+                                                        }));
 
-                                                const editedQuantityData = {
-                                                    url: 'inventory/opening-stock/inline-update',
-                                                    data: {
-                                                        field_name: "opening_quantity",
-                                                        opening_quantity: editedQuantity,
-                                                        subTotal: subTotal,
-                                                        id: item.id
-                                                    }
+                                                        const editedQuantityData = {
+                                                            url: 'inventory/opening-stock/inline-update',
+                                                            data: {
+                                                                field_name: "opening_quantity",
+                                                                opening_quantity: editedQuantity,
+                                                                subTotal: subTotal,
+                                                                id: item.id
+                                                            }
+                                                        }
+
+                                                        setTimeout(() => {
+                                                            dispatch(inlineUpdateEntityData(editedQuantityData));
+                                                            setFetching(true);
+                                                        }, 1000);
+
+                                                    };
+
+                                                    return (
+                                                        <>
+                                                            <TextInput
+                                                                type="number"
+                                                                label=""
+                                                                size="xs"
+                                                                id={"inline-update-quantity-" + item.id}
+                                                                value={Number(editedQuantity)}
+                                                                onChange={handlQuantityChange}
+                                                                onKeyDown={getHotkeyHandler([
+                                                                    ['Enter', (e) => {
+                                                                        document.getElementById('inline-update-purchase-price-' + item.id).focus();
+                                                                    }],
+                                                                ])}
+                                                            />
+                                                        </>
+                                                    );
                                                 }
+                                            },
 
-                                                setTimeout(() => {
-                                                    dispatch(inlineUpdateEntityData(editedQuantityData));
-                                                    setFetching(true);
-                                                }, 1000);
+                                            {
+                                                accessor: 'purchase_price',
+                                                title: t('PurchasePrice'),
+                                                width: '10%',
+                                                textAlign: "right",
+                                                render: (item) => {
+                                                    const [editedPurchaseQuantity, setEditedPurchaseQuantity] = useState(item.purchase_price);
 
-                                            };
+                                                    const handlePurchasePriceChange = (e) => {
+                                                        const editedPurchaseQuantity = e.currentTarget.value;
+                                                        setEditedPurchaseQuantity(editedPurchaseQuantity);
 
-                                            return (
-                                                <>
-                                                    <TextInput
-                                                        type="number"
-                                                        label=""
-                                                        size="xs"
-                                                        id={"inline-update-quantity-" + item.id}
-                                                        value={Number(editedQuantity)}
-                                                        onChange={handlQuantityChange}
-                                                        onKeyDown={getHotkeyHandler([
-                                                            ['Enter', (e) => {
-                                                                document.getElementById('inline-update-purchase-price-' + item.id).focus();
-                                                            }],
-                                                        ])}
-                                                    />
-                                                </>
-                                            );
-                                        }
-                                    },
+                                                        let quantityElement = document.getElementById('inline-update-quantity-' + item.id);
+                                                        let quantity = parseFloat(quantityElement.value);
+                                                        let subTotal = quantity * editedPurchaseQuantity;
 
-                                    {
-                                        accessor: 'purchase_price',
-                                        title: t('PurchasePrice'),
-                                        width: '10%',
-                                        textAlign: "right",
-                                        render: (item) => {
-                                            const [editedPurchaseQuantity, setEditedPurchaseQuantity] = useState(item.purchase_price);
+                                                        setEditedSubtotal(prevSubTotal => ({
+                                                            ...prevSubTotal,
+                                                            [item.id]: subTotal
+                                                        }));
 
-                                            const handlePurchasePriceChange = (e) => {
-                                                const editedPurchaseQuantity = e.currentTarget.value;
-                                                setEditedPurchaseQuantity(editedPurchaseQuantity);
+                                                        const editedQuantityData = {
+                                                            url: 'inventory/opening-stock/inline-update',
+                                                            data: {
+                                                                field_name: "purchase_price",
+                                                                purchase_price: editedPurchaseQuantity,
+                                                                subTotal: subTotal,
+                                                                id: item.id
+                                                            }
+                                                        }
 
-                                                let quantityElement = document.getElementById('inline-update-quantity-' + item.id);
-                                                let quantity = parseFloat(quantityElement.value);
-                                                let subTotal = quantity * editedPurchaseQuantity;
-
-                                                setEditedSubtotal(prevSubTotal => ({
-                                                    ...prevSubTotal,
-                                                    [item.id]: subTotal
-                                                }));
-
-                                                const editedQuantityData = {
-                                                    url: 'inventory/opening-stock/inline-update',
-                                                    data: {
-                                                        field_name: "purchase_price",
-                                                        purchase_price: editedPurchaseQuantity,
-                                                        subTotal: subTotal,
-                                                        id: item.id
+                                                        setTimeout(() => {
+                                                            dispatch(inlineUpdateEntityData(editedQuantityData));
+                                                            setFetching(true);
+                                                        }, 1000);
                                                     }
+
+                                                    return (
+                                                        <>
+                                                            <TextInput
+                                                                type="number"
+                                                                label=""
+                                                                size="xs"
+                                                                id={'inline-update-purchase-price-' + item.id}
+                                                                value={editedPurchaseQuantity}
+                                                                onChange={handlePurchasePriceChange}
+                                                            />
+                                                        </>
+                                                    );
                                                 }
+                                            },
+                                            {
+                                                accessor: 'sales_price',
+                                                title: t('SalesPrice'),
+                                                width: '10%',
+                                                textAlign: "right",
+                                                render: (item) => {
+                                                    return (
+                                                        item.sales_price && Number(item.sales_price).toFixed(2)
+                                                    );
+                                                },
+                                            },
 
-                                                setTimeout(() => {
-                                                    dispatch(inlineUpdateEntityData(editedQuantityData));
-                                                    setFetching(true);
-                                                }, 1000);
-                                            }
+                                            {
+                                                accessor: 'sub_total',
+                                                title: t('SubTotal'),
+                                                width: '15%',
+                                                textAlign: "right",
+                                                render: (item) => {
+                                                    return (
+                                                        editedSubtotal[item.id] !== undefined ? editedSubtotal[item.id].toFixed(2) : item.sub_total && Number(item.sub_total).toFixed(2)
+                                                    );
+                                                },
 
-                                            return (
-                                                <>
-                                                    <TextInput
-                                                        type="number"
-                                                        label=""
-                                                        size="xs"
-                                                        id={'inline-update-purchase-price-' + item.id}
-                                                        value={editedPurchaseQuantity}
-                                                        onChange={handlePurchasePriceChange}
-                                                    />
-                                                </>
-                                            );
+                                            },
+                                            {
+                                                accessor: "action",
+                                                title: t('Action'),
+                                                width: '15%',
+                                                textAlign: "right",
+                                                render: (item) => (
+                                                    <Group gap={'xs'} justify="right" wrap="nowrap">
+                                                        <Button
+                                                            rightSection={<IconChevronsRight size={14} />}
+                                                            variant="light"
+                                                            color="green"
+                                                            size="xs"
+                                                            radius="xs"
+                                                            onClick={() => {
+                                                                modals.openConfirmModal({
+                                                                    title: (
+                                                                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                    ),
+                                                                    children: (
+                                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                    ),
+                                                                    labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                    confirmProps: { color: 'red.6' },
+                                                                    onCancel: () => console.log('Cancel'),
+                                                                    onConfirm: () => {
+                                                                        const approveData = {
+                                                                            url: 'inventory/opening-stock/inline-update',
+                                                                            data: {
+                                                                                field_name: "approve",
+                                                                                value: 1,
+                                                                                id: item.id
+                                                                            }
+                                                                        }
+
+                                                                        if (!item.opening_quantity){
+                                                                            showNotificationComponent(t("EnterOpeningQuantity"),'red',null,null,false,1000,true)
+                                                                        }
+                                                                        if (!item.purchase_price){
+                                                                            showNotificationComponent(t("EnterPurchasePrice"),'red',null,null,false,1000,true);
+                                                                        }
+                                                                        if (item.opening_quantity && item.purchase_price){
+                                                                            dispatch(inlineUpdateEntityData(approveData))
+                                                                            setFetching(true)
+                                                                        }
+                                                                    },
+                                                                });
+                                                            }}
+                                                        >
+                                                            {t('Approve')}
+                                                        </Button>
+                                                        <ActionIcon
+                                                            size="sm"
+                                                            variant="subtle"
+                                                            color="red"
+                                                            onClick={() => {
+                                                                modals.openConfirmModal({
+                                                                    title: (
+                                                                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                    ),
+                                                                    children: (
+                                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                    ),
+                                                                    labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                    confirmProps: { color: 'red.6' },
+                                                                    onCancel: () => console.log('Cancel'),
+                                                                    onConfirm: () => {
+                                                                        dispatch(deleteEntityData('inventory/opening-stock/' + item.id))
+                                                                        setFetching(true)
+                                                                    },
+                                                                });
+                                                            }}
+                                                        >
+                                                            <IconX size={16} style={{ width: '70%', height: '70%' }}
+                                                                   stroke={1.5} />
+                                                        </ActionIcon>
+                                                    </Group>
+
+                                                ),
+                                            },
+                                        ]
                                         }
-                                    },
-                                    {
-                                        accessor: 'sales_price',
-                                        title: t('SalesPrice'),
-                                        width: '10%',
-                                        textAlign: "right",
-                                        render: (item) => {
-                                            return (
-                                                item.sales_price && Number(item.sales_price).toFixed(2)
-                                            );
-                                        },
-                                    },
-
-                                    {
-                                        accessor: 'sub_total',
-                                        title: t('SubTotal'),
-                                        width: '15%',
-                                        textAlign: "right",
-                                        render: (item) => {
-                                            return (
-                                                editedSubtotal[item.id] !== undefined ? editedSubtotal[item.id].toFixed(2) : item.sub_total && Number(item.sub_total).toFixed(2)
-                                            );
-                                        },
-
-                                    },
-                                    {
-                                        accessor: "action",
-                                        title: t('Action'),
-                                        width: '15%',
-                                        textAlign: "right",
-                                        render: (item) => (
-                                            <Group gap={'xs'} justify="right" wrap="nowrap">
-                                                <Button
-                                                    rightSection={<IconChevronsRight size={14} />}
-                                                    variant="light"
-                                                    color="green"
-                                                    size="xs"
-                                                    radius="xs"
-                                                    onClick={() => {
-                                                        modals.openConfirmModal({
-                                                            title: (
-                                                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                            ),
-                                                            children: (
-                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                            ),
-                                                            labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                            confirmProps: { color: 'red.6' },
-                                                            onCancel: () => console.log('Cancel'),
-                                                            onConfirm: () => {
-                                                                const approveData = {
-                                                                    url: 'inventory/opening-stock/inline-update',
-                                                                    data: {
-                                                                        field_name: "approve",
-                                                                        value: 1,
-                                                                        id: item.id
-                                                                    }
-                                                                }
-
-                                                                if (!item.opening_quantity){
-                                                                    showNotificationComponent(t("EnterOpeningQuantity"),'red',null,null,false,1000,true)
-                                                                }
-                                                                if (!item.purchase_price){
-                                                                    showNotificationComponent(t("EnterPurchasePrice"),'red',null,null,false,1000,true);
-                                                                }
-                                                                if (item.opening_quantity && item.purchase_price){
-                                                                    dispatch(inlineUpdateEntityData(approveData))
-                                                                    setFetching(true)
-                                                                }
-                                                            },
-                                                        });
-                                                    }}
-                                                >
-                                                    {t('Approve')}
-                                                </Button>
-                                                <ActionIcon
-                                                    size="sm"
-                                                    variant="subtle"
-                                                    color="red"
-                                                    onClick={() => {
-                                                        modals.openConfirmModal({
-                                                            title: (
-                                                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                            ),
-                                                            children: (
-                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                            ),
-                                                            labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                            confirmProps: { color: 'red.6' },
-                                                            onCancel: () => console.log('Cancel'),
-                                                            onConfirm: () => {
-                                                                dispatch(deleteEntityData('inventory/opening-stock/' + item.id))
-                                                                setFetching(true)
-                                                            },
-                                                        });
-                                                    }}
-                                                >
-                                                    <IconX size={16} style={{ width: '70%', height: '70%' }}
-                                                        stroke={1.5} />
-                                                </ActionIcon>
-                                            </Group>
-
-                                        ),
-                                    },
-                                ]
-                                }
-                                fetching={fetching}
-                                totalRecords={indexData.total}
-                                recordsPerPage={perPage}
-                                page={page}
-                                onPageChange={(p) => {
-                                    setPage(p)
-                                    setFetching(true)
-                                }}
-                                loaderSize="xs"
-                                loaderColor="grape"
-                                height={height}
-                                scrollAreaProps={{ type: 'never' }}
-                            />
-                        </Box>
+                                        fetching={fetching}
+                                        totalRecords={indexData.total}
+                                        recordsPerPage={perPage}
+                                        page={page}
+                                        onPageChange={(p) => {
+                                            setPage(p)
+                                            setFetching(true)
+                                        }}
+                                        loaderSize="xs"
+                                        loaderColor="grape"
+                                        height={height}
+                                        scrollAreaProps={{ type: 'never' }}
+                                    />
+                                </Box>
+                            </Grid.Col>
+                        </Grid>
+                    </form>
                     </Box>
                 </Grid.Col>
 

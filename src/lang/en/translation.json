@@ -1125,7 +1125,8 @@
   "SearchVendorSupplier": "Search vendor/supplier",
   "ChooseBatch": "Choose batch",
   "ProductAddedSuccessfully": "Product added successfully",
-  "xxxxxx": "xxxxxxx",
   "ItemPercent": "Item Percent",
-  "EarnPoint": "Earn Point"
+  "EarnPoint": "Earn Point",
+  "AccountOpeningStockData": "Account Opening Stock",
+  "xxxxxx": "xxxxxxx"
 }
