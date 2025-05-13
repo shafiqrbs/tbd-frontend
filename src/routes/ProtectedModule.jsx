@@ -13,6 +13,7 @@ export default function ProtectedModule({ modules }) {
 
 	const moduleArray = Array.isArray(modules) ? modules : [modules];
 	if (!moduleArray.some(module => domainConfig?.modules?.includes(module))) {
+		console.log("redirect to login from ProtectedModule");
 		return <Navigate to="/" replace />;
 	}
 	return <Outlet context={{ isOnline: networkStatus.online, mainAreaHeight: mainAreaHeight }} />;

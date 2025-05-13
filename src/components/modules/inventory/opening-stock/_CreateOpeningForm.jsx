@@ -47,7 +47,11 @@ function _CreateOpeningForm(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
+<<<<<<< HEAD
     const height = mainAreaHeight - 120; //TabList height 104
+=======
+    const height = mainAreaHeight - 116; //TabList height 104
+>>>>>>> 1c9298d (Update opening item)
     const itemFormheight = mainAreaHeight - 160; //TabList height 104
     const [fetching, setFetching] = useState(true);
 

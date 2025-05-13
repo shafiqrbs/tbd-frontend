@@ -120,6 +120,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
         setVisible(false);
       } else {
         setVisible(false);
+        console.log("redirect to login from Header");
         navigate("/login");
       }
     };
