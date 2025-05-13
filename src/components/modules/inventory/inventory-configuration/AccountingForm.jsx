@@ -14,6 +14,8 @@ import {
 import SelectForm from "../../../form-builders/SelectForm";
 import { setFormLoading } from "../../../../store/inventory/crudSlice";
 import DatePickerForm from "../../../form-builders/DatePicker.jsx";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
 
 function AccountingForm(props) {
   const {
@@ -27,24 +29,46 @@ function AccountingForm(props) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+  const {fetchDomainConfig} = getDomainConfig(false)
 
   // State variables for each dropdown
+  const [accountCapitalData, setAccountCapitalData] = useState(null);
   const [accountBankData, setAccountBankData] = useState(null);
   const [accountCashData, setAccountCashData] = useState(null);
-  const [accountCategoryData, setAccountCategoryData] = useState(null);
-  const [accountCustomerData, setAccountCustomerData] = useState(null);
   const [accountMobileData, setAccountMobileData] = useState(null);
+  const [accountOpeningStockData, setAccountOpeningStockData] = useState(null);
   const [accountProductGroupData, setAccountProductGroupData] = useState(null);
+  const [accountCategoryData, setAccountCategoryData] = useState(null);
   const [accountUserData, setAccountUserData] = useState(null);
+  const [accountCustomerData, setAccountCustomerData] = useState(null);
   const [accountVendorData, setAccountVendorData] = useState(null);
+
+  const [voucherStockOpeningData, setVoucherStockOpeningData] = useState(null);
   const [voucherPurchaseData, setVoucherPurchaseData] = useState(null);
-  const [voucherPurchaseReturnData, setVoucherPurchaseReturnData] =
-    useState(null);
+  const [voucherPurchaseReturnData, setVoucherPurchaseReturnData] = useState(null);
   const [voucherSalesData, setVoucherSalesData] = useState(null);
   const [voucherSalesReturnData, setVoucherSalesReturnData] = useState(null);
-  const [voucherStockOpeningData, setVoucherStockOpeningData] = useState(null);
-  const [voucherStockReconciliationData, setVoucherStockReconciliationData] =
-    useState(null);
+  const [voucherStockReconciliationData, setVoucherStockReconciliationData] = useState(null);
+
+  useEffect(() => {
+    setAccountCapitalData(account_config?.capital_investment_id?.toString());
+    setAccountBankData(account_config?.account_bank_id?.toString());
+    setAccountCashData(account_config?.account_cash_id?.toString());
+    setAccountMobileData(account_config?.account_mobile_id?.toString());
+    setAccountOpeningStockData(account_config?.account_stock_opening_id?.toString());
+    setAccountProductGroupData(account_config?.account_product_group_id?.toString());
+    setAccountCategoryData(account_config?.account_category_id?.toString());
+    setAccountUserData(account_config?.account_user_id?.toString());
+    setAccountCustomerData(account_config?.account_customer_id?.toString());
+    setAccountVendorData(account_config?.account_vendor_id?.toString());
+
+    setVoucherStockOpeningData(account_config?.voucher_stock_opening_id?.toString());
+    setVoucherPurchaseData(account_config?.voucher_purchase_id?.toString());
+    setVoucherPurchaseReturnData(account_config?.voucher_purchase_return_id?.toString());
+    setVoucherSalesData(account_config?.voucher_sales_id?.toString());
+    setVoucherSalesReturnData(account_config?.voucher_sales_return_id?.toString());
+    setVoucherStockReconciliationData(account_config?.voucher_stock_reconciliation_id?.toString());
+  }, [account_config]);
 
   // Helper function to parse dates properly
   const parseDateValue = (dateString) => {
@@ -67,7 +91,6 @@ function AccountingForm(props) {
   // Helper function to format dates for MySQL
   const formatDateForMySQL = (date) => {
     if (!date) return null;
-    
     try {
       const dateObj = new Date(date);
       if (isNaN(dateObj.getTime())) return null;
@@ -88,56 +111,48 @@ function AccountingForm(props) {
 
   const form = useForm({
     initialValues: {
-      financial_start_date:
-        parseDateValue(account_config?.financial_start_date) || "",
-      financial_end_date:
-        parseDateValue(account_config?.financial_end_date) || "",
+      financial_start_date:parseDateValue(account_config?.financial_start_date) || "",
+      financial_end_date:parseDateValue(account_config?.financial_end_date) || "",
       capital_investment_id: account_config?.capital_investment_id || "",
       account_bank_id: account_config?.account_bank_id || "",
       account_cash_id: account_config?.account_cash_id || "",
+      account_mobile_id: account_config?.account_mobile_id || "",
+      account_stock_opening_id: account_config?.account_stock_opening_id || "",
+      account_product_group_id: account_config?.account_product_group_id || "",
       account_category_id: account_config?.account_category_id || "",
       account_customer_id: account_config?.account_customer_id || "",
-      account_mobile_id: account_config?.account_mobile_id || "",
-      account_product_group_id: account_config?.account_product_group_id || "",
       account_user_id: account_config?.account_user_id || "",
       account_vendor_id: account_config?.account_vendor_id || "",
       voucher_purchase_id: account_config?.voucher_purchase_id || "",
-      voucher_purchase_return_id:
-        account_config?.voucher_purchase_return_id || "",
+      voucher_purchase_return_id:account_config?.voucher_purchase_return_id || "",
       voucher_sales_id: account_config?.voucher_sales_id || "",
       voucher_sales_return_id: account_config?.voucher_sales_return_id || "",
       voucher_stock_opening_id: account_config?.voucher_stock_opening_id || "",
-      voucher_stock_reconciliation_id:
-        account_config?.voucher_stock_reconciliation_id || "",
+      voucher_stock_reconciliation_id:account_config?.voucher_stock_reconciliation_id || "",
     },
   });
 
   useEffect(() => {
     if (account_config) {
       form.setValues({
-        financial_start_date:
-          parseDateValue(account_config?.financial_start_date) || "",
-        financial_end_date:
-          parseDateValue(account_config?.financial_end_date) || "",
+        financial_start_date:parseDateValue(account_config?.financial_start_date) || "",
+        financial_end_date:parseDateValue(account_config?.financial_end_date) || "",
         capital_investment_id: account_config?.capital_investment_id || "",
         account_bank_id: account_config?.account_bank_id || "",
         account_cash_id: account_config?.account_cash_id || "",
+        account_mobile_id: account_config?.account_mobile_id || "",
+        account_stock_opening_id: account_config?.account_stock_opening_id || "",
+        account_product_group_id: account_config?.account_product_group_id || "",
         account_category_id: account_config?.account_category_id || "",
         account_customer_id: account_config?.account_customer_id || "",
-        account_mobile_id: account_config?.account_mobile_id || "",
-        account_product_group_id:
-          account_config?.account_product_group_id || "",
         account_user_id: account_config?.account_user_id || "",
         account_vendor_id: account_config?.account_vendor_id || "",
         voucher_purchase_id: account_config?.voucher_purchase_id || "",
-        voucher_purchase_return_id:
-          account_config?.voucher_purchase_return_id || "",
+        voucher_purchase_return_id:account_config?.voucher_purchase_return_id || "",
         voucher_sales_id: account_config?.voucher_sales_id || "",
         voucher_sales_return_id: account_config?.voucher_sales_return_id || "",
-        voucher_stock_opening_id:
-          account_config?.voucher_stock_opening_id || "",
-        voucher_stock_reconciliation_id:
-          account_config?.voucher_stock_reconciliation_id || "",
+        voucher_stock_opening_id:account_config?.voucher_stock_opening_id || "",
+        voucher_stock_reconciliation_id:account_config?.voucher_stock_reconciliation_id || "",
       });
     }
   }, [dispatch, account_config]);
@@ -155,49 +170,37 @@ function AccountingForm(props) {
   };
 
   const handleAccountingConfirmSubmit = async (values) => {
+
+    // Format dates properly for MySQL
+    const formattedValues = {
+      ...values,
+      financial_start_date: formatDateForMySQL(values.financial_start_date),
+      financial_end_date: formatDateForMySQL(values.financial_end_date)
+    };
+
+    const payload = {
+      url: `domain/config/accounting/${id}`,
+      data: formattedValues,
+    };
+
     try {
       setSaveCreateLoading(true);
-      
-      // Format dates properly for MySQL
-      const formattedValues = {
-        ...values,
-        financial_start_date: formatDateForMySQL(values.financial_start_date),
-        financial_end_date: formatDateForMySQL(values.financial_end_date)
-      };
-      
-      const value = {
-        url: `domain/config/accounting/${id}`,
-        data: formattedValues,
-      };
-      await dispatch(storeEntityData(value));
+      const result = await dispatch(storeEntityData(payload));
+      if (storeEntityData.fulfilled.match(result) && result.payload?.data?.status === 200) {
+        fetchDomainConfig()
+        showNotificationComponent(t("UpdateSuccessfully"), "teal");
+      } else {
+        showNotificationComponent(t("UpdateFailed"), "red");
+      }
 
-      notifications.show({
-        color: "teal",
-        title: t("UpdateSuccessfully"),
-        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-        loading: false,
-        autoClose: 700,
-        style: { backgroundColor: "lightgray" },
-      });
-
-      setTimeout(() => {
-        setSaveCreateLoading(false);
-      }, 700);
-    } catch (error) {
-      console.error("Error updating accounting config:", error);
-
-      notifications.show({
-        color: "red",
-        title: t("UpdateFailed"),
-        icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
-        loading: false,
-        autoClose: 700,
-        style: { backgroundColor: "lightgray" },
-      });
-
+    } catch (err) {
+      console.error(err);
+      showNotificationComponent(t("UpdateFailed"), "red");
+    } finally {
       setSaveCreateLoading(false);
     }
-  };
+
+  }
 
   useHotkeys(
     [
@@ -277,14 +280,8 @@ function AccountingForm(props) {
                     dropdownValue={accountDropdownData}
                     id={"capital_investment_id"}
                     searchable={true}
-                    value={
-                      accountBankData
-                          ? String(accountBankData)
-                          : account_config?.capital_investment_id
-                          ? String(account_config.capital_investment_id)
-                          : null
-                    }
-                    changeValue={setAccountBankData}
+                    value={accountCapitalData}
+                    changeValue={setAccountCapitalData}
                 />
               </Grid.Col>
             </Grid>
@@ -306,13 +303,7 @@ function AccountingForm(props) {
                   dropdownValue={accountDropdownData}
                   id={"account_bank_id"}
                   searchable={true}
-                  value={
-                    accountBankData
-                      ? String(accountBankData)
-                      : account_config?.account_bank_id
-                      ? String(account_config.account_bank_id)
-                      : null
-                  }
+                  value={accountBankData}
                   changeValue={setAccountBankData}
                 />
               </Grid.Col>
@@ -330,25 +321,87 @@ function AccountingForm(props) {
                   label={""}
                   placeholder={t("ChooseAccountCash")}
                   required={false}
-                  nextField={"account_category_id"}
+                  nextField={"account_mobile_id"}
                   name={"account_cash_id"}
                   form={form}
                   dropdownValue={accountDropdownData}
                   id={"account_cash_id"}
                   searchable={true}
-                  value={
-                    accountCashData
-                      ? String(accountCashData)
-                      : account_config?.account_cash_id
-                      ? String(account_config.account_cash_id)
-                      : null
-                  }
+                  value={accountCashData}
                   changeValue={setAccountCashData}
                 />
               </Grid.Col>
             </Grid>
           </Box>
-
+          <Box mt={"xs"}>
+            <Grid columns={24} gutter={{ base: 1 }}>
+              <Grid.Col span={12} fz={"sm"} mt={8}>
+                {t("AccountMobile")}
+              </Grid.Col>
+              <Grid.Col span={12}>
+                <SelectForm
+                    tooltip={t("ChooseAccountMobile")}
+                    label={""}
+                    placeholder={t("ChooseAccountMobile")}
+                    required={false}
+                    nextField={"account_stock_opening_id"}
+                    name={"account_mobile_id"}
+                    form={form}
+                    dropdownValue={accountDropdownData}
+                    id={"account_mobile_id"}
+                    searchable={true}
+                    value={accountMobileData}
+                    changeValue={setAccountMobileData}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
+          <Box mt={"xs"}>
+            <Grid columns={24} gutter={{ base: 1 }}>
+              <Grid.Col span={12} fz={"sm"} mt={8}>
+                {t("AccountOpeningStockData")}
+              </Grid.Col>
+              <Grid.Col span={12}>
+                <SelectForm
+                  tooltip={t("ChooseAccountOpeningStockData")}
+                  label={""}
+                  placeholder={t("ChooseAccountOpeningStockData")}
+                  required={false}
+                  nextField={"account_product_group_id"}
+                  name={"account_stock_opening_id"}
+                  form={form}
+                  dropdownValue={accountDropdownData}
+                  id={"account_stock_opening_id"}
+                  searchable={true}
+                  value={accountOpeningStockData}
+                  changeValue={setAccountOpeningStockData}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
+          <Box mt={"xs"}>
+            <Grid columns={24} gutter={{ base: 1 }}>
+              <Grid.Col span={12} fz={"sm"} mt={8}>
+                {t("AccountProductGroup")}
+              </Grid.Col>
+              <Grid.Col span={12}>
+                <SelectForm
+                    tooltip={t("ChooseAccountProductGroup")}
+                    label={""}
+                    placeholder={t("ChooseAccountProductGroup")}
+                    required={false}
+                    nextField={"account_category_id"}
+                    name={"account_product_group_id"}
+                    form={form}
+                    dropdownValue={accountDropdownData}
+                    id={"account_product_group_id"}
+                    searchable={true}
+                    value={accountProductGroupData}
+                    changeValue={setAccountProductGroupData}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
           <Box mt={"xs"}>
             <Grid columns={24} gutter={{ base: 1 }}>
               <Grid.Col span={12} fz={"sm"} mt={8}>
@@ -360,25 +413,41 @@ function AccountingForm(props) {
                   label={""}
                   placeholder={t("ChooseAccountCategory")}
                   required={false}
-                  nextField={"account_customer_id"}
+                  nextField={"account_user_id"}
                   name={"account_category_id"}
                   form={form}
                   dropdownValue={accountDropdownData}
                   id={"account_category_id"}
                   searchable={true}
-                  value={
-                    accountCategoryData
-                      ? String(accountCategoryData)
-                      : account_config?.account_category_id
-                      ? String(account_config.account_category_id)
-                      : null
-                  }
+                  value={accountCategoryData}
                   changeValue={setAccountCategoryData}
                 />
               </Grid.Col>
             </Grid>
           </Box>
-
+          <Box mt={"xs"}>
+            <Grid columns={24} gutter={{ base: 1 }}>
+              <Grid.Col span={12} fz={"sm"} mt={8}>
+                {t("AccountUser")}
+              </Grid.Col>
+              <Grid.Col span={12}>
+                <SelectForm
+                    tooltip={t("ChooseAccountUser")}
+                    label={""}
+                    placeholder={t("ChooseAccountUser")}
+                    required={false}
+                    nextField={"account_mobile_id"}
+                    name={"account_user_id"}
+                    form={form}
+                    dropdownValue={accountDropdownData}
+                    id={"account_user_id"}
+                    searchable={true}
+                    value={accountUserData}
+                    changeValue={setAccountUserData}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
           <Box mt={"xs"}>
             <Grid columns={24} gutter={{ base: 1 }}>
               <Grid.Col span={12} fz={"sm"} mt={8}>
@@ -390,114 +459,19 @@ function AccountingForm(props) {
                   label={""}
                   placeholder={t("ChooseAccountCustomer")}
                   required={false}
-                  nextField={"account_mobile_id"}
+                  nextField={"account_vendor_id"}
                   name={"account_customer_id"}
                   form={form}
                   dropdownValue={accountDropdownData}
                   id={"account_customer_id"}
                   searchable={true}
-                  value={
-                    accountCustomerData
-                      ? String(accountCustomerData)
-                      : account_config?.account_customer_id
-                      ? String(account_config.account_customer_id)
-                      : null
-                  }
+                  value={accountCustomerData}
                   changeValue={setAccountCustomerData}
                 />
               </Grid.Col>
             </Grid>
           </Box>
 
-          <Box mt={"xs"}>
-            <Grid columns={24} gutter={{ base: 1 }}>
-              <Grid.Col span={12} fz={"sm"} mt={8}>
-                {t("AccountMobile")}
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <SelectForm
-                  tooltip={t("ChooseAccountMobile")}
-                  label={""}
-                  placeholder={t("ChooseAccountMobile")}
-                  required={false}
-                  nextField={"account_product_group_id"}
-                  name={"account_mobile_id"}
-                  form={form}
-                  dropdownValue={accountDropdownData}
-                  id={"account_mobile_id"}
-                  searchable={true}
-                  value={
-                    accountMobileData
-                      ? String(accountMobileData)
-                      : account_config?.account_mobile_id
-                      ? String(account_config.account_mobile_id)
-                      : null
-                  }
-                  changeValue={setAccountMobileData}
-                />
-              </Grid.Col>
-            </Grid>
-          </Box>
-
-          <Box mt={"xs"}>
-            <Grid columns={24} gutter={{ base: 1 }}>
-              <Grid.Col span={12} fz={"sm"} mt={8}>
-                {t("AccountProductGroup")}
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <SelectForm
-                  tooltip={t("ChooseAccountProductGroup")}
-                  label={""}
-                  placeholder={t("ChooseAccountProductGroup")}
-                  required={false}
-                  nextField={"account_user_id"}
-                  name={"account_product_group_id"}
-                  form={form}
-                  dropdownValue={accountDropdownData}
-                  id={"account_product_group_id"}
-                  searchable={true}
-                  value={
-                    accountProductGroupData
-                      ? String(accountProductGroupData)
-                      : account_config?.account_product_group_id
-                      ? String(account_config.account_product_group_id)
-                      : null
-                  }
-                  changeValue={setAccountProductGroupData}
-                />
-              </Grid.Col>
-            </Grid>
-          </Box>
-
-          <Box mt={"xs"}>
-            <Grid columns={24} gutter={{ base: 1 }}>
-              <Grid.Col span={12} fz={"sm"} mt={8}>
-                {t("AccountUser")}
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <SelectForm
-                  tooltip={t("ChooseAccountUser")}
-                  label={""}
-                  placeholder={t("ChooseAccountUser")}
-                  required={false}
-                  nextField={"account_vendor_id"}
-                  name={"account_user_id"}
-                  form={form}
-                  dropdownValue={accountDropdownData}
-                  id={"account_user_id"}
-                  searchable={true}
-                  value={
-                    accountUserData
-                      ? String(accountUserData)
-                      : account_config?.account_user_id
-                      ? String(account_config.account_user_id)
-                      : null
-                  }
-                  changeValue={setAccountUserData}
-                />
-              </Grid.Col>
-            </Grid>
-          </Box>
 
           <Box mt={"xs"}>
             <Grid columns={24} gutter={{ base: 1 }}>
@@ -510,25 +484,41 @@ function AccountingForm(props) {
                   label={""}
                   placeholder={t("ChooseAccountVendor")}
                   required={false}
-                  nextField={"voucher_purchase_id"}
+                  nextField={"voucher_stock_opening_id"}
                   name={"account_vendor_id"}
                   form={form}
                   dropdownValue={accountDropdownData}
                   id={"account_vendor_id"}
                   searchable={true}
-                  value={
-                    accountVendorData
-                      ? String(accountVendorData)
-                      : account_config?.account_vendor_id
-                      ? String(account_config.account_vendor_id)
-                      : null
-                  }
+                  value={accountVendorData}
                   changeValue={setAccountVendorData}
                 />
               </Grid.Col>
             </Grid>
           </Box>
-
+          <Box mt={"xs"}>
+            <Grid columns={24} gutter={{ base: 1 }}>
+              <Grid.Col span={12} fz={"sm"} mt={8}>
+                {t("VoucherStockOpening")}
+              </Grid.Col>
+              <Grid.Col span={12}>
+                <SelectForm
+                    tooltip={t("ChooseVoucherStockOpening")}
+                    label={""}
+                    placeholder={t("ChooseVoucherStockOpening")}
+                    required={false}
+                    nextField={"voucher_purchase_id"}
+                    name={"voucher_stock_opening_id"}
+                    form={form}
+                    dropdownValue={voucherDropdownData}
+                    id={"voucher_stock_opening_id"}
+                    searchable={true}
+                    value={voucherStockOpeningData}
+                    changeValue={setVoucherStockOpeningData}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
           <Box mt={"xs"}>
             <Grid columns={24} gutter={{ base: 1 }}>
               <Grid.Col span={12} fz={"sm"} mt={8}>
@@ -546,13 +536,7 @@ function AccountingForm(props) {
                   dropdownValue={voucherDropdownData}
                   id={"voucher_purchase_id"}
                   searchable={true}
-                  value={
-                    voucherPurchaseData
-                      ? String(voucherPurchaseData)
-                      : account_config?.voucher_purchase_id
-                      ? String(account_config.voucher_purchase_id)
-                      : null
-                  }
+                  value={voucherPurchaseData}
                   changeValue={setVoucherPurchaseData}
                 />
               </Grid.Col>
@@ -576,19 +560,12 @@ function AccountingForm(props) {
                   dropdownValue={voucherDropdownData}
                   id={"voucher_purchase_return_id"}
                   searchable={true}
-                  value={
-                    voucherPurchaseReturnData
-                      ? String(voucherPurchaseReturnData)
-                      : account_config?.voucher_purchase_return_id
-                      ? String(account_config.voucher_purchase_return_id)
-                      : null
-                  }
+                  value={voucherPurchaseReturnData}
                   changeValue={setVoucherPurchaseReturnData}
                 />
               </Grid.Col>
             </Grid>
           </Box>
-
           <Box mt={"xs"}>
             <Grid columns={24} gutter={{ base: 1 }}>
               <Grid.Col span={12} fz={"sm"} mt={8}>
@@ -606,19 +583,12 @@ function AccountingForm(props) {
                   dropdownValue={voucherDropdownData}
                   id={"voucher_sales_id"}
                   searchable={true}
-                  value={
-                    voucherSalesData
-                      ? String(voucherSalesData)
-                      : account_config?.voucher_sales_id
-                      ? String(account_config.voucher_sales_id)
-                      : null
-                  }
+                  value={voucherSalesData}
                   changeValue={setVoucherSalesData}
                 />
               </Grid.Col>
             </Grid>
           </Box>
-
           <Box mt={"xs"}>
             <Grid columns={24} gutter={{ base: 1 }}>
               <Grid.Col span={12} fz={"sm"} mt={8}>
@@ -630,50 +600,14 @@ function AccountingForm(props) {
                   label={""}
                   placeholder={t("ChooseVoucherSalesReturn")}
                   required={false}
-                  nextField={"voucher_stock_opening_id"}
+                  nextField={"voucher_stock_reconciliation_id"}
                   name={"voucher_sales_return_id"}
                   form={form}
                   dropdownValue={voucherDropdownData}
                   id={"voucher_sales_return_id"}
                   searchable={true}
-                  value={
-                    voucherSalesReturnData
-                      ? String(voucherSalesReturnData)
-                      : account_config?.voucher_sales_return_id
-                      ? String(account_config.voucher_sales_return_id)
-                      : null
-                  }
+                  value={voucherSalesReturnData}
                   changeValue={setVoucherSalesReturnData}
-                />
-              </Grid.Col>
-            </Grid>
-          </Box>
-
-          <Box mt={"xs"}>
-            <Grid columns={24} gutter={{ base: 1 }}>
-              <Grid.Col span={12} fz={"sm"} mt={8}>
-                {t("VoucherStockOpening")}
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <SelectForm
-                  tooltip={t("ChooseVoucherStockOpening")}
-                  label={""}
-                  placeholder={t("ChooseVoucherStockOpening")}
-                  required={false}
-                  nextField={"voucher_stock_reconciliation_id"}
-                  name={"voucher_stock_opening_id"}
-                  form={form}
-                  dropdownValue={voucherDropdownData}
-                  id={"voucher_stock_opening_id"}
-                  searchable={true}
-                  value={
-                    voucherStockOpeningData
-                      ? String(voucherStockOpeningData)
-                      : account_config?.voucher_stock_opening_id
-                      ? String(account_config.voucher_stock_opening_id)
-                      : null
-                  }
-                  changeValue={setVoucherStockOpeningData}
                 />
               </Grid.Col>
             </Grid>
@@ -696,13 +630,7 @@ function AccountingForm(props) {
                   dropdownValue={voucherDropdownData}
                   id={"voucher_stock_reconciliation_id"}
                   searchable={true}
-                  value={
-                    voucherStockReconciliationData
-                      ? String(voucherStockReconciliationData)
-                      : account_config?.voucher_stock_reconciliation_id
-                      ? String(account_config.voucher_stock_reconciliation_id)
-                      : null
-                  }
+                  value={voucherStockReconciliationData}
                   changeValue={setVoucherStockReconciliationData}
                 />
               </Grid.Col>

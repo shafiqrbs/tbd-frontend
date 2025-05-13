@@ -153,7 +153,7 @@ function LedgerForm(props) {
                                                             dropdownValue={accountHeadDropdownData}
                                                             mt={8}
                                                             id={'parent_id'}
-                                                            searchable={false}
+                                                            searchable={true}
                                                             value={motherData}
                                                             changeValue={setMotherData}
                                                         />
