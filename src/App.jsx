@@ -8,7 +8,6 @@ import store, {persistor} from "./store";
 import { PersistGate } from 'redux-persist/integration/react'
 import AppRoute from "./AppRoute";
 
-
 function App() {
 
     return (

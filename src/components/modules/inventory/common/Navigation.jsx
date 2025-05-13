@@ -27,14 +27,17 @@ export default function Navigation(props) {
   const height = mainAreaHeight - 30;
   const { configData } = getConfigData();
   const navigate = useNavigate();
+  console.log(module);
   return (
     <>
       <ScrollArea
         h={
           module === "opening-approve-stock"
-            ? height - 9
+            ? height
             : module === 'config'
             ? height - 8
+            : module === 'opening-stock'
+            ? height+4
             : module
             ? height - 63
             : height
