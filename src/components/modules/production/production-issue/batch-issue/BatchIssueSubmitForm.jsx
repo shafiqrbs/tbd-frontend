@@ -1,4 +1,4 @@
-import {isNotEmpty, useForm} from "@mantine/form";
+import {useForm} from "@mantine/form";
 import React, {useEffect, useMemo, useState} from "react";
 import {
     Box,
@@ -24,7 +24,7 @@ import {
 import {useOutletContext, useParams} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {IconCalendar} from "@tabler/icons-react";
-import {storeEntityData, updateEntityData} from "../../../../../store/inventory/crudSlice.js";
+import {updateEntityData} from "../../../../../store/core/crudSlice.js";
 import genericClass from "../../../../../assets/css/Generic.module.css";
 import DatePickerForm from "../../../../form-builders/DatePicker.jsx";
 import SelectForm from "../../../../form-builders/SelectForm.jsx";
@@ -42,10 +42,10 @@ import dayjs from 'dayjs';
 
 export default function BatchIssueSubmitForm(props) {
     const {
-        setLoadCardProducts, batchId, setBatchId, productionsRecipeItems, setProductionsRecipeItems,productionsIssueData
+        batchId, setBatchId, productionsRecipeItems, setProductionsRecipeItems, productionsIssueData
     } = props;
 
-    const { id } = useParams();
+    const {id} = useParams();
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 170;
@@ -68,7 +68,7 @@ export default function BatchIssueSubmitForm(props) {
             factory_id: '',
             vendor_id: '',
             warehouse_id: '',
-            issued_by: '',
+            issued_by_id: '',
             narration: '',
         },
         validate: {
@@ -83,7 +83,7 @@ export default function BatchIssueSubmitForm(props) {
             setIssueType(String(productionsIssueData.issue_type) || null);
             setWarehouseId(String(productionsIssueData.issue_warehouse_id) || null);
             setVendorId(String(productionsIssueData.vendor_id) || null);
-            setIssuedById(String(productionsIssueData.created_by_id) || null);
+            setIssuedById(String(productionsIssueData.issued_by_id) || null);
 
             form.setValues({
                 invoice_date: productionsIssueData.invoice_date
@@ -93,7 +93,7 @@ export default function BatchIssueSubmitForm(props) {
                 batch_id: productionsIssueData.production_batch_id || '',
                 vendor_id: productionsIssueData.vendor_id || '',
                 warehouse_id: productionsIssueData.warehouse_id || '',
-                issued_by: productionsIssueData.issued_by || '',
+                issued_by_id: productionsIssueData.issued_by_id || '',
                 narration: productionsIssueData.narration || '',
             });
         }
@@ -115,12 +115,6 @@ export default function BatchIssueSubmitForm(props) {
             setIssueByDropdownData(transformedData);
         }
     }, []);
-
-    const [lastClicked, setLastClicked] = useState(null);
-    const handleClick = (event) => {
-        const clickedButton = event.currentTarget.name;
-        setLastClicked(clickedButton);
-    };
 
     let warehouseDropdownData = getCoreWarehouseDropdownData();
     let vendorDropdownData = getVendorDropdownData();
@@ -204,15 +198,13 @@ export default function BatchIssueSubmitForm(props) {
                         radius="xl"
                         color="red"
                         onClick={() => {
-                            const dataString = localStorage.getItem("temp-production-issue");
-                            let data = dataString ? JSON.parse(dataString) : [];
+                            // const dataString = localStorage.getItem("temp-production-issue");
+                            // let data = dataString ? JSON.parse(dataString) : [];
+                            //
+                            // data = data.filter((d) => d.product_id !== item.product_id);
+                            //
+                            // const updatedDataString = JSON.stringify(data);
 
-                            data = data.filter((d) => d.product_id !== item.product_id);
-
-                            const updatedDataString = JSON.stringify(data);
-
-                            localStorage.setItem("temp-production-issue", updatedDataString);
-                            setLoadCardProducts(true);
                         }}
                     >
                         <IconX
@@ -244,7 +236,7 @@ export default function BatchIssueSubmitForm(props) {
         formValue["issue_date"] = values.invoice_date
             ? new Date(values.invoice_date).toLocaleDateString("en-CA", options)
             : new Date().toLocaleDateString("en-CA");
-        formValue["issued_by"] = form.values.issued_by;
+        formValue["issued_by_id"] = form.values.issued_by_id;
         formValue["issue_type"] = issueType;
         formValue["production_batch_id"] = batchId;
         formValue["type"] = 'batch';
@@ -261,7 +253,7 @@ export default function BatchIssueSubmitForm(props) {
         formValue["items"] = transformedArray;
 
         const value = {
-            url: 'production/issue/'+id,
+            url: 'production/issue/' + id,
             data: formValue
         }
 
@@ -487,10 +479,10 @@ export default function BatchIssueSubmitForm(props) {
                                         label=""
                                         placeholder={t("ChooseIssuedBy")}
                                         required={false}
-                                        name={"issued_by"}
+                                        name={"issued_by_id"}
                                         form={form}
                                         dropdownValue={issueByDropdownData}
-                                        id={"issued_by"}
+                                        id={"issued_by_id"}
                                         nextField={"save"}
                                         searchable={false}
                                         value={issuedById}
@@ -544,7 +536,6 @@ export default function BatchIssueSubmitForm(props) {
                                 fullWidth={true}
                                 variant="filled"
                                 type={"submit"}
-                                onClick={handleClick}
                                 name="print"
                                 leftSection={<IconPrinter size={14}/>}
                                 className={genericClass.invoicePrint}
@@ -564,7 +555,6 @@ export default function BatchIssueSubmitForm(props) {
                                 style={{
                                     transition: "all 0.3s ease",
                                 }}
-                                onClick={handleClick}
                             >
                                 {t("Generate")}
                             </Button>
@@ -579,7 +569,7 @@ export default function BatchIssueSubmitForm(props) {
                     setBatchDrawer={setBatchDrawer}
                     warehouseData={warehouseData}
                     setWarehouseData={setWarehouseData}
-                    setLoadCardProducts={setLoadCardProducts}
+                    setLoadCardProducts={productionsRecipeItems}
                 />
             )}
         </>

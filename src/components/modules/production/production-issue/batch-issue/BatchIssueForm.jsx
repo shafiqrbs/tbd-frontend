@@ -68,13 +68,13 @@ const getCoreProducts = () => {
 
 export default function BatchIssueForm(props) {
 
-    const { id } = useParams();
+    const {id} = useParams();
     const dispatch = useDispatch();
-    const { t } = useTranslation();
-    const { isOnline, mainAreaHeight } = useOutletContext();
+    const {t} = useTranslation();
+    const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 360;
 
-    const { domainConfigData } = props;
+    const {domainConfigData} = props;
     const production_config = domainConfigData?.production_config;
     const isWarehouse = production_config?.is_warehouse;
     const isMeasurement = domainConfigData?.isMeasurement;
@@ -83,7 +83,6 @@ export default function BatchIssueForm(props) {
     const [warehouseDropdownData, setWarehouseDataDropdown] = useState([]);
     const [warehouseData, setWarehouseData] = useState(null);
     const [searchValue, setSearchValue] = useState("");
-    const [loadCardProducts, setLoadCardProducts] = useState(false);
     const [productionsRecipeItems, setProductionsRecipeItems] = useState([]);
     const [productionsIssueData, setProductionsIssueData] = useState({});
     const [productQuantities, setProductQuantities] = useState({});
@@ -192,6 +191,57 @@ export default function BatchIssueForm(props) {
         );
     }, [filteredProducts, debouncedSearchValue]);
 
+    const handleFormSubmit = (values) => {
+        const productsToAdd = filteredTableProducts.filter(
+            (data) =>
+                productQuantities[data.id] &&
+                Number(productQuantities[data.id]) > 0
+        );
+
+        if (productsToAdd.length === 0) {
+            showNotificationComponent(t("WeNotifyYouThat"), 'red')
+            return;
+        }
+
+        // Update state-based product list
+        setProductionsRecipeItems((prevItems) => {
+            const updatedItems = [...prevItems];
+
+            productsToAdd.forEach((data) => {
+                const quantity = Number(productQuantities[data.id]);
+
+                const productToAdd = {
+                    id: data.id,
+                    stock_item_id: isWarehouse ? data.stock_item_id : data.stock_id,
+                    display_name: isWarehouse ? data.item_name : data.display_name,
+                    quantity: Number(quantity),
+                    unit_name: isWarehouse ? data.uom : data.unit_name,
+                    purchase_price: data.purchase_price,
+                    sales_price: data.sales_price,
+                    stock_quantity: isWarehouse ? data.stock_quantity : data.quantity,
+                    warehouse_id: isWarehouse ? data.warehouse_id : null,
+                };
+
+                const existingIndex = updatedItems.findIndex(
+                    (item) => String(item.stock_item_id) === String(productToAdd.stock_item_id)
+                );
+
+                if (existingIndex !== -1) {
+                    updatedItems[existingIndex] = {
+                        ...updatedItems[existingIndex],
+                        ...productToAdd,
+                    };
+                } else {
+                    updatedItems.push(productToAdd);
+                }
+            });
+
+            return updatedItems;
+        });
+        setProductQuantities({})
+        showNotificationComponent(t("ProductAddedSuccessfully"), 'green')
+    }
+
     return (
         <>
             <Box>
@@ -201,58 +251,7 @@ export default function BatchIssueForm(props) {
                     </Grid.Col>
                     <Grid.Col span={8}>
                         <form
-                            onSubmit={form.onSubmit(() => {
-                                const productsToAdd = filteredTableProducts.filter(
-                                    (data) =>
-                                        productQuantities[data.id] &&
-                                        Number(productQuantities[data.id]) > 0
-                                );
-
-                                if (productsToAdd.length === 0) {
-                                    showNotificationComponent(t("WeNotifyYouThat"), 'red')
-                                    return;
-                                }
-
-                                // Update state-based product list
-                                setProductionsRecipeItems((prevItems) => {
-                                    const updatedItems = [...prevItems];
-
-                                    productsToAdd.forEach((data) => {
-                                        const quantity = Number(productQuantities[data.id]);
-
-                                        const productToAdd = {
-                                            id: data.id,
-                                            // product_id: data.id,
-                                            stock_item_id: isWarehouse ? data.stock_item_id : data.stock_id,
-                                            display_name: isWarehouse ? data.item_name : data.display_name,
-                                            quantity: Number(quantity),
-                                            unit_name: isWarehouse ? data.uom : data.unit_name,
-                                            purchase_price: data.purchase_price,
-                                            sales_price: data.sales_price,
-                                            stock_quantity: isWarehouse ? data.stock_quantity : data.quantity,
-                                            warehouse_id: isWarehouse ? data.warehouse_id : null,
-                                            // type: 'general_issue',
-                                        };
-
-                                        const existingIndex = updatedItems.findIndex(
-                                            (item) => String(item.stock_item_id) === String(productToAdd.stock_item_id)
-                                        );
-
-                                        if (existingIndex !== -1) {
-                                            updatedItems[existingIndex] = {
-                                                ...updatedItems[existingIndex],
-                                                ...productToAdd,
-                                            };
-                                        } else {
-                                            updatedItems.push(productToAdd);
-                                        }
-                                    });
-
-                                    return updatedItems;
-                                });
-                                setProductQuantities({})
-                                showNotificationComponent(t("ProductAddedSuccessfully"), 'green')
-                            })}
+                            onSubmit={form.onSubmit(handleFormSubmit)}
                         >
                             <Box bg={"white"} p={"md"} pb="0" className={"borderRadiusAll"}>
                                 <Box>
@@ -506,12 +505,10 @@ export default function BatchIssueForm(props) {
 
                                                                     onClick={() => {
                                                                         const quantity = productQuantities[data.id];
-                                                                        // console.log(data)
 
                                                                         if (quantity && Number(quantity) > 0) {
                                                                             const productToAdd = {
                                                                                 id: data.id,
-                                                                                // product_id: data.id,
                                                                                 stock_item_id: isWarehouse ? data.stock_item_id : data.stock_id,
                                                                                 display_name: isWarehouse ? data.item_name : data.display_name,
                                                                                 quantity: Number(quantity),
@@ -520,7 +517,6 @@ export default function BatchIssueForm(props) {
                                                                                 sales_price: data.sales_price,
                                                                                 stock_quantity: isWarehouse ? data.stock_quantity : data.quantity,
                                                                                 warehouse_id: isWarehouse ? data.warehouse_id : null,
-                                                                                // type: 'general_issue',
                                                                             };
 
                                                                             setProductionsRecipeItems(prevItems => {
@@ -684,8 +680,6 @@ export default function BatchIssueForm(props) {
                     </Grid.Col>
                     <Grid.Col span={15}>
                         <BatchIssueSubmitForm
-                            loadCardProducts={loadCardProducts}
-                            setLoadCardProducts={setLoadCardProducts}
                             batchId={batchId}
                             setBatchId={setBatchId}
                             productionsRecipeItems={productionsRecipeItems}

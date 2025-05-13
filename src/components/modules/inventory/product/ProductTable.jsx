@@ -372,7 +372,11 @@ function ProductTable({categoryDropdown}) {
                         </Text>
                         {!allDataLoaded && (
                             <Text size="xs" color="dimmed">
-                                Scroll to bottom to load more...
+                                {fetching && !allDataLoaded && (
+                                    <Text size="xs" color="dimmed">
+                                        {t("LoadingProducts")}...
+                                    </Text>
+                                )}
                             </Text>
                         )}
                     </Group>

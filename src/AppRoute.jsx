@@ -72,6 +72,7 @@ import DiscountDashboard from "./components/modules/discount/dashboard/DiscountD
 import IssueWarehouseIndex from "./components/modules/production/production-issue/warehouse/IssueWarehouseIndex.jsx";
 import ProtectedModule from "./routes/ProtectedModule.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import IssueIndex from "./components/modules/production/production-issue/issue-table/issueIndex.jsx";
 
 function AppRoute() {
 	return (
@@ -470,6 +471,11 @@ function AppRoute() {
 					<Route path="issue-production-general/:id" element={
 						<ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
 							<GeneralIssueIndex />
+						</ProtectedRoute>
+					} />
+					<Route path="issue-production/:type" element={
+						<ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
+							<IssueIndex />
 						</ProtectedRoute>
 					} />
 					<Route path="issue-production-batch/:id" element={
