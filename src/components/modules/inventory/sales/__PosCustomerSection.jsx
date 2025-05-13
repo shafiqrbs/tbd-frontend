@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import genericClass from "../../../../assets/css/Generic.module.css";
 import { Box, Grid, Tooltip, ActionIcon, Group, Text, Overlay } from "@mantine/core";
-import { IconMessage, IconEyeEdit, IconUserCircle, IconUser } from "@tabler/icons-react";
+import { IconMessage, IconEyeEdit, IconUserCircle, IconUserPlus } from "@tabler/icons-react";
 import InputForm from "../../../form-builders/InputForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput";
 import { useTranslation } from "react-i18next";
@@ -198,7 +198,7 @@ export default function __PosCustomerSection(props) {
 														}}
 														disabled={customerData}
 													>
-														<IconUser
+														<IconUserPlus
 															size={18}
 															stroke={1.5}
 															color="gray"
