@@ -122,7 +122,9 @@ function HeadGroupTable() {
             title: t("Action"),
             textAlign: "right",
             render: (data) => (
-                <Group gap={4} justify="right" wrap="nowrap">
+                    <>
+                    {data.is_private !== 1 &&(
+                        <Group gap={4} justify="right" wrap="nowrap">
                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                         <Menu.Target>
                             <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
@@ -158,6 +160,7 @@ function HeadGroupTable() {
                         </Menu.Dropdown>
                     </Menu>
                 </Group>
+                    )}</>
             ),
         },
     ], [t, indexData.data]);

@@ -31,6 +31,7 @@ function SettingsIndex() {
 
   const progress = getLoadingProgress();
   const { configData, fetchData } = getConfigData();
+  const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
   const navigate = useNavigate();
 
   const { id } = useParams();

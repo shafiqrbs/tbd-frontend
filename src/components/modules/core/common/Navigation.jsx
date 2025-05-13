@@ -27,6 +27,7 @@ export default function Navigation(props) {
   const height = mainAreaHeight - 20;
   const { configData } = getConfigData();
   const navigate = useNavigate();
+  const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
   return (
     <>
       <ScrollArea
@@ -168,6 +169,8 @@ export default function Navigation(props) {
               </Text>
             </Flex>
           </Flex>
+
+          {domainConfigData && domainConfigData?.inventory_config && domainConfigData?.inventory_config?.sku_warehouse ===1 && (
           <Flex direction={`column`} align={"center"}>
             <Tooltip
               label={t("Warehouse")}
@@ -214,7 +217,9 @@ export default function Navigation(props) {
               </Text>
             </Flex>
           </Flex>
-          <Flex direction={`column`} align={"center"}>
+          )}
+          {domainConfigData && domainConfigData?.inventory_config && domainConfigData?.inventory_config?.is_marketing_executive ===1 && (
+              <Flex direction={`column`} align={"center"}>
             <Tooltip
               label={t("MarketingExecutive")}
               px={16}
@@ -260,6 +265,7 @@ export default function Navigation(props) {
               </Text>
             </Flex>
           </Flex>
+          )}
           <Flex direction={`column`} align={"center"}>
             <Tooltip
               label={t("Setting")}
