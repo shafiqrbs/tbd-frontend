@@ -1,15 +1,18 @@
-import { Navigate, Outlet } from "react-router-dom";
-import getDomainConfig from "../components/global-hook/config-data/getDomainConfig.js";
-import { useNetwork, useViewportSize } from "@mantine/hooks";
+import React from "react";
+import { Navigate } from "react-router-dom";
 
-export default function ProtectedRoute({ module }) {
-	const { domainConfig } = getDomainConfig();
-	const { height } = useViewportSize();
-	const networkStatus = useNetwork();
+export default function ProtectedRoute({ roles, children }) {
+	const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
 
-	if (!domainConfig?.modules?.includes(module)) {
+	if (userInfo?.access_control_role?.includes("role_domain")) {
+		return children;
+	}
+
+	const hasRequiredRole = roles.some((role) => userInfo?.access_control_role?.includes(role));
+
+	if (!hasRequiredRole) {
 		return <Navigate to="/" replace />;
 	}
 
-	return <Outlet context={{ isOnline: networkStatus.online, mainAreaHeight: height }} />;
+	return children;
 }
