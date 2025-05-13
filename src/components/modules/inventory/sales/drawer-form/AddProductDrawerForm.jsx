@@ -28,7 +28,7 @@ function AddProductDrawerForm(props) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 100; //TabList height 104
+    const height = mainAreaHeight - 120; //TabList height 104
     const [categoryData, setCategoryData] = useState(null);
     const [productTypeData, setProductTypeData] = useState(null);
     const [productUnitData, setProductUnitData] = useState(null);

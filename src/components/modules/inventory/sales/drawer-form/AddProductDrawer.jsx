@@ -34,10 +34,10 @@ function AddProductDrawer(props) {
         <Drawer.Overlay />
         <Drawer.Content>
           <ScrollArea
-            h={height + 100}
+            h={height + 58}
             scrollbarSize={2}
             type="never"
-            bg={"gray.1"}
+            bg={"white"}
           >
             <Flex
               mih={40}

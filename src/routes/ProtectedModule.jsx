@@ -6,12 +6,14 @@ export default function ProtectedModule({ modules }) {
 	const domainConfig = JSON.parse(localStorage.getItem("domain-config-data") || "{}");
 	const { height } = useViewportSize();
 	const networkStatus = useNetwork();
+	const headerHeight = 42;
+	const footerHeight = 58;
+	const padding = 0;
+	const mainAreaHeight = height - headerHeight - footerHeight - padding;
 
 	const moduleArray = Array.isArray(modules) ? modules : [modules];
-
 	if (!moduleArray.some(module => domainConfig?.modules?.includes(module))) {
 		return <Navigate to="/" replace />;
 	}
-
-	return <Outlet context={{ isOnline: networkStatus.online, mainAreaHeight: height }} />;
+	return <Outlet context={{ isOnline: networkStatus.online, mainAreaHeight: mainAreaHeight }} />;
 }

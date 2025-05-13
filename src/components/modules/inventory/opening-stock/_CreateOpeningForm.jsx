@@ -39,6 +39,7 @@ import Navigation from "../common/Navigation.jsx";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
 import SelectForm from "../../../form-builders/SelectForm";
+import _OpeningSearch from "./_OpeningSearch";
 
 function _CreateOpeningForm(props) {
     const { currencySymbol } = props
@@ -46,7 +47,7 @@ function _CreateOpeningForm(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 52; //TabList height 104
+    const height = mainAreaHeight - 116; //TabList height 104
     const itemFormheight = mainAreaHeight - 160; //TabList height 104
     const [fetching, setFetching] = useState(true);
 
@@ -668,6 +669,13 @@ function _CreateOpeningForm(props) {
                                 )}
                             </Grid.Col>
                             <Grid.Col span={17} >
+                                <Box>
+                                    <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
+                                        <Box pb={'xs'}>
+                                            <_OpeningSearch module={'opening-stock'} tableDataLoading={setFetching}/>
+                                        </Box>
+                                    </Box>
+                                </Box>
                                 <Box className={'borderRadiusAll'}>
                                     <DataTable
                                         classNames={{
