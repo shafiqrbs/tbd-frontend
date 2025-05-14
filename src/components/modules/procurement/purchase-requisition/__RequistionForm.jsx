@@ -10,6 +10,7 @@ import { getHotkeyHandler, useToggle } from "@mantine/hooks";
 import { useDispatch } from "react-redux";
 import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import __RequistionInvoiceoSection from "./__RequistionInvoiceSection.jsx";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 
 export default function __RequistionForm(props) {
   const {
@@ -28,6 +29,8 @@ export default function __RequistionForm(props) {
   const [fetching, setFetching] = useState(false);
   const dispatch = useDispatch();
 
+    const [vendorData, setVendorData] = useState(null);
+    const [vendorObject,setVendorObject] = useState({})
   // form
   const form = useForm({
     initialValues: {
@@ -113,8 +116,8 @@ export default function __RequistionForm(props) {
               setTimeout(() => {
                 localStorage.removeItem("temp-requisition-products");
                 form.reset();
-                setVendorData(null);
-                setVendorObject(null);
+                setVendorObject({})
+                  setVendorData(null)
                 setLoadCardProducts(true);
               }, 700);
             } else {
@@ -303,7 +306,11 @@ export default function __RequistionForm(props) {
             isSMSActive={isSMSActive}
             defaultVendorId={defaultVendorId}
             setDefaultVendorId={setDefaultVendorId}
-          />
+            vendorData={vendorData}
+            setVendorData={setVendorData}
+            vendorObject={vendorObject}
+            setVendorObject={setVendorObject}
+            />
         </Box>
       </form>
     </>

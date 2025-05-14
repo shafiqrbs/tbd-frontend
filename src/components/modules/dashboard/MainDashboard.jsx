@@ -390,8 +390,6 @@ function MainDashboard(props) {
                                                     />
                                                 </List.Item>
                                             )}
-
-
                                             <List.Item
                                                 pl={"xs"}
                                                 icon={
@@ -450,6 +448,38 @@ function MainDashboard(props) {
                                                     }}
                                                 />
                                             </List.Item>
+                                            {["role_admin","role_domain"].some((value) => userRole.includes(value)) &&
+                                            (
+                                            <List.Item
+                                                pl={"xs"}
+                                                icon={
+                                                    <ThemeIcon
+                                                        color="teal.6"
+                                                        size={20}
+                                                        radius="xl"
+                                                        variant="outline"
+                                                    >
+                                                        <IconList/>
+                                                    </ThemeIcon>
+                                                }
+                                            >
+                                                <NavLink
+                                                    pl={"md"}
+                                                    href="/inventory/config"
+                                                    label={t("Configuration")}
+                                                    component="button"
+                                                    onClick={(e) => {
+                                                        navigate("inventory/config");
+                                                    }}
+                                                    onAuxClick={(e) => {
+                                                        // Handle middle mouse button click for browsers that support it
+                                                        if (e.button === 1) {
+                                                            window.open("/inventory/config", "_blank");
+                                                        }
+                                                    }}
+                                                />
+                                            </List.Item>
+                                            )}
 
                                         </List>
                                     </Box>
@@ -784,7 +814,7 @@ function MainDashboard(props) {
                                     <Box fz="sm" c="dimmed" mt="sm">
                                         <List spacing="ms" size="sm" center>
                                             {
-                                                ["role_inventory_stock",].some((value) => userRole.includes(value)) && (
+                                                ["role_inventory_stock",'role_domain'].some((value) => userRole.includes(value)) && (
                                                     <List.Item
                                                         pl={"xs"}
                                                         icon={

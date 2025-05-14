@@ -40,14 +40,15 @@ export default function __RequistionInvoiceSection(props) {
     handleClick,
     isSMSActive,
     setDefaultVendorId,
+    vendorData,
+    setVendorData,
     vendorObject,
     setVendorObject
   } = props;
   const { t } = useTranslation();
 
-  // vendor dropdown
-  const [vendorData, setVendorData] = useState(null);
   const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
+
   useEffect(() => {
     if (vendorData) {
       const coreVendors = JSON.parse(
