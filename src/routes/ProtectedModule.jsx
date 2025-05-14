@@ -3,7 +3,7 @@ import getDomainConfig from "../components/global-hook/config-data/getDomainConf
 import { useNetwork, useViewportSize } from "@mantine/hooks";
 
 export default function ProtectedModule({ modules }) {
-	const { domainConfig } = getDomainConfig();
+	const domainConfig = JSON.parse(localStorage.getItem("domain-config-data") || "{}");
 	const { height } = useViewportSize();
 	const networkStatus = useNetwork();
 

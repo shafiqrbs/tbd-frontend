@@ -81,19 +81,14 @@ function MainDashboard(props) {
         }
     });
 
-    // console.log(domainConfig);
     useEffect(() => {
-        const checkDomainConfig = () => {
-            if (!configData) {
-                navigate("/login");
-            }
-        };
-
-        // Adding a short delay before checking localStorage (e.g., 500ms)
-        const timeoutId = setTimeout(checkDomainConfig, 500);
-
-        return () => clearTimeout(timeoutId); // Clear the timeout if the component unmounts
-    }, [navigate]);  // Notice we're also adding `navigate` dependency here
+        const domainConfigData = localStorage.getItem("domain-config-data");
+        const inventoryConfig = JSON.parse(domainConfigData || '{}')?.inventory_config;
+        
+        if (!inventoryConfig?.id) {
+            navigate("/login");
+        }
+    }, [navigate]);
 
     return (
         <>
