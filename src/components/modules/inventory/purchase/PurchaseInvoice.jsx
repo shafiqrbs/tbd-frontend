@@ -41,10 +41,7 @@ function PurchaseInvoice() {
                 }
               />
               <Box p={"8"}>
-                {domainConfigData?.inventory_config?.business_model?.slug ===
-                  "general" && (
                   <_GenericInvoiceForm domainConfigData={domainConfigData} />
-                )}
               </Box>
             </>
           )}

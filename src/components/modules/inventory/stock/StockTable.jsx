@@ -265,13 +265,18 @@ function StockTable(props) {
                 const [opened, setOpened] = useState(false);
                 const autoplay = useRef(Autoplay({ delay: 2000 }));
 
-                const images = [
-                  item?.images?.feature_image ? `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/${item?.images?.feature_image}` : null,
-                  item?.images?.path_one ? `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/${item?.images?.path_one}` : null,
-                  item?.images?.path_two ? `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/${item?.images?.path_two}` : null,
-                  item?.images?.path_three ? `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/${item?.images?.path_three}` : null,
-                  item?.images?.path_four ? `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/${item?.images?.path_four}` : null,
-              ].filter(Boolean);
+                const baseUrl = import.meta.env.VITE_IMAGE_GATEWAY_URL;
+                const imageKeys = [
+                  'feature_image',
+                  'path_one',
+                  'path_two',
+                  'path_three',
+                  'path_four'
+                ];
+                const images = imageKeys
+                    .map((key) => item?.images?.[key])
+                    .filter(Boolean)
+                    .map((path) => `${baseUrl}/${path}`);
 
                 return (
                   <>
@@ -382,13 +387,14 @@ function StockTable(props) {
             },
             {
               accessor: "location",
-              title: t("Location"),
+              title: t("Rack"),
+              width:120,
               textAlign: "center",
               render: (item) => (
                 <>
                   <SelectForm
                     tooltip={t("ChooseProductLocation")}
-                    placeholder={t("ChooseProductLocation")}
+                    placeholder={t("Rack")}
                     required={true}
                     name={"location_id"}
                     form={form}
@@ -429,81 +435,85 @@ function StockTable(props) {
                     {" "}
                     {t("View")}
                   </Button>
+                  {!item.parent_id &&
                   <Menu
-                    position="bottom-end"
-                    offset={3}
-                    withArrow
-                    trigger="hover"
-                    openDelay={100}
-                    closeDelay={400}
+                      position="bottom-end"
+                      offset={3}
+                      withArrow
+                      trigger="hover"
+                      openDelay={100}
+                      closeDelay={400}
                   >
                     <Menu.Target>
                       <ActionIcon
-                        size="sm"
-                        variant="outline"
-                        color="red"
-                        radius="xl"
-                        aria-label="Settings"
+                          size="sm"
+                          variant="outline"
+                          color="red"
+                          radius="xl"
+                          aria-label="Settings"
                       >
                         <IconDotsVertical
-                          height={"18"}
-                          width={"18"}
-                          stroke={1.5}
+                            height={"18"}
+                            width={"18"}
+                            stroke={1.5}
                         />
                       </ActionIcon>
                     </Menu.Target>
                     <Menu.Dropdown>
                       <Menu.Item
-                        onClick={() => {
-                          dispatch(setInsertType("update"));
-                          dispatch(
-                            editEntityData("inventory/product/" + item.product_id)
-                          );
-                          dispatch(setFormLoading(true));
-                          navigate(`/inventory/product/${item.product_id}`);
-                        }}
+                          onClick={() => {
+                            dispatch(setInsertType("update"));
+                            dispatch(
+                                editEntityData("inventory/product/" + item.product_id)
+                            );
+                            dispatch(setFormLoading(true));
+                            navigate(`/inventory/product/${item.product_id}`);
+                          }}
                       >
                         {t("Edit")}
                       </Menu.Item>
+
                       <Menu.Item
-                        target="_blank"
-                        component="a"
-                        w={"200"}
-                        mt={"2"}
-                        bg={"red.1"}
-                        c={"red.6"}
-                        onClick={() => {
-                          modals.openConfirmModal({
-                            title: (
-                              <Text size="md">
-                                {" "}
-                                {t("FormConfirmationTitle")}
-                              </Text>
-                            ),
-                            children: (
-                              <Text size="sm">
-                                {" "}
-                                {t("FormConfirmationMessage")}
-                              </Text>
-                            ),
-                            labels: { confirm: "Confirm", cancel: "Cancel" },
-                            confirmProps: { color: "red.6" },
-                            onCancel: () => console.log("Cancel"),
-                            onConfirm: () => {
-                              console.log("ok pressed");
-                            },
-                          });
-                        }}
-                        rightSection={
-                          <IconTrashX
-                            style={{ width: rem(14), height: rem(14) }}
-                          />
-                        }
+                          target="_blank"
+                          component="a"
+                          w={"200"}
+                          mt={"2"}
+                          bg={"red.1"}
+                          c={"red.6"}
+                          onClick={() => {
+                            modals.openConfirmModal({
+                              title: (
+                                  <Text size="md">
+                                    {" "}
+                                    {t("FormConfirmationTitle")}
+                                  </Text>
+                              ),
+                              children: (
+                                  <Text size="sm">
+                                    {" "}
+                                    {t("FormConfirmationMessage")}
+                                  </Text>
+                              ),
+                              labels: {confirm: "Confirm", cancel: "Cancel"},
+                              confirmProps: {color: "red.6"},
+                              onCancel: () => console.log("Cancel"),
+                              onConfirm: () => {
+                                console.log("ok pressed");
+                              },
+                            });
+                          }}
+                          rightSection={
+                            <IconTrashX
+                                style={{width: rem(14), height: rem(14)}}
+                            />
+                          }
                       >
                         {t("Delete")}
                       </Menu.Item>
                     </Menu.Dropdown>
                   </Menu>
+                  }
+
                 </Group>
               ),
             },

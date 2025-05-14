@@ -250,7 +250,7 @@ export default function __PosVendorSection(props) {
                   </Grid.Col>
                   <Grid.Col span={3}>
                     <Text ta="left" size="xs" pl={"md"}>
-                      {t("Receive")}
+                      {t("Payment")}
                     </Text>
                   </Grid.Col>
                   <Grid.Col span={6}>
