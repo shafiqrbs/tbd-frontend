@@ -82,12 +82,16 @@ function MainDashboard(props) {
     });
 
     useEffect(() => {
-        const domainConfigData = localStorage.getItem("domain-config-data");
-        const inventoryConfig = JSON.parse(domainConfigData || '{}')?.inventory_config;
-        
-        if (!inventoryConfig?.id) {
-            navigate("/login");
-        }
+        const checkDomainConfig = () => {
+            const domainConfigData = localStorage.getItem("domain-config-data");
+            const inventoryConfig = JSON.parse(domainConfigData || '{}')?.inventory_config;
+            
+            if (!inventoryConfig?.id) {
+                navigate("/login");
+            }
+        };
+
+        setTimeout(checkDomainConfig, 500);
     }, [navigate]);
 
     return (
