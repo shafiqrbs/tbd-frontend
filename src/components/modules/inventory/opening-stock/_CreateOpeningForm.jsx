@@ -47,7 +47,7 @@ function _CreateOpeningForm(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 116; //TabList height 104
+    const height = mainAreaHeight - 120; //TabList height 104
     const itemFormheight = mainAreaHeight - 160; //TabList height 104
     const [fetching, setFetching] = useState(true);
 
@@ -358,85 +358,84 @@ function _CreateOpeningForm(props) {
                             <Grid.Col span={7} >
                                 <Box bg={"white"} p={"md"} pb="0" className={"borderRadiusAll"}>
                                     <Box mb={"xs"}>
-                                    <Grid columns={12} gutter={{base: 2}}>
-                                        <Grid.Col span={7}>
-                                            <Text fz="md" fw={500} className={classes.cardTitle}>
-                                                {t("Opening Stock")}
-                                            </Text>
-                                        </Grid.Col>
-                                        <Grid.Col span={5} align="center">
-                                            <Group justify="flex-end" align="center" gap={4}>
+                                        <Grid columns={12} gutter={{base: 2}}>
+                                            <Grid.Col span={7}>
+                                                <Text fz="md" fw={500} className={classes.cardTitle}>
+                                                    {t("Opening Stock")}
+                                                </Text>
+                                            </Grid.Col>
+                                            <Grid.Col span={5} align="center">
+                                                <Group justify="flex-end" align="center" gap={4}>
 
-                                                <SegmentedControl
-                                                    size="xs"
-                                                    styles={{
-                                                        label: {color: "#140d05"},
-                                                    }}
-                                                    className={genericClass.genericHighlightedBox}
-                                                    withItemsBorders={false}
-                                                    fullWidth
-                                                    color={"#f8eedf"}
-                                                    value={invoiceProductMode}
-                                                    onChange={setInvoiceProductMode}
-                                                    data={[
-                                                        {
-                                                            label: (
-                                                                <Center pl={"8"} pr={"8"} style={{gap: 10}}>
-                                                                    <IconCoinMonero
-                                                                        height={"18"}
-                                                                        width={"18"}
-                                                                        stroke={1.5}
-                                                                    />
-                                                                </Center>
-                                                            ),
-                                                            value: "product",
-                                                        },
-                                                        {
-                                                            label: (
-                                                                <Center pl={"8"} pr={"8"} style={{gap: 10}}>
-                                                                    <IconBarcode
-                                                                        height={"18"}
-                                                                        width={"18"}
-                                                                        stroke={1.5}
-                                                                    />
-                                                                </Center>
-                                                            ),
-                                                            value: "list",
-                                                        },
-                                                    ]}
-                                                />
-                                                <Tooltip
-                                                    multiline
-                                                    bg={"#905923"}
-                                                    position="top"
-                                                    withArrow
-                                                    ta={"center"}
-                                                    transitionProps={{duration: 200}}
-                                                    label={t("Settings")}
-                                                >
-                                                    <ActionIcon
-                                                        radius={"xl"}
-                                                        variant="transparent"
-                                                        size={"md"}
-                                                        color="gray"
-                                                        mt={"1"}
-                                                        aria-label="Settings"
-                                                        onClick={() => setSettingDrawer(true)}
+                                                    <SegmentedControl
+                                                        size="xs"
+                                                        styles={{
+                                                            label: {color: "#140d05"},
+                                                        }}
+                                                        className={genericClass.genericHighlightedBox}
+                                                        withItemsBorders={false}
+                                                        fullWidth
+                                                        color={"#f8eedf"}
+                                                        value={invoiceProductMode}
+                                                        onChange={setInvoiceProductMode}
+                                                        data={[
+                                                            {
+                                                                label: (
+                                                                    <Center pl={"8"} pr={"8"} style={{gap: 10}}>
+                                                                        <IconCoinMonero
+                                                                            height={"18"}
+                                                                            width={"18"}
+                                                                            stroke={1.5}
+                                                                        />
+                                                                    </Center>
+                                                                ),
+                                                                value: "product",
+                                                            },
+                                                            {
+                                                                label: (
+                                                                    <Center pl={"8"} pr={"8"} style={{gap: 10}}>
+                                                                        <IconBarcode
+                                                                            height={"18"}
+                                                                            width={"18"}
+                                                                            stroke={1.5}
+                                                                        />
+                                                                    </Center>
+                                                                ),
+                                                                value: "list",
+                                                            },
+                                                        ]}
+                                                    />
+                                                    <Tooltip
+                                                        multiline
+                                                        bg={"#905923"}
+                                                        position="top"
+                                                        withArrow
+                                                        ta={"center"}
+                                                        transitionProps={{duration: 200}}
+                                                        label={t("Settings")}
                                                     >
-                                                        <IconDotsVertical
-                                                            style={{width: "100%", height: "70%"}}
-                                                            stroke={1.5}
-                                                        />
-                                                    </ActionIcon>
-                                                </Tooltip>
-                                            </Group>
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
+                                                        <ActionIcon
+                                                            radius={"xl"}
+                                                            variant="transparent"
+                                                            size={"md"}
+                                                            color="gray"
+                                                            mt={"1"}
+                                                            aria-label="Settings"
+                                                            onClick={() => setSettingDrawer(true)}
+                                                        >
+                                                            <IconDotsVertical
+                                                                style={{width: "100%", height: "70%"}}
+                                                                stroke={1.5}
+                                                            />
+                                                        </ActionIcon>
+                                                    </Tooltip>
+                                                </Group>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
                                 </Box>
                                 <Box className="boxBackground">
                                     <Box  pt={'0'}>
-
                                         <ScrollArea h={itemFormheight-56} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box  p={"xs"} className={genericClass.genericHighlightedBox}>
                                             <InputNumberForm
@@ -471,7 +470,7 @@ function _CreateOpeningForm(props) {
                                             <Box mt={'4'}>
                                                 <Grid columns={24} gutter={{ base: 1 }}>
                                                     <Grid.Col span={10} fz="sm" mt={8}>
-                                                        {t("PriceMode")}
+                                                        {t("Quantity")}
                                                     </Grid.Col>
                                                     <Grid.Col span={14}>
                                                         <InputForm
@@ -497,7 +496,7 @@ function _CreateOpeningForm(props) {
                                             <Box mt={'4'}>
                                                 <Grid columns={24} gutter={{ base: 1 }}>
                                                     <Grid.Col span={10} fz="sm" mt={8}>
-                                                        {t("PriceMode")}
+                                                        {t("PurchasePrice")}
                                                     </Grid.Col>
                                                     <Grid.Col span={14}>
                                                         <InputForm
@@ -524,7 +523,7 @@ function _CreateOpeningForm(props) {
                                             <Box mt={'4'}>
                                                 <Grid columns={24} gutter={{ base: 1 }}>
                                                     <Grid.Col span={10} fz="sm" mt={8}>
-                                                        {t("PriceMode")}
+                                                        {t("SalesPrice")}
                                                     </Grid.Col>
                                                     <Grid.Col span={14}>
                                                         <InputForm
@@ -548,34 +547,6 @@ function _CreateOpeningForm(props) {
                                                     </Grid.Col>
                                                 </Grid>
                                             </Box>
-                                            <Box mt={'4'}>
-                                                <Grid columns={24} gutter={{ base: 1 }}>
-                                                    <Grid.Col span={10} fz="sm" mt={8}>
-                                                        {t("PriceMode")}
-                                                    </Grid.Col>
-                                                    <Grid.Col span={14}>
-                                                        <InputForm
-                                                            tooltip={t('SubTotalValidateMessage')}
-                                                            label=''
-                                                            placeholder={t('SubTotal')}
-                                                            required={true}
-                                                            nextField={'EntityFormSubmit'}
-                                                            form={form}
-                                                            name={'sub_total'}
-                                                            type={'number'}
-                                                            leftSection={
-                                                                <IconSum
-                                                                    size={16} opacity={0.5} />
-                                                            }
-                                                            id={'sub_total'}
-                                                            rightSection={inputGroupCurrency}
-                                                            closeIcon={false}
-                                                            disabled={true}
-
-                                                        />
-                                                    </Grid.Col>
-                                                </Grid>
-                                            </Box>
                                         </Box>
                                         </ScrollArea>
                                     </Box>
@@ -584,7 +555,7 @@ function _CreateOpeningForm(props) {
                                     <>
                                         <Box p={"xs"} className={genericClass.genericHighlightedBox}>
                                             <Grid columns={24} gutter={{ base: 1 }}>
-                                                <Grid.Col span={10} fz="sm" fw={'800'} mt={8}>
+                                                <Grid.Col span={10} fz="sm" fw={'800'} mt={4}>
                                                     {t("SubTotal")}
                                                 </Grid.Col>
                                                 <Grid.Col span={14}>
@@ -610,7 +581,7 @@ function _CreateOpeningForm(props) {
                                                             closeIcon={false}
                                                         />
                                                     </Box>
-                                                    <Text ta="right" mt={"8"} fw={'800'} pr={'xs'}>
+                                                    <Text ta="right" mt={"4"} fw={'800'} pr={'xs'}>
                                                         {currencySymbol}{" "}
                                                         {selectProductDetails
                                                             ? selectProductDetails.sub_total
@@ -619,7 +590,7 @@ function _CreateOpeningForm(props) {
                                                 </Grid.Col>
                                             </Grid>
                                         </Box>
-                                        <Box mt="2"  className="" pl={'xs'} pt={'4'} pb={'6'}>
+                                        <Box mt="2"  className="" pl={'xs'} pt={'8'} pb={'6'}>
                                             <Grid
                                                 className={genericClass.genericBackground}
                                                 columns={12}
