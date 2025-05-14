@@ -64,7 +64,7 @@ function _GenericInvoiceForm(props) {
     domainConfigData?.inventory_config?.is_purchase_by_purchase_price;
 
   let inventory_config = domainConfigData?.inventory_config;
-  let config_purchase = inventory_config?.config_purchase;
+  let configPurchase = inventory_config?.config_purchase;
   let id = domainConfigData?.id;
 
   //common hooks and variables
@@ -95,6 +95,10 @@ function _GenericInvoiceForm(props) {
 
   //unit type hook
   const [unitType, setUnitType] = useState(null);
+  const [selectUnitDetails, setSelectUnitDetails] = useState(null);
+  const [unitDropdown, setUnitDropdown] = useState([]);
+
+
 
   //product hook
   const [product, setProduct] = useState(null);
@@ -107,6 +111,8 @@ function _GenericInvoiceForm(props) {
 
   //product dropdown hook
   const [productDropdown, setProductDropdown] = useState([]);
+
+
 
   //product dropdown update based on searchValue
   useEffect(() => {
@@ -243,10 +249,19 @@ function _GenericInvoiceForm(props) {
       (product) => product.id === Number(form.values.product_id)
     );
 
+
+
     if (filteredProducts.length > 0) {
       const selectedProduct = filteredProducts[0];
 
       setSelectProductDetails(selectedProduct);
+      if (configPurchase?.is_measurement_enable === 1 && selectedProduct.measurements) {
+        const unitDropdown = selectedProduct.measurements.map((unit) => ({
+          label: unit.unit_name+' (1 '+unit.unit_name+'='+unit.quantity+' '+selectedProduct.unit_name+')',
+          value: String(unit.id),
+        }));
+        setUnitDropdown(unitDropdown);
+      }
 
       form.setFieldValue("price", selectedProduct.purchase_price);
       form.setFieldValue("purchase_price", selectedProduct.purchase_price);
@@ -257,6 +272,10 @@ function _GenericInvoiceForm(props) {
       form.setFieldValue("purchase_price", "");
     }
   }, [form.values.product_id]);
+
+
+
+
 
   //selected product group text to show in input
   const inputGroupText = (
@@ -384,7 +403,7 @@ function _GenericInvoiceForm(props) {
       return product;
     });
 
-
+    console.log(configPurchase);
     if (searchValue) {
       const searchValueLower = searchValue.toLowerCase();
       filteredProducts = filteredProducts.filter(product =>
@@ -468,7 +487,7 @@ function _GenericInvoiceForm(props) {
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
         <Grid.Col span={1}>
-          <Navigation />
+          <Navigation module={'module'} />
         </Grid.Col>
         <Grid.Col span={7}>
           <form
@@ -591,7 +610,7 @@ function _GenericInvoiceForm(props) {
                   {switchValue === "product" && (
                       <>
                       <ScrollArea h={itemFromHeight} scrollbarSize={2} scrollbars="y" type="never">
-                        {config_purchase?.is_barcode === 1 && (
+                        {configPurchase?.is_barcode === 1 && (
                             <Box  p={"xs"} className={genericClass.genericHighlightedBox}>
                               <InputNumberForm
                                   tooltip={t("BarcodeValidateMessage")}
@@ -607,7 +626,7 @@ function _GenericInvoiceForm(props) {
                             </Box>
                         )}
                         <Box  pl={"xs"} pr={'xs'}>
-                        {config_purchase?.search_by_vendor === 1 && (
+                        {configPurchase?.search_by_vendor === 1 && (
                             <Box mt={"8"}>
                               <SelectForm
                                   tooltip={t("Vendor")}
@@ -627,7 +646,7 @@ function _GenericInvoiceForm(props) {
                             </Box>
                         )}
 
-                        {config_purchase?.search_by_category === 1 && (
+                        {configPurchase?.search_by_category === 1 && (
                             <Box mt={"4"}>
                               <SelectForm
                                   tooltip={t("ChooseCategory")}
@@ -704,7 +723,7 @@ function _GenericInvoiceForm(props) {
                     </Grid>
                     </Box>
                         <Box  pl={"xs"} pr={'xs'}>
-                          {config_purchase?.is_warehouse === 1 && (
+                          {configPurchase?.is_warehouse === 1 && (
                               <Box  mt={"4"}>
                                 <Grid columns={24} gutter={{ base: 1 }}>
                               <Grid.Col span={10} fz="sm" mt={8}>
@@ -741,7 +760,7 @@ function _GenericInvoiceForm(props) {
                                   label=""
                                   placeholder={t("PurchasePrice")}
                                   required={true}
-                                  nextField={ config_purchase?.item_percent === 1 ? "price" : 'quantity' }
+                                  nextField={ configPurchase?.item_percent === 1 ? "price" : 'quantity' }
                                   form={form}
                                   name={"purchase_price"}
                                   id={"purchase_price"}
@@ -756,7 +775,7 @@ function _GenericInvoiceForm(props) {
                             </Grid.Col>
                           </Grid>
                           </Box>
-                            {config_purchase?.item_percent === 1 && (
+                            {configPurchase?.item_percent === 1 && (
                                 <Box  mt={"4"}>
                                 <Grid columns={24} gutter={{ base: 1 }}>
                                   <Grid.Col span={10} fz="sm" mt={8}>
@@ -795,7 +814,7 @@ function _GenericInvoiceForm(props) {
                                     label=""
                                     placeholder={t("SalesPrice")}
                                     required={true}
-                                    nextField={ config_purchase?.is_measurement_enable === 1 ? "unit_id" : 'quantity' }
+                                    nextField={ configPurchase?.is_measurement_enable === 1 ? "unit_id" : 'quantity' }
                                     form={form}
                                     name={"price"}
                                     id={"price"}
@@ -810,7 +829,7 @@ function _GenericInvoiceForm(props) {
                               </Grid.Col>
                             </Grid>
                             </Box>
-                            {config_purchase?.is_measurement_enable === 1 && (
+                            {configPurchase?.is_measurement_enable === 1 && (
                                 <Box  mt={"4"}>
                                   <Grid columns={24} gutter={{ base: 1 }}>
                                     <Grid.Col span={10} fz="sm" mt={8}>
@@ -825,14 +844,15 @@ function _GenericInvoiceForm(props) {
                                           nextField={"quantity"}
                                           name={"unit_id"}
                                           form={form}
-                                          dropdownValue={["pcs", "kg"]}
+                                          dropdownValue={unitDropdown}
                                           id={"unit_id"}
                                           mt={1}
-                                          searchable={true}
+                                          searchable={false}
                                           value={unitType}
-                                          changeValue={setUnitType}
+                                          changeValue={(e)=>{
+                                            setUnitType(e)
+                                          }}
                                       />
-
                                     </Grid.Col>
                                   </Grid>
                                 </Box>
@@ -848,9 +868,9 @@ function _GenericInvoiceForm(props) {
                                     type="number"
                                     tooltip={t("BonusQuantityValidateMessage")}
                                     label=""
-                                    placeholder={t("Bonus")}
+                                    placeholder={t("Quantity")}
                                     required={true}
-                                    nextField={ config_purchase?.is_bonus_quantity === 1 ? "bonus_quantity" : 'EntityFormSubmit' }
+                                    nextField={ configPurchase?.is_bonus_quantity === 1 ? "bonus_quantity" : 'EntityFormSubmit' }
                                     form={form}
                                     name={"quantity"}
                                     id={"quantity"}
@@ -866,7 +886,7 @@ function _GenericInvoiceForm(props) {
                               </Grid.Col>
                             </Grid>
                           </Box>
-                          {config_purchase?.is_bonus_quantity === 1 && (
+                          {configPurchase?.is_bonus_quantity === 1 && (
                               <Box  mt={"4"}>
                                 <Grid columns={24} gutter={{ base: 1 }}>
                               <Grid.Col span={10} fz="sm" mt={8}>
