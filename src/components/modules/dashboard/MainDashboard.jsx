@@ -85,13 +85,14 @@ function MainDashboard(props) {
         const checkDomainConfig = () => {
             const domainConfigData = localStorage.getItem("domain-config-data");
             const inventoryConfig = JSON.parse(domainConfigData || '{}')?.inventory_config;
-            
+
             if (!inventoryConfig?.id) {
+                console.log("redirect to login from MainDashboard");
                 navigate("/login");
             }
         };
-
-        setTimeout(checkDomainConfig, 500);
+        const timeoutId = setTimeout(checkDomainConfig, 500);
+        return () => clearTimeout(timeoutId);
     }, [navigate]);
 
     return (
