@@ -246,6 +246,11 @@ input[type=radio]:checked + label>img {
     background-color: #905a23!important;
 }
 
+/* Tooltip z-index */
+.m_1b3c8819.mantine-Tooltip-tooltip {
+    z-index: 999 !important;
+} 
+
 .link {
 
     /* padding: var(--mantine-spacing-xs) var(--mantine-spacing-md) !important;

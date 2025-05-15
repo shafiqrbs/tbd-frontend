@@ -10,6 +10,7 @@ import inputCss from "../../assets/css/InputField.module.css";
 function PasswordInputForm(props) {
     const { label, placeholder, required, nextField, name, form, tooltip, mt, id, value } = props
     const { t, i18n } = useTranslation();
+
     return (
         <>
             {
