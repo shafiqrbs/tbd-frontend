@@ -859,7 +859,7 @@ function InventoryConfigurationFormOBK() {
                                                     {!saveCreateLoading && isOnline && (
                                                         <Button
                                                             size="xs"
-                                                            calssName={'btnPrimaryBg'}
+                                                            className={'btnPrimaryBg'}
                                                             type="submit"
                                                             id="EntityFormSubmit"
                                                             leftSection={<IconDeviceFloppy size={16}/>}

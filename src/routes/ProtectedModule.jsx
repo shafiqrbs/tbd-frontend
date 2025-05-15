@@ -3,10 +3,9 @@ import getDomainConfig from "../components/global-hook/config-data/getDomainConf
 import { useNetwork, useViewportSize } from "@mantine/hooks";
 
 export default function ProtectedModule({ modules }) {
-
 	const domainConfig = JSON.parse(localStorage.getItem("domain-config-data") || "{}");
+	const { height } = useViewportSize();
 	const networkStatus = useNetwork();
-	const {height, width} = useViewportSize();
 	const headerHeight = 42;
 	const footerHeight = 58;
 	const padding = 0;
@@ -14,7 +13,8 @@ export default function ProtectedModule({ modules }) {
 
 	const moduleArray = Array.isArray(modules) ? modules : [modules];
 	if (!moduleArray.some(module => domainConfig?.modules?.includes(module))) {
+		console.log("redirect to login from ProtectedModule");
 		return <Navigate to="/" replace />;
 	}
-	return <Outlet context={{ isOnline: networkStatus.online, mainAreaHeight: mainAreaHeight }} />;
+	return <Outlet context={{ isOnline: networkStatus.online, mainAreaHeight }} />;
 }

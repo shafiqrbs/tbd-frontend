@@ -53,6 +53,7 @@ const Layout = () => {
             if (storedConfigData) {
                 setConfigData(JSON.parse(storedConfigData));
             } else {
+                console.log("redirect to login from Layout");
                 navigate("/login");
             }
         };

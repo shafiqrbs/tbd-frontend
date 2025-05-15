@@ -6,7 +6,9 @@ import {
     Button,
     LoadingOverlay,
     Tooltip,
+    Text,
 } from "@mantine/core";
+import { modals } from '@mantine/modals';
 
 import { DataTable } from "mantine-datatable";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,14 +40,28 @@ export default function B2bUserTable({ id }) {
 
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
 
-    const loginUser = (() => {
+    const loginUser = (userInfo) => {
         try {
-            return JSON.parse(localStorage.getItem("user")) || {};
+            const loggedInUser = JSON.parse(localStorage.getItem("user")) || {};
+            modals.openConfirmModal({
+				title: t("Confirm Login"),
+				children: (
+					<Text size="sm">
+						Are you sure you want to login as <strong>{userInfo.username}</strong>? This will log you out of your current session.
+					</Text>
+				),
+				labels: { confirm: t("Confirm"), cancel: t("Cancel") },
+				confirmProps: { color: "red" },
+				onCancel: () => console.log("Login cancelled"),
+				onConfirm: () => {
+					console.log(userInfo);
+				},
+			});
         } catch (e) {
             console.error("Error parsing user from localStorage", e);
             return {};
         }
-    })();
+    };
 
     const form = useForm({
         initialValues: {
@@ -86,6 +102,7 @@ export default function B2bUserTable({ id }) {
     useEffect(() => {
         fetchData();
     }, [fetchData]);
+
     return (
         <Box style={{position: "relative"}}>
             <LoadingOverlay
@@ -150,9 +167,7 @@ export default function B2bUserTable({ id }) {
                                         className={'btnPrimaryBg'}
                                         mr={"4"}
                                         rightSection={<IconArrowRight size={14} />}
-                                        onClick={() => {
-                                            navigate(`/b2b/sub-domain/setting/${data.id}`);
-                                        }}
+                                        onClick={() => loginUser(data)}
                                     >
                                         {t("Login")}
                                     </Button>

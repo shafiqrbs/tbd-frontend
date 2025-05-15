@@ -45,6 +45,7 @@ function SpotLightSearchModal({ onClose }) {
       if (storedConfigData) {
         setConfigData(JSON.parse(storedConfigData));
       } else {
+        console.log("redirect to login from SpotLightSearchModal");
         navigate("/login");
       }
     };

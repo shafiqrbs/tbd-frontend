@@ -145,7 +145,7 @@ function _ProductionSettingUpdateForm(props) {
                                                             !saveCreateLoading && isOnline &&
                                                             <Button
                                                                 size="xs"
-                                                                calssName={'btnPrimaryBg'}
+                                                                className={'btnPrimaryBg'}
                                                                 type="submit"
                                                                 id={formSubmitId}
                                                                 leftSection={<IconDeviceFloppy size={16}/>}
