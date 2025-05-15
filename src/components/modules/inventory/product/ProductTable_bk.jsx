@@ -149,25 +149,9 @@ function ProductTable(props) {
       deleteEntityData("inventory/product/" + id)
     );
     if (resultAction.payload.data.status === 200) {
-      showNotificationComponent(
-        t("DeleteSuccessfully"),
-        "red",
-        "lightgray",
-        "",
-        true,
-        1000,
-        true
-      );
+      showNotificationComponent(t("DeleteSuccessfully"), "red", "", true, 1000, true);
     } else {
-      showNotificationComponent(
-        "Something went wrong",
-        "red",
-        "lightgray",
-        "",
-        true,
-        1000,
-        true
-      );
+      showNotificationComponent("Something went wrong", "red", "", true, 1000, true);
     }
     setFetching(true);
   };

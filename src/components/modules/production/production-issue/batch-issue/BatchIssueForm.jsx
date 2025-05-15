@@ -120,7 +120,7 @@ export default function BatchIssueForm(props) {
                         setProductionsIssueData(result.data.data);
                         setProductionsRecipeItems(result.data.data.issue_items);
                     } else {
-                        showNotificationComponent(t("FailedToFetchData"), "red", "lightgray", null, false, 1000);
+                        showNotificationComponent(t("FailedToFetchData"), "red", null, false, 1000);
                     }
                 } catch (error) {
                     console.error("Fetch issue data error:", error);
@@ -140,7 +140,7 @@ export default function BatchIssueForm(props) {
                     if (result.data.status === 200) {
                         setProductionsRecipeItems(result.data.data);
                     } else {
-                        showNotificationComponent(t("FailedToFetchData"), "red", "lightgray", null, false, 1000);
+                        showNotificationComponent(t("FailedToFetchData"), "red", null, false, 1000);
                     }
                 } catch (error) {
                     console.error("Fetching batch recipe failed:", error);
@@ -539,7 +539,7 @@ export default function BatchIssueForm(props) {
                                                                             });
                                                                             setProductQuantities({})
                                                                         } else {
-                                                                            showNotificationComponent(t('InvalidQuantity'), 'red', 'lightgray', null, false, 1000)
+                                                                            showNotificationComponent(t('InvalidQuantity'), 'red', null, false, 1000)
                                                                         }
                                                                     }}
 

@@ -170,14 +170,10 @@ function _ProductMeasurement(props) {
     const resultAction = await dispatch(storeEntityData(value));
 
     if (storeEntityData.rejected.match(resultAction)) {
-      showNotificationComponent(
-        resultAction.payload?.message || t("ErrorOccurred"),
-        "red",
-        "lightgray"
-      );
+      showNotificationComponent(resultAction.payload?.message || t("ErrorOccurred"), "red");
       setReloadMeasurementData(true);
     } else if (storeEntityData.fulfilled.match(resultAction)) {
-      showNotificationComponent(t("Update"), "teal", "lightgray");
+      showNotificationComponent(t("Update"), "teal");
       setReloadMeasurementData(true);
     }
   };
@@ -197,15 +193,7 @@ function _ProductMeasurement(props) {
             );
 
             if (isUnitIdExists) {
-              showNotificationComponent(
-                "Unit already exists",
-                "red",
-                "lightgray",
-                "Data will be loaded in 3 seconds, you cannot close this yet",
-                true,
-                1000,
-                true
-              );
+              showNotificationComponent("Unit already exists", "red", "Data will be loaded in 3 seconds, you cannot close this yet", true, 1000, true);
               return;
             }
 
@@ -221,15 +209,7 @@ function _ProductMeasurement(props) {
             form.reset();
             setSaveCreateLoading(true);
 
-            showNotificationComponent(
-              t("UpdateSuccessfully"),
-              "teal",
-              "lightgray",
-              "Data will be loaded in 3 seconds, you cannot close this yet",
-              true,
-              1000,
-              true
-            );
+            showNotificationComponent(t("UpdateSuccessfully"), "teal", "Data will be loaded in 3 seconds, you cannot close this yet", true, 1000, true);
 
             setTimeout(() => {
               setReloadMeasurementData(true);

@@ -53,7 +53,7 @@ function ConfigurationForm() {
                     setCurrencyId(result.data.data.currency_id?.toString() || '');
                 }
             } catch (error) {
-                showNotificationComponent(t('FailedToFetchData'), 'red', 'lightgray', null, false, 1000)
+                showNotificationComponent(t('FailedToFetchData'), 'red', null, false, 1000)
             } finally {
                 setFormLoad(false);
             }
@@ -197,7 +197,7 @@ function ConfigurationForm() {
             };
             const result = await dispatch(updateEntityData(value)).unwrap();
             if (result.data.message === 'success') {
-                showNotificationComponent(t('UpdateSuccessfully'), 'teal', 'lightgray', null, false, 1000)
+                showNotificationComponent(t('UpdateSuccessfully'), 'teal', null, false, 1000)
                 const resultAction = await dispatch(showInstantEntityData('inventory/config'));
                 if (showInstantEntityData.fulfilled.match(resultAction)) {
                     if (resultAction.payload.data.status === 200) {
@@ -206,7 +206,7 @@ function ConfigurationForm() {
                 }
             }
         } catch (error) {
-            showNotificationComponent(t('FailedToUpdateData'), 'red', 'lightgray', null, false, 1000)
+            showNotificationComponent(t('FailedToUpdateData'), 'red', null, false, 1000)
         } finally {
             setSaveCreateLoading(false);
         }

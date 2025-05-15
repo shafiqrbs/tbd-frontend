@@ -63,14 +63,14 @@ function DomainTable(props) {
             if (showInstantEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
                     // Show success notification
-                    showNotificationComponent(t("ResetSuccessfully"), 'teal', 'lightgray', null, false, 1000, true)
+                    showNotificationComponent(t("ResetSuccessfully"), 'teal', null, false, 1000, true)
                     fetchData()
                 }
             }
         } catch (error) {
             console.error("Error updating entity:", error);
             // Error notification
-            showNotificationComponent(t("ResetFailed"), 'red', 'lightgray', null, false, 1000, true)
+            showNotificationComponent(t("ResetFailed"), 'red', null, false, 1000, true)
         }finally {
             setSuperadmin(true)
             setReloadList(true)
@@ -84,14 +84,14 @@ function DomainTable(props) {
             if (showInstantEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
                     // Show success notification
-                    showNotificationComponent(t("DeleteSuccessfully"), 'teal', 'lightgray', null, false, 1000, true)
+                    showNotificationComponent(t("DeleteSuccessfully"), 'teal', null, false, 1000, true)
                     fetchData()
                 }
             }
         } catch (error) {
             console.error("Error updating entity:", error);
             // Error notification
-            showNotificationComponent(t("DeleteFailed"), 'red', 'lightgray', null, false, 1000, true)
+            showNotificationComponent(t("DeleteFailed"), 'red', null, false, 1000, true)
         }finally {
             setSuperadmin(true)
             setReloadList(true)

@@ -95,7 +95,7 @@ function _RecipeItemsTable(props) {
                             anchorElement.click();
                             document.body.removeChild(anchorElement);
                         }else {
-                            showNotificationComponent(resultAction.payload.error,'red')
+                            showNotificationComponent(resultAction.payload.error, 'red')
                         }
                     }
                 } catch (err) {

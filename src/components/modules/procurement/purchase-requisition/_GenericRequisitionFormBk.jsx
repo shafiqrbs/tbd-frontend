@@ -620,10 +620,10 @@ export default function _GenericRequisitionForm(props) {
                                                     const resultAction = await dispatch(storeEntityData(value));
 
                                                     if (storeEntityData.rejected.match(resultAction)) {
-                                                        showNotificationComponent(resultAction.payload.message, 'red', 'lightgray', true, 1000, true)
+                                                        showNotificationComponent(resultAction.payload.message, 'red', true, 1000, true)
                                                     } else if (storeEntityData.fulfilled.match(resultAction)) {
                                                         if (resultAction.payload.data.status === 200) {
-                                                            showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
+                                                            showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
                                                             setTimeout(() => {
                                                                 localStorage.removeItem("temp-requisition-products");
                                                                 requisitionForm.reset();
@@ -631,7 +631,7 @@ export default function _GenericRequisitionForm(props) {
                                                                 setLoadCardProducts(true);
                                                             }, 700)
                                                         } else {
-                                                            showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
+                                                            showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
                                                         }
                                                     }
                                                 })}

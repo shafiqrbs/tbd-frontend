@@ -163,7 +163,7 @@ function _DiscountUserTable() {
   // Handle update for a specific row
   const handleUpdateRow = async (userId) => {
     if (!editedValues[userId]) {
-      showNotificationComponent(t("NoChanges"),'red','lightgray');
+      showNotificationComponent(t("NoChanges"), 'red');
       return;
     }
     setUpdatingRows((prev) => ({ ...prev, [userId]: true }));
@@ -185,7 +185,7 @@ function _DiscountUserTable() {
           form.setErrors(errorObject);
         }
       } else if (storeEntityData.fulfilled.match(resultAction)) {
-        showNotificationComponent(t('CreateSuccessfully'),'teal','lightgray');
+        showNotificationComponent(t('CreateSuccessfully'), 'teal');
       }
     } catch (error) {
       notifications.show({
@@ -195,7 +195,7 @@ function _DiscountUserTable() {
         loading: false,
         autoClose: 700,
       });
-      showNotificationComponent(t('UpdateFailed'),'red','lightgray');
+      showNotificationComponent(t('UpdateFailed'), 'red');
     } finally {
       setUpdatingRows((prev) => {
         const newState = { ...prev };

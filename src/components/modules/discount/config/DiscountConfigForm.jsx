@@ -105,11 +105,11 @@ function DiscountConfig(props) {
                     form.setErrors(errorObject);
                 }
             } else if (storeEntityData.fulfilled.match(resultAction)) {
-                showNotificationComponent(t('CreateSuccessfully'),'teal','lightgray');
+                showNotificationComponent(t('CreateSuccessfully'), 'teal');
             }
 
         } catch (error) {
-            showNotificationComponent(t('UpdateFailed'),'red','lightgray');
+            showNotificationComponent(t('UpdateFailed'), 'red');
             setSaveCreateLoading(false);
         }
     };

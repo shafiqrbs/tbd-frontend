@@ -277,7 +277,7 @@ export default function CategoryTable({ id }) {
                                                                 );
 
                                                                 if (getIndexEntityData.fulfilled.match(resultAction)) {
-                                                                    showNotificationComponent(resultAction?.payload?.message, "red", "", "", true);
+                                                                    showNotificationComponent(resultAction?.payload?.message, "red", "", true);
                                                                 }
                                                             } catch (err) {
                                                                 console.error("Update error", err);

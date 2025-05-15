@@ -848,10 +848,10 @@ function _CreateOpeningForm(props) {
                                                                         }
 
                                                                         if (!item.opening_quantity){
-                                                                            showNotificationComponent(t("EnterOpeningQuantity"),'red',null,null,false,1000,true)
+                                                                            showNotificationComponent(t("EnterOpeningQuantity"), 'red', null, false, 1000, true)
                                                                         }
                                                                         if (!item.purchase_price){
-                                                                            showNotificationComponent(t("EnterPurchasePrice"),'red',null,null,false,1000,true);
+                                                                            showNotificationComponent(t("EnterPurchasePrice"), 'red', null, false, 1000, true);
                                                                         }
                                                                         if (item.opening_quantity && item.purchase_price){
                                                                             dispatch(inlineUpdateEntityData(approveData))

@@ -27,7 +27,7 @@ export default function Navigation(props) {
   const height = mainAreaHeight - 30;
   const { configData } = getConfigData();
   const navigate = useNavigate();
-  console.log(module);
+
   return (
     <>
       <ScrollArea

@@ -47,7 +47,6 @@ import Navigation from "../common/Navigation.jsx";
 
 function _SalesTable(props) {
     const {isWarehouse,configData} = props
-    console.log(configData);
     const navigate = useNavigate();
     const printRef = useRef()
     const dispatch = useDispatch();
@@ -108,14 +107,7 @@ function _SalesTable(props) {
     useEffect(() => {
         dispatch(setDeleteMessage(''))
         if (entityDataDelete === 'success') {
-            notifications.show({
-                color: 'red',
-                title: t('DeleteSuccessfully'),
-                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 700,
-                style: { backgroundColor: 'lightgray' },
-            });
+            showNotificationComponent(t('DeleteSuccessfully'), 'red')
 
             setTimeout(() => {
                 dispatch(setFetching(true))
@@ -196,14 +188,14 @@ function _SalesTable(props) {
             if (showInstantEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
                     // Show success notification
-                    showNotificationComponent(t("SalesComplete"), 'teal', 'lightgray', null, false, 1000, true)
+                    showNotificationComponent(t("SalesComplete"), 'teal', null, false, 1000, true)
                 }else{
-                    showNotificationComponent('Failed to process', 'red', 'lightgray', null, false, 1000, true)
+                    showNotificationComponent('Failed to process', 'red', null, false, 1000, true)
                 }
             }
         } catch (error) {
             console.error("Error updating entity:", error);
-            showNotificationComponent('Failed to process', 'red', 'lightgray', null, false, 1000, true)
+            showNotificationComponent('Failed to process', 'red', null, false, 1000, true)
         }finally {
             fetchData();
         }

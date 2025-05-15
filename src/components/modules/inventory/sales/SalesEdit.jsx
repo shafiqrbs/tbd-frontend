@@ -1,90 +1,97 @@
-import React, { useEffect, useState } from "react";
-import { Box, Progress, rem } from "@mantine/core";
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from "react-redux";
-import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import React, {useEffect, useState, useMemo} from "react";
+import {Box, Progress} from "@mantine/core";
+import {useTranslation} from "react-i18next";
+import {useDispatch, useSelector} from "react-redux";
+import {useNavigate, useParams} from "react-router-dom";
+
+import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
-import { useNavigate, useParams } from "react-router-dom";
-import { editEntityData } from "../../../../store/inventory/crudSlice.js";
-import { notifications } from "@mantine/notifications";
-import { IconCheck } from "@tabler/icons-react";
+import {editEntityData} from "../../../../store/inventory/crudSlice.js";
 import _UpdateInvoice from "./_UpdateInvoice.jsx";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function SalesEdit() {
-    let { id } = useParams();
-    const navigate = useNavigate()
-    const { t, i18n } = useTranslation();
+    const {id} = useParams();
+    const navigate = useNavigate();
+    const {t} = useTranslation();
     const dispatch = useDispatch();
-    const progress = getLoadingProgress()
-    const {configData,fetchData} = getConfigData()
+    const progress = getLoadingProgress();
 
+    // Safe parsing of config data from localStorage
+    const domainConfigData = useMemo(() => {
+        try {
+            return JSON.parse(localStorage.getItem("domain-config-data")) || {};
+        } catch {
+            return {};
+        }
+    }, []);
+
+    const configData = domainConfigData?.inventory_config;
 
     const dataStatus = useSelector((state) => state.inventoryCrudSlice.dataStatus);
     const editedData = useSelector((state) => state.inventoryCrudSlice.entityEditData);
+
     const [entityEditData, setEntityEditData] = useState({});
     const [hasNotified, setHasNotified] = useState(false);
 
+    // Initial fetch on mount
     useEffect(() => {
-        if (!entityEditData.id) {
-            dispatch(editEntityData(`inventory/sales/edit/${id}`))
-        }
+        dispatch(editEntityData(`inventory/sales/edit/${id}`));
+    }, [dispatch, id]);
 
+    // React to Redux state changes (e.g. success/error)
+    useEffect(() => {
         if (dataStatus === 200) {
             setEntityEditData(editedData);
         }
+
         if (dataStatus === 404 && !hasNotified) {
-            notifications.show({
-                color: 'teal',
-                title: t('InvalidRequest'),
-                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 1000,
-                style: { backgroundColor: 'lightgray' },
-            });
+            showNotificationComponent(t("InvalidRequest"), "teal");
             setTimeout(() => {
-                navigate('/inventory/sales')
-            }, 1000)
+                navigate("/inventory/sales");
+            }, 1000);
             setHasNotified(true);
         }
-    }, [dataStatus, entityEditData.id]);
+    }, [dataStatus, editedData, t, hasNotified, navigate]);
 
-
+    // Rendering
     return (
         <>
-            {progress !== 100 &&
-                <Progress color="red" size={"sm"} striped animated value={progress} transitionDuration={200} />}
-            {progress === 100 &&
+            {progress !== 100 ? (
+                <Progress
+                    color="red"
+                    size="sm"
+                    striped
+                    animated
+                    value={progress}
+                    transitionDuration={200}
+                />
+            ) : (
                 <Box>
-                    {
-                        configData &&
+                    {configData && (
                         <>
                             <_SalesPurchaseHeaderNavbar
-                                pageTitle={t('SalesInvoice')}
-                                roles={t('Roles')}
+                                pageTitle={t("SalesInvoice")}
+                                roles={t("Roles")}
                                 allowZeroPercentage={configData?.zero_stock}
                                 currencySymbol={configData?.currency?.symbol}
                             />
-                            <Box p={'8'}>
-                                {
-                                    configData?.business_model?.slug === 'general' &&
+
+                            <Box p={8}>
+                                {configData?.business_model?.slug === "general" && (
                                     <_UpdateInvoice
-                                        allowZeroPercentage={configData?.zero_stock}
-                                        currencySymbol={configData?.currency?.symbol}
-                                        domainId={configData?.domain_id}
-                                        isSMSActive={configData?.is_active_sms}
-                                        isZeroReceiveAllow={configData?.is_zero_receive_allow}
+                                        domainConfigData={domainConfigData}
                                         entityEditData={entityEditData}
-                                        isWarehouse={configData?.sku_warehouse}
                                     />
-                                }
+                                )}
                             </Box>
                         </>
-                    }
+                    )}
                 </Box>
-            }
+            )}
         </>
     );
 }
 
 export default SalesEdit;
+

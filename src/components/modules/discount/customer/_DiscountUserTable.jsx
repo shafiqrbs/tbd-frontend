@@ -194,7 +194,7 @@ function _DiscountUserTable() {
           form.setErrors(errorObject);
         }
       } else if (storeEntityData.fulfilled.match(resultAction)) {
-        showNotificationComponent(t('CreateSuccessfully'),'teal','lightgray');
+        showNotificationComponent(t('CreateSuccessfully'), 'teal');
       }
     } catch (error) {
       notifications.show({
@@ -204,7 +204,7 @@ function _DiscountUserTable() {
         loading: false,
         autoClose: 700,
       });
-      showNotificationComponent(t('UpdateFailed'),'red','lightgray');
+      showNotificationComponent(t('UpdateFailed'), 'red');
     } finally {
       setUpdatingRows((prev) => {
         const newState = { ...prev };

@@ -221,23 +221,11 @@ export default function Invoice(props) {
             );
 
             if (resultAction.payload?.status !== 200) {
-                showNotificationComponent(
-                    resultAction.payload?.message ||
-                    "Error updating invoice",
-                    "red",
-                    "",
-                    "",
-                    true
-                );
+                showNotificationComponent(resultAction.payload?.message ||
+                    "Error updating invoice", "red", "", true);
             }
         } catch (error) {
-            showNotificationComponent(
-                "Request failed. Please try again.",
-                "red",
-                "",
-                "",
-                true
-            );
+            showNotificationComponent("Request failed. Please try again.", "red", "", true);
             console.error("Error updating invoice:", error);
         } finally {
             setReloadInvoiceData(true)
@@ -454,26 +442,26 @@ export default function Invoice(props) {
     };
     const handleSave = () => {
         if(!invoiceData.invoice_items || invoiceData.invoice_items.length === 0) {
-            showNotificationComponent(t('NoProductAdded'), 'red', '', '', true, 1000, true)
+            showNotificationComponent(t('NoProductAdded'), 'red', '', true, 1000, true)
             return
         }
         if (!salesByUser || salesByUser == 'undefined') {
-            showNotificationComponent(t('ChooseUser'), 'red', '', '', true, 1000, true)
+            showNotificationComponent(t('ChooseUser'), 'red', '', true, 1000, true)
             return
         }
 
         if (!invoiceData.transaction_mode_id) {
-            showNotificationComponent(t('ChooseTransactionMode'), 'red', '', '', true, 1000, true)
+            showNotificationComponent(t('ChooseTransactionMode'), 'red', '', true, 1000, true)
             return
         }
 
         if (!customerId) {
-            showNotificationComponent(t('ChooseCustomer'), 'red', '', '', true, 1000, true)
+            showNotificationComponent(t('ChooseCustomer'), 'red', '', true, 1000, true)
             return
         }
 
         if (!invoiceData.payment) {
-            showNotificationComponent(t('PaymentAmount'), 'red', '', '', true, 1000, true)
+            showNotificationComponent(t('PaymentAmount'), 'red', '', true, 1000, true)
             return
         }
 
@@ -485,7 +473,7 @@ export default function Invoice(props) {
                     param: {}
                 }));
                 if (getIndexEntityData.fulfilled.match(resultAction)) {
-                    showNotificationComponent(t('SalesComplete'), 'blue', '', '', true, 1000, true)
+                    showNotificationComponent(t('SalesComplete'), 'blue', '', true, 1000, true)
                     clearTableCustomer(tableId);
                     setSalesByUser(null);
                     setCustomerId(null);
@@ -1432,23 +1420,11 @@ export default function Invoice(props) {
                                                                 );
 
                                                                 if (resultAction.payload?.status !== 200) {
-                                                                    showNotificationComponent(
-                                                                        resultAction.payload?.message ||
-                                                                        "Error updating invoice",
-                                                                        "red",
-                                                                        "",
-                                                                        "",
-                                                                        true
-                                                                    );
+                                                                    showNotificationComponent(resultAction.payload?.message ||
+                                                                        "Error updating invoice", "red", "", true);
                                                                 }
                                                             } catch (error) {
-                                                                showNotificationComponent(
-                                                                    "Request failed. Please try again.",
-                                                                    "red",
-                                                                    "",
-                                                                    "",
-                                                                    true
-                                                                );
+                                                                showNotificationComponent("Request failed. Please try again.", "red", "", true);
                                                                 console.error("Error updating invoice:", error);
                                                             } finally {
                                                                 setReloadInvoiceData(true)
@@ -1480,23 +1456,11 @@ export default function Invoice(props) {
                                                 );
 
                                                 if (resultAction.payload?.status !== 200) {
-                                                    showNotificationComponent(
-                                                        resultAction.payload?.message ||
-                                                        "Error updating invoice",
-                                                        "red",
-                                                        "",
-                                                        "",
-                                                        true
-                                                    );
+                                                    showNotificationComponent(resultAction.payload?.message ||
+                                                        "Error updating invoice", "red", "", true);
                                                 }
                                             } catch (error) {
-                                                showNotificationComponent(
-                                                    "Request failed. Please try again.",
-                                                    "red",
-                                                    "",
-                                                    "",
-                                                    true
-                                                );
+                                                showNotificationComponent("Request failed. Please try again.", "red", "", true);
                                                 console.error("Error updating invoice:", error);
                                             } finally {
                                                 setReloadInvoiceData(true)
@@ -1542,23 +1506,11 @@ export default function Invoice(props) {
                                                     );
 
                                                     if (resultAction.payload?.status !== 200) {
-                                                        showNotificationComponent(
-                                                            resultAction.payload?.message ||
-                                                            "Error updating invoice",
-                                                            "red",
-                                                            "",
-                                                            "",
-                                                            true
-                                                        );
+                                                        showNotificationComponent(resultAction.payload?.message ||
+                                                            "Error updating invoice", "red", "", true);
                                                     }
                                                 } catch (error) {
-                                                    showNotificationComponent(
-                                                        "Request failed. Please try again.",
-                                                        "red",
-                                                        "",
-                                                        "",
-                                                        true
-                                                    );
+                                                    showNotificationComponent("Request failed. Please try again.", "red", "", true);
                                                     console.error("Error updating invoice:", error);
                                                 } finally {
                                                     setReloadInvoiceData(true)

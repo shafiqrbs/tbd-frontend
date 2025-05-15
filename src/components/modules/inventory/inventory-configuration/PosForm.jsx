@@ -141,7 +141,7 @@ function PosForm(props) {
         }
       }else if (storeEntityData.fulfilled.match(resultAction) && resultAction.payload?.data?.status === 200) {
         await fetchDomainConfig();
-        showNotificationComponent(t('CreateSuccessfully'),'teal','lightgray');
+        showNotificationComponent(t('CreateSuccessfully'), 'teal');
       }
     } catch (err) {
         showNotificationComponent(t("UpdateFailed"), "red");

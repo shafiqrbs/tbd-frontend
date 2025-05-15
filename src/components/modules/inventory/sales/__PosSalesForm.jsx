@@ -1,5 +1,5 @@
 import {isNotEmpty, useForm} from "@mantine/form";
-import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import __PosCustomerSection from "./__PosCustomerSection";
 import {Box, Text, ActionIcon, Group, TextInput} from "@mantine/core";
 import {DataTable} from "mantine-datatable";
@@ -8,22 +8,27 @@ import {useTranslation} from "react-i18next";
 import {IconPercentage, IconSum, IconX} from "@tabler/icons-react";
 import {useOutletContext} from "react-router-dom";
 import __PosInvoiceSection from "./__PosInvoiceSetion.jsx";
-import {getHotkeyHandler, useToggle} from "@mantine/hooks";
+import {useToggle} from "@mantine/hooks";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import {useDispatch} from "react-redux";
-import {notifications} from "@mantine/notifications";
-import {IconCheck} from "@tabler/icons-react";
-import {rem} from "@mantine/core";
-import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
-import InputButtonForm from "../../../form-builders/InputButtonForm";
-import inputInlineCss from "../../../../assets/css/InlineInputField.module.css";
+import {storeEntityData, updateEntityData} from "../../../../store/inventory/crudSlice.js";
 import inputCss from "../../../../assets/css/InlineInputField.module.css";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
+// Utility: Parses localStorage safely
+const getJSON = (key, fallback = null) => {
+    try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+    } catch (e) {
+        console.warn(`Error parsing localStorage key: ${key}`, e);
+        return fallback;
+    }
+};
 export default function __PosSalesForm(props) {
     const {
         isSMSActive,
         currencySymbol,
-        domainId,
         tempCardProducts,
         setLoadCardProducts,
         salesConfig
@@ -59,10 +64,8 @@ export default function __PosSalesForm(props) {
     });
 
 
-
     //calculate subTotal amount
-    let salesSubTotalAmount =
-        tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
+    let salesSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
 
     //customer dropdown data
     const [customersDropdownData, setCustomersDropdownData] = useState([]);
@@ -132,7 +135,7 @@ export default function __PosSalesForm(props) {
 
     //discount type hook
     const [discountType, setDiscountType] = useToggle(["Flat", "Percent"]);
-    const [discount,setDiscount] = useState('')
+    const [discount, setDiscount] = useState('')
     // calculate sales total amount after discount and vat change
     useEffect(() => {
         let discountAmount = '';
@@ -141,10 +144,10 @@ export default function __PosSalesForm(props) {
                 discountAmount = Number(form.values.discount);
                 setDiscount(form.values.discount)
             } else if (discountType === "Percent") {
-                if (form.values.discount.length<3){
-                discountAmount = (salesSubTotalAmount * Number(form.values.discount)) / 100;
-                setDiscount(form.values.discount)
-                }else {
+                if (form.values.discount.length < 3) {
+                    discountAmount = (salesSubTotalAmount * Number(form.values.discount)) / 100;
+                    setDiscount(form.values.discount)
+                } else {
                     setDiscount('')
                 }
             }
@@ -174,177 +177,145 @@ export default function __PosSalesForm(props) {
         salesVatAmount,
     ]);
 
+    const handleFormSubmit = async (values) => {
+        const tempProducts = localStorage.getItem("temp-sales-products");
+        let items = tempProducts ? JSON.parse(tempProducts) : [];
+        let createdBy = JSON.parse(localStorage.getItem("user"));
+
+        let transformedArray = items.map((product) => {
+            // Calculate measurement string safely
+            const measurementString = product?.measurement_unit?.id
+                ? `${product.unit_quantity || 0}*${product.measurement_unit?.quantity || 0}=${(product.unit_quantity || 0) * (product.measurement_unit?.quantity || 0)} ${product.unit_name || ''}`
+                : null;
+
+            return {
+                product_id: product.product_id,
+                item_name: product.display_name,
+                sales_price: product.sales_price,
+                price: product.price,
+                percent: product.percent,
+                quantity: product.quantity,
+                price_matrix_id: product?.multi_price_item?.id || null,
+                measurement_unit_id: product?.measurement_unit?.id || null,
+                measurement_unit_quantity: product?.measurement_unit?.id ? product.unit_quantity : null,
+                measurement_unit_name: product?.measurement_unit?.id ? product.measurement_unit?.unit_name : null,
+                measurement_string: measurementString,
+                uom: product.unit_name,
+                unit_id: product.unit_id,
+                purchase_price: product.purchase_price,
+                sub_total: product.sub_total,
+                warehouse_id: product.warehouse_id,
+                bonus_quantity: product.bonus_quantity,
+            };
+        });
+
+        const options = {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        };
+        const formValue = {};
+        formValue["customer_id"] = form.values.customer_id
+            ? form.values.customer_id
+            : defaultCustomerId;
+
+        // Include manual customer input fields if no customer is selected
+        if (
+            !form.values.customer_id ||
+            form.values.customer_id == defaultCustomerId
+        ) {
+            formValue["customer_name"] = form.values.name;
+            formValue["customer_mobile"] = form.values.mobile;
+            formValue["customer_email"] = form.values.email;
+        }
+
+        formValue["sub_total"] = salesSubTotalAmount;
+        formValue["transaction_mode_id"] = form.values.transaction_mode_id;
+        formValue["discount_type"] = discountType;
+        formValue["discount"] = salesDiscountAmount;
+        formValue["discount_calculation"] = discountType === "Percent" ? form.values.discount : 0;
+        formValue["vat"] = 0;
+        formValue["total"] = salesTotalAmount;
+        formValue["sales_by_id"] = form.values.sales_by;
+        formValue["created_by_id"] = Number(createdBy["id"]);
+        formValue["process"] = form.values.order_process;
+        formValue["narration"] = form.values.narration;
+        formValue["invoice_date"] =
+            form.values.invoice_date ?
+                new Date(form.values.invoice_date).toLocaleDateString(
+                    "en-CA",
+                    options
+                ) : new Date().toLocaleDateString(
+                    "en-CA",
+                    options
+                )
+        formValue["items"] = transformedArray ? transformedArray : [];
+
+        const hasReceiveAmount = form.values.receive_amount;
+        const isDefaultCustomer =
+            !form.values.customer_id ||
+            form.values.customer_id == defaultCustomerId;
+
+        formValue["payment"] = hasReceiveAmount ? (form.values.receive_amount > salesTotalAmount ? salesTotalAmount : form.values.receive_amount) : salesConfig?.is_zero_receive_allow && isDefaultCustomer ? salesTotalAmount : 0;
+
+        // Check if default customer needs receive amount
+        if (
+            isDefaultCustomer &&
+            !salesConfig?.is_zero_receive_allow &&
+            (!form.values.receive_amount ||
+                Number(form.values.receive_amount) <= 0 ||
+                Number(form.values.receive_amount) < salesTotalAmount)
+        ) {
+            form.setFieldError(
+                "receive_amount",
+                t("Receive amount must cover the total for default customer")
+            );
+
+            showNotificationComponent(t("Default customer must pay full amount"), 'red')
+            return;
+        }
+
+        // Also ensure transaction mode is selected
+        if (!form.values.transaction_mode_id) {
+            form.setFieldError(
+                "transaction_mode_id",
+                "Please select a payment method"
+            );
+            showNotificationComponent("Please select a payment method", 'red')
+            return;
+        }
+
+        if (items && items.length > 0) {
+            const data = {
+                url: "inventory/sales",
+                data: formValue,
+            };
+
+            const resultAction = await dispatch(storeEntityData(data));
+            if (storeEntityData.rejected.match(resultAction)) {
+                showNotificationComponent('Fail to sales', 'red')
+            } else if (storeEntityData.fulfilled.match(resultAction)) {
+                showNotificationComponent(t("CreateSuccessfully"), 'teal')
+
+                setTimeout(() => {
+                    localStorage.removeItem("temp-sales-products");
+                    form.reset();
+                    setCustomerData(null);
+                    setSalesByUser(null);
+                    setOrderProcess(null);
+                    setLoadCardProducts(true);
+                    setCustomerObject(null);
+                }, 500);
+            }
+        } else {
+            showNotificationComponent(t("PleaseChooseItems"), 'red')
+        }
+    }
 
     return (
         <>
             <form
-                onSubmit={form.onSubmit((values) => {
-                    const tempProducts = localStorage.getItem("temp-sales-products");
-                    let items = tempProducts ? JSON.parse(tempProducts) : [];
-                    let createdBy = JSON.parse(localStorage.getItem("user"));
-
-                    let transformedArray = items.map((product) => {
-                        // Calculate measurement string safely
-                        const measurementString = product?.measurement_unit?.id
-                            ? `${product.unit_quantity || 0}*${product.measurement_unit?.quantity || 0}=${(product.unit_quantity || 0)*(product.measurement_unit?.quantity || 0)} ${product.unit_name || ''}`
-                            : null;
-
-                        return {
-                            product_id: product.product_id,
-                            item_name: product.display_name,
-                            sales_price: product.sales_price,
-                            price: product.price,
-                            percent: product.percent,
-                            quantity: product.quantity,
-                            price_matrix_id: product?.multi_price_item?.id || null,
-                            measurement_unit_id: product?.measurement_unit?.id || null,
-                            measurement_unit_quantity: product?.measurement_unit?.id ? product.unit_quantity : null,
-                            measurement_unit_name: product?.measurement_unit?.id ? product.measurement_unit?.unit_name : null,
-                            measurement_string: measurementString,
-                            uom: product.unit_name,
-                            unit_id: product.unit_id,
-                            purchase_price: product.purchase_price,
-                            sub_total: product.sub_total,
-                            warehouse_id: product.warehouse_id,
-                            bonus_quantity: product.bonus_quantity,
-                        };
-                    });
-
-                    const options = {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                    };
-                    const formValue = {};
-                    formValue["customer_id"] = form.values.customer_id
-                        ? form.values.customer_id
-                        : defaultCustomerId;
-
-                    // console.log(form.values.customer_id,defaultCustomerId)
-
-                    // Include manual customer input fields if no customer is selected
-                    if (
-                        !form.values.customer_id ||
-                        form.values.customer_id == defaultCustomerId
-                    ) {
-                        formValue["customer_name"] = form.values.name;
-                        formValue["customer_mobile"] = form.values.mobile;
-                        formValue["customer_email"] = form.values.email;
-                    }
-
-                    formValue["sub_total"] = salesSubTotalAmount;
-                    formValue["transaction_mode_id"] = form.values.transaction_mode_id;
-                    formValue["discount_type"] = discountType;
-                    formValue["discount"] = salesDiscountAmount;
-                    formValue["discount_calculation"] = discountType === "Percent" ? form.values.discount : 0;
-                    formValue["vat"] = 0;
-                    formValue["total"] = salesTotalAmount;
-                    formValue["sales_by_id"] = form.values.sales_by;
-                    formValue["created_by_id"] = Number(createdBy["id"]);
-                    formValue["process"] = form.values.order_process;
-                    formValue["narration"] = form.values.narration;
-                    formValue["invoice_date"] =
-                        form.values.invoice_date &&
-                        new Date(form.values.invoice_date).toLocaleDateString(
-                            "en-CA",
-                            options
-                        );
-                    formValue["items"] = transformedArray ? transformedArray : [];
-
-                    const hasReceiveAmount = form.values.receive_amount;
-                    const isDefaultCustomer =
-                        !form.values.customer_id ||
-                        form.values.customer_id == defaultCustomerId;
-
-                    formValue["payment"] = hasReceiveAmount
-                        ? form.values.receive_amount
-                        : salesConfig?.is_zero_receive_allow && isDefaultCustomer
-                            ? salesTotalAmount
-                            : 0;
-
-                    // Add console log to display all form values
-                    // console.log("Form submission values:", formValue);
-
-                    // Check if default customer needs receive amount
-                    if (
-                        isDefaultCustomer &&
-                        !salesConfig?.is_zero_receive_allow &&
-                        (!form.values.receive_amount ||
-                            Number(form.values.receive_amount) <= 0 ||
-                            Number(form.values.receive_amount) < salesTotalAmount)
-                    ) {
-                        form.setFieldError(
-                            "receive_amount",
-                            t("Receive amount must cover the total for default customer")
-                        );
-
-                        notifications.show({
-                            color: "red",
-                            title: t("Payment Required"),
-                            message: t("Default customer must pay full amount"),
-                            loading: false,
-                            autoClose: 1500,
-                        });
-
-                        return;
-                    }
-
-                    // Also ensure transaction mode is selected
-                    if (!form.values.transaction_mode_id) {
-                        form.setFieldError(
-                            "transaction_mode_id",
-                            t("Please select a payment method")
-                        );
-
-                        notifications.show({
-                            color: "red",
-                            title: t("Missing Payment Method"),
-                            message: t("Please select a payment method"),
-                            loading: false,
-                            autoClose: 1500,
-                        });
-
-                        return;
-                    }
-
-                    if (items && items.length > 0) {
-                        const data = {
-                            url: "inventory/sales",
-                            data: formValue,
-                        };
-
-                        // console.log(data)
-                        dispatch(storeEntityData(data));
-
-                        notifications.show({
-                            color: "teal",
-                            title: t("CreateSuccessfully"),
-                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                            loading: false,
-                            autoClose: 700,
-                            style: {backgroundColor: "lightgray"},
-                        });
-
-                        setTimeout(() => {
-                            localStorage.removeItem("temp-sales-products");
-                            form.reset();
-                            setCustomerData(null);
-                            setSalesByUser(null);
-                            setOrderProcess(null);
-                            setLoadCardProducts(true);
-                            setCustomerObject(null);
-                        }, 500);
-                    } else {
-                        notifications.show({
-                            color: "red",
-                            title: t("PleaseChooseItems"),
-                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                            loading: false,
-                            autoClose: 700,
-                            style: {backgroundColor: "lightgray"},
-                        });
-                    }
-                })}
+                onSubmit={form.onSubmit(handleFormSubmit)}
             >
                 <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                     <__PosCustomerSection
@@ -459,8 +430,10 @@ export default function __PosSalesForm(props) {
                                                 value={editedQuantity}
                                                 onChange={handleQuantityChange}
                                                 onKeyDown={handleKeyDown} // Use direct handler instead of getHotkeyHandler
-                                                rightSection={<Text style={{textAlign: "right", width: "100%", paddingRight: 16}} fz={'xs'} color={"gray"}>
-                                                    {(item?.measurement_unit) ?  item?.measurement_unit?.unit_name?item?.measurement_unit.unit_name:item?.measurement_unit?.unit_name:item.unit_name}
+                                                rightSection={<Text
+                                                    style={{textAlign: "right", width: "100%", paddingRight: 16}}
+                                                    fz={'xs'} color={"gray"}>
+                                                    {(item?.measurement_unit) ? item?.measurement_unit?.unit_name ? item?.measurement_unit.unit_name : item?.measurement_unit?.unit_name : item.unit_name}
                                                 </Text>}
                                                 rightSectionWidth={50}
                                             />

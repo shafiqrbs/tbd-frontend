@@ -589,10 +589,10 @@ export default function _UpdateRequisitionForm(props) {
 
                                                     const result = await dispatch(updateEntityData(value)).unwrap();
                                                     if (result.data.status === 200) {
-                                                        showNotificationComponent(t('UpdateSuccessfully'), 'teal', 'lightgray', null, false, 1000)
+                                                        showNotificationComponent(t('UpdateSuccessfully'), 'teal', null, false, 1000)
                                                         navigate('/procurement/requisition', {replace: true})
                                                     } else {
-                                                        showNotificationComponent(t('FailedToUpdateData'), 'red', 'lightgray', null, false, 1000)
+                                                        showNotificationComponent(t('FailedToUpdateData'), 'red', null, false, 1000)
                                                     }
                                                 })}
                                             >

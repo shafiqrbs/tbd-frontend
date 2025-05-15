@@ -49,6 +49,7 @@ import Navigation from "../common/Navigation.jsx";
 import __PosSalesForm from "./__PosSalesForm.jsx";
 import {useHotkeys} from "@mantine/hooks";
 import SettingDrawer from "../common/SettingDrawer.jsx";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function _GenericPosForm({domainConfigData}) {
   // Constants
@@ -262,16 +263,7 @@ function _GenericPosForm({domainConfigData}) {
 
     if (!isNaN(quantity) && !isNaN(salesPrice) && quantity > 0 && salesPrice >= 0) {
       if (!salesConfig?.zero_stock) {
-        showNotification({
-          color: "pink",
-          title: t("WeNotifyYouThat"),
-          message: t("ZeroQuantityNotAllow"),
-          autoClose: 1500,
-          loading: true,
-          withCloseButton: true,
-          position: "top-center",
-          style: {backgroundColor: "mistyrose"},
-        });
+        showNotificationComponent(t("ZeroQuantityNotAllow"), 'red')
       } else if (selectProductDetails) {
         setSelectProductDetails({
           ...selectProductDetails,
@@ -420,14 +412,7 @@ function _GenericPosForm({domainConfigData}) {
 
       updateLocalStorageAndResetForm(addProducts);
     } else {
-      notifications.show({
-        loading: true,
-        color: "red",
-        title: "Product not found with this barcode",
-        message: "Data will be loaded in 3 seconds, you cannot close this yet",
-        autoClose: 1000,
-        withCloseButton: true,
-      });
+      showNotificationComponent('Product not found with this barcode', 'red')
     }
   }, [createProductFromValues, updateLocalStorageAndResetForm]);
 
@@ -445,16 +430,7 @@ function _GenericPosForm({domainConfigData}) {
 
     if (values.product_id && !values.barcode) {
       if (!salesConfig?.zero_stock) {
-        showNotification({
-          color: "pink",
-          title: t("WeNotifyYouThat"),
-          message: t("ZeroQuantityNotAllow"),
-          autoClose: 1500,
-          loading: true,
-          withCloseButton: true,
-          position: "top-center",
-          style: {backgroundColor: "mistyrose"},
-        });
+        showNotificationComponent(t("ZeroQuantityNotAllow"), 'red')
       } else {
         handleAddProductByProductId(values, myCardProducts, localProducts);
       }

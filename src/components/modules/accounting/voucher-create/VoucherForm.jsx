@@ -126,10 +126,7 @@ function VoucherForm(props) {
                 const action = await dispatch(storeEntityData(data));
                 const payload = action.payload;
                 if (payload?.status === 200 && payload?.data?.data?.id) {
-                  showNotificationComponent(
-                    t("Voucher created successfully"),
-                    "green"
-                  );
+                  showNotificationComponent(t("Voucher created successfully"), "green");
                 } else {
                   showNotificationComponent(t("Something went wrong"), "red");
                 }

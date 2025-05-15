@@ -148,9 +148,9 @@ function FileUploadTable() {
     const uploadFileDeleteHandle = async (id) => {
         const resultAction = await dispatch(deleteEntityData("core/file-upload/" + id));
         if (resultAction.payload.data.status === 200) {
-            showNotificationComponent(t("DeleteSuccessfully"), 'red', 'lightgray', '', true, 1000, true)
+            showNotificationComponent(t("DeleteSuccessfully"), 'red', '', true, 1000, true)
         } else {
-            showNotificationComponent('Something went wrong', 'red', 'lightgray', '', true, 1000, true)
+            showNotificationComponent('Something went wrong', 'red', '', true, 1000, true)
         }
         setFetching(true)
     }

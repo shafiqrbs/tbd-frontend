@@ -39,10 +39,10 @@ function HeaderNavbar({tables, tableId, setTableId, tableCustomerMap, setCustome
             const resultAction = await dispatch(storeEntityData(data));
 
             if (resultAction.payload?.status !== 200) {
-                showNotificationComponent(resultAction.payload?.message || 'Error updating invoice', 'red', '', '', true);
+                showNotificationComponent(resultAction.payload?.message || 'Error updating invoice', 'red', '', true);
             }
         } catch (error) {
-            showNotificationComponent('Request failed. Please try again.', 'red', '', '', true);
+            showNotificationComponent('Request failed. Please try again.', 'red', '', true);
             console.error('Error updating invoice:', error);
         }
     };

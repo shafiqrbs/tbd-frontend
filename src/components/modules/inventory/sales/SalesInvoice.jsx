@@ -1,67 +1,72 @@
-import React, { useEffect, useState } from "react";
-import {
-    Box, Button,
-    Grid, Progress, Title
-} from "@mantine/core";
+import React from 'react';
+import { Box, Progress } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from "react-redux";
-import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
-import _WholeSaleGenericInvoiceForm from "./whole-sale/_GenericInvoiceForm.jsx";
-import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
-import _GenericPosForm from "./_GenericPosForm";
-import __GenericPosSalesForm from "./__GenericPosSalesForm";
+import { useSelector } from 'react-redux';
+import { getLoadingProgress } from '../../../global-hook/loading-progress/getLoadingProgress.js';
+import _WholeSaleGenericInvoiceForm from './whole-sale/_GenericInvoiceForm.jsx';
+import _SalesPurchaseHeaderNavbar from '../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx';
+import _GenericPosForm from './_GenericPosForm';
 
 function SalesInvoice() {
+    const { t } = useTranslation();
+    const insertType = useSelector((state) => state.crudSlice.insertType);
+    const progress = getLoadingProgress();
 
-    const { t, i18n } = useTranslation();
-    const dispatch = useDispatch();
-    const insertType = useSelector((state) => state.crudSlice.insertType)
-    const progress = getLoadingProgress()
-    const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
-    let configData = domainConfigData?.inventory_config
-    // console.log(domainConfigData?.inventory_config?.business_model)
+    // Load and parse config safely
+    let domainConfigData = null;
+    try {
+        const configRaw = localStorage.getItem('domain-config-data');
+        domainConfigData = configRaw ? JSON.parse(configRaw) : null;
+    } catch (e) {
+        console.error('Failed to parse domain-config-data from localStorage', e);
+    }
+
+    const inventoryConfig = domainConfigData?.inventory_config;
+    const allowZeroStock = inventoryConfig?.zero_stock ?? false;
+    const currencySymbol = inventoryConfig?.currency?.symbol ?? '';
+    const businessModelSlug = inventoryConfig?.business_model?.slug;
+    const domainId = inventoryConfig?.domain_id;
+    const isSMSActive = inventoryConfig?.is_active_sms ?? false;
+    const isZeroReceiveAllow = inventoryConfig?.is_zero_receive_allow ?? false;
+
+    const isDistributionModel = businessModelSlug === 'distribution';
+    const isCreateMode = insertType === 'create';
 
     return (
         <>
-            {progress !== 100 &&
-                <Progress color="red" size={"sm"} striped animated value={progress} transitionDuration={200} />}
-            {progress === 100 &&
+            {progress !== 100 && (
+                <Progress
+                    color="red"
+                    size="sm"
+                    striped
+                    animated
+                    value={progress}
+                    transitionDuration={200}
+                />
+            )}
+            {progress === 100 && domainConfigData && (
                 <Box>
-                    {
-                        domainConfigData &&
-                        <>
-                            <_SalesPurchaseHeaderNavbar
-                                pageTitle={t('SalesInvoice')}
-                                roles={t('Roles')}
-                                configData={configData}
-                                allowZeroPercentage={domainConfigData?.inventory_config?.zero_stock}
-                                currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
+                    <_SalesPurchaseHeaderNavbar
+                        pageTitle={t('SalesInvoice')}
+                        roles={t('Roles')}
+                        configData={inventoryConfig}
+                        allowZeroPercentage={allowZeroStock}
+                        currencySymbol={currencySymbol}
+                    />
+                    <Box p="8">
+                        <_GenericPosForm domainConfigData={domainConfigData} />
+                        {isCreateMode && isDistributionModel && (
+                            <_WholeSaleGenericInvoiceForm
+                                allowZeroPercentage={allowZeroStock}
+                                currencySymbol={currencySymbol}
+                                domainId={domainId}
+                                isSMSActive={isSMSActive}
+                                isZeroReceiveAllow={isZeroReceiveAllow}
                             />
-                            <Box p={'8'}>
-                                {
-                                    
-                                    <_GenericPosForm
-                                        domainConfigData={domainConfigData}
-                                    />
-                                }
-                                {
-                                    insertType === 'create' && domainConfigData?.inventory_config?.business_model?.slug === 'distribution' &&
-                                    <_WholeSaleGenericInvoiceForm
-                                        allowZeroPercentage={domainConfigData?.inventory_config?.zero_stock}
-                                        currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
-                                        domainId={domainConfigData?.inventory_config?.domain_id}
-                                        isSMSActive={domainConfigData?.inventory_config?.is_active_sms}
-                                        isZeroReceiveAllow={domainConfigData?.inventory_config?.is_zero_receive_allow}
-                                    />
-                                }
-                            </Box>
-                        </>
-                    }
-
+                        )}
+                    </Box>
                 </Box>
-            }
+            )}
         </>
     );
 }

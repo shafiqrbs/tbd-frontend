@@ -161,17 +161,9 @@ export default function BatchTable(props){
                                                             const resultAction = await dispatch(storeEntityData(value));
 
                                                             if (storeEntityData.rejected.match(resultAction)) {
-                                                                showNotificationComponent(
-                                                                    resultAction.payload?.message || t('ErrorOccurred'),
-                                                                    'red',
-                                                                    'lightgray'
-                                                                );
+                                                                showNotificationComponent(resultAction.payload?.message || t('ErrorOccurred'), 'red');
                                                             } else if (storeEntityData.fulfilled.match(resultAction)) {
-                                                                showNotificationComponent(
-                                                                    t('ReceivedSuccessfully'),
-                                                                    'teal',
-                                                                    'lightgray'
-                                                                );
+                                                                showNotificationComponent(t('ReceivedSuccessfully'), 'teal');
                                                             }
                                                             setReloadBatchData(true)
                                                         },
@@ -209,17 +201,9 @@ export default function BatchTable(props){
                                                             const resultAction = await dispatch(storeEntityData(value));
 
                                                             if (storeEntityData.rejected.match(resultAction)) {
-                                                                showNotificationComponent(
-                                                                    resultAction.payload?.message || t('ErrorOccurred'),
-                                                                    'red',
-                                                                    'lightgray'
-                                                                );
+                                                                showNotificationComponent(resultAction.payload?.message || t('ErrorOccurred'), 'red');
                                                             } else if (storeEntityData.fulfilled.match(resultAction)) {
-                                                                showNotificationComponent(
-                                                                    t('ApprovedSuccessfully'),
-                                                                    'teal',
-                                                                    'lightgray'
-                                                                );
+                                                                showNotificationComponent(t('ApprovedSuccessfully'), 'teal');
                                                             }
                                                             setReloadBatchData(true)
                                                         },

@@ -314,10 +314,10 @@ export default function _RequisitionTable(props) {
                                                                                 {
                                                                                     const result = await dispatch(deleteEntityData('inventory/requisition/' + data.id)).unwrap();
                                                                                     if (result.data.status === 200) {
-                                                                                        showNotificationComponent(t('DeleteSuccessfully'), 'teal', 'lightgray', null, false, 1000)
+                                                                                        showNotificationComponent(t('DeleteSuccessfully'), 'teal', null, false, 1000)
                                                                                         setFetching(true)
                                                                                     } else {
-                                                                                        showNotificationComponent(t('FailedToUpdateData'), 'red', 'lightgray', null, false, 1000)
+                                                                                        showNotificationComponent(t('FailedToUpdateData'), 'red', null, false, 1000)
                                                                                     }
                                                                                 }
                                                                             },
