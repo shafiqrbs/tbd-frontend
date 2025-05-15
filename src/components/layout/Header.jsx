@@ -47,7 +47,7 @@ import {
 	IconBackspace,
 	IconUser,
 	IconLock,
-	IconUserHexagon,
+	IconUserHexagon, IconCheck,
 } from "@tabler/icons-react";
 import { Link, useOutletContext } from "react-router-dom";
 import HeaderStyle from "./../../assets/css/Header.module.css";
@@ -66,6 +66,10 @@ import shortcutDropdownData from "../global-hook/shortcut-dropdown/shortcutDropd
 import logo_default from "../../assets/images/logo_default.png";
 import ImageUploadDropzone from "../form-builders/ImageUploadDropzone";
 import PasswordInputForm from "../form-builders/PasswordInputForm";
+import {storeEntityData} from "../../store/inventory/crudSlice";
+import {notifications} from "@mantine/notifications";
+import ChangePassword from "../modules/core/user/ChnagePassword";
+import AddProductDrawer from "../modules/inventory/sales/drawer-form/AddProductDrawer";
 
 const languages = [
 	{ label: "EN", value: "en", flag: flagGB },
@@ -120,27 +124,6 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
 	const loginUser = JSON.parse(localStorage.getItem("user"));
 	const [resetPasswordOpened, { open: openResetPassword, close: closeResetPassword }] =
 		useDisclosure(false);
-
-	const form = useForm({
-		initialValues: {
-			oldPassword: "",
-			newPassword: "",
-			confirmPassword: "",
-		},
-		validate: {
-			oldPassword: isNotEmpty("Old Password is required"),
-			newPassword: (value) => {
-				if (!value) return "New Password is required";
-				if (value.length < 6) return "New Password must be at least 6 characters long";
-				return null;
-			},
-			confirmPassword: (value, values) => {
-				if (!value) return "Confirm Password is required";
-				if (value !== values.newPassword) return "Confirm Password did not match";
-				return null;
-			},
-		},
-	});
 
 	useEffect(() => {
 		const checkConfigData = () => {
@@ -316,18 +299,6 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
 			default:
 				return false;
 		}
-	};
-
-	const handleResetPassword = (values) => {
-		// Add your password reset logic here
-		console.log(values);
-		// Call API to reset password
-		closeResetPassword();
-		form.reset();
-	};
-
-	const validateField = (field) => {
-		form.validateField(field);
 	};
 
 	return (
@@ -934,53 +905,11 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
 					</Grid.Col>
 				</Grid>
 			</Box>
-			<Drawer
-				opened={resetPasswordOpened}
-				onClose={() => {
-					closeResetPassword();
-					form.reset();
-				}}
-				title={t("Reset Password")}
-				position="right"
-				size="md"
-			>
-				<form onSubmit={form.onSubmit(handleResetPassword)}>
-					<Stack spacing="md">
-						<PasswordInputForm
-							tooltip={form.errors.oldPassword}
-							form={form}
-							name="oldPassword"
-							label={t("Old Password")}
-							placeholder={t("Enter your old password")}
-							required
-							nextField="newPassword"
-							{...form.getInputProps("oldPassword")}
-						/>
-						<PasswordInputForm
-							tooltip={form.errors.newPassword}
-							form={form}
-							name="newPassword"
-							label={t("New Password")}
-							placeholder={t("Enter your new password")}
-							required
-							nextField="confirmPassword"
-							{...form.getInputProps("newPassword")}
-						/>
-						<PasswordInputForm
-							tooltip={form.errors.confirmPassword}
-							form={form}
-							name="confirmPassword"
-							label={t("Confirm Password")}
-							placeholder={t("Confirm your new password")}
-							required
-							{...form.getInputProps("confirmPassword")}
-						/>
-						<Button type="submit" bg={"#635031"} fullWidth>
-							{t("Reset Password")}
-						</Button>
-					</Stack>
-				</form>
-			</Drawer>
+			<ChangePassword
+				height={height}
+				resetPasswordOpened={resetPasswordOpened}
+				closeResetPassword={closeResetPassword}
+			/>
 		</>
 	);
 }

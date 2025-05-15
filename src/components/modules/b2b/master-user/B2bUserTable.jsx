@@ -20,9 +20,12 @@ import { useForm } from "@mantine/form";
 import {
     getIndexEntityData,
     storeEntityData,
+    showEntityData,
 } from "../../../../store/core/crudSlice.js";
 import useUtilityDomainTypeDropdownData from "../../../global-hook/dropdown/getUtilityDomainTypeDropdownData.js";
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
+import commonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/commonDataStoreIntoLocalStorage";
+import orderProcessDropdownLocalDataStore from "../../../global-hook/local-storage/orderProcessDropdownLocalDataStore";
 
 export default function B2bUserTable({ id }) {
     const dispatch = useDispatch();
@@ -42,7 +45,6 @@ export default function B2bUserTable({ id }) {
 
     const loginUser = (userInfo) => {
         try {
-            const loggedInUser = JSON.parse(localStorage.getItem("user")) || {};
             modals.openConfirmModal({
 				title: t("Confirm Login"),
 				children: (
@@ -53,9 +55,19 @@ export default function B2bUserTable({ id }) {
 				labels: { confirm: t("Confirm"), cancel: t("Cancel") },
 				confirmProps: { color: "red" },
 				onCancel: () => console.log("Login cancelled"),
-				onConfirm: () => {
-					console.log(userInfo);
-				},
+				onConfirm: async () => {
+                    const resultAction = await dispatch(showEntityData("domain/b2b/impersonate/" + userInfo.domain_id + "/" + userInfo.id));
+                    if (showEntityData.rejected.match(resultAction)) {
+                        console.log('Error'+resultAction)
+                    } else if (showEntityData.fulfilled.match(resultAction)) {
+                        if (resultAction.payload.data.status === 200) {
+                            localStorage.setItem("user", JSON.stringify(resultAction.payload.data.data));
+                            const allLocal = commonDataStoreIntoLocalStorage(resultAction.payload.data.data.id)
+                            const orderProcess = orderProcessDropdownLocalDataStore(resultAction.payload.data.data.id)
+                            navigate('/')
+                        }
+                    }
+                },
 			});
         } catch (e) {
             console.error("Error parsing user from localStorage", e);

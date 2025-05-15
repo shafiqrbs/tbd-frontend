@@ -1134,6 +1134,12 @@
   "IssueIndex": "Production issue",
   "GeneralIssue": "General issue",
   "BatchIssue": "Batch issue",
+  "ChangePassword": "Manage Change Password",
+  "CurrentPassword": "CurrentPassword",
+  "EnterCurrentPassword": "Enter Your Current Password",
+  "NewPassword": "New Password",
+  "EnterNewPassword": "Enter Your New Password",
+  "EnterConfirmNewPassword": "Enter Enter Confirm New Password",
   "xxxxxx": "xxxxxxx",
   "BalanceSheet": "Balance Sheet",
   "BalanceEntry": "Balance Entry"
