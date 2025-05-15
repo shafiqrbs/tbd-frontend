@@ -16,5 +16,5 @@ export default function ProtectedModule({ modules }) {
 		console.log("redirect to login from ProtectedModule");
 		return <Navigate to="/" replace />;
 	}
-	return <Outlet context={{ isOnline: networkStatus.online, mainAreaHeight: mainAreaHeight }} />;
+	return <Outlet context={{ isOnline: networkStatus.online, mainAreaHeight }} />;
 }
