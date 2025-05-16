@@ -718,5 +718,7 @@
   "Core Admin" : "কোর অ্যাডমিন",
   "Inventory & Product" : "ইনভেন্টরি এবং প্রোডাক্ট",
   "ItemPercent" : "আইটেম পার্সেন্ট",
-  "EarnPoint": "পয়েন্ট আর্ন"
+  "EarnPoint": "পয়েন্ট আর্ন",
+  "BalanceSheet": "ব্যালেন্স শিট",
+  "BalanceEntry": "ব্যালেন্স এন্ট্রি"
 }
