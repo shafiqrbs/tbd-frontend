@@ -27,7 +27,7 @@ import { showNotificationComponent } from "../../../core-component/showNotificat
 import commonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/commonDataStoreIntoLocalStorage";
 import orderProcessDropdownLocalDataStore from "../../../global-hook/local-storage/orderProcessDropdownLocalDataStore";
 
-export default function B2bUserTable({ id }) {
+export default function DomainUserTable({ id }) {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const { mainAreaHeight } = useOutletContext();
