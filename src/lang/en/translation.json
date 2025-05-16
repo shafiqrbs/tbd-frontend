@@ -1135,5 +1135,6 @@
   "GeneralIssue": "General issue",
   "BatchIssue": "Batch issue",
   "xxxxxx": "xxxxxxx",
-  "BalanceSheet": "Balance Sheet"
+  "BalanceSheet": "Balance Sheet",
+  "BalanceEntry": "Balance Entry"
 }

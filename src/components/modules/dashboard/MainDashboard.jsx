@@ -699,6 +699,34 @@ function MainDashboard(props) {
                                                     }}
                                                 />
                                             </List.Item>
+                                            <List.Item
+                                                pl={"xs"}
+                                                icon={
+                                                    <ThemeIcon
+                                                        color="blue.6"
+                                                        size={20}
+                                                        radius="xl"
+                                                        variant="outline"
+                                                    >
+                                                        <IconBasket/>
+                                                    </ThemeIcon>
+                                                }
+                                            >
+                                                <NavLink
+                                                    pl={"md"}
+                                                    href="accounting/balance-entry"
+                                                    label={t("BalanceEntry")}
+                                                    component="button"
+                                                    onClick={(e) => {
+                                                        navigate("/accounting/balance-entry");
+                                                    }}
+                                                    onAuxClick={(e) => {
+                                                        if (e.button === 1) {
+                                                            window.open("/accounting/balance-entry", "_blank");
+                                                        }
+                                                    }}  
+                                                />
+                                            </List.Item>
                                         </List>
                                     </Box>
                                 </Card>

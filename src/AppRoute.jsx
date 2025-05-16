@@ -74,6 +74,7 @@ import ProtectedModule from "./routes/ProtectedModule.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import IssueIndex from "./components/modules/production/production-issue/issue-table/issueIndex.jsx";
 import BalanceSheetIndex from "./components/modules/accounting/balance-sheet/BalanceSheetIndex.jsx";
+import BalanceEntryIndex from "./components/modules/accounting/balance-entry/BalanceEntryIndex.jsx";
 
 function AppRoute() {
 	return (
@@ -596,6 +597,11 @@ function AppRoute() {
 					<Route path="balance-sheet" element={
 						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
 							<BalanceSheetIndex />
+						</ProtectedRoute>		
+					} />
+					<Route path="balance-entry" element={
+						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
+							<BalanceEntryIndex />
 						</ProtectedRoute>
 					} />
 				</Route>

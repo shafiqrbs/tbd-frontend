@@ -8,6 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 import "./i18n.js";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import "@mantine/charts/styles.css";
 import store from "./store";
 import Provider from "react-redux/es/components/Provider";
 
