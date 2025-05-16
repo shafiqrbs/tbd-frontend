@@ -251,6 +251,12 @@ const shortcutDropdownData = (t, configData) => {
               description: t("WhereWePresentTheHeadSubGroupInformationN"),
               isShow: true,
             },
+            {
+              id: "balance-sheet",
+              label: t("BalanceSheet"),
+              description: t("WhereWePresentTheBalanceSheetInformationN"),
+              isShow: true,
+            },
           ]
         : [],
     },
