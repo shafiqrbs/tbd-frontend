@@ -31,7 +31,7 @@ export default function _Shortcut(props) {
         <Flex direction={`column`} align={"center"} gap={"16"}>
           <Flex direction={`column`} align={"center"} mt={"xs"} pt={5}>
             <Tooltip
-              label={t("B2BDomainDashboard")}
+              label={t("Domain")}
               px={16}
               py={2}
               withArrow
@@ -49,40 +49,7 @@ export default function _Shortcut(props) {
                 color={`black`}
                 radius="xl"
                 onClick={(e) => {
-                  navigate("/b2b/dashboard");
-                }}
-              >
-                <Flex direction={`column`} align={"center"}>
-                  <IconDashboard size={16} color={"white"} />
-                </Flex>
-              </Button>
-            </Tooltip>
-            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
-              {t("Dashboard")}
-            </Flex>
-          </Flex>
-
-          <Flex direction={`column`} align={"center"} pt={5}>
-            <Tooltip
-              label={t("B2BDomain")}
-              px={16}
-              py={2}
-              withArrow
-              position={"left"}
-              c={"white"}
-              bg={"#905a23"}
-              transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-            >
-              <Button
-                bg={"#905a23"}
-                size="md"
-                pl={"12"}
-                pr={"12"}
-                variant={"light"}
-                color={`black`}
-                radius="xl"
-                onClick={(e) => {
-                  navigate("/b2b/domain");
+                  navigate("/domain");
                 }}
               >
                 <Flex direction={`column`} align={"center"}>
@@ -94,10 +61,9 @@ export default function _Shortcut(props) {
               {t("Domain")}
             </Flex>
           </Flex>
-
           <Flex direction={`column`} align={"center"} pt={5}>
             <Tooltip
-                label={t("B2BDomain")}
+                label={t("DomainMasterUser")}
                 px={16}
                 py={2}
                 withArrow
@@ -115,7 +81,7 @@ export default function _Shortcut(props) {
                   color={`black`}
                   radius="xl"
                   onClick={(e) => {
-                    navigate("/b2b/master-user");
+                    navigate("/domain/user");
                   }}
               >
                 <Flex direction={`column`} align={"center"}>
@@ -127,132 +93,6 @@ export default function _Shortcut(props) {
               {t("MasterUsers")}
             </Flex>
           </Flex>
-
-          {module !== "b2b_dashboard" && (
-            <>
-
-              <Flex direction={`column`} align={"center"} mb={"8"}>
-                <Tooltip
-                  label={t("B2BProduct")}
-                  px={16}
-                  py={2}
-                  withArrow
-                  position={"left"}
-                  c={"white"}
-                  bg={"#3F51B5"}
-                  transitionProps={{
-                    transition: "pop-bottom-left",
-                    duration: 500,
-                  }}
-                >
-                  <Button
-                    bg={"#3F51B5"}
-                    size="md"
-                    pl={"12"}
-                    pr={"12"}
-                    variant={"light"}
-                    color={`black`}
-                    radius="xl"
-                    onClick={(e) => {
-                      navigate(`/b2b/sub-domain/product/${id}`);
-                    }}
-                  >
-                    <Flex direction={`column`} align={"center"}>
-                      <IconIcons size={16} color={"white"} />
-                    </Flex>
-                  </Button>
-                </Tooltip>
-                <Flex
-                  direction={`column`}
-                  align={"center"}
-                  fz={"12"}
-                  c={"black"}
-                >
-                  {t("Product")}
-                </Flex>
-              </Flex>
-              <Flex direction={`column`} align={"center"} mb={"8"}>
-                <Tooltip
-                    label={t("B2BCategory")}
-                    px={16}
-                    py={2}
-                    withArrow
-                    position={"left"}
-                    c={"white"}
-                    bg={"#E53935"}
-                    transitionProps={{
-                      transition: "pop-bottom-left",
-                      duration: 500,
-                    }}
-                >
-                  <Button
-                      bg={"#E53935"}
-                      size="md"
-                      pl={"12"}
-                      pr={"12"}
-                      variant={"light"}
-                      color={`black`}
-                      radius="xl"
-                      onClick={(e) => {
-                        navigate(`/b2b/sub-domain/category/${id}`);
-                      }}
-                  >
-                    <Flex direction={`column`} align={"center"}>
-                      <IconCategory size={16} color={"white"} />
-                    </Flex>
-                  </Button>
-                </Tooltip>
-                <Flex
-                    direction={`column`}
-                    align={"center"}
-                    fz={"12"}
-                    c={"black"}
-                >
-                  {t("Category")}
-                </Flex>
-              </Flex>
-              <Flex direction={`column`} align={"center"} mb={"8"}>
-                <Tooltip
-                  label={t("B2BSetting")}
-                  px={16}
-                  py={2}
-                  withArrow
-                  position={"left"}
-                  c={"white"}
-                  bg={"#FFC107"}
-                  transitionProps={{
-                    transition: "pop-bottom-left",
-                    duration: 500,
-                  }}
-                >
-                  <Button
-                    bg={"#FFC107"}
-                    size="md"
-                    pl={"12"}
-                    pr={"12"}
-                    variant={"light"}
-                    color={`black`}
-                    radius="xl"
-                    onClick={(e) => {
-                      navigate(`/b2b/sub-domain/setting/${id}`);
-                    }}
-                  >
-                    <Flex direction={`column`} align={"center"}>
-                      <IconSettings size={16} color={"white"} />
-                    </Flex>
-                  </Button>
-                </Tooltip>
-                <Flex
-                  direction={`column`}
-                  align={"center"}
-                  fz={"12"}
-                  c={"black"}
-                >
-                  {t("Setting")}
-                </Flex>
-              </Flex>
-            </>
-          )}
         </Flex>
       </ScrollArea>
     </>

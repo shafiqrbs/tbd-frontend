@@ -23,6 +23,7 @@ function DomainHeaderNavbar(props) {
 
     const links = [
         { link: '/domain', label: t('Domains') },
+        { link: '/domain/user', label: t('DomainUser') },
     ];
     const items = links.map((link) => (
         <a

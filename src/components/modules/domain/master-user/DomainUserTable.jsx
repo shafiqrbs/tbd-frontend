@@ -88,7 +88,7 @@ export default function DomainUserTable({ id }) {
         try {
             const action = await dispatch(
                 getIndexEntityData({
-                    url: "domain/b2b/sub-domain-users",
+                    url: "domain/b2b/users",
                     param: {
                         term: searchKeyword,
                         page,

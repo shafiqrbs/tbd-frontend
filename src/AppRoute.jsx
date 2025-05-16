@@ -503,6 +503,11 @@ function AppRoute() {
 							<DomainIndex />
 						</ProtectedRoute>
 					} />
+					<Route path="user" element={
+						<ProtectedRoute roles={["role_domain"]}>
+							<DomainUserIndex />
+						</ProtectedRoute>
+					} />
 					<Route path="edit/:id" element={
 						<ProtectedRoute roles={["role_domain"]}>
 							<DomainIndex />
@@ -647,6 +652,7 @@ function AppRoute() {
 						</ProtectedRoute>
 					} />
 				</Route>
+
 				<Route path="/b2b" element={<ProtectedModule modules={["sales-purchase"]} />}>
 					<Route path="dashboard" element={
 						<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>
@@ -656,11 +662,6 @@ function AppRoute() {
 					<Route path="domain" element={
 						<ProtectedRoute roles={["role_domain"]}>
 							<B2bDomainIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="domain" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<DomainUserIndex />
 						</ProtectedRoute>
 					} />
 					<Route path="master-user" element={

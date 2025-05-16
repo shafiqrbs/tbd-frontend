@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { setFormLoading } from "../../../../store/generic/crudSlice.js";
 import DomainForm from './DomainFrom.jsx'
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import _Shortcut from "../common/_Shortcut";
 
 function DomainIndex() {
     const { t, i18n } = useTranslation();
@@ -54,12 +55,15 @@ function DomainIndex() {
                     />
                     <Box p={'8'}>
                         <Grid columns={24} gutter={{ base: 8 }}>
+                            <Grid.Col span={1}>
+                                <_Shortcut id={id} module={"b2b_dashboard"}/>
+                            </Grid.Col>
                             <Grid.Col span={15} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                     <DomainTable configData={configData} />
                                 </Box>
                             </Grid.Col>
-                            <Grid.Col span={9}>
+                            <Grid.Col span={8}>
                                 {
                                     insertType === 'create'
                                         ? <DomainForm />
