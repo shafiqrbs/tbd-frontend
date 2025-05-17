@@ -20,6 +20,7 @@ import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
 function AccountingForm(props) {
   const {
     accountDropdownData,
+    accountingLedgerDropdownData,
     voucherDropdownData,
     height,
     account_config,
@@ -359,7 +360,7 @@ function AccountingForm(props) {
           <Box mt={"xs"}>
             <Grid columns={24} gutter={{ base: 1 }}>
               <Grid.Col span={12} fz={"sm"} mt={8}>
-                {t("AccountOpeningStockData")}
+                {t("AccountOpeningStockLedger")}
               </Grid.Col>
               <Grid.Col span={12}>
                 <SelectForm
@@ -370,7 +371,7 @@ function AccountingForm(props) {
                   nextField={"account_product_group_id"}
                   name={"account_stock_opening_id"}
                   form={form}
-                  dropdownValue={accountDropdownData}
+                  dropdownValue={accountingLedgerDropdownData}
                   id={"account_stock_opening_id"}
                   searchable={true}
                   value={accountOpeningStockData}

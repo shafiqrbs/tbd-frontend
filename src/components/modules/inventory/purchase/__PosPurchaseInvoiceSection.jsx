@@ -229,7 +229,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                     closeIcon={true}
                   />
                 </Box>
-                { domainConfigData?.inventory_config?.config_purchase?.is_warehouse == 1 && (
+                {domainConfigData?.inventory_config?.sku_warehouse == 1 && domainConfigData?.inventory_config?.config_purchase?.is_warehouse == 1 && (
                   <Box mt={"4"}>
                     <SelectForm
                       tooltip={t("Warehouse")}
@@ -247,6 +247,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                     />
                   </Box>
                 )}
+                { domainConfigData?.inventory_config?.config_purchase?.is_purchase_auto_approved !== 1 && (
                 <Box pt={4}>
                   <SelectForm
                     tooltip={t("ChooseOrderProcess")}
@@ -267,6 +268,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                     changeValue={setOrderProcess}
                   />
                 </Box>
+                )}
                 <Box pt={4}>
                   <TextAreaForm
                     size="xs"

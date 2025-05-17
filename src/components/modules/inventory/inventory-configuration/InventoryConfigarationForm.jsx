@@ -35,7 +35,8 @@ import ProductionForm from "./ProductionForm.jsx";
 import ProductForm from "./ProductForm.jsx";
 import DiscountForm from "./DiscountForm.jsx";
 import InventoryForm from "./InventoryForm.jsx";
-import getAccountingDropdownData from "../../../global-hook/dropdown/getAccountingDropdownData.jsx";
+import getAccountingDropdownData from "../../../global-hook/dropdown/getAccountingSubHeadDropdownData.jsx";
+import getAccountingLedgerDropdownData from "../../../global-hook/dropdown/getAccountingLedgerDropdownData.jsx";
 import getVoucherDropdownData from "../../../global-hook/dropdown/getVoucherDropdownData.jsx";
 import getCurrencyDropdownData from "../../../global-hook/dropdown/getCurrencyDropdownData.js";
 import getCountryDropdownData from "../../../global-hook/dropdown/getCountryDropdownData.js";
@@ -93,6 +94,7 @@ function InventoryConfigarationForm() {
   }, [dropdownLoad]);
 
   let accountDropdownData = getAccountingDropdownData();
+  let accountingLedgerDropdownData = getAccountingLedgerDropdownData();
   let voucherDropdownData = getVoucherDropdownData();
   let currencyList = getCurrencyDropdownData();
   let countryList = getCountryDropdownData();
@@ -203,6 +205,7 @@ function InventoryConfigarationForm() {
             account_config={account_config}
             id={id}
             accountDropdownData={accountDropdownData}
+            accountingLedgerDropdownData={accountingLedgerDropdownData}
             voucherDropdownData={voucherDropdownData}
           />
         );

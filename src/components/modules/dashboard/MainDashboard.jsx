@@ -1396,6 +1396,7 @@ function MainDashboard(props) {
                                             </List.Item>
 
                                             {configData?.sku_warehouse == 1 && (
+
                                                 <List.Item
                                                     pl="xs"
                                                     icon={
@@ -1413,6 +1414,7 @@ function MainDashboard(props) {
                                                         onAuxClick={(e) => e.button === 1 && window.open("/core/warehouse", "_blank")}
                                                     />
                                                 </List.Item>
+
                                             )}
 
 

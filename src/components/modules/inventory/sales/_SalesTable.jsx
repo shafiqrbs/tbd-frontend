@@ -22,7 +22,7 @@ import {
     IconEdit,
     IconPrinter,
     IconReceipt, IconDotsVertical, IconTrashX,
-    IconCheck,
+    IconCheck, IconChevronsRight, IconEyeEdit,IconPencil
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
@@ -88,6 +88,7 @@ function _SalesTable(props) {
     useHotkeys([['alt+n', () => {
         navigate('/inventory/sales-invoice');
     }]], []);
+
     const rows = salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element, index) => (
         <Table.Tr key={element.name}>
             <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
@@ -201,6 +202,7 @@ function _SalesTable(props) {
         }
 
     };
+
 
     return (
         <>
@@ -348,9 +350,17 @@ function _SalesTable(props) {
                                                                         });
                                                                     }}
                                                                     component="a"
+                                                                    color="green"
+                                                                    leftSection={
+                                                                        <IconChevronsRight
+                                                                            style={{
+                                                                                width: rem(14),
+                                                                                height: rem(14)
+                                                                            }}/>
+                                                                    }
                                                                     w={'200'}
                                                                 >
-                                                                    {t('SalesProcess')}
+                                                                    {t("Approve")}
                                                                 </Menu.Item>
                                                             }
 
@@ -383,6 +393,9 @@ function _SalesTable(props) {
                                                                     }}
                                                                     component="a"
                                                                     w={'200'}
+                                                                    leftSection={
+                                                                        <IconPencil style={{width: rem(14), height: rem(14)}} />
+                                                                    }
                                                                 >
                                                                     {t('Edit')}
                                                                 </Menu.Item>
@@ -396,6 +409,9 @@ function _SalesTable(props) {
                                                                     data?.invoice_batch_id ? setChecked(true) : setChecked(false)
                                                                 }}
                                                                 component="a"
+                                                                leftSection={
+                                                                    <IconEyeEdit style={{width: rem(14), height: rem(14)}} />
+                                                                }
                                                                 w={'200'}
                                                             >
                                                                 {t('Show')}

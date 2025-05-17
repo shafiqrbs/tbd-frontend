@@ -78,12 +78,10 @@ function SalesEdit() {
                             />
 
                             <Box p={8}>
-                                {configData?.business_model?.slug === "general" && (
-                                    <_UpdateInvoice
-                                        domainConfigData={domainConfigData}
-                                        entityEditData={entityEditData}
-                                    />
-                                )}
+                                <_UpdateInvoice
+                                    domainConfigData={domainConfigData}
+                                    entityEditData={entityEditData}
+                                />
                             </Box>
                         </>
                     )}

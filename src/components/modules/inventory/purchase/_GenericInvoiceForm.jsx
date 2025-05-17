@@ -345,7 +345,7 @@ function _GenericInvoiceForm(props) {
           unit_name: product.unit_name,
           purchase_price: Number(values.purchase_price),
           sub_total: Number(values.sub_total),
-          sales_price: Number(product.sales_price),
+          sales_price: Number(values.price),
           warehouse_id: values.warehouse_id
             ? Number(values.warehouse_id)
             : null,
@@ -723,30 +723,30 @@ function _GenericInvoiceForm(props) {
                     </Grid>
                     </Box>
                         <Box  pl={"xs"} pr={'xs'}>
-                          {configPurchase?.is_warehouse === 1 && (
+                          {domainConfigData?.inventory_config?.sku_warehouse === 1 && configPurchase?.is_warehouse === 1 &&(
                               <Box  mt={"4"}>
                                 <Grid columns={24} gutter={{ base: 1 }}>
-                              <Grid.Col span={10} fz="sm" mt={8}>
-                                {t("Warehouse")}
-                              </Grid.Col>
-                              <Grid.Col span={14}>
-                                <SelectForm
-                                    tooltip={t("Warehouse")}
-                                    label=""
-                                    placeholder={t("Warehouse")}
-                                    required={false}
-                                    nextField={"purchase_price"}
-                                    name={"warehouse_id"}
-                                    form={form}
-                                    dropdownValue={warehouseDropdownData}
-                                    id={"warehouse_id"}
-                                    mt={1}
-                                    searchable={true}
-                                    value={warehouseData}
-                                    changeValue={setWarehouseData}
-                                />
-                              </Grid.Col>
-                            </Grid>
+                                    <Grid.Col span={10} fz="sm" mt={8}>
+                                      {t("Warehouse")}
+                                    </Grid.Col>
+                                    <Grid.Col span={14}>
+                                      <SelectForm
+                                          tooltip={t("Warehouse")}
+                                          label=""
+                                          placeholder={t("Warehouse")}
+                                          required={false}
+                                          nextField={"purchase_price"}
+                                          name={"warehouse_id"}
+                                          form={form}
+                                          dropdownValue={warehouseDropdownData}
+                                          id={"warehouse_id"}
+                                          mt={1}
+                                          searchable={true}
+                                          value={warehouseData}
+                                          changeValue={setWarehouseData}
+                                      />
+                                    </Grid.Col>
+                                </Grid>
                               </Box>
                           )}
                           <Box  mt={"4"}>
@@ -806,7 +806,7 @@ function _GenericInvoiceForm(props) {
                             <Box  mt={"4"}>
                                 <Grid columns={24} gutter={{ base: 1 }}>
                               <Grid.Col span={10} fz="sm" mt={8}>
-                                {t("Price")}
+                                {t("SalesPrice")}
                               </Grid.Col>
                               <Grid.Col span={14}>
                                 <InputNumberForm
