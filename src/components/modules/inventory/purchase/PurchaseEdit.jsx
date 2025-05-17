@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import { Box, Progress, rem } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
@@ -16,9 +16,19 @@ function PurchaseEdit() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const progress = getLoadingProgress();
-  const configData = localStorage.getItem("config-data")
+  /*const configData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
-    : [];
+    : [];*/
+  // Safe parsing of config data from localStorage
+  const domainConfigData = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem("domain-config-data")) || {};
+    } catch {
+      return {};
+    }
+  }, []);
+
+  // const configData = domainConfigData?.inventory_config;
 
   const dataStatus = useSelector(
     (state) => state.inventoryCrudSlice.dataStatus
@@ -68,25 +78,19 @@ function PurchaseEdit() {
       )}
       {progress === 100 && (
         <Box>
-          {configData && (
+          {domainConfigData && (
             <>
               <_SalesPurchaseHeaderNavbar
                 pageTitle={t("PurchaseInvoice")}
                 roles={t("Roles")}
-                allowZeroPercentage={configData?.zero_stock}
-                currencySymbol={configData?.currency?.symbol}
+                allowZeroPercentage={domainConfigData?.inventory_config?.zero_stock}
+                currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
               />
               <Box p={"8"}>
-                {configData?.business_model?.slug === "general" && (
+                {domainConfigData?.inventory_config?.business_model?.slug === "general" && (
                   <_UpdatePurchaseInvoice
-                    domainId={configData?.domain_id}
-                    currencySymbol={configData?.currency?.symbol}
-                    isPurchaseByPurchasePrice={
-                      configData?.is_purchase_by_purchase_price
-                    }
-                    editedData={editedData}
-                    isWarehouse={configData?.sku_warehouse}
-                    isSMSActive={configData?.is_active_sms}
+                      domainConfigData={domainConfigData}
+                      editedData={editedData}
                   />
                 )}
               </Box>
