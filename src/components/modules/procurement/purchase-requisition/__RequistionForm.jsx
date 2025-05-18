@@ -1,5 +1,5 @@
 import { isNotEmpty, useForm } from "@mantine/form";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Text, ActionIcon, Group, TextInput } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
@@ -20,6 +20,7 @@ export default function __RequistionForm(props) {
     isZeroReceiveAllow,
     tempCardProducts,
     setLoadCardProducts,
+      loadCardProducts
   } = props;
 
   //common hooks
@@ -92,6 +93,8 @@ export default function __RequistionForm(props) {
             data: formValue,
           };
 
+            console.log(formValue)
+
           const resultAction = await dispatch(storeEntityData(value));
 
           if (storeEntityData.rejected.match(resultAction)) {
@@ -140,61 +143,41 @@ export default function __RequistionForm(props) {
                   title: t("Quantity"),
                   width: "10%",
                   render: (item) => {
-                    const [editedQuantity, setEditedQuantity] = useState(
-                      item.quantity
-                    );
-                    const handlQuantityChange = (e) => {
-                      const editedQuantity = e.currentTarget.value;
-                      setEditedQuantity(editedQuantity);
+                      const handleQuantityChange = (e) => {
+                          const newQuantity = Number(e.currentTarget.value);
+                          const tempCardProducts = localStorage.getItem(
+                              "temp-requisition-products"
+                          );
+                          const cardProducts = tempCardProducts
+                              ? JSON.parse(tempCardProducts)
+                              : [];
 
-                      const tempCardProducts = localStorage.getItem(
-                        "temp-requisition-products"
+                          const updatedProducts = cardProducts.map((product) => {
+                              if (product.product_id === item.product_id) {
+                                  return {
+                                      ...product,
+                                      quantity: newQuantity,
+                                      sub_total: newQuantity * item.purchase_price,
+                                  };
+                              }
+                              return product;
+                          });
+
+                          localStorage.setItem(
+                              "temp-requisition-products",
+                              JSON.stringify(updatedProducts)
+                          );
+                          setLoadCardProducts(true);
+                      };
+
+                      return (
+                          <TextInput
+                              type="number"
+                              size="xs"
+                              value={item.quantity ?? ""}
+                              onChange={handleQuantityChange}
+                          />
                       );
-                      const cardProducts = tempCardProducts
-                        ? JSON.parse(tempCardProducts)
-                        : [];
-
-                      const updatedProducts = cardProducts.map((product) => {
-                        if (product.product_id === item.product_id) {
-                          return {
-                            ...product,
-                            quantity: e.currentTarget.value,
-                            sub_total: e.currentTarget.value * item.sales_price,
-                          };
-                        }
-                        return product;
-                      });
-
-                      localStorage.setItem(
-                        "temp-requisition-products",
-                        JSON.stringify(updatedProducts)
-                      );
-                      setLoadCardProducts(true);
-                    };
-
-                    return (
-                      <>
-                        <TextInput
-                          type="number"
-                          label=""
-                          size="xs"
-                          value={editedQuantity}
-                          onChange={handlQuantityChange}
-                          onKeyDown={getHotkeyHandler([
-                            [
-                              "Enter",
-                              (e) => {
-                                document
-                                  .getElementById(
-                                    "inline-update-quantity-" + item.product_id
-                                  )
-                                  .focus();
-                              },
-                            ],
-                          ])}
-                        />
-                      </>
-                    );
                   },
                 },
                 {
@@ -266,7 +249,7 @@ export default function __RequistionForm(props) {
                   ),
                 },
               ]}
-              fetching={fetching}
+              fetching={loadCardProducts}
               totalRecords={100}
               recordsPerPage={10}
               loaderSize="xs"

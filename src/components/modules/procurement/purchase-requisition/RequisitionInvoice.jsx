@@ -10,7 +10,6 @@ export default function RequisitionInvoice() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
 
- // const {configData} = getConfigData();
   const domainConfigData = JSON.parse(localStorage.getItem("domain-config-data"));
   const configData = domainConfigData.inventory_config;
 

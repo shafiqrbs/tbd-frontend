@@ -31,7 +31,8 @@ const SelectForm = forwardRef((props, ref) => {
         inlineUpdate = false,
         updateDetails = null,
         size,
-        pt
+        pt,
+        disabled=false
     } = props;
     const dispatch = useDispatch();
 
@@ -97,6 +98,7 @@ const SelectForm = forwardRef((props, ref) => {
                         withAsterisk={required}
                         comboboxProps={props.comboboxProps}
                         allowDeselect={allowDeselect}
+                        disabled={disabled}
                     />
                 </Tooltip>
             )}
