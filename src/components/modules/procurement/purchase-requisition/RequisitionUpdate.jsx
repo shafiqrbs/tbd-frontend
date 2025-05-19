@@ -1,20 +1,21 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress";
-import getConfigData from "../../../global-hook/config-data/getConfigData";
-import {Box, Progress, rem} from "@mantine/core";
+import {Box, Progress} from "@mantine/core";
 import ProcurementHeaderNavbar from "../ProcurementHeaderNavbar";
-import _UpdateRequisitionForm from "./_UpdateRequisitionForm.jsx";
-import {editEntityData} from "../../../../store/inventory/crudSlice.js";
 import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {notifications} from "@mantine/notifications";
-import {IconCheck} from "@tabler/icons-react";
+import {editEntityData} from "../../../../store/inventory/crudSlice.js";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import _UpdateGenericRequisitionForm from "./_UpdateGenericRequisitionForm.jsx";
 
 export default function RequisitionUpdate() {
     const {t} = useTranslation();
     const progress = getLoadingProgress();
-    const {configData} = getConfigData();
+
+    const domainConfigData = JSON.parse(localStorage.getItem("domain-config-data"));
+    const configData = domainConfigData.inventory_config;
+
     const {id} = useParams()
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -33,20 +34,14 @@ export default function RequisitionUpdate() {
             setEntityEditData(editedData);
         }
         if (dataStatus === 404 && !hasNotified) {
-            notifications.show({
-                color: 'teal',
-                title: t('InvalidRequest'),
-                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                loading: false,
-                autoClose: 1000,
-                style: {backgroundColor: 'lightgray'},
-            });
+            showNotificationComponent('Invalid Request', 'red')
             setTimeout(() => {
                 navigate('/inventory/requisition')
             }, 1000)
             setHasNotified(true);
         }
     }, [dataStatus, entityEditData.id]);
+
 
     return (
         <>
@@ -65,12 +60,13 @@ export default function RequisitionUpdate() {
                     {configData && (
                         <>
                             <ProcurementHeaderNavbar
-                                pageTitle={t("UpdateRequisition")}
+                                pageTitle={t("NewRequisition")}
                                 roles={t("Roles")}
+                                configData={configData}
                             />
                             <Box p={8}>
                                 {(
-                                    <_UpdateRequisitionForm
+                                    <_UpdateGenericRequisitionForm
                                         allowZeroPercentage={configData?.zero_stock}
                                         currencySymbol={configData?.currency?.symbol}
                                         editedData={editedData}

@@ -35,19 +35,20 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
-import __RequistionForm from "./__RequistionForm";
 import {useHotkeys} from "@mantine/hooks";
 import AddProductDrawer from "../../inventory/sales/drawer-form/AddProductDrawer.jsx";
 import SettingDrawer from "../../inventory/common/SettingDrawer.jsx";
 import RequisitionNavigation from "../common/RequisitionNavigation";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import __UpdateRequistionForm from "./__UpdateRequistionForm.jsx";
 
-function _GenericRequisitionForm(props) {
+function _UpdateGenericRequisitionForm(props) {
     const {
         currencySymbol,
         domainId,
         isSMSActive,
         isZeroReceiveAllow,
+        editedData
     } = props;
 
     //common hooks and variables
@@ -84,6 +85,14 @@ function _GenericRequisitionForm(props) {
         const storedVendors = localStorage.getItem("core-vendors");
         return storedVendors ? JSON.parse(storedVendors) : [];
     }, []);
+
+    useEffect(() => {
+        setVendorData(String(editedData?.vendor_id))
+        setTempCardProducts(editedData?.requisition_items ? editedData.requisition_items : [])
+        setLoadCardProducts(false)
+    }, [loadCardProducts])
+
+    // console.log(tempCardProducts)
 
     //vendor dropdown data
     useEffect(() => {
@@ -259,12 +268,11 @@ function _GenericRequisitionForm(props) {
 
     //update local storage and reset form values
     function updateLocalStorageAndResetForm(addProducts, addedType) {
-        localStorage.setItem("temp-requisition-products", JSON.stringify(addProducts));
+        setTempCardProducts(addProducts);
         setSearchValue("");
         setWarehouseData(null);
         setProduct(null);
         form.reset();
-        setLoadCardProducts(true);
         addedType && document.getElementById(addedType).focus();
     }
 
@@ -317,13 +325,6 @@ function _GenericRequisitionForm(props) {
         };
     }
 
-    //load cart products from local storage
-    useEffect(() => {
-        const tempProducts = localStorage.getItem("temp-requisition-products");
-        setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        setLoadCardProducts(false);
-    }, [loadCardProducts]);
-
     const handleFormSubmit = (values) => {
         if (!values.barcode && !values.product_id) {
             form.setFieldError("barcode", true);
@@ -331,8 +332,7 @@ function _GenericRequisitionForm(props) {
             setTimeout(() => {
             }, 1000);
         } else {
-            const cardProducts = localStorage.getItem("temp-requisition-products");
-            const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+            const myCardProducts = tempCardProducts || [];
 
             if (values.product_id && !values.barcode) {
                 handleAddProductByProductId(
@@ -1002,7 +1002,7 @@ function _GenericRequisitionForm(props) {
                     </form>
                 </Grid.Col>
                 <Grid.Col span={16}>
-                    <__RequistionForm
+                    <__UpdateRequistionForm
                         currencySymbol={currencySymbol}
                         domainId={domainId}
                         isSMSActive={isSMSActive}
@@ -1014,6 +1014,7 @@ function _GenericRequisitionForm(props) {
                         vendorData={vendorData}
                         vendorObject={vendorObject}
                         vendorsDropdownData={vendorsDropdownData}
+                        editedData={editedData}
                     />
                 </Grid.Col>
             </Grid>
@@ -1037,4 +1038,4 @@ function _GenericRequisitionForm(props) {
     );
 }
 
-export default _GenericRequisitionForm;
+export default _UpdateGenericRequisitionForm;

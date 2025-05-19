@@ -5,20 +5,22 @@ import {DataTable} from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
 import {useTranslation} from "react-i18next";
 import {IconSum, IconX} from "@tabler/icons-react";
-import {useOutletContext} from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
-import __RequistionInvoiceoSection from "./__RequistionInvoiceSection.jsx";
+import {updateEntityData} from "../../../../store/inventory/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
+import __UpdateRequistionInvoiceSection from "./__UpdateRequistionInvoiceSection.jsx";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
 
-export default function __RequistionForm(props) {
+export default function __UpdateRequistionForm(props) {
     const {
         isSMSActive,
         currencySymbol,
         tempCardProducts,
         setLoadCardProducts,
         loadCardProducts,
-        vendorData, vendorObject, vendorsDropdownData
+        vendorData, vendorObject, vendorsDropdownData, editedData, setTempCardProducts
     } = props;
 
     //common hooks
@@ -26,14 +28,16 @@ export default function __RequistionForm(props) {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 170;
     const dispatch = useDispatch();
+    const navigate = useNavigate()
 
     // form
+    dayjs.extend(customParseFormat);
     const form = useForm({
         initialValues: {
-            vendor_id: "",
-            order_process: "",
-            narration: "",
-            expected_date: "",
+            expected_date: editedData.expected_date ? dayjs(editedData.expected_date, "DD-MM-YYYY").toDate() : new Date(),
+            invoice_date: editedData.invoice_date ? dayjs(editedData.invoice_date, "DD-MM-YYYY").toDate() : new Date(),
+            vendor_id: editedData.vendor_id,
+            narration: editedData.remark,
         },
         validate: {
             vendor_id: isNotEmpty(),
@@ -44,12 +48,8 @@ export default function __RequistionForm(props) {
     let purchaseSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
 
     const handleFormSubmit = async (values) => {
-        const tempProducts = localStorage.getItem(
-            "temp-requisition-products"
-        );
-        let items = tempProducts ? JSON.parse(tempProducts) : [];
         let createdBy = JSON.parse(localStorage.getItem("user"));
-        let transformedArray = items.map((product) => {
+        let transformedArray = tempCardProducts.map((product) => {
             return {
                 product_id: product.product_id,
                 display_name: product.display_name,
@@ -78,26 +78,16 @@ export default function __RequistionForm(props) {
         formValue["vendor_id"] = form.values.vendor_id;
 
         const value = {
-            url: "inventory/requisition",
-            data: formValue,
-        };
+            url: 'inventory/requisition/' + editedData.id,
+            data: formValue
+        }
 
-
-        const resultAction = await dispatch(storeEntityData(value));
-
-        if (storeEntityData.rejected.match(resultAction)) {
-            showNotificationComponent(resultAction.payload.message, "red");
-        } else if (storeEntityData.fulfilled.match(resultAction)) {
-            if (resultAction.payload.data.status === 200) {
-                showNotificationComponent(resultAction.payload.data.message, "teal");
-                setTimeout(() => {
-                    localStorage.removeItem("temp-requisition-products");
-                    form.reset();
-                    setLoadCardProducts(true);
-                }, 700);
-            } else {
-                showNotificationComponent(resultAction.payload.data.message, "teal");
-            }
+        const result = await dispatch(updateEntityData(value)).unwrap();
+        if (result.data.status === 200) {
+            showNotificationComponent(t('UpdateSuccessfully'), 'teal', null, false, 1000)
+            navigate('/procurement/requisition', {replace: true})
+        } else {
+            showNotificationComponent(t('FailedToUpdateData'), 'red', null, false, 1000)
         }
     }
 
@@ -136,14 +126,8 @@ export default function __RequistionForm(props) {
                                     render: (item) => {
                                         const handleQuantityChange = (e) => {
                                             const newQuantity = Number(e.currentTarget.value);
-                                            const tempCardProducts = localStorage.getItem(
-                                                "temp-requisition-products"
-                                            );
-                                            const cardProducts = tempCardProducts
-                                                ? JSON.parse(tempCardProducts)
-                                                : [];
 
-                                            const updatedProducts = cardProducts.map((product) => {
+                                            const updatedProducts = tempCardProducts.map((product) => {
                                                 if (product.product_id === item.product_id) {
                                                     return {
                                                         ...product,
@@ -154,11 +138,7 @@ export default function __RequistionForm(props) {
                                                 return product;
                                             });
 
-                                            localStorage.setItem(
-                                                "temp-requisition-products",
-                                                JSON.stringify(updatedProducts)
-                                            );
-                                            setLoadCardProducts(true);
+                                            setTempCardProducts(updatedProducts)
                                         };
 
                                         return (
@@ -212,22 +192,9 @@ export default function __RequistionForm(props) {
                                                 variant="subtle"
                                                 color="red"
                                                 onClick={() => {
-                                                    const dataString = localStorage.getItem(
-                                                        "temp-requisition-products"
-                                                    );
-                                                    let data = dataString ? JSON.parse(dataString) : [];
-
-                                                    data = data.filter(
+                                                    setTempCardProducts(tempCardProducts.filter(
                                                         (d) => d.product_id !== item.product_id
-                                                    );
-
-                                                    const updatedDataString = JSON.stringify(data);
-
-                                                    localStorage.setItem(
-                                                        "temp-requisition-products",
-                                                        updatedDataString
-                                                    );
-                                                    setLoadCardProducts(true);
+                                                    ));
                                                 }}
                                             >
                                                 <IconX
@@ -251,7 +218,7 @@ export default function __RequistionForm(props) {
                     </Box>
                 </Box>
                 <Box>
-                    <__RequistionInvoiceoSection
+                    <__UpdateRequistionInvoiceSection
                         purchaseSubTotalAmount={purchaseSubTotalAmount}
                         form={form}
                         currencySymbol={currencySymbol}

@@ -20,7 +20,7 @@ import {
 import React, {useEffect} from "react";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 
-export default function __RequistionInvoiceSection(props) {
+export default function __UpdateRequistionInvoiceSection(props) {
     const {
         form,
         currencySymbol,
