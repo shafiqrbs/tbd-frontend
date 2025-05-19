@@ -27,6 +27,8 @@ function AccountingForm(props) {
     id,
   } = props;
 
+  // console.log(accountingLedgerDropdownData)
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);

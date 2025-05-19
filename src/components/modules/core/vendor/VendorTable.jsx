@@ -119,6 +119,7 @@ function VendorTable() {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
+                        { accessor: 'group_name', title: t("GroupName") },
                         { accessor: 'name', title: t("Name") },
                         { accessor: 'company_name', title: t("CompanyName") },
                         { accessor: 'mobile', title: t("Mobile") },

@@ -219,7 +219,12 @@ const utilitySlice = createSlice({
       state.voucherAllDropdownData = action.payload;
     });
     builder.addCase(getAccountingDropdown.fulfilled, (state, action) => {
-      state.accountingDropdownData = action.payload;
+      if (action.payload.type == 'sub-head'){
+        state.accountSubHeadDropdownData = action.payload;
+      }
+      if (action.payload.type == 'ledger'){
+        state.accountLedgerDropdownData = action.payload;
+      }
     });
     builder.addCase(getVoucherTypeDropdown.fulfilled, (state, action) => {
       state.voucherDropdownData = action.payload;

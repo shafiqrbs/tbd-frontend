@@ -74,6 +74,8 @@ function _UpdatePurchaseInvoice(props) {
     /*get warehouse dropdown data*/
     let warehouseDropdownData = getCoreWarehouseDropdownData();
     const [warehouseData, setWarehouseData] = useState(null);
+    const [unitDropdown, setUnitDropdown] = useState([]);
+
 
     const [stockProductRestore, setStockProductRestore] = useState(false);
     useEffect(() => {

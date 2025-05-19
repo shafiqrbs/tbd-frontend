@@ -16,18 +16,18 @@ const getAccountingLedgerDropdownData = () => {
     dispatch(getAccountingDropdown(valueForAccounting));
   }, [dispatch]);
 
-  const accountingDropdownData = useSelector(
-    (state) => state.utilitySlice.accountingDropdownData
+  const accountLedgerDropdownData = useSelector(
+    (state) => state.utilitySlice.accountLedgerDropdownData
   );
 
   useEffect(() => {
-    if (accountingDropdownData && accountingDropdownData.length > 0) {
-      const transformedData = accountingDropdownData.map((type) => {
+    if (accountLedgerDropdownData && accountLedgerDropdownData?.data?.length > 0) {
+      const transformedData = accountLedgerDropdownData?.data.map((type) => {
         return { label: type.name, value: String(type.id) };
       });
       setAccountingDropdown(transformedData);
     }
-  }, [accountingDropdownData]);
+  }, [accountLedgerDropdownData]);
 
   return accountingDropdown;
 };

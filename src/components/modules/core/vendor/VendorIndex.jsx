@@ -19,6 +19,8 @@ import CoreHeaderNavbar from "../CoreHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
 import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
 import Navigation from "../common/Navigation.jsx";
+import {coreSettingDropdown} from "../../../../store/core/utilitySlice";
+import {setDropdownLoad} from "../../../../store/inventory/crudSlice";
 
 function VendorIndex() {
   const { t, i18n } = useTranslation();
@@ -32,6 +34,19 @@ function VendorIndex() {
   );
   const customerDropDownData = getCustomerDropdownData();
 
+  const dropdownData = useSelector((state) => state.utilitySlice.vendorGroupDropdownData);
+    let groupDropdownData = dropdownData && dropdownData.length > 0 ?
+        dropdownData.map((type, index) => {
+            return ({ 'label': type.name, 'value': String(type.id) })
+        }) : []
+    useEffect(() => {
+        const value = {
+            url: 'core/select/setting',
+            param: { 'dropdown-type': 'vendor-group' }
+        }
+        dispatch(coreSettingDropdown(value))
+        dispatch(setDropdownLoad(false))
+    }, [dropdownData]);
   const progress = getLoadingProgress();
 
   useEffect(() => {
@@ -85,10 +100,10 @@ function VendorIndex() {
               </Grid.Col>
               <Grid.Col span={9}>
                 {insertType === "create" ? (
-                  <VendorForm customerDropDownData={customerDropDownData} />
+                  <VendorForm customerDropDownData={customerDropDownData} vendorGroupDropdownData={groupDropdownData} />
                 ) : (
                   <VendorUpdateForm
-                    customerDropDownData={customerDropDownData}
+                    customerDropDownData={customerDropDownData} vendorGroupDropdownData={groupDropdownData}
                   />
                 )}
               </Grid.Col>

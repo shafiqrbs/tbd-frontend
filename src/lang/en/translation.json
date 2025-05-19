@@ -1141,7 +1141,8 @@
   "NewPassword": "New Password",
   "EnterNewPassword": "Enter Your New Password",
   "EnterConfirmNewPassword": "Enter Enter Confirm New Password",
-  "xxxxxx": "xxxxxxx",
   "BalanceSheet": "Balance Sheet",
-  "BalanceEntry": "Balance Entry"
+  "BalanceEntry": "Balance Entry",
+  "RequestQuantity": "Request Quantity",
+  "xxxxxx": "xxxxxxx"
 }

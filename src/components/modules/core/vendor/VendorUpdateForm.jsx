@@ -30,7 +30,7 @@ import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 
 function VendorUpdateForm(props) {
-    const { customerDropDownData } = props
+    const { customerDropDownData,vendorGroupDropdownData } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -42,10 +42,12 @@ function VendorUpdateForm(props) {
     const [customerData, setCustomerData] = useState(null);
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
+    const [vendorGroupData, setVendorGroupData] = useState(null);
     const navigate = useNavigate();
 
     const form = useForm({
         initialValues: {
+            vendor_group_id: entityEditData.vendor_group_id ? entityEditData.vendor_group_id : '',
             company_name: entityEditData.company_name ? entityEditData.company_name : '',
             name: entityEditData.name ? entityEditData.name : '',
             mobile: entityEditData.mobile ? entityEditData.mobile : '',
@@ -70,14 +72,19 @@ function VendorUpdateForm(props) {
     });
 
     useEffect(() => {
+        setCustomerData(entityEditData?.customer_id?.toString());
+        setVendorGroupData(entityEditData?.vendor_group_id?.toString());
         setFormLoad(true)
         setFormDataForUpdate(true)
     }, [dispatch, formLoading])
+
+
 
     useEffect(() => {
 
         if (entityEditData) {
             form.setValues({
+                vendor_group_id: entityEditData.vendor_group_id ? entityEditData.vendor_group_id : '',
                 company_name: entityEditData.company_name ? entityEditData.company_name : '',
                 name: entityEditData.name ? entityEditData.name : '',
                 mobile: entityEditData.mobile ? entityEditData.mobile : '',
@@ -97,6 +104,7 @@ function VendorUpdateForm(props) {
     const handleFormReset = () => {
         if (entityEditData) {
             const originalValues = {
+                vendor_group_id: entityEditData.vendor_group_id ? entityEditData.vendor_group_id : '',
                 company_name: entityEditData.company_name ? entityEditData.company_name : '',
                 name: entityEditData.name ? entityEditData.name : '',
                 mobile: entityEditData.mobile ? entityEditData.mobile : '',
@@ -216,6 +224,23 @@ function VendorUpdateForm(props) {
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
                                             <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+                                            <Box mt={'xs'}>
+                                                <SelectForm
+                                                    tooltip={t('ChooseCustomerGroup')}
+                                                    label={t('VendorGroup')}
+                                                    placeholder={t('ChooseCustomerGroup')}
+                                                    required={false}
+                                                    nextField={'company_name'}
+                                                    name={'vendor_group_id'}
+                                                    form={form}
+                                                    dropdownValue={vendorGroupDropdownData}
+                                                    mt={8}
+                                                    id={'vendor_group_id'}
+                                                    searchable={false}
+                                                    value={vendorGroupData}
+                                                    changeValue={setVendorGroupData}
+                                                />
+                                            </Box>
                                             <Box mt={'xs'}>
                                                 <InputForm
                                                     tooltip={t('CompanyNameValidateMessage')}

@@ -107,21 +107,25 @@ function VoucherCreateTable(props) {
               accessor: "status",
               title: t("Status"),
               textAlign: "center",
-              render: (item) => (
-                <Flex justify="center" align="center">
-                  <Switch
-                    disabled={switchEnable[item.id] || false || item.parent_id}
-                    defaultChecked={item.status == 1 ? true : false}
-                    color="red"
-                    radius="xs"
-                    size="md"
-                    onLabel="Enable"
-                    offLabel="Disable"
-                    onChange={(event) => {
-                      handleSwitch(event.currentTarget.checked, item);
-                    }}
-                  />
-                </Flex>
+              render: (data) => (
+                  <>
+                  {data.is_private !== 1 &&(
+                      <Flex justify="center" align="center">
+                          <Switch
+                            disabled={switchEnable[data.id] || false || data.parent_id}
+                            defaultChecked={data.status === 1 ? true : false}
+                            color="red"
+                            radius="xs"
+                            size="md"
+                            onLabel="Enable"
+                            offLabel="Disable"
+                            onChange={(event) => {
+                              handleSwitch(event.currentTarget.checked, data);
+                            }}
+                          />
+                      </Flex>
+                  )}
+                  </>
               ),
             },
             {
@@ -129,6 +133,8 @@ function VoucherCreateTable(props) {
               title: t("Action"),
               textAlign: "right",
               render: (data) => (
+                  <>
+                  {data.is_private !== 1 &&(
                 <Group gap={4} justify="right" wrap="nowrap">
                   <Menu
                     position="bottom-end"
@@ -232,6 +238,8 @@ function VoucherCreateTable(props) {
                     </Menu.Dropdown>
                   </Menu>
                 </Group>
+                  )}
+                </>
               ),
             },
           ]}

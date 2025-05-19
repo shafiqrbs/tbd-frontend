@@ -15,7 +15,8 @@ export const getSelectDataWithParam = async (value) => {
         params : value.param
     })
         .then(res => {
-            data = res.data.data
+            data['data'] = res.data.data
+            data['type'] = value.param["dropdown-type"]
         })
         .catch(function (error) {
             console.log(error)

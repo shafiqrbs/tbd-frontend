@@ -87,12 +87,12 @@ function PurchaseEdit() {
                 currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
               />
               <Box p={"8"}>
-                {domainConfigData?.inventory_config?.business_model?.slug === "general" && (
+                {/*{domainConfigData?.inventory_config?.business_model?.slug === "general" && (*/}
                   <_UpdatePurchaseInvoice
                       domainConfigData={domainConfigData}
                       editedData={editedData}
                   />
-                )}
+                {/*)}*/}
               </Box>
             </>
           )}
