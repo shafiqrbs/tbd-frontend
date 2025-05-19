@@ -37,6 +37,8 @@ import Invoice from "./Invoice.jsx";
 import {notifications} from "@mantine/notifications";
 import {useCartOperations} from "./utils/CartOperations.jsx";
 import __ShortcutPos from "./__ShortcutPos.jsx";
+import { useDisclosure } from "@mantine/hooks";
+import PosSettings from "./PosSettings.jsx";
 
 export default function NewSales(props) {
     const {
@@ -59,7 +61,7 @@ export default function NewSales(props) {
         setReloadInvoiceData,
         setInvoiceData
     } = props;
-
+    const [settingsOpened, { open: openSettings, close: closeSettings }] = useDisclosure(false);
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 190; //TabList height 104
@@ -340,7 +342,7 @@ export default function NewSales(props) {
         <>
             <Grid columns={24} gutter={{base: 8}}>
                 <Grid.Col span={1}>
-                    <__ShortcutPos FormSubmit={"EntityFormSubmit"} Name={"CompanyName"}/>
+                    <__ShortcutPos FormSubmit={"EntityFormSubmit"} Name={"CompanyName"} settingsAction={openSettings} />
                 </Grid.Col>
                 {leftSide ? (
                     <Grid.Col span={8}>
@@ -1453,6 +1455,7 @@ export default function NewSales(props) {
                     </Grid.Col>
                 )}
             </Grid>
+            <PosSettings settingsOpened={settingsOpened} closeModel={closeSettings} />
         </>
     );
 }

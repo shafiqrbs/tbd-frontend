@@ -1146,5 +1146,8 @@
   "BalanceEntry": "Balance Entry",
   "LedgerNavigation": "Ledger Navigation",
   "ManageLedgerView": "Manage Ledger View",
-  "ChooseFinancialYear": "Choose Financial Year"
+  "ChooseFinancialYear": "Choose Financial Year",
+  "WarehouseList": "Warehouse List",
+  "FormSubmitConfirmationTitle": "Form Submit Confirmation Title",
+  "FormSubmitConfirmationMessage": "Form Submit Confirmation Message"
 }
