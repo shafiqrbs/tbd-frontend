@@ -1143,6 +1143,12 @@
   "EnterConfirmNewPassword": "Enter Enter Confirm New Password",
   "BalanceSheet": "Balance Sheet",
   "BalanceEntry": "Balance Entry",
+  "LedgerNavigation": "Ledger Navigation",
+  "ManageLedgerView": "Manage Ledger View",
+  "ChooseFinancialYear": "Choose Financial Year",
+  "WarehouseList": "Warehouse List",
+  "FormSubmitConfirmationTitle": "Form Submit Confirmation Title",
+  "FormSubmitConfirmationMessage": "Form Submit Confirmation Message"
   "RequestQuantity": "Request Quantity",
   "xxxxxx": "xxxxxxx"
 }

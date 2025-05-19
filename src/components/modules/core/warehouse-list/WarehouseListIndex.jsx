@@ -16,10 +16,8 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 
 import CoreHeaderNavbar from "../CoreHeaderNavbar.jsx";
-import WarehouseTable from "./WarehouseTable.jsx";
-import WarehouseForm from "./WarehouseForm.jsx";
-import WarehouseUpdateForm from "./WarehouseUpdateForm.jsx";
 import Navigation from "../common/Navigation.jsx";
+import WarehouseListTable from "./WarehouseListTable.jsx";
 
 function WarehouseListIndex() {
 	const { t } = useTranslation();
@@ -33,15 +31,15 @@ function WarehouseListIndex() {
 	useEffect(() => {
 		if (id) {
 			dispatch(setInsertType("update"));
-			dispatch(editEntityData(`/core/warehouse/${id}`));
+			dispatch(editEntityData(`/core/warehouse-list/${id}`));
 			dispatch(setFormLoading(true));
 		} else {
 			dispatch(setInsertType("create"));
 			dispatch(setSearchKeyword(""));
 			dispatch(setEntityNewData([]));
 
-			if (window.location.pathname !== "/core/warehouse") {
-				navigate("/core/warehouse");
+			if (window.location.pathname !== "/core/warehouse-list") {
+				navigate("/core/warehouse-list");
 			}
 		}
 	}, [id]);
@@ -67,17 +65,10 @@ function WarehouseListIndex() {
 							<Grid.Col span={1}>
 								<Navigation module={"warehouse"} />
 							</Grid.Col>
-							<Grid.Col span={14}>
+							<Grid.Col span={23}>
 								<Box bg="white" p="xs" className="borderRadiusAll">
-									<WarehouseTable />
+									<WarehouseListTable />
 								</Box>
-							</Grid.Col>
-							<Grid.Col span={9}>
-								{insertType === "create" ? (
-									<WarehouseForm />
-								) : (
-									<WarehouseUpdateForm />
-								)}
 							</Grid.Col>
 						</Grid>
 					</Box>

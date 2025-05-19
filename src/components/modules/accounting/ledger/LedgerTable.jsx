@@ -110,7 +110,8 @@ function LedgerTable(props) {
                                             <Menu.Item
                                                 onClick={() => {
                                                     // console.log("ok")
-                                                    setLedgerViewDrawer(true)
+                                                    // setLedgerViewDrawer(true)
+                                                    navigate(`/accounting/ledger/view/${data.id}`)
                                                     // setCustomerViewModel(true)
                                                     // dispatch(showEntityData('core/customer/' + data.id))
                                                 }}

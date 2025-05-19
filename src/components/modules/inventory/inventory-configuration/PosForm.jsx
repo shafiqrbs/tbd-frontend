@@ -8,12 +8,16 @@ import {
   Button,
   Text,
   rem,
+  Stack,
+  Group,
+  Flex,
+  ActionIcon,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDispatch, useSelector } from "react-redux";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { IconCheck, IconDeviceFloppy, IconRefreshDot, IconX } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import {
   setValidationData,
@@ -29,9 +33,7 @@ import {storeEntityData} from "../../../../store/core/crudSlice";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
-function PosForm(props) {
-
-  const { height,id } = props;
+function PosForm({ height,id, enableExternalSubmit = false, closeModel }) {
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -90,7 +92,6 @@ function PosForm(props) {
   }, [dispatch, inventory_config]);
 
   const handlePosFormSubmit = (values) => {
-
       dispatch(setValidationData(false));
       modals.openConfirmModal({
         title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
@@ -98,9 +99,8 @@ function PosForm(props) {
         labels: { confirm: t("Submit"), cancel: t("Cancel") },
         confirmProps: { color: "red" },
         onCancel: () => console.log("Cancel"),
-        onConfirm: () => handlePosConfirmSubmit(values),
+        onConfirm: () => {handlePosConfirmSubmit(values);},
       });
-
   };
 
   const handlePosConfirmSubmit = async (values) => {
@@ -141,7 +141,8 @@ function PosForm(props) {
         }
       }else if (storeEntityData.fulfilled.match(resultAction) && resultAction.payload?.data?.status === 200) {
         await fetchDomainConfig();
-        showNotificationComponent(t('CreateSuccessfully'), 'teal');
+        showNotificationComponent(t('UpdateSuccessfully'), 'teal');
+        closeModel();
       }
     } catch (err) {
         showNotificationComponent(t("UpdateFailed"), "red");
@@ -198,7 +199,7 @@ function PosForm(props) {
   );
 
   return (
-    <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
+    <ScrollArea h="100vh" scrollbarSize={2} scrollbars="y" type="never">
       <form onSubmit={form.onSubmit(handlePosFormSubmit)}>
         <Box pt={"xs"} pl={"xs"}>
 
@@ -284,10 +285,70 @@ function PosForm(props) {
             <InputCheckboxForm form={form} label={t("CustomInvoicePrint")} field={'custom_invoice_print'}  name={'custom_invoice_print'} />
           </Box>
         </Box>
-        {/* Add hidden submit button with ID for external triggering */}
-        <Button id="PosFormSubmit" type="submit" style={{ display: "none" }}>
-          Submit
-        </Button>
+
+        {/* submit button */}
+        <Box w="100%" pos="absolute" bottom={0} right={0} pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} mt={4} className={'boxBackground borderRadiusAll'} style={{ display: enableExternalSubmit ? "block" : "none" }}>
+          <Group justify="space-between">
+              <Flex
+                  gap="md"
+                  justify="center"
+                  align="center"
+                  direction="row"
+                  wrap="wrap"
+              >
+                  <ActionIcon
+                      variant="transparent"
+                      size="sm"
+                      color="red.6"
+                      onClick={closeModel}
+                      ml={'4'}
+                  >
+                      <IconX style={{ width: '100%', height: '100%' }} stroke={1.5} />
+                  </ActionIcon>
+              </Flex>
+
+              <Group gap={8}>
+                  <Flex justify="flex-end" align="center" h="100%">
+                      <Button
+                          variant="transparent"
+                          size="xs"
+                          color="red.4"
+                          type="reset"
+                          id=""
+                          comboboxProps={{ withinPortal: false }}
+                          p={0}
+                          rightSection={
+                              <IconRefreshDot style={{ width: '100%', height: '60%' }} stroke={1.5} />}
+                          onClick={() => {
+                              productAddedForm.reset()
+                          }}
+
+                      >
+                      </Button>
+                  </Flex>
+                  <Stack align="flex-start">
+                      <>
+                          {
+                              !saveCreateLoading &&
+                              <Button
+                                  size="xs"
+                                  className={'btnPrimaryBg'}
+                                  type="submit"
+                                  id={"EntityProductFormSubmit"}
+                                  leftSection={<IconDeviceFloppy size={16} />}
+                              >
+                                  <Flex direction={`column`} gap={0}>
+                                      <Text fz={14} fw={400}>
+                                          {t("Update")}
+                                      </Text>
+                                  </Flex>
+                              </Button>
+                          }
+                      </>
+                  </Stack>
+              </Group>
+          </Group>
+        </Box>
       </form>
     </ScrollArea>
   );
