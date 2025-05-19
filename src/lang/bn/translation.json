@@ -720,5 +720,8 @@
   "ItemPercent" : "আইটেম পার্সেন্ট",
   "EarnPoint": "পয়েন্ট আর্ন",
   "BalanceSheet": "ব্যালেন্স শিট",
-  "BalanceEntry": "ব্যালেন্স এন্ট্রি"
+  "BalanceEntry": "ব্যালেন্স এন্ট্রি",
+  "LedgerNavigation": "লেজার নেভিগেশন",
+  "ManageLedgerView": "লেজার ভিউ ম্যানেজ",
+  "ChooseFinancialYear": "ফিনান্সিয়াল ইয়ার নির্বাচন করুন"
 }

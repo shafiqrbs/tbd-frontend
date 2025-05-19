@@ -76,6 +76,7 @@ import IssueIndex from "./components/modules/production/production-issue/issue-t
 import BalanceSheetIndex from "./components/modules/accounting/balance-sheet/BalanceSheetIndex.jsx";
 import BalanceEntryIndex from "./components/modules/accounting/balance-entry/BalanceEntryIndex.jsx";
 import DomainUserIndex from "./components/modules/domain/master-user/DomainUserIndex";
+import LedgerViewIndex from "./components/modules/accounting/ledger-view/LedgerViewIndex.jsx";
 
 function AppRoute() {
 	return (
@@ -548,6 +549,11 @@ function AppRoute() {
 					<Route path="ledger/:id" element={
 						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
 							<LedgerIndex />
+						</ProtectedRoute>
+					} />
+					<Route path="ledger/view/:id" element={
+						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+							<LedgerViewIndex />
 						</ProtectedRoute>
 					} />
 					<Route path="head-group" element={

@@ -1143,5 +1143,8 @@
   "EnterConfirmNewPassword": "Enter Enter Confirm New Password",
   "xxxxxx": "xxxxxxx",
   "BalanceSheet": "Balance Sheet",
-  "BalanceEntry": "Balance Entry"
+  "BalanceEntry": "Balance Entry",
+  "LedgerNavigation": "Ledger Navigation",
+  "ManageLedgerView": "Manage Ledger View",
+  "ChooseFinancialYear": "Choose Financial Year"
 }

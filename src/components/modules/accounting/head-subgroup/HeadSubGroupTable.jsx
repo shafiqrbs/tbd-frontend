@@ -104,7 +104,10 @@ function HeadSubGroupTable(props) {
                                             </Menu.Item>
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setHeadGroupDrawer(true)
+                                                    // setHeadGroupDrawer(true)
+                                                    navigate(
+														`/accounting/ledger/view/${data.id}`, {state: {headSubGroup: true}}
+													);
                                                     // dispatch(showEntityData('core/customer/' + data.id))
                                                 }}
                                                 target="_blank"
