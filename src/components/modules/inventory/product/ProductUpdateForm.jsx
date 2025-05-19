@@ -64,6 +64,7 @@ function ProductUpdateForm(props) {
 
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
   const [indexData, setIndexData] = useState([]);
+  const [reload, setReload] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,6 +86,8 @@ function ProductUpdateForm(props) {
         }
       } catch (err) {
         console.error("Unexpected error:", err);
+      }finally {
+        setReload(false)
       }
     };
 
@@ -93,8 +96,7 @@ function ProductUpdateForm(props) {
     dispatch,
     searchKeyword,
     page,
-    perPage
-
+    perPage,reload
   ]);
 
   const start = page * perPage;

@@ -220,7 +220,7 @@ function ProductTable({categoryDropdown}) {
                                     item?.images?.path_four,
                                 ]
                                     .filter(Boolean)
-                                    .map((img) => `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/${img}`);
+                                    .map((img) => `${img}`);
 
                                 return (
                                     <>
@@ -229,7 +229,7 @@ function ProductTable({categoryDropdown}) {
                                             mah={50}
                                             fit="contain"
                                             src={
-                                                images[0] ||
+                                                import.meta.env.VITE_IMAGE_GATEWAY_URL+'/storage/'+images[0] ||
                                                 `https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(item.product_name)}`
                                             }
                                             style={{cursor: "pointer"}}
@@ -248,7 +248,7 @@ function ProductTable({categoryDropdown}) {
                                                     <Carousel.Slide key={index}>
                                                         <div className="centered-slide">
                                                             <Image
-                                                                src={img}
+                                                                src={import.meta.env.VITE_IMAGE_GATEWAY_URL+'/storage/'+img}
                                                                 fit="contain"
                                                                 style={{
                                                                     transition: "transform 0.3s ease-in-out",
