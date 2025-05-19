@@ -487,7 +487,7 @@ function _GenericInvoiceForm(props) {
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
         <Grid.Col span={1}>
-          <Navigation module={'module'} />
+          <Navigation module={'purchase-invoice'} />
         </Grid.Col>
         <Grid.Col span={7}>
           <form

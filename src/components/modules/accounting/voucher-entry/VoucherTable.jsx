@@ -91,6 +91,7 @@ function VoucherTable(props) {
                             title: t("Action"),
                             textAlign: "right",
                             render: (data) => (
+                                <>
                                 <Group gap={4} justify="right" wrap="nowrap">
                                     <ActionIcon
                                         size="sm"
@@ -140,6 +141,7 @@ function VoucherTable(props) {
                                         <IconTrash size={16} />
                                     </ActionIcon>
                                 </Group>
+                                </>
                             ),
                         },
                     ]

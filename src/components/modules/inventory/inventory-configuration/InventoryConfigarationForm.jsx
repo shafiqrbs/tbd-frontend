@@ -43,6 +43,7 @@ import getCountryDropdownData from "../../../global-hook/dropdown/getCountryDrop
 import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData.js";
 import PosForm from "./PosForm.jsx";
 import VatForm from "./VatForm.jsx";
+import getAccountingSubHeadDropdownData from "../../../global-hook/dropdown/getAccountingSubHeadDropdownData";
 
 function InventoryConfigarationForm() {
   const { t } = useTranslation();
@@ -93,7 +94,8 @@ function InventoryConfigarationForm() {
     dispatch(setDropdownLoad(false));
   }, [dropdownLoad]);
 
-  let accountDropdownData = getAccountingDropdownData();
+  // let accountDropdownData = getAccountingDropdownData();
+  let accountDropdownData = getAccountingSubHeadDropdownData();
   let accountingLedgerDropdownData = getAccountingLedgerDropdownData();
   let voucherDropdownData = getVoucherDropdownData();
   let currencyList = getCurrencyDropdownData();

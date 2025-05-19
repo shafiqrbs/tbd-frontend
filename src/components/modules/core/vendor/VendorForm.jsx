@@ -26,16 +26,18 @@ import Shortcut from "../../shortcut/Shortcut.jsx";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 
 function VendorForm(props) {
-    const { customerDropDownData } = props
+    const { customerDropDownData,vendorGroupDropdownData } = props
+
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [customerData, setCustomerData] = useState(null);
+    const [vendorGroupData, setVendorGroupData] = useState(null);
     const form = useForm({
         initialValues: {
-            company_name: '', name: '', mobile: '', email: '', customer_id: '', address: ''
+            vendor_group_id: '',company_name: '', name: '', mobile: '', email: '', customer_id: '', address: ''
         },
         validate: {
             company_name: hasLength({ min: 2, max: 20 }),
@@ -155,6 +157,23 @@ function VendorForm(props) {
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
+                                            <Box mt={'8'}>
+                                                <SelectForm
+                                                    tooltip={t('ChooseCustomerGroup')}
+                                                    label={t('VendorGroup')}
+                                                    placeholder={t('ChooseCustomerGroup')}
+                                                    required={false}
+                                                    nextField={'company_name'}
+                                                    name={'vendor_group_id'}
+                                                    form={form}
+                                                    dropdownValue={vendorGroupDropdownData}
+                                                    mt={8}
+                                                    id={'vendor_group_id'}
+                                                    searchable={false}
+                                                    value={vendorGroupData}
+                                                    changeValue={setVendorGroupData}
+                                                />
+                                            </Box>
                                             <Box mt={8}>
                                                 <InputForm
                                                     tooltip={t('CompanyNameValidateMessage')}
