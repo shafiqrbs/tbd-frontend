@@ -1150,5 +1150,6 @@
   "FormSubmitConfirmationTitle": "Form Submit Confirmation Title",
   "FormSubmitConfirmationMessage": "Form Submit Confirmation Message",
   "RequestQuantity": "Request Quantity",
-  "xxxxxx": "xxxxxxx"
+  "xxxxxx": "xxxxxxx",
+  "SettingsDetails": "Settings Details"
 }

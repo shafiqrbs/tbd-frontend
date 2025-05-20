@@ -726,5 +726,6 @@
   "ChooseFinancialYear": "ফিনান্সিয়াল ইয়ার নির্বাচন করুন",
   "WarehouseList": "ওয়্যারহাউস লিস্ট",
   "FormSubmitConfirmationTitle": "ফর্ম সাবমিট করার জন্য নির্দেশনা",
-  "FormSubmitConfirmationMessage": "আপনি কি নির্দেশনাটি সাবমিট করতে চান?"
+  "FormSubmitConfirmationMessage": "আপনি কি নির্দেশনাটি সাবমিট করতে চান?",
+  "SettingsDetails": "সেটিংস বিবিধ"
 }

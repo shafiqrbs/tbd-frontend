@@ -270,7 +270,7 @@ function __ShortcutPos({ settingsAction }) {
 								variant={"light"}
 								color={`black`}
 								radius="xl"
-								onClick={settingsAction}
+								onClick={() => settingsAction(true)}
 							>
 								<Flex direction={`column`} align={"center"}>
 									<IconSettings size={16} color={"white"} />

@@ -24,6 +24,7 @@ import FormGeneric from "../inventory-configuration/FormGeneric.jsx";
 import { coreSettingDropdown } from "../../../../store/core/utilitySlice.js";
 import { setDropdownLoad } from "../../../../store/core/crudSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import PosForm from "../inventory-configuration/PosForm.jsx";
 
 function SettingDrawer(props) {
   const {
@@ -114,6 +115,13 @@ function SettingDrawer(props) {
             closeDrawer={closeDrawer}
           />
         );
+      case "Pos":
+        return (
+          <PosForm
+            height={height}
+            id={id}
+          />
+        );
       default:
         return (
           <FormGeneric height={height} salesConfig={domainConfigData?.inventory_config?.config_sales} id={id} closeDrawer={closeDrawer} />
@@ -173,7 +181,8 @@ function SettingDrawer(props) {
                           {isOnline &&
                             (module === "Sales" ||
                               module === "Purchase" ||
-                              module === "Requisition") && (
+                              module === "Requisition" ||
+                              module === "Pos") && (
                               <Button
                                 size="xs"
                                 className={"btnPrimaryBg"}
@@ -190,6 +199,10 @@ function SettingDrawer(props) {
                                   } else if (module === "Requisition") {
                                     document
                                       .getElementById("RequisitionFormSubmit")
+                                      .click();
+                                  } else if (module === "Pos") {
+                                    document
+                                      .getElementById("PosFormSubmit")
                                       .click();
                                   }
                                 }}
