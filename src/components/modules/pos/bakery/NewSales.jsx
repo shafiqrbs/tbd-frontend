@@ -38,7 +38,7 @@ import {notifications} from "@mantine/notifications";
 import {useCartOperations} from "./utils/CartOperations.jsx";
 import __ShortcutPos from "./__ShortcutPos.jsx";
 import { useDisclosure } from "@mantine/hooks";
-import PosSettings from "./PosSettings.jsx";
+import SettingDrawer from "../../inventory/common/SettingDrawer.jsx";
 
 export default function NewSales(props) {
     const {
@@ -61,7 +61,7 @@ export default function NewSales(props) {
         setReloadInvoiceData,
         setInvoiceData
     } = props;
-    const [settingsOpened, { open: openSettings, close: closeSettings }] = useDisclosure(false);
+    const [settingsOpened, setSettingsOpened] = useState(false);
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 190; //TabList height 104
@@ -79,7 +79,7 @@ export default function NewSales(props) {
     const [searchValue, setSearchValue] = useState("");
     const [tableStatuses, setTableStatuses] = useState({});
     const [barcode, setBarcode] = useState("");
-
+    const domainConfigData = JSON.parse(localStorage.getItem("domain-config-data"));
     const [isValidBarcode, setIsValidBarcode] = useState(true);
     const handleBarcodeSearch = (code) => {
         const product = products.find(
@@ -342,7 +342,7 @@ export default function NewSales(props) {
         <>
             <Grid columns={24} gutter={{base: 8}}>
                 <Grid.Col span={1}>
-                    <__ShortcutPos FormSubmit={"EntityFormSubmit"} Name={"CompanyName"} settingsAction={openSettings} />
+                    <__ShortcutPos FormSubmit={"EntityFormSubmit"} Name={"CompanyName"} settingsAction={setSettingsOpened} />
                 </Grid.Col>
                 {leftSide ? (
                     <Grid.Col span={8}>
@@ -1455,7 +1455,18 @@ export default function NewSales(props) {
                     </Grid.Col>
                 )}
             </Grid>
-            <PosSettings settingsOpened={settingsOpened} closeModel={closeSettings} />
+            {/* <PosSettings settingsOpened={settingsOpened} closeModel={closeSettings} /> */}
+            {
+                settingsOpened && (
+                    <SettingDrawer
+                        settingDrawer={settingsOpened}
+                        setSettingDrawer={setSettingsOpened}
+                        id={id}
+                        module={"Pos"}
+                        domainConfigData={domainConfigData}
+                    />
+                )
+            }
         </>
     );
 }
