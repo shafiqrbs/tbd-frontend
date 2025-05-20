@@ -66,7 +66,7 @@ function WarehouseListIndex() {
 								<Navigation module={"warehouse"} />
 							</Grid.Col>
 							<Grid.Col span={23}>
-								<Box bg="white" p="xs" className="borderRadiusAll">
+								<Box className="borderRadiusAll">
 									<WarehouseListTable />
 								</Box>
 							</Grid.Col>

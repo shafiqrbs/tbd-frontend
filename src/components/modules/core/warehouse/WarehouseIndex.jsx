@@ -3,6 +3,7 @@ import { Box, Grid, Progress } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import _ShortcutMasterData from "../../shortcut/_ShortcutMasterData.jsx";
 
 import {
   setEntityNewData,

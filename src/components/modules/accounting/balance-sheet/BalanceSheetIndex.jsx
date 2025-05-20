@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Box, Grid, Progress } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
 // Redux actions
 import { setSearchKeyword } from "../../../../store/core/crudSlice";
@@ -65,6 +65,9 @@ function BalanceSheetIndex() {
 	const progress = getLoadingProgress();
 	const { id } = useParams();
 	const navigate = useNavigate();
+	const { mainAreaHeight } = useOutletContext();
+
+	const height = mainAreaHeight - 30;
 
 	useEffect(() => {
 		if (id) {
@@ -104,10 +107,10 @@ function BalanceSheetIndex() {
 								<Navigation module={""} />
 							</Grid.Col>
 							<Grid.Col span={11}>
-								<BalanceSheetTable data={leftData} totalAmount="1,50,000.00" />
+								<BalanceSheetTable data={leftData} totalAmount="1,50,000.00" mainAreaHeight={height} />
 							</Grid.Col>
 							<Grid.Col span={12}>
-								<BalanceSheetTable data={rightData} totalAmount="1,50,000.00" />
+								<BalanceSheetTable data={rightData} totalAmount="1,50,000.00" mainAreaHeight={height} />
 							</Grid.Col>
 						</Grid>
 					</Box>
