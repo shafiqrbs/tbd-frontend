@@ -27,7 +27,7 @@ import InputForm from "../../../form-builders/InputForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 
 function ProductForm(props) {
-  const { height, config_product, id } = props;
+  const { height, config_product, id,fetchDomainConfig } = props;
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -145,6 +145,7 @@ function ProductForm(props) {
       });
 
       setTimeout(() => {
+        fetchDomainConfig()
         setSaveCreateLoading(false);
       }, 700);
     } catch (error) {
