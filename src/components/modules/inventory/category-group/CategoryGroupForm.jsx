@@ -34,7 +34,7 @@ function CategoryGroupForm() {
             name: '', status: true
         },
         validate: {
-            name: hasLength({ min: 2, max: 20 }),
+            name: hasLength({ min: 2}),
         }
     });
 

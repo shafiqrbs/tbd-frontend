@@ -15,6 +15,7 @@ import { setFormLoading } from "../../../../store/generic/crudSlice.js";
 import SitemapTable from "./SitemapTable.jsx";
 import SitemapForm from "./SitemapForm.jsx";
 import SitemapUpdateForm from "./SitemapUpdateForm.jsx";
+import _Navigation from "../common/_Navigation";
 function SitemapIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -53,7 +54,10 @@ function SitemapIndex() {
                     />
                     <Box p={'8'}>
                         <Grid columns={24} gutter={{ base: 8 }}>
-                            <Grid.Col span={15} >
+                            <Grid.Col span={1}>
+                                <_Navigation module={""} />
+                            </Grid.Col>
+                            <Grid.Col span={14} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                     <SitemapTable />
                                 </Box>

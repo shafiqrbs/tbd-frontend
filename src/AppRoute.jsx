@@ -78,6 +78,8 @@ import BalanceEntryIndex from "./components/modules/accounting/balance-entry/Bal
 import DomainUserIndex from "./components/modules/domain/master-user/DomainUserIndex";
 import LedgerViewIndex from "./components/modules/accounting/ledger-view/LedgerViewIndex.jsx";
 import WarehouseListIndex from "./components/modules/core/warehouse-list/WarehouseListIndex.jsx";
+import HeadDomainIndex from "./components/modules/domain/head-group/HeadDomainIndex";
+import LedgerDomainIndex from "./components/modules/domain/ledger/LedgerDomainIndex";
 
 function AppRoute() {
 	return (
@@ -89,7 +91,7 @@ function AppRoute() {
 					<Route path="invoice" element={<SampleInvoice />} />
 					<Route path="index" element={<SampleIndex />} />
 				</Route>
-				<Route path="core/" element={<ProtectedModule modules={["core"]} />}>
+				<Route path="/core" element={<ProtectedModule modules={["core"]} />}>
 					<Route path="file-upload/">
 						<Route path="" element={
 							<ProtectedRoute roles={["role_domain", "role_core_admin"]}>
@@ -518,6 +520,21 @@ function AppRoute() {
 							<DomainUserIndex />
 						</ProtectedRoute>
 					} />
+					<Route path="head" element={
+						<ProtectedRoute roles={["role_domain"]}>
+							<HeadDomainIndex />
+						</ProtectedRoute>
+					} />
+					<Route path="sub-head" element={
+						<ProtectedRoute roles={["role_domain"]}>
+							<HeadSubGroupIndex />
+						</ProtectedRoute>
+					} />
+					<Route path="ledger" element={
+						<ProtectedRoute roles={["role_domain"]}>
+							<LedgerDomainIndex />
+						</ProtectedRoute>
+					} />
 					<Route path="edit/:id" element={
 						<ProtectedRoute roles={["role_domain"]}>
 							<DomainIndex />
@@ -543,6 +560,7 @@ function AppRoute() {
 							<BranchManagementIndex />
 						</ProtectedRoute>
 					} />
+
 				</Route>
 				<Route path="/accounting" element={<ProtectedModule modules={["accounting"]} />}>
 					<Route path="voucher-entry" element={
@@ -618,7 +636,7 @@ function AppRoute() {
 					<Route path="balance-sheet" element={
 						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
 							<BalanceSheetIndex />
-						</ProtectedRoute>		
+						</ProtectedRoute>
 					} />
 					<Route path="balance-entry" element={
 						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
@@ -667,7 +685,6 @@ function AppRoute() {
 						</ProtectedRoute>
 					} />
 				</Route>
-
 				<Route path="/b2b" element={<ProtectedModule modules={["sales-purchase"]} />}>
 					<Route path="dashboard" element={
 						<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>

@@ -87,7 +87,7 @@ export const getLocationDropdown = createAsyncThunk(
 );
 export const getVoucherDropdown = createAsyncThunk("voucher/all", async (value) => {
   try {
-    const response = getSelectDataWithParam(value);
+    const response = getDataWithoutParam(value);
     return response;
   } catch (error) {
     console.log("error", error.message);
@@ -215,17 +215,24 @@ const utilitySlice = createSlice({
     builder.addCase(getLocationDropdown.fulfilled, (state, action) => {
       state.locationDropdownData = action.payload;
     });
+
     builder.addCase(getVoucherDropdown.fulfilled, (state, action) => {
       state.voucherAllDropdownData = action.payload;
     });
+
     builder.addCase(getAccountingDropdown.fulfilled, (state, action) => {
+      if (action.payload.type == 'head'){
+        state.accountHeadDropdownData = action.payload;
+      }
       if (action.payload.type == 'sub-head'){
         state.accountSubHeadDropdownData = action.payload;
       }
       if (action.payload.type == 'ledger'){
         state.accountLedgerDropdownData = action.payload;
       }
+
     });
+
     builder.addCase(getVoucherTypeDropdown.fulfilled, (state, action) => {
       state.voucherDropdownData = action.payload;
     });
