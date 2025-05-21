@@ -44,6 +44,7 @@ import Shortcut from "../../shortcut/Shortcut.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
+import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/getAccountHeadAllDropdownData";
 
 function VoucherUpdateFrom(props) {
   const { voucherDropdown } = props;
@@ -59,9 +60,12 @@ function VoucherUpdateFrom(props) {
 
 
   const [voucherType, setVoucherType] = useState(null);
+  const [accountHeadData, setAccountHeadData] = useState(null);
+  const accountHeadDropdownData = useAccountHeadDropdownData(true, 'sub-head');
 
   useEffect(() => {
     setVoucherType(entityEditData?.voucher_type_id?.toString())
+    setAccountHeadData(entityEditData?.ledger_account_head_id?.toString())
     setMode(entityEditData?.mode?.toString() || 'credit')
   }, [entityEditData]);
 
@@ -74,9 +78,11 @@ function VoucherUpdateFrom(props) {
       status: entityEditData?.status || "",
       mode: entityEditData?.mode || "",
       voucher_type_id: entityEditData?.voucher_type_id || "",
+      ledger_account_head_id: entityEditData?.ledger_account_head_id || "",
     },
     validate: {
       voucher_type_id: isNotEmpty(),
+      ledger_account_head_id: isNotEmpty(),
       name: isNotEmpty(),
       short_name: isNotEmpty(),
       short_code: isNotEmpty(),
@@ -92,6 +98,7 @@ function VoucherUpdateFrom(props) {
         status: entityEditData?.status || "",
         mode: entityEditData?.mode || "debit",
         voucher_type_id: entityEditData?.voucher_type_id || "",
+        ledger_account_head_id: entityEditData?.ledger_account_head_id || "",
       });
     }
     dispatch(setFormLoading(false));
@@ -174,6 +181,7 @@ function VoucherUpdateFrom(props) {
                 );
                 form.reset();
                 setVoucherType(null);
+                setAccountHeadData(null);
               }, 500);
             },
           });
@@ -232,19 +240,36 @@ function VoucherUpdateFrom(props) {
                         <Box>
                           <Box mt={"8"}>
                             <SelectForm
-                              tooltip={t("ChooseVoucherType")}
-                              label={t("VoucherType")}
-                              placeholder={t("ChooseVoucherType")}
-                              required={true}
-                              nextField={"name"}
-                              name={"voucher_type_id"}
-                              form={form}
-                              dropdownValue={voucherDropdown}
-                              mt={8}
-                              id={"voucher_type_id"}
-                              searchable={false}
-                              value={voucherType}
-                              changeValue={setVoucherType}
+                                tooltip={t("ChooseVoucherType")}
+                                label={t("VoucherType")}
+                                placeholder={t("ChooseVoucherType")}
+                                required={true}
+                                nextField={"ledger_account_head_id"}
+                                name={"voucher_type_id"}
+                                form={form}
+                                dropdownValue={voucherDropdown}
+                                mt={8}
+                                id={"voucher_type_id"}
+                                searchable={false}
+                                value={voucherType}
+                                changeValue={setVoucherType}
+                            />
+                          </Box>
+                          <Box mt={"8"}>
+                            <SelectForm
+                                tooltip={t("ChooseVoucherType")}
+                                label={t("AccountLedgerHead")}
+                                placeholder={t("ChooseVoucherType")}
+                                required={true}
+                                nextField={"name"}
+                                name={"ledger_account_head_id"}
+                                form={form}
+                                dropdownValue={accountHeadDropdownData}
+                                mt={8}
+                                id={"ledger_account_head_id"}
+                                searchable={false}
+                                value={accountHeadData}
+                                changeValue={setAccountHeadData}
                             />
                           </Box>
                           <Box mt={"xs"}>

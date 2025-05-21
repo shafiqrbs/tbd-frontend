@@ -208,7 +208,7 @@ export default function CustomerVoucherForm(props) {
             <Grid>
               <Grid.Col span={9}>
                 <Title order={6} pl={"6"}>
-                  {t("CreateNewVoucher")}
+                  {t("AddLedgerHead")}
                 </Title>
               </Grid.Col>
             </Grid>
@@ -227,7 +227,7 @@ export default function CustomerVoucherForm(props) {
                     <Box mt={"xs"}>
                       <SelectForm
                         tooltip={t("LedgerHead")}
-                        label={t("LedgerHead")}
+                        label=''
                         placeholder={t("ChooseLedgerHead")}
                         required={true}
                         nextField={nextField}
@@ -273,7 +273,7 @@ export default function CustomerVoucherForm(props) {
                 <Stack justify="flex-end" align="flex-end">
                   {!saveCreateLoading && isOnline && (
                     <Button
-                      mt={4}
+                      mt={2}
                       size="xs"
                       color={"green.8"}
                       type="submit"
@@ -283,7 +283,7 @@ export default function CustomerVoucherForm(props) {
                     >
                       <Flex direction={"column"} gap={0}>
                         <Text fz={14} fw={400}>
-                          {t("AddVoucher")}
+                          {t("AddLedger")}
                         </Text>
                       </Flex>
                     </Button>

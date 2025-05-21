@@ -134,7 +134,7 @@ function VoucherCreateTable(props) {
               textAlign: "right",
               render: (data) => (
                   <>
-                  {data.is_private !== 1 &&(
+
                 <Group gap={4} justify="right" wrap="nowrap">
                   <Menu
                     position="bottom-end"
@@ -160,6 +160,7 @@ function VoucherCreateTable(props) {
                       </ActionIcon>
                     </Menu.Target>
                     <Menu.Dropdown>
+
                       <Menu.Item
                         onClick={() => {
                           dispatch(setInsertType("update"));
@@ -174,7 +175,8 @@ function VoucherCreateTable(props) {
                       >
                         {t("Edit")}
                       </Menu.Item>
-
+                      {data.is_private !== 1 &&(
+                          <>
                       <Menu.Item
                         onClick={() => {
                           console.log("ok")
@@ -235,10 +237,12 @@ function VoucherCreateTable(props) {
                       >
                         {t("Delete")}
                       </Menu.Item>
+                      </>
+                        )}
                     </Menu.Dropdown>
                   </Menu>
                 </Group>
-                  )}
+
                 </>
               ),
             },

@@ -41,6 +41,7 @@ function VoucherCreateIndex() {
 
   const voucherDropdown = getVoucherTypeDropdownData();
 
+
   const { id } = useParams();
   const navigate = useNavigate();
 

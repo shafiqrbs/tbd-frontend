@@ -114,10 +114,12 @@ function HeadDomainTable() {
             textAlignment: 'right',
             render: (item) => (indexData.data.indexOf(item) + 1)
         },
+        { accessor: 'mother_name', title: t('MotherAccount') },
+        { accessor: 'parent_name', title: t('ParentName') },
         { accessor: 'name', title: t('Name') },
-        { accessor: 'mother_name', title: t('NatureOfGroup') },
         { accessor: 'code', title: t('AccountCode') },
-        { accessor: 'amount', title: t('Amount') },
+        { accessor: 'head_group', title: t('HeadGroup') },
+        { accessor: 'mode', title: t('Mode') },
         {
             accessor: "action",
             title: t("Action"),

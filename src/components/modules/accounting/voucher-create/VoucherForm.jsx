@@ -39,6 +39,7 @@ import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
+import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/getAccountHeadAllDropdownData";
 
 function VoucherForm(props) {
   const { voucherDropdown } = props;
@@ -49,6 +50,8 @@ function VoucherForm(props) {
 
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [voucherType, setVoucherType] = useState(null);
+  const [accountHeadData, setAccountHeadData] = useState(null);
+  const accountHeadDropdownData = useAccountHeadDropdownData(true, 'sub-head');
 
   const form = useForm({
     initialValues: {
@@ -58,10 +61,12 @@ function VoucherForm(props) {
       status: 1,
       mode: "",
       voucher_type_id: "",
+      ledger_account_head_id: "",
     },
     validate: {
       name: isNotEmpty(),
       voucher_type_id : isNotEmpty(),
+      ledger_account_head_id : isNotEmpty(),
       short_code : isNotEmpty()
     },
   });
@@ -200,7 +205,7 @@ function VoucherForm(props) {
                               label={t("VoucherType")}
                               placeholder={t("ChooseVoucherType")}
                               required={true}
-                              nextField={"name"}
+                              nextField={"ledger_account_head_id"}
                               name={"voucher_type_id"}
                               form={form}
                               dropdownValue={voucherDropdown}
@@ -209,6 +214,23 @@ function VoucherForm(props) {
                               searchable={false}
                               value={voucherType}
                               changeValue={setVoucherType}
+                            />
+                          </Box>
+                          <Box mt={"8"}>
+                            <SelectForm
+                                tooltip={t("ChooseVoucherType")}
+                                label={t("AccountLedgerHead")}
+                                placeholder={t("ChooseVoucherType")}
+                                required={true}
+                                nextField={"name"}
+                                name={"ledger_account_head_id"}
+                                form={form}
+                                dropdownValue={accountHeadDropdownData}
+                                mt={8}
+                                id={"ledger_account_head_id"}
+                                searchable={false}
+                                value={accountHeadData}
+                                changeValue={setAccountHeadData}
                             />
                           </Box>
                           <Box mt={"xs"}>

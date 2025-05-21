@@ -10,7 +10,7 @@ import {
   Stack,
   Button,
   Flex,
-  NumberInput,
+  NumberInput, TextInput,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -45,6 +45,7 @@ import ContraVoucherForm from "./voucher-forms/ContraVoucherForm.jsx";
 import genericClass from "../../../../assets/css/Generic.module.css";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import BankDrawer from "../common/BankDrawer.jsx";
+import inputCss from "../../../../assets/css/InlineInputField.module.css";
 
 function VoucherFormIndex(props) {
   const { currencySymbol } = props;
@@ -364,6 +365,35 @@ function VoucherFormIndex(props) {
     dispatch(setFetching(false));
   });
 
+  const EditableNumberInput = ({ item, field, placeholder, value, onChange }) => {
+    const [inputValue, setInputValue] = useState(value || "");
+
+    useEffect(() => {
+      setInputValue(value || "");
+    }, [value]);
+
+    const handleChange = (e) => {
+      const val = e.currentTarget.value;
+      setInputValue(val);
+      if (onChange) {
+        onChange(item.id, field, val);
+      }
+    };
+
+    return (
+        <TextInput
+            type="number"
+            classNames={inputCss}
+            size="xs"
+            id={`inline-update-${field}-${item.id}`}
+            value={inputValue}
+            placeholder={placeholder}
+            onChange={handleChange}
+            style={{ width: "80px" }}
+        />
+    );
+  };
+
   const [value, setValue] = useState(null);
   const renderForm = () => {
     switch (activeTab) {
@@ -405,7 +435,7 @@ function VoucherFormIndex(props) {
                   <SelectForm
                     tooltip={t("Head")}
                     label={t("")}
-                    placeholder={t("ChooseHead")}
+                    placeholder={t("ChooseLedgerHead")}
                     required={true}
                     nextField={""}
                     name={"ledger_head"}
@@ -555,15 +585,21 @@ function VoucherFormIndex(props) {
                             title: t("Mode"),
                             width: 100,
                           },
+
                           {
                             accessor: "name",
                             title: t("LedgerName"),
                           },
                           {
+                            accessor: "name",
+                            title: t("AccountHead"),
+                          },
+                          {
                             accessor: "debit",
                             title: t("Debit"),
-                            width: 130,
+                            width: 120,
                             render: (record, index) => (
+
                               <NumberInput
                                 disabled={record.mode === "CR"}
                                 hideControls
@@ -582,7 +618,7 @@ function VoucherFormIndex(props) {
                           {
                             accessor: "credit",
                             title: t("Credit"),
-                            width: 130,
+                            width: 120,
                             resizable: true,
                             render: (record, index) => (
                               <NumberInput
