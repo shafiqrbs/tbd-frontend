@@ -101,8 +101,8 @@ function InventoryConfigarationForm() {
   let currencyList = getCurrencyDropdownData();
   let countryList = getCountryDropdownData();
   let businessModelList = getSettingBusinessModelDropdownData();
-  const {fetchDomainConfig} = getDomainConfig()
-  const domainConfig = JSON.parse(localStorage.getItem('domain-config-data'))
+  const {domainConfig,fetchDomainConfig} = getDomainConfig()
+  // const domainConfig = JSON.parse(localStorage.getItem('domain-config-data'))
 
   let inventory_config = domainConfig?.inventory_config;
   let config_purchase = inventory_config?.config_purchase;
