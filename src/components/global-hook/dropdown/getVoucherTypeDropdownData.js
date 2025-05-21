@@ -18,11 +18,13 @@ const getVoucherTypeDropdownData = () => {
 
     const voucherDropdownData = useSelector(state => state.utilitySlice.voucherDropdownData);
 
+
     useEffect(() => {
-        if (voucherDropdownData && voucherDropdownData.length > 0) {
-            const transformedData = voucherDropdownData.map(type => {
-                return { 'label': type.name, 'value': String(type.id) };
-            });
+        if (voucherDropdownData && voucherDropdownData?.data?.length > 0) {
+            const transformedData = voucherDropdownData?.data?.map(item => ({
+                label: item.name,
+                value: String(item.id)
+            }));
             setVoucherDropdown(transformedData);
         }
     }, [voucherDropdownData]);

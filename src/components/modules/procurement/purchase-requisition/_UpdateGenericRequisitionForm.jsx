@@ -96,7 +96,8 @@ function _UpdateGenericRequisitionForm(props) {
 
     //vendor dropdown data
     useEffect(() => {
-        const transformedData = coreVendors.map((type) => {
+        const filteredVendors = coreVendors.filter(vendor => vendor.sub_domain_id != null);
+        const transformedData = filteredVendors.map((type) => {
             return {
                 label: type.mobile + " -- " + type.name,
                 value: String(type.id),
