@@ -54,13 +54,14 @@ function VoucherFormIndex(props) {
   const { mainAreaHeight, isOnline } = useOutletContext();
   const height = mainAreaHeight - 196;
 
-  const [activeTab, setActiveTab] = useState("Customer Voucher");
+  const [activeVoucher, setActiveVoucher] = useState(null);
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
   const perPage = 50;
   const [page, setPage] = useState(1);
   const fetching = useSelector((state) => state.crudSlice.fetching);
   const indexData = useSelector((state) => state.crudSlice.indexEntityData);
+  const [reloadList, setReloadList] = useState(true)
 
   const [files, setFiles] = useState([]);
   const [records, setRecords] = useState([]);
@@ -396,7 +397,7 @@ function VoucherFormIndex(props) {
 
   const [value, setValue] = useState(null);
   const renderForm = () => {
-    switch (activeTab) {
+    switch (activeVoucher) {
       case "Customer Voucher":
         return <CustomerVoucherForm />;
       case "Vendor Voucher":
@@ -405,6 +406,8 @@ function VoucherFormIndex(props) {
         return <ContraVoucherForm />;
     }
   };
+
+  console.log(activeVoucher)
   return (
     <Box pt={6} bg={"#f0f1f9"}>
       <Box>
@@ -415,12 +418,16 @@ function VoucherFormIndex(props) {
           <Grid.Col span={3}>
             <Box bg={"white"}>
               <VoucherNavigation
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
+                activeVoucher={activeVoucher}
+                setActiveVoucher={setActiveVoucher}
+                setReloadList={setReloadList}
+                reloadList={reloadList}
               />
             </Box>
           </Grid.Col>
           <Grid.Col span={19}>
+            {activeVoucher &&
+                <>
             <Box
               p={"xs"}
               style={{ borderRadius: 4 }}
@@ -789,7 +796,10 @@ function VoucherFormIndex(props) {
                 </form>
               </Grid.Col>
             </Grid>
+                </>
+        }
           </Grid.Col>
+
           <Grid.Col span={1}>
             <Box className={"borderRadiusAll"} pt={"16"} bg={"white"}>
               <ShortcutVoucher
