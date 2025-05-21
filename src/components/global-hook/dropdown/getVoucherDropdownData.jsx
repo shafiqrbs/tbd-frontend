@@ -7,16 +7,14 @@ const getVoucherDropdownData = () => {
   const [voucherDropdown, setVoucherDropdown] = useState([]);
 
   useEffect(() => {
-    const valueForVoucher = {
-      url: "accounting/select/voucher",
-      param: {},
-    };
-    dispatch(getVoucherDropdown(valueForVoucher));
+
+    dispatch(getVoucherDropdown("accounting/select/voucher"));
   }, [dispatch]);
 
   const voucherAllDropdownData = useSelector(
     (state) => state.utilitySlice.voucherAllDropdownData
   );
+
   useEffect(() => {
     if (voucherAllDropdownData && voucherAllDropdownData.length > 0) {
       const transformedData = voucherAllDropdownData.map((type) => {

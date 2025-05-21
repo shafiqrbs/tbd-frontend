@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
 
-export default function _Shortcut(props) {
+export default function _Navigation(props) {
   const { module, id } = props;
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -69,11 +69,11 @@ export default function _Shortcut(props) {
                 withArrow
                 position={"left"}
                 c={"white"}
-                bg={"blue"}
+                bg={"#fd7e14"}
                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
-                  bg={"blue"}
+                  bg={"#fd7e14"}
                   size="md"
                   pl={"12"}
                   pr={"12"}
@@ -95,17 +95,17 @@ export default function _Shortcut(props) {
           </Flex>
           <Flex direction={`column`} align={"center"} pt={5}>
             <Tooltip
-                label={t("DomainMasterUser")}
+                label={t("DomainHead")}
                 px={16}
                 py={2}
                 withArrow
                 position={"left"}
                 c={"white"}
-                bg={"blue"}
+                bg={"#6f42c1"}
                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
-                  bg={"blue"}
+                  bg={"#6f42c1"}
                   size="md"
                   pl={"12"}
                   pr={"12"}
@@ -123,6 +123,102 @@ export default function _Shortcut(props) {
             </Tooltip>
             <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
               {t("Head")}
+            </Flex>
+          </Flex>
+          <Flex direction={`column`} align={"center"} pt={5}>
+            <Tooltip
+                label={t("DomainSubHead")}
+                px={16}
+                py={2}
+                withArrow
+                position={"left"}
+                c={"white"}
+                bg={"#dc3545"}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <Button
+                  bg={"#dc3545"}
+                  size="md"
+                  pl={"12"}
+                  pr={"12"}
+                  variant={"light"}
+                  color={`black`}
+                  radius="xl"
+                  onClick={(e) => {
+                    navigate("/domain/sub-head");
+                  }}
+              >
+                <Flex direction={`column`} align={"center"}>
+                  <IconUsers size={16} color={"white"} />
+                </Flex>
+              </Button>
+            </Tooltip>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+              {t("Sub-Head")}
+            </Flex>
+          </Flex>
+          <Flex direction={`column`} align={"center"} pt={5}>
+            <Tooltip
+                label={t("DomainLedger")}
+                px={16}
+                py={2}
+                withArrow
+                position={"left"}
+                c={"white"}
+                bg={"#20c997"}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <Button
+                  bg={"#20c997"}
+                  size="md"
+                  pl={"12"}
+                  pr={"12"}
+                  variant={"light"}
+                  color={`black`}
+                  radius="xl"
+                  onClick={(e) => {
+                    navigate("/domain/ledger");
+                  }}
+              >
+                <Flex direction={`column`} align={"center"}>
+                  <IconUsers size={16} color={"white"} />
+                </Flex>
+              </Button>
+            </Tooltip>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+              {t("Ledger")}
+            </Flex>
+          </Flex>
+          <Flex direction={`column`} align={"center"} pt={5}>
+            <Tooltip
+                label={t("SiteMap")}
+                px={16}
+                py={2}
+                withArrow
+                position={"left"}
+                c={"white"}
+                bg={"blue"}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <Button
+                  bg={"blue"}
+                  size="md"
+                  pl={"12"}
+                  pr={"12"}
+                  variant={"light"}
+                  color={`black`}
+                  radius="xl"
+                  onClick={(e) => {
+                    navigate("/domain/sitemap");
+                  }}
+              >
+                <Flex direction={`column`} align={"center"}>
+                  <IconUsers size={16} color={"white"} />
+                </Flex>
+              </Button>
+            </Tooltip>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+              {t("SiteMap")}
             </Flex>
           </Flex>
         </Flex>

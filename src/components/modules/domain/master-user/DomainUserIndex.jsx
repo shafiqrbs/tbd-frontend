@@ -3,9 +3,9 @@ import {useParams} from "react-router-dom";
 import {Box, Grid, Progress} from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import _Shortcut from "../common/_Shortcut.jsx";
 import DomainHeaderNavbar from "../DomainHeaderNavbar";
 import DomainUserTable from "./DomainUserTable";
+import _Navigation from "../common/_Navigation";
 
 
 export default function DomainUserIndex() {
@@ -29,7 +29,7 @@ export default function DomainUserIndex() {
                     <Box p={"8"}>
                         <Grid columns={24} gutter={{base: 8}}>
                             <Grid.Col span={1}>
-                                <_Shortcut id={id} module={"b2b_dashboard"}/>
+                                <_Navigation id={id} module={"b2b_dashboard"}/>
                             </Grid.Col>
                             <Grid.Col span={23}>
                                 <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>

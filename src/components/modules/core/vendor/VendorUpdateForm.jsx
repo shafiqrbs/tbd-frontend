@@ -306,9 +306,7 @@ function VendorUpdateForm(props) {
                                                     mt={8}
                                                     id={'customer_id'}
                                                     searchable={true}
-                                                    value={customerData ? String(customerData)
-                                                        : entityEditData.customer_id ? String(entityEditData.customer_id) : null
-                                                    }
+                                                    value={customerData}
                                                     changeValue={setCustomerData}
                                                 />
                                             </Box>
