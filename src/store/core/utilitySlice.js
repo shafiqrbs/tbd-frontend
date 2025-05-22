@@ -94,6 +94,20 @@ export const getVoucherDropdown = createAsyncThunk("voucher/all", async (value) 
     throw error;
   }
 });
+
+export const getAccountingMasterDropdown = createAsyncThunk(
+    "accounting/head",
+    async (value) => {
+      try {
+        const response = getDataWithoutParam(value);
+        return response;
+      } catch (error) {
+        console.log("error", error.message);
+        throw error;
+      }
+    }
+);
+
 export const getAccountingDropdown = createAsyncThunk(
   "accounting/head",
   async (value) => {

@@ -250,11 +250,10 @@ function ProductForm(props) {
           </Text>
           </Center>
           {renderCheckboxItem("sku_brand", "SKUBrand")}
-          {renderCheckboxItem("sku_category", "SKUCategory")}
+          {renderCheckboxItem("sku_grade", "SKUGrade")}
           {renderCheckboxItem("sku_color", "SKUColor")}
           {renderCheckboxItem("sku_model", "SKUModel")}
           {renderCheckboxItem("sku_size", "SKUSize")}
-          {renderCheckboxItem("sku_warehouse", "SKUWarehouse")}
         </Box>
         <Button
           id="ProductFormSubmit"
