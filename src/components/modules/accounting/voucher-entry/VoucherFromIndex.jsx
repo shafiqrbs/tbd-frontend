@@ -18,7 +18,7 @@ import {
   IconCheck,
   IconTrashX,
   IconDeviceFloppy,
-  IconPlus,
+  IconPlus, IconSum,
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,16 +66,134 @@ function VoucherFormIndex(props) {
   const [files, setFiles] = useState([]);
   const [records, setRecords] = useState([]);
 
-  const [ledgerHead, setLedgerHead] = useState("");
   const [loadVoucher, setLoadVoucher] = useState(false);
   const [currentEntryType, setCurrentEntryType] = useState("");
 
+
+
+
+
+  const [allVoucherList, setAllVoucherList] = useState([]);
+  const [mainLedgerDropdownData, setMainLedgerDropdownData] = useState([]);
+  const [mainLedgerHeadData, setMainLedgerHeadData] = useState(null);
+  const [mainLedgerHeadObject, setMainLedgerHeadObject] = useState(null);
+  const [ledgerHeadDropdownData, setLedgerHeadDropdownData] = useState([]);
+  const [myItems,setMyItems] = useState([])
+  const [ledgerHead, setLedgerHead] = useState("");
+  const [ledgerHeadObject, setLedgerHeadObject] = useState(null);
+
+  // Sum debit and credit
+  const totals = myItems.reduce(
+      (acc, item) => {
+        acc.debit += Number(item.debit) || 0;
+        acc.credit += Number(item.credit) || 0;
+        return acc;
+      },
+      { debit: 0, credit: 0 }
+  );
+
+  const loadMyItemsFromStorage = () => {
+    const saved = localStorage.getItem("temp-voucher-entry");
+    const parsed = saved ? JSON.parse(saved) : [];
+    setMyItems(parsed);
+  };
+
+
+  useEffect(() => {
+    loadMyItemsFromStorage();
+  }, []);
+
+  useEffect(() => {
+    const cardProducts = localStorage.getItem("temp-voucher-entry");
+    const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+    setMyItems(myCardProducts)
+  }, [mainLedgerHeadData]);
+
+
+  // 1. Load main ledger dropdown data when activeVoucher changes
+  useEffect(() => {
+    if (activeVoucher?.id) {
+      const transformedData = activeVoucher?.ledger_account_head.map(item => ({
+        label: item.name,
+        value: String(item.id)
+      }));
+      setMainLedgerDropdownData(transformedData);
+    }
+  }, [activeVoucher]);
+
+  // 2. Filter ledgerHeadEntryForm whenever ledgerHead or dropdown data changes
+  useEffect(() => {
+    if (mainLedgerHeadData && mainLedgerDropdownData.length > 0) {
+      const updatedData = mainLedgerDropdownData.filter(item => item.value !== mainLedgerHeadData);
+      const mainLedgerObject = activeVoucher?.ledger_account_head.filter(item => item.id == mainLedgerHeadData);
+      setLedgerHeadDropdownData(updatedData);
+      setMainLedgerHeadObject(mainLedgerObject[0])
+    }
+  }, [mainLedgerHeadData, mainLedgerDropdownData]);
+
+  useEffect(() => {
+    if (mainLedgerHeadData){
+       handleAddProductByProductId('main-ledger');
+    }
+  }, [mainLedgerHeadData]);
+
+
+  function handleAddProductByProductId(addedType) {
+    const cardProducts = localStorage.getItem("temp-voucher-entry");
+    const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+
+    // Find the product in localProducts
+    let updatedProducts;
+    if (addedType === 'main-ledger') {
+      updatedProducts = [
+        ...myCardProducts,
+        {
+          id: mainLedgerHeadObject?.id,
+          mode: activeVoucher?.mode,
+          ledger_name: mainLedgerHeadObject?.display_name || '',
+          account_head: mainLedgerHeadObject?.display_name || '',
+          debit: 0,
+          credit: 0
+        }
+      ];
+    }else if (addedType === 'ledger'){
+      updatedProducts = [
+        ...myCardProducts,
+        {
+          id: ledgerHeadObject?.id,
+          mode: activeVoucher?.mode==='debit'?'credit':'debit',
+          ledger_name: ledgerHeadObject?.display_name || '',
+          account_head: ledgerHeadObject?.display_name || '',
+          debit: 0,
+          credit: 0
+        }
+      ];
+    }
+    updateLocalStorageAndResetForm(updatedProducts, addedType);
+  }
+  //update local storage and reset form values
+  function updateLocalStorageAndResetForm(addProducts, addedType) {
+    localStorage.setItem("temp-voucher-entry", JSON.stringify(addProducts));
+    loadMyItemsFromStorage();
+  }
+
+
+  // render entry ledger form
+  const renderForm = () => {
+        return <CustomerVoucherForm
+            ledgerHeadDropdownData={ledgerHeadDropdownData}
+            loadMyItemsFromStorage={loadMyItemsFromStorage}
+            mainLedgerHeadObject={mainLedgerHeadObject}
+            activeVoucher={activeVoucher}
+        />;
+  };
+
+
+
   // Load vouchers from both local storage keys and merge them
   useEffect(() => {
-    const mainVouchers =
-      JSON.parse(localStorage.getItem("vouchers-entry")) || [];
-    const formVouchers =
-      JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
+    const mainVouchers = JSON.parse(localStorage.getItem("vouchers-entry")) || [];
+    const formVouchers = JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
 
     // Combine both voucher sets
     const combinedVouchers = [...mainVouchers, ...formVouchers];
@@ -91,142 +209,9 @@ function VoucherFormIndex(props) {
     setRecords(sortedVouchers);
   }, []);
 
-  // Reload vouchers when loadVoucher changes
-  useEffect(() => {
-    if (loadVoucher) {
-      const mainVouchers =
-        JSON.parse(localStorage.getItem("vouchers-entry")) || [];
-      const formVouchers =
-        JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
 
-      // Combine both voucher sets
-      const combinedVouchers = [...mainVouchers, ...formVouchers];
-
-      // Sort vouchers: CR entries first, then DR entries
-      const sortedVouchers = combinedVouchers.sort((a, b) => {
-        // First prioritize CR entries
-        if (a.mode === "CR" && b.mode !== "CR") return -1;
-        if (a.mode !== "CR" && b.mode === "CR") return 1;
-        return 0;
-      });
-
-      setRecords(sortedVouchers);
-      setLoadVoucher(false);
-    }
-  }, [loadVoucher]);
-
-  const categorizedOptions = [
-    {
-      group: t("BankAccount"),
-      items: [
-        {
-          value: "bank_account_sonali",
-          label: "Sonali Bank, Gulshan Branch (00115633005315)",
-        },
-        { value: "bank_account_agrani", label: "Agrani Bank" },
-      ],
-    },
-  ];
   const [bankDetails, setBankDetails] = useState(null);
   const [bankDrawer, setBankDrawer] = useState(false);
-
-  // Fix the null check in hasCREntry
-  const hasCREntry = () => {
-    const mainVouchers =
-      JSON.parse(localStorage.getItem("vouchers-entry")) || [];
-    const formVouchers =
-      JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
-
-    // Check both storage locations for CR entries with proper null checking
-    return (
-      mainVouchers.some((voucher) => voucher && voucher.mode === "CR") ||
-      formVouchers.some((voucher) => voucher && voucher.mode === "CR")
-    );
-  };
-
-  const showNotificationComponent = (message, color) => {
-    showNotification({
-      title: message,
-      color: color,
-    });
-  };
-
-  useEffect(() => {
-    if (ledgerHead) {
-      setCurrentEntryType(ledgerHead);
-
-      if (ledgerHead === "bank_account_sonali") {
-        setBankDetails({
-          account_number: "00115633005315",
-          account_name: "Sonali Bank, Gulshan Branch",
-          bank_name: "Sonali Bank",
-          branch_name: "Gulshan Branch",
-          opening_balance: 1002221,
-        });
-
-        // Get current vouchers from local storage
-        const storedVouchers =
-          JSON.parse(localStorage.getItem("vouchers-entry")) || [];
-
-        // Remove any existing bank entries
-        const filteredVouchers = storedVouchers.filter(
-          (voucher) =>
-            !voucher.name || !voucher.name.startsWith("bank_account_")
-        );
-
-        filteredVouchers.push({
-          name: ledgerHead,
-          debit: 0,
-          credit: 0,
-          mode: "CR",
-          to: "Sonali Bank, Gulshan Branch",
-          cheque_no: null,
-        });
-
-        // Save to local storage
-        localStorage.setItem(
-          "vouchers-entry",
-          JSON.stringify(filteredVouchers)
-        );
-        setLoadVoucher(true);
-        setBankDrawer(true);
-      } else if (ledgerHead === "bank_account_agrani") {
-        setBankDetails({
-          account_number: "00115633005315",
-          account_name: "Agrani Bank",
-          bank_name: "Agrani Bank",
-          branch_name: "Gulshan Branch",
-          opening_balance: 5000,
-        });
-
-        // Get current vouchers from local storage
-        const storedVouchers =
-          JSON.parse(localStorage.getItem("vouchers-entry")) || [];
-
-        // Remove any existing bank entries
-        const filteredVouchers = storedVouchers.filter(
-          (voucher) =>
-            !voucher.name || !voucher.name.startsWith("bank_account_")
-        );
-
-        filteredVouchers.push({
-          name: ledgerHead,
-          debit: 0,
-          credit: 0,
-          mode: "CR",
-          to: "Agrani Bank",
-          cheque_no: null,
-        });
-
-        localStorage.setItem(
-          "vouchers-entry",
-          JSON.stringify(filteredVouchers)
-        );
-        setLoadVoucher(true);
-        setBankDrawer(true);
-      }
-    }
-  }, [ledgerHead]);
 
   // Delete voucher entry handler
   const handleDeleteVoucher = (index) => {
@@ -396,18 +381,8 @@ function VoucherFormIndex(props) {
   };
 
   const [value, setValue] = useState(null);
-  const renderForm = () => {
-    switch (activeVoucher) {
-      case "Customer Voucher":
-        return <CustomerVoucherForm />;
-      case "Vendor Voucher":
-        return <VendorVoucherForm />;
-      case "Contra Voucher":
-        return <ContraVoucherForm />;
-    }
-  };
 
-  console.log(activeVoucher)
+
   return (
     <Box pt={6} bg={"#f0f1f9"}>
       <Box>
@@ -422,6 +397,10 @@ function VoucherFormIndex(props) {
                 setActiveVoucher={setActiveVoucher}
                 setReloadList={setReloadList}
                 reloadList={reloadList}
+                allVoucherList={allVoucherList}
+                setAllVoucherList={setAllVoucherList}
+                setMainLedgerHeadData={setMainLedgerHeadData}
+                loadMyItemsFromStorage={loadMyItemsFromStorage}
               />
             </Box>
           </Grid.Col>
@@ -445,13 +424,14 @@ function VoucherFormIndex(props) {
                     placeholder={t("ChooseLedgerHead")}
                     required={true}
                     nextField={""}
-                    name={"ledger_head"}
+                    name={"main_ledger_head"}
                     form={form}
-                    dropdownValue={categorizedOptions}
-                    id={"ledger_head"}
+                    dropdownValue={mainLedgerDropdownData}
+                    id={"main_ledger_head"}
                     searchable={true}
-                    value={ledgerHead}
-                    changeValue={setLedgerHead}
+                    value={mainLedgerHeadData}
+                    changeValue={setMainLedgerHeadData}
+                    disabled={mainLedgerHeadObject && mainLedgerHeadData}
                   />
                 </Box>
               </Box>
@@ -471,7 +451,7 @@ function VoucherFormIndex(props) {
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <Text ta="left" size="sm">
-                      {bankDetails?.account_name}
+                      {mainLedgerHeadObject?.name}
                     </Text>
                   </Grid.Col>
                   <Grid.Col span={3} mt={2}>
@@ -482,7 +462,7 @@ function VoucherFormIndex(props) {
                   <Grid.Col span={6}>
                     <Text ta="left" size="sm">
                       {" "}
-                      {bankDetails?.account_number}
+                      {mainLedgerHeadObject?.name}
                     </Text>
                   </Grid.Col>
                 </Grid>
@@ -495,7 +475,7 @@ function VoucherFormIndex(props) {
                   <Grid.Col span={6}>
                     <Text ta="left" size="sm">
                       {" "}
-                      {currencySymbol} {bankDetails?.opening_balance}
+                      {currencySymbol} {mainLedgerHeadObject?.opening_balance}
                     </Text>
                   </Grid.Col>
                   <Grid.Col span={3} mt={2}>
@@ -506,7 +486,7 @@ function VoucherFormIndex(props) {
                   <Grid.Col span={6}>
                     <Text ta="left" size="sm">
                       {" "}
-                      {bankDetails?.branch_name}
+                      {mainLedgerHeadObject?.credit_limit}
                     </Text>
                   </Grid.Col>
                 </Grid>
@@ -575,7 +555,7 @@ function VoucherFormIndex(props) {
                           footer: tableCss.footer,
                           pagination: tableCss.pagination,
                         }}
-                        records={records}
+                        records={myItems}
                         columns={[
                           {
                             accessor: "item_index",
@@ -592,13 +572,12 @@ function VoucherFormIndex(props) {
                             title: t("Mode"),
                             width: 100,
                           },
-
                           {
-                            accessor: "name",
+                            accessor: "ledger_name",
                             title: t("LedgerName"),
                           },
                           {
-                            accessor: "name",
+                            accessor: "account_head",
                             title: t("AccountHead"),
                           },
                           {
@@ -608,7 +587,7 @@ function VoucherFormIndex(props) {
                             render: (record, index) => (
 
                               <NumberInput
-                                disabled={record.mode === "CR"}
+                                disabled={record.mode === "credit"}
                                 hideControls
                                 ta={"right"}
                                 value={record.debit}
@@ -621,6 +600,14 @@ function VoucherFormIndex(props) {
                                 }
                               />
                             ),
+                            footer: (
+                                <Group gap="xs">
+                                  <Box mb={-4}>
+                                    <IconSum size={16} />
+                                  </Box>
+                                  <div>{totals.debit}</div>
+                                </Group>
+                            ),
                           },
                           {
                             accessor: "credit",
@@ -629,7 +616,7 @@ function VoucherFormIndex(props) {
                             resizable: true,
                             render: (record, index) => (
                               <NumberInput
-                                disabled={record.mode === "DR"}
+                                disabled={record.mode === "debit"}
                                 hideControls
                                 value={record.credit}
                                 onChange={(e) =>
@@ -640,6 +627,14 @@ function VoucherFormIndex(props) {
                                   )
                                 }
                               />
+                            ),
+                            footer: (
+                                <Group gap="xs">
+                                  <Box mb={-4}>
+                                    <IconSum size={16} />
+                                  </Box>
+                                  <div>{totals.credit}</div>
+                                </Group>
                             ),
                           },
                           {
@@ -662,10 +657,8 @@ function VoucherFormIndex(props) {
                         ]}
                         fetching={fetching}
                         totalRecords={indexData.total}
-                        // useDataTableColumns
                         key={"item_index"}
                         recordsPerPage={perPage}
-                        // resizableColumns
                         onPageChange={(p) => {
                           setPage(p);
                           dispatch(setFetching(true));
