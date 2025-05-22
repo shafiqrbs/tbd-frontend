@@ -8,6 +8,7 @@ import {
   Button,
   Text,
   Center, Title,
+  rem,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDispatch } from "react-redux";

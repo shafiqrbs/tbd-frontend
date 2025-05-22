@@ -163,28 +163,30 @@ function BalanceEntryIndex() {
 							</Grid.Col>
 							<Grid.Col span={23}>
 								<ScrollArea h={mainAreaHeight}>
-									<DataTable
-										classNames={{
-											root: tableCss.root,
-											table: tableCss.table,
-											header: tableCss.header,
-											footer: tableCss.footer,
-										}}
-										styles={{
-											tableLayout: "fixed",
-										}}
-										withTableBorder
-                                        withColumnBorders
-										withRowBorders={false}
-										striped
-										highlightOnHover
-										groups={groups}
-										records={data}
-										className={tableCss.balanceEntryTable}
-										rowClassName={(record) =>
-											record.highlight ? "highlight-row" : ""
-										}
-									/>
+									<Box bg="white" className={"borderRadiusAll"} p="xs">
+										<DataTable
+											classNames={{
+												root: tableCss.root,
+												table: tableCss.table,
+												header: tableCss.header,
+												footer: tableCss.footer,
+											}}
+											styles={{
+												tableLayout: "fixed",
+											}}
+											withTableBorder
+											withColumnBorders
+											withRowBorders={false}
+											striped
+											highlightOnHover
+											groups={groups}
+											records={data}
+											className={tableCss.balanceEntryTable}
+											rowClassName={(record) =>
+												record.highlight ? "highlight-row" : ""
+											}
+										/>
+									</Box>
 									{/* -------------- balance bar chart -------------- */}
 									<BalanceBarChart />
 								</ScrollArea>
