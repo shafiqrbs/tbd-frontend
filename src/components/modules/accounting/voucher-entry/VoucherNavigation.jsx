@@ -15,13 +15,12 @@ import {getIndexEntityData} from "../../../../store/core/crudSlice.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 
 export default function VoucherNavigation(props) {
-    const {activeVoucher, setActiveVoucher, setReloadList, reloadList} = props;
+    const {activeVoucher, setActiveVoucher, setReloadList, reloadList,setAllVoucherList,allVoucherList,setMainLedgerHeadData,loadMyItemsFromStorage} = props;
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = useMemo(() => mainAreaHeight - 184, [mainAreaHeight]);
 
-    const [allVoucherList, setAllVoucherList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -32,8 +31,8 @@ export default function VoucherNavigation(props) {
             setError(null);
 
             const value = {
-                url: "accounting/voucher",
-                param: {page: 1, offset: 5000},
+                url: "accounting/voucher/wise-ledger-details",
+                param: {},
             };
 
             try {
@@ -68,7 +67,12 @@ export default function VoucherNavigation(props) {
                 className={`${classes.pressableCard} border-radius`}
                 mih={40}
                 mt={4}
-                onClick={() => setActiveVoucher(item)}
+                onClick={() => {
+                    localStorage.removeItem("temp-voucher-entry");
+                    setMainLedgerHeadData(null)
+                    setActiveVoucher(item)
+                    loadMyItemsFromStorage
+                }}
                 bg={activeVoucher?.id === item?.id ? "#f8eedf" : "gray.1"}
             >
                 <Text size="sm" pt={8} pl={8} fw={500} c="black">
