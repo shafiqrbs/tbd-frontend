@@ -46,7 +46,7 @@ function ProductUpdateForm(props) {
   const { t } = useTranslation();
   const { categoryDropdown, domainConfigData } = props;
   const product_config = domainConfigData?.inventory_config?.config_product;
-  const [activeTab, setActiveTab] = useState("updateProduct");
+  const [activeTab, setActiveTab] = useState("skuManagement");
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 104;
   const [products, setProducts] = useState([]);
@@ -54,10 +54,10 @@ function ProductUpdateForm(props) {
   // Define the tab mapping with proper identifiers
   const tabConfig = [
     { id: "updateProduct", displayName: "Update Product" },
+    { id: "skuManagement", displayName: "Sku Management" },
     { id: "productMeasurement", displayName: "Product Measurement" },
     { id: "productGallery", displayName: "Product Gallery" },
     { id: "vatManagement", displayName: "Vat Management" },
-    { id: "skuManagement", displayName: "Sku Management" },
   ];
   const perPage = 50;
   const [page, setPage] = useState(1);
@@ -109,14 +109,14 @@ function ProductUpdateForm(props) {
     switch (activeTab) {
       case "updateProduct":
         return <_UpdateProduct categoryDropdown={categoryDropdown} />;
+      case "skuManagement":
+        return <_SkuManagement id={id} productConfig={product_config} />;
       case "productMeasurement":
         return <_ProductMeasurement id={id} />;
       case "productGallery":
         return <_ProductGallery id={id} />;
       case "vatManagement":
         return <_VatManagement id={id} />;
-      case "skuManagement":
-        return <_SkuManagement id={id} />;
       default:
         return <_UpdateProduct categoryDropdown={categoryDropdown} />;
     }

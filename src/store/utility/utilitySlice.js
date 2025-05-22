@@ -3,6 +3,7 @@ import {
   getDataWithParam,
   getDataWithParamForSettingDropdown,
 } from "../../services/utilityApiService.js";
+import {getDataWithoutParam} from "../../services/utilityApiService";
 
 export const getSettingDropdown = createAsyncThunk(
   "setting/select",
@@ -14,6 +15,18 @@ export const getSettingDropdown = createAsyncThunk(
       throw error;
     }
   }
+);
+
+export const getSettingWithoutParamDropdown = createAsyncThunk(
+    "setting/select-without-param",
+    async (value) => {
+      try {
+        const response = getDataWithoutParam(value);
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    }
 );
 
 export const getProductUnitDropdown = createAsyncThunk(
@@ -68,6 +81,7 @@ const utilitySlice = createSlice({
     productModelDropdown: [],
     posInvoiceModeDropdownData: [],
     warehouseDropdown: [],
+    settingWithoutParamDropdown: [],
   },
   reducers: {
     setFetching: (state, action) => {
@@ -146,6 +160,9 @@ const utilitySlice = createSlice({
 
     builder.addCase(getCurrencyDropdown.fulfilled, (state, action) => {
       state.currencyDropdown = action.payload.data;
+    });
+    builder.addCase(getSettingWithoutParamDropdown.fulfilled, (state, action) => {
+      state.settingWithoutParamDropdown = action.payload.data;
     });
   },
 });

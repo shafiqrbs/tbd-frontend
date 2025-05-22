@@ -36,7 +36,7 @@ function _ParticularForm(props) {
         },
         validate: {
             particular_type_id: isNotEmpty(),
-            name: hasLength({min: 2, max: 30}),
+            name: hasLength({min: 1, max: 30}),
         }
     });
 

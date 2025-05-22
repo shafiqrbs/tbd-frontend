@@ -42,7 +42,7 @@ function HeadDomainTable() {
 
         try {
             const resultAction = await dispatch(getIndexEntityData({
-                url: 'accounting/account-head',
+                url: 'accounting/account-head-master',
                 param: {
                     group: 'head',
                     term: searchKeyword,

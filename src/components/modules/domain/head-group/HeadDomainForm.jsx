@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
-    Button, Flex, Grid, Box, ScrollArea, Text, Title, Stack
+    Button, Flex, Grid, Box, ScrollArea, Text, Title, Stack, rem
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import {IconDeviceFloppy} from "@tabler/icons-react";
+import {IconCheck, IconDeviceFloppy} from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
@@ -20,6 +20,11 @@ import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getSettingMotherAccountDropdownData from "../../../global-hook/dropdown/getSettingMotherAccountDropdownData";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import getAccountHeadMasterDropdownData from "../../../global-hook/dropdown/getAccountHeadMasterDropdownData";
+import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/getAccountHeadAllDropdownData";
+import {notifications} from "@mantine/notifications";
+import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
+
 
 function HeadDomainForm() {
     const { t, i18n } = useTranslation();
@@ -28,16 +33,22 @@ function HeadDomainForm() {
     const height = mainAreaHeight - 100; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const [motherAccount, setMotherAccount] = useState(null);
+    const [parentHead, setParentHead] = useState(null);
     const [headGroup, setHeadGroup] = useState(null);
+    const [mode, setMode] = useState(null);
+    const [reloadTrigger, setReloadTrigger] = useState(false);
 
     const motherAccountDropdown = getSettingMotherAccountDropdownData()
+//    const accountDropdown = getAccountHeadMasterDropdownData();
+    const accountHeadDropdownData = getAccountHeadMasterDropdownData(reloadTrigger);
+
 
     const form = useForm({
         initialValues: {
-            mother_account_id: '', name: '', code: '', head_group : 'head'
+            mother_account_id: '',parent_id: '', name: '', code: '', head_group : '',mode : ''
         },
         validate: {
-            mother_account_id: isNotEmpty(),
             name: isNotEmpty(),
             code : isNotEmpty()
         }
@@ -57,26 +68,36 @@ function HeadDomainForm() {
 
     const handleSubmit = async (values) => {
         setSaveCreateLoading(true);
-        dispatch(setValidationData(false));
-
-        try {
-            const action = await dispatch(storeEntityData({
-                url: "accounting/account-head",
-                data: values
-            }));
-
-            if (action.payload?.status === 200) {
-                showNotificationComponent(t("Account head created successfully"), "green");
-                form.reset();
-            } else {
-                showNotificationComponent(t("Something went wrong"), "red");
+        const data ={
+            url: "accounting/account-head-master",
+            data: values
+        };
+        const resultAction = await dispatch(storeEntityData(data));
+        if (storeEntityData.rejected.match(resultAction)) {
+            const fieldErrors = resultAction.payload.errors;
+            // Check if there are field validation errors and dynamically set them
+            if (fieldErrors) {
+                const errorObject = {};
+                Object.keys(fieldErrors).forEach(key => {
+                    errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                });
+                // Display the errors using your form's `setErrors` function dynamically
+                form.setErrors(errorObject);
             }
-        } catch (error) {
-            console.error("Account head creation error:", error);
-            showNotificationComponent(t("Request failed"), "red");
-        } finally {
-            dispatch(setFetching(true));
-            setSaveCreateLoading(false);
+        } else if (storeEntityData.fulfilled.match(resultAction)) {
+            if (resultAction.payload ?.status === 200 && resultAction.payload?.data?.data?.id) {
+                showNotificationComponent(resultAction.payload?.data?.message, "green");
+                form.reset();
+                setMotherAccount(null);
+                setParentHead(null);
+                setHeadGroup(null);
+                setMode(null);
+                setSaveCreateLoading(false);
+                setReloadTrigger(true)
+                dispatch(setFetching(true));
+            } else {
+                showNotificationComponent(resultAction.payload?.data?.message, "red");
+            }
         }
     };
 
@@ -134,17 +155,50 @@ function HeadDomainForm() {
                                                             tooltip={t('ChooseMotherAccount')}
                                                             label={t('MotherAccount')}
                                                             placeholder={t('ChooseMotherAccount')}
-                                                            required={true}
-                                                            nextField={'name'}
+                                                            required={false}
+                                                            nextField={'parent_id'}
                                                             name={'mother_account_id'}
                                                             form={form}
                                                             dropdownValue={motherAccountDropdown}
                                                             id={'mother_account_id'}
                                                             searchable={false}
+                                                            value={motherAccount}
+                                                            changeValue={setMotherAccount}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'8'}>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseAccountHead')}
+                                                            label={t('AccountHead')}
+                                                            placeholder={t('ChooseAccountHead')}
+                                                            required={false}
+                                                            nextField={'head_group'}
+                                                            name={'parent_id'}
+                                                            form={form}
+                                                            dropdownValue={accountHeadDropdownData}
+                                                            id={'parent_id'}
+                                                            searchable={true}
+                                                            value={parentHead}
+                                                            changeValue={setParentHead}
+                                                        />
+
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseAccountHead')}
+                                                            label={t('HeadGroup')}
+                                                            placeholder={t('HeadGroup')}
+                                                            required={true}
+                                                            nextField={'name'}
+                                                            name={'head_group'}
+                                                            form={form}
+                                                            dropdownValue={['head', 'sub-head', 'ledger']}
+                                                            id={'head_group'}
                                                             value={headGroup}
                                                             changeValue={setHeadGroup}
                                                         />
                                                     </Box>
+
                                                     <Box mt={'xs'}>
                                                         <InputForm
                                                             tooltip={t('NameValidateMessage')}
@@ -165,9 +219,26 @@ function HeadDomainForm() {
                                                             placeholder={t('AccountCode')}
                                                             required={true}
                                                             name={'code'}
+                                                            nextField={'mode'}
                                                             form={form}
                                                             id={'code'}
-                                                            nextField={'status'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseAccountHead')}
+                                                            label={t('HeadMode')}
+                                                            placeholder={t('HeadMode')}
+                                                            required={true}
+                                                            nextField=''
+                                                            name={'mode'}
+                                                            form={form}
+                                                            dropdownValue={['Debit', 'Credit']}
+                                                            id={'mode'}
+                                                            defaultValue="Debit"
+                                                            allowDeselect={false}
+                                                            value={mode}
+                                                            changeValue={setMode}
                                                         />
                                                     </Box>
                                                 </Box>

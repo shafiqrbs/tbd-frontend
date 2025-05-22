@@ -83,9 +83,8 @@ export const getDataWithoutParam = async (value) => {
             "X-Api-Key": import.meta.env.VITE_API_KEY,
             "X-Api-User": JSON.parse(localStorage.getItem('user')).id
         }
-    })
-        .then(res => {
-            data = res.data.data
+    }).then(res => {
+            data = res.data
         })
         .catch(function (error) {
             console.log(error)
