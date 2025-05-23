@@ -15,7 +15,7 @@ import {getIndexEntityData} from "../../../../store/core/crudSlice.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 
 export default function VoucherNavigation(props) {
-    const {activeVoucher, setActiveVoucher, setReloadList, reloadList,setAllVoucherList,allVoucherList,setMainLedgerHeadData,loadMyItemsFromStorage} = props;
+    const {activeVoucher, setActiveVoucher, setReloadList, reloadList,setAllVoucherList,allVoucherList,setMainLedgerHeadData,loadMyItemsFromStorage,setMainLedgerHeadObject} = props;
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -71,7 +71,8 @@ export default function VoucherNavigation(props) {
                     localStorage.removeItem("temp-voucher-entry");
                     setMainLedgerHeadData(null)
                     setActiveVoucher(item)
-                    loadMyItemsFromStorage
+                    setMainLedgerHeadObject(null)
+                    loadMyItemsFromStorage()
                 }}
                 bg={activeVoucher?.id === item?.id ? "#f8eedf" : "gray.1"}
             >

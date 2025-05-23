@@ -81,29 +81,79 @@ export default function CustomerVoucherForm(props) {
       });
       return;
     }
-
     handleAddProductByProductId("ledger", values.amount);
   };
 
   // Add new item
   const handleAddProductByProductId = (addedType, amount) => {
     const cardProducts = localStorage.getItem("temp-voucher-entry");
-    const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+    let myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
 
-    // Determine DR or CR
-    const mode = activeVoucher?.mode === "credit" ?"debit":"credit";
+    const mode = activeVoucher?.mode === "credit" ? "debit" : "credit";
+    const targetId = ledgerHead;
 
-    const newItem = {
-      id: ledgerHead,
-      mode: mode,
-      ledger_name: ledgerHeadObject?.display_name || "",
-      account_head: ledgerHeadObject?.display_name || "",
-      debit: mode === "debit" ? amount : 0,
-      credit: mode === "credit" ? amount : 0,
-    };
+    // Clone product list
+    const updatedProducts = [...myCardProducts];
 
-    const updatedData = [...myCardProducts, newItem];
-    updateLocalStorageAndResetForm(updatedData, addedType);
+    // Check if the item already exists
+    const existingIndex = updatedProducts.findIndex(
+        item => item.id === targetId && item.type === addedType
+    );
+
+    // Update or add item
+    if (existingIndex !== -1) {
+      if (mode === "debit") {
+        updatedProducts[existingIndex].debit = amount;
+        updatedProducts[existingIndex].credit = 0;
+      } else {
+        updatedProducts[existingIndex].credit = amount;
+        updatedProducts[existingIndex].debit = 0;
+      }
+    } else {
+      const newItem = {
+        id: targetId,
+        mode: mode,
+        ledger_name: ledgerHeadObject?.display_name || "",
+        account_head: ledgerHeadObject?.display_name || "",
+        debit: mode === "debit" ? amount : 0,
+        credit: mode === "credit" ? amount : 0,
+        type: addedType
+      };
+      updatedProducts.push(newItem);
+    }
+
+    // 🔄 Recalculate totals (excluding index 0 which we will rebalance)
+    const restItems = updatedProducts.slice(1); // all except first row
+    const totals = restItems.reduce(
+        (acc, item) => {
+          acc.debit += Number(item.debit) || 0;
+          acc.credit += Number(item.credit) || 0;
+          return acc;
+        },
+        { debit: 0, credit: 0 }
+    );
+
+    const diff = totals.debit - totals.credit;
+
+    // ⚖️ Adjust the first row to balance totals
+    if (updatedProducts.length > 0) {
+      if (diff > 0) {
+        // More Debit → add to credit of first row
+        updatedProducts[0].credit = diff;
+        updatedProducts[0].debit = 0;
+      } else if (diff < 0) {
+        // More Credit → add to debit of first row
+        updatedProducts[0].debit = Math.abs(diff);
+        updatedProducts[0].credit = 0;
+      } else {
+        // Already balanced
+        updatedProducts[0].debit = 0;
+        updatedProducts[0].credit = 0;
+      }
+    }
+
+    // 💾 Save final data
+    updateLocalStorageAndResetForm(updatedProducts, addedType);
   };
 
   // Update localStorage and reset form
