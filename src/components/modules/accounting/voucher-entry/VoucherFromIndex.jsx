@@ -79,8 +79,6 @@ function VoucherFormIndex(props) {
   const [mainLedgerHeadObject, setMainLedgerHeadObject] = useState(null);
   const [ledgerHeadDropdownData, setLedgerHeadDropdownData] = useState([]);
   const [myItems,setMyItems] = useState([])
-  const [ledgerHead, setLedgerHead] = useState("");
-  const [ledgerHeadObject, setLedgerHeadObject] = useState(null);
 
   // Sum debit and credit
   const totals = myItems.reduce(
@@ -131,51 +129,138 @@ function VoucherFormIndex(props) {
     }
   }, [mainLedgerHeadData, mainLedgerDropdownData]);
 
-  useEffect(() => {
+ /* useEffect(() => {
     if (mainLedgerHeadData){
        handleAddProductByProductId('main-ledger');
     }
-  }, [mainLedgerHeadData]);
+  }, [mainLedgerHeadData]);*/
 
+  useEffect(() => {
+    if (mainLedgerHeadObject && mainLedgerHeadData) {
+      handleAddProductByProductId('main-ledger');
+    }
+  }, [mainLedgerHeadObject]);
 
   function handleAddProductByProductId(addedType) {
     const cardProducts = localStorage.getItem("temp-voucher-entry");
     const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
 
-    // Find the product in localProducts
-    let updatedProducts;
-    if (addedType === 'main-ledger') {
-      updatedProducts = [
-        ...myCardProducts,
-        {
-          id: mainLedgerHeadObject?.id,
-          mode: activeVoucher?.mode,
-          ledger_name: mainLedgerHeadObject?.display_name || '',
-          account_head: mainLedgerHeadObject?.display_name || '',
-          debit: 0,
-          credit: 0
-        }
-      ];
-    }else if (addedType === 'ledger'){
-      updatedProducts = [
-        ...myCardProducts,
-        {
-          id: ledgerHeadObject?.id,
-          mode: activeVoucher?.mode==='debit'?'credit':'debit',
-          ledger_name: ledgerHeadObject?.display_name || '',
-          account_head: ledgerHeadObject?.display_name || '',
-          debit: 0,
-          credit: 0
-        }
-      ];
-    }
+    const alreadyExists = myCardProducts.some(p => p.id === mainLedgerHeadObject?.id);
+
+    if (alreadyExists) return;
+
+    let updatedProducts = [
+      ...myCardProducts,
+      {
+        id: mainLedgerHeadObject?.id,
+        mode: activeVoucher?.mode,
+        ledger_name: mainLedgerHeadObject?.display_name,
+        account_head: mainLedgerHeadObject?.display_name,
+        debit: 0,
+        credit: 0,
+        type: addedType
+      }
+    ];
+
     updateLocalStorageAndResetForm(updatedProducts, addedType);
   }
+
   //update local storage and reset form values
   function updateLocalStorageAndResetForm(addProducts, addedType) {
     localStorage.setItem("temp-voucher-entry", JSON.stringify(addProducts));
     loadMyItemsFromStorage();
   }
+
+  const handleInputChange = (index, field, value) => {
+    const updatedItems = [...myItems];
+
+    // Parse the number safely
+    const parsedValue = parseFloat(value) || 0;
+
+    // Update the specific field
+    if (field === "debit") {
+      updatedItems[index].debit = parsedValue;
+      updatedItems[index].credit = 0;
+    } else {
+      updatedItems[index].credit = parsedValue;
+      updatedItems[index].debit = 0;
+    }
+
+    // Recalculate totals (excluding first row)
+    const restItems = updatedItems.slice(1); // Exclude index 0
+    const totals = restItems.reduce(
+        (acc, item) => {
+          acc.debit += Number(item.debit) || 0;
+          acc.credit += Number(item.credit) || 0;
+          return acc;
+        },
+        { debit: 0, credit: 0 }
+    );
+
+    // Adjust the first row to balance the table
+    if (updatedItems.length > 0) {
+      const firstRow = updatedItems[0];
+      const diff = totals.debit - totals.credit;
+
+      if (diff > 0) {
+        // Add to credit side
+        firstRow.credit = diff;
+        firstRow.debit = 0;
+      } else if (diff < 0) {
+        // Add to debit side
+        firstRow.debit = Math.abs(diff);
+        firstRow.credit = 0;
+      } else {
+        // Balanced
+        firstRow.debit = 0;
+        firstRow.credit = 0;
+      }
+    }
+
+    // Save and update state
+    setMyItems(updatedItems); // Update React state
+    localStorage.setItem("temp-voucher-entry", JSON.stringify(updatedItems)); // Sync with storage
+  };
+
+  const handleDeleteVoucher = (indexToDelete) => {
+    const updatedItems = [...myItems];
+
+    // Remove the item
+    updatedItems.splice(indexToDelete, 1);
+
+    // 🔁 Optional: rebalance the first row
+    const restItems = updatedItems.slice(1); // Exclude index 0
+    const totals = restItems.reduce(
+        (acc, item) => {
+          acc.debit += Number(item.debit) || 0;
+          acc.credit += Number(item.credit) || 0;
+          return acc;
+        },
+        { debit: 0, credit: 0 }
+    );
+
+    if (updatedItems.length > 0) {
+      const firstRow = updatedItems[0];
+      const diff = totals.debit - totals.credit;
+
+      if (diff > 0) {
+        firstRow.credit = diff;
+        firstRow.debit = 0;
+      } else if (diff < 0) {
+        firstRow.debit = Math.abs(diff);
+        firstRow.credit = 0;
+      } else {
+        firstRow.debit = 0;
+        firstRow.credit = 0;
+      }
+    }
+
+    // Update state/storage
+    setMyItems(updatedItems);
+    localStorage.setItem("temp-voucher-entry", JSON.stringify(updatedItems));
+  };
+
+
 
 
   // render entry ledger form
@@ -190,68 +275,11 @@ function VoucherFormIndex(props) {
 
 
 
-  // Load vouchers from both local storage keys and merge them
-  useEffect(() => {
-    const mainVouchers = JSON.parse(localStorage.getItem("vouchers-entry")) || [];
-    const formVouchers = JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
-
-    // Combine both voucher sets
-    const combinedVouchers = [...mainVouchers, ...formVouchers];
-
-    // Sort vouchers: CR entries first, then DR entries
-    const sortedVouchers = combinedVouchers.sort((a, b) => {
-      // First prioritize CR entries
-      if (a.mode === "CR" && b.mode !== "CR") return -1;
-      if (a.mode !== "CR" && b.mode === "CR") return 1;
-      return 0;
-    });
-
-    setRecords(sortedVouchers);
-  }, []);
-
 
   const [bankDetails, setBankDetails] = useState(null);
   const [bankDrawer, setBankDrawer] = useState(false);
 
   // Delete voucher entry handler
-  const handleDeleteVoucher = (index) => {
-    const updatedRecords = [...records];
-    const deletedVoucher = updatedRecords[index];
-    updatedRecords.splice(index, 1);
-
-    // Check if it's from the main vouchers or form vouchers
-    const mainVouchers =
-      JSON.parse(localStorage.getItem("vouchers-entry")) || [];
-    const formVouchers =
-      JSON.parse(localStorage.getItem("vouchers-entry-form")) || [];
-
-    // Update the appropriate storage
-    const isInMainVouchers = mainVouchers.some(
-      (v) => v.name === deletedVoucher.name && v.mode === deletedVoucher.mode
-    );
-
-    if (isInMainVouchers) {
-      const updatedMainVouchers = mainVouchers.filter(
-        (v, i) =>
-          !(v.name === deletedVoucher.name && v.mode === deletedVoucher.mode)
-      );
-      localStorage.setItem(
-        "vouchers-entry",
-        JSON.stringify(updatedMainVouchers)
-      );
-    } else {
-      const updatedFormVouchers = formVouchers.filter(
-        (v, i) =>
-          !(v.name === deletedVoucher.name && v.mode === deletedVoucher.mode)
-      );
-      localStorage.setItem(
-        "vouchers-entry-form",
-        JSON.stringify(updatedFormVouchers)
-      );
-    }
-
-    setRecords(updatedRecords);
-  };
 
   const form = useForm({
     initialValues: {
@@ -319,12 +347,6 @@ function VoucherFormIndex(props) {
     []
   );
 
-  const handleInputChange = (index, field, value) => {
-    const updatedRecords = records.map((record, i) =>
-      i === index ? { ...record, [field]: value } : record
-    );
-    setRecords(updatedRecords);
-  };
 
   // Update to safely handle potentially null values
   const totalDebit = records.reduce(
@@ -351,35 +373,6 @@ function VoucherFormIndex(props) {
     dispatch(setFetching(false));
   });
 
-  const EditableNumberInput = ({ item, field, placeholder, value, onChange }) => {
-    const [inputValue, setInputValue] = useState(value || "");
-
-    useEffect(() => {
-      setInputValue(value || "");
-    }, [value]);
-
-    const handleChange = (e) => {
-      const val = e.currentTarget.value;
-      setInputValue(val);
-      if (onChange) {
-        onChange(item.id, field, val);
-      }
-    };
-
-    return (
-        <TextInput
-            type="number"
-            classNames={inputCss}
-            size="xs"
-            id={`inline-update-${field}-${item.id}`}
-            value={inputValue}
-            placeholder={placeholder}
-            onChange={handleChange}
-            style={{ width: "80px" }}
-        />
-    );
-  };
-
   const [value, setValue] = useState(null);
 
 
@@ -401,6 +394,7 @@ function VoucherFormIndex(props) {
                 setAllVoucherList={setAllVoucherList}
                 setMainLedgerHeadData={setMainLedgerHeadData}
                 loadMyItemsFromStorage={loadMyItemsFromStorage}
+                setMainLedgerHeadObject={setMainLedgerHeadObject}
               />
             </Box>
           </Grid.Col>
@@ -585,20 +579,13 @@ function VoucherFormIndex(props) {
                             title: t("Debit"),
                             width: 120,
                             render: (record, index) => (
-
-                              <NumberInput
-                                disabled={record.mode === "credit"}
-                                hideControls
-                                ta={"right"}
-                                value={record.debit}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "debit",
-                                    e.target.value
-                                  )
-                                }
-                              />
+                                <NumberInput
+                                    disabled={record.mode === "credit"}
+                                    hideControls
+                                    ta={"right"}
+                                    value={record.debit}
+                                    onChange={(val) => handleInputChange(index, "debit", val)}
+                                />
                             ),
                             footer: (
                                 <Group gap="xs">
@@ -615,18 +602,13 @@ function VoucherFormIndex(props) {
                             width: 120,
                             resizable: true,
                             render: (record, index) => (
-                              <NumberInput
-                                disabled={record.mode === "debit"}
-                                hideControls
-                                value={record.credit}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    index,
-                                    "credit",
-                                    e.target.value
-                                  )
-                                }
-                              />
+                                <NumberInput
+                                    disabled={record.mode === "debit"}
+                                    hideControls
+                                    ta={"right"}
+                                    value={record.credit}
+                                    onChange={(val) => handleInputChange(index, "credit", val)}
+                                />
                             ),
                             footer: (
                                 <Group gap="xs">
@@ -643,14 +625,17 @@ function VoucherFormIndex(props) {
                             textAlign: "right",
                             render: (record, index) => (
                               <Group gap={8} justify="right" wrap="nowrap">
-                                <ActionIcon
-                                  size={"sm"}
-                                  variant="transparent"
-                                  color="red.5"
-                                  onClick={() => handleDeleteVoucher(index)}
-                                >
-                                  <IconTrashX size="xs" stroke={1.5} />
-                                </ActionIcon>
+                                {
+                                  record.type === 'ledger' &&
+                                    <ActionIcon
+                                        size={"sm"}
+                                        variant="transparent"
+                                        color="red.5"
+                                        onClick={() => handleDeleteVoucher(index)}
+                                    >
+                                      <IconTrashX size="xs" stroke={1.5} />
+                                    </ActionIcon>
+                                }
                               </Group>
                             ),
                           },
@@ -745,21 +730,7 @@ function VoucherFormIndex(props) {
                           className={"boxBackground borderRadiusAll"}
                         >
                           <Grid>
-                            <Grid.Col span={9}>
-                              <Text size="sm" weight={500}>
-                                {t("TotalDebit")}: {totalDebit.toFixed(2)} |{" "}
-                                {t("TotalCredit")}: {totalCredit.toFixed(2)}
-                              </Text>
-                              <Text
-                                size="sm"
-                                color={isBalanced ? "green" : "red"}
-                                weight={600}
-                              >
-                                {isBalanced
-                                  ? t("VoucherBalanced")
-                                  : t("VoucherNotBalanced")}
-                              </Text>
-                            </Grid.Col>
+                            <Grid.Col span={9}></Grid.Col>
                             <Grid.Col span={3}>
                               <Stack right align="flex-end">
                                 {!saveCreateLoading && isOnline && (
