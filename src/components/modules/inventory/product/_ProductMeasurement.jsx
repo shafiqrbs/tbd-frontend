@@ -224,16 +224,9 @@ function _ProductMeasurement(props) {
     >
       <Box >
         <Grid columns={32} gutter={{ base: 8 }}>
-          <Grid.Col span={12}>
-            <Stack
-                h={height}
-                bg="var(--mantine-color-body)"
-                align="stretch"
-                justify="space-between"
-                className={"borderRadiusAll"}
-            >
-              <Box variant="default">&nbsp;</Box>
-              <Box className={"boxBackground"}>
+          <Grid.Col span={10}>
+            <Box>
+              <Box className={"boxBackground"} h={height-48}>
                 <Box p={'xs'}>
                   <InputButtonForm
                       tooltip={t("EnterQuantity")}
@@ -271,33 +264,34 @@ function _ProductMeasurement(props) {
                       changeValue={setMeasurementUnitData}
                   />
                 </Box>
-                <Box
-                    p={`xs`}
-                    className={"titleBackground"}
-                >
-                  <>
-                    {!saveCreateLoading && isOnline && (
-                        <Button
-                            size="xs"
-                            className={'btnPrimaryBg'}
-                            type="submit"
-                            fullWidth={'true'}
-                            id="ProductMeasurementFormSubmit"
-                            leftSection={<IconDeviceFloppy size={18} />}
-                        >
-                          <Flex direction={`column`} gap={0}>
-                            <Text fz={14} fw={400}>
-                              {t("AddMeasurement")}
-                            </Text>
-                          </Flex>
-                        </Button>
-                    )}
-                  </>
-                </Box>
               </Box>
-            </Stack>
+              <Box
+                  p={`xs`}
+                  className={"titleBackground"}
+              >
+                <>
+                  {!saveCreateLoading && isOnline && (
+                      <Button
+                          size="md"
+                          className={'btnPrimaryBg'}
+                          type="submit"
+                          fullWidth={'true'}
+                          id="SkuManagementFormSubmit"
+                          leftSection={<IconDeviceFloppy size={16} />}
+                      >
+                        <Flex direction={`column`} gap={0}>
+                          <Text fz={18} fw={400}>
+                            {t("AddMeasurement")}
+                          </Text>
+                        </Flex>
+                      </Button>
+
+                  )}
+                </>
+              </Box>
+            </Box>
           </Grid.Col>
-          <Grid.Col span={20}>
+          <Grid.Col span={22}>
             <Box className={"borderRadiusAll"}>
           <ScrollArea
             h={height}

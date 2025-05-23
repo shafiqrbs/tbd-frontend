@@ -311,11 +311,10 @@ function _SkuManagement(props) {
             <Box>
               <Box className={"borderRadiusAll"}>
                 <ScrollArea
-                    h={height-300}
+                    h={height-378}
                     scrollbarSize={2}
                     scrollbars="y"
-                    type="never"
-                >
+                    type="never">
                   <Box>
                     <Table stickyHeader>
                       <Table.Thead className={"boxBackground"}>
@@ -363,7 +362,7 @@ function _SkuManagement(props) {
                           {isMultiPrice &&
                           multiplePriceFieldName?.length > 0 &&
                           multiplePriceFieldName.map((priceFieldName, index) => (
-                              <Table.Th fz="xs" ta="center" key={index}>
+                              <Table.Th fz="xs" width={'50'} ta="center" key={index}>
                                 {priceFieldName}
                               </Table.Th>
                           ))}
@@ -375,9 +374,9 @@ function _SkuManagement(props) {
                             productSkuIndexEntityData.data.map((sku, index) => {
                               return (
                                   <Table.Tr key={sku.id}>
-                                    <Table.Th fz="xs">{index + 1}</Table.Th>
-                                    <Table.Th fz="xs">{sku.name}</Table.Th>
-                                    <Table.Th fz="xs">
+                                    <Table.Td fz="xs">{index + 1}</Table.Td>
+                                    <Table.Td fz="xs">{sku.name}</Table.Td>
+                                    <Table.Td fz="xs" width={'180'}>
                                       <TextInput
                                           type="number"
                                           label=""
@@ -395,34 +394,34 @@ function _SkuManagement(props) {
                                             );
                                           }}
                                       />
-                                    </Table.Th>
+                                    </Table.Td>
                                     {productConfig?.sku_color === 1 && (
-                                        <Table.Th fz="xs" ta="center">
+                                        <Table.Td fz="xs" ta="center">
                                           {sku.color_name}
-                                        </Table.Th>
+                                        </Table.Td>
                                     )}
                                     {productConfig?.sku_size === 1 && (
-                                        <Table.Th fz="xs" ta="center">
+                                        <Table.Td fz="xs" ta="center">
                                           {sku.size_name}
-                                        </Table.Th>
+                                        </Table.Td>
                                     )}
                                     {productConfig?.sku_brand === 1 && (
-                                        <Table.Th fz="xs" ta="center">
+                                        <Table.Td fz="xs" ta="center">
                                           {sku.brand_name}
-                                        </Table.Th>
+                                        </Table.Td>
                                     )}
                                     {productConfig?.sku_grade === 1 && (
-                                        <Table.Th fz="xs" ta="center">
+                                        <Table.Td fz="xs" ta="center">
                                           {sku.grade_name}
-                                        </Table.Th>
+                                        </Table.Td>
                                     )}
                                     {productConfig?.sku_model === 1 && (
-                                        <Table.Th fz="xs" ta="center">
+                                        <Table.Td fz="xs" ta="center">
                                           {sku.model_name}
-                                        </Table.Th>
+                                        </Table.Td>
                                     )}
 
-                                    <Table.Th fz="xs" ta="center">
+                                    <Table.Td fz="xs" ta="center" width={'120'} >
                                       <TextInput
                                           type="number"
                                           label=""
@@ -440,9 +439,9 @@ function _SkuManagement(props) {
                                             );
                                           }}
                                       />
-                                    </Table.Th>
+                                    </Table.Td>
 
-                                    <Table.Th fz="xs" ta="center">
+                                    <Table.Td fz="xs" ta="center" width={'120'}>
                                       <TextInput
                                           type="number"
                                           label=""
@@ -460,10 +459,10 @@ function _SkuManagement(props) {
                                             );
                                           }}
                                       />
-                                    </Table.Th>
+                                    </Table.Td>
 
                                     {sku.price_field?.map((field, fieldIndex) => (
-                                        <Table.Th fz="xs" ta="center" key={field.id}>
+                                        <Table.Td fz="xs" ta="center" key={field.id}>
                                           <TextInput
                                               type="number"
                                               label=""
@@ -484,9 +483,9 @@ function _SkuManagement(props) {
                                                   )
                                               }
                                           />
-                                        </Table.Th>
+                                        </Table.Td>
                                     ))}
-                                    <Table.Th fz="xs" ta="center">
+                                    <Table.Td fz="xs" ta="center">
                                       {!sku.is_master && (
                                           <ActionIcon
                                               size="sm"
@@ -539,7 +538,7 @@ function _SkuManagement(props) {
                                             />
                                           </ActionIcon>
                                       )}
-                                    </Table.Th>
+                                    </Table.Td>
                                   </Table.Tr>
                               );
                             })
@@ -555,112 +554,142 @@ function _SkuManagement(props) {
                   </Box>
                 </ScrollArea>
               </Box>
-              <Box
-                  className={"borderRadiusAll"}
-              >
-                <ScrollArea
-                    h={height-400}
-                    scrollbarSize={2}
-                    scrollbars="y"
-                    type="never"
-                >
-                  <Box p={'xs'}>
-                    <EditableNumberInput
-                        tooltip={t("BarcodeValidateMessage")}
-                        placeholder={t("Barcode")}
-                        required={false}
-                        nextField={"sales_price"}
-                        form={form}
-                        name={"barcode"}
-                        id={"barcode"}
-                    />
+              <Box className={"borderRadiusAll"}>
+                <Box pl={`xs`} pb={'6'} pr={8} pt={'6'} mb={'4'} className={'bodyBackground borderRadiusAll'} >
+                  <Title order={6} pt={'2'} c={'white'}>{t("AddStockKeepingUnit")}</Title>
+                </Box>
+                <ScrollArea h={height-360} scrollbarSize={2}   scrollbars="y">
+                  <Box pl={'md'} pr={'md'} mt={"xs"}>
+                    <Grid columns={24} gutter={{ base: 1 }}>
+                      <Grid.Col span={12} fz={"sm"} mt={8}>
+                        {t("ProductBarcode")}
+                      </Grid.Col>
+                      <Grid.Col span={12}>
+                        <EditableNumberInput
+                            tooltip={t("BarcodeValidateMessage")}
+                            placeholder={t("Barcode")}
+                            required={false}
+                            nextField={"sales_price"}
+                            form={form}
+                            name={"barcode"}
+                            id={"barcode"}
+                        />
+                      </Grid.Col>
+                    </Grid>
                   </Box>
                   {productConfig?.sku_color === 1 && colorDropDown?.length > 0 && (
-                      <Box p={'xs'}>
-                        <SelectForm
-                            tooltip={t("ChooseColor")}
-                            placeholder={t("ChooseColor")}
-                            name={"color_id"}
-                            form={form}
-                            dropdownValue={colorDropDown}
-                            mt={0}
-                            id={"color_id"}
-                            nextField={"size_id"}
-                            searchable={true}
-                            value={colorData}
-                            changeValue={setColorData}
-                        />
+                      <Box pl={'md'} pr={'md'} mt={"xs"}>
+                        <Grid columns={24} gutter={{ base: 1 }}>
+                          <Grid.Col span={12} fz={"sm"} mt={8}>
+                            {t("SelectSize")}
+                          </Grid.Col>
+                          <Grid.Col span={12}>
+                            <SelectForm
+                                tooltip={t("ChooseSize")}
+                                placeholder={t("ChooseSize")}
+                                name={"size_id"}
+                                form={form}
+                                dropdownValue={sizeDropDown}
+                                mt={0}
+                                id={"size_id"}
+                                nextField={"color_id"}
+                                searchable={true}
+                                value={sizeData}
+                                changeValue={setSizeData}
+                            />
+                          </Grid.Col>
+                        </Grid>
                       </Box>
-                  )}
-                  {productConfig?.sku_size === 1 &&  sizeDropDown?.length > 0 && (
-                      <Box p={'xs'}>
-                        <SelectForm
-                            tooltip={t("ChooseSize")}
-                            placeholder={t("ChooseSize")}
-                            name={"size_id"}
-                            form={form}
-                            dropdownValue={sizeDropDown}
-                            mt={0}
-                            id={"size_id"}
-                            nextField={"brand_id"}
-                            searchable={true}
-                            value={sizeData}
-                            changeValue={setSizeData}
-                        />
 
+                  )}
+                  {productConfig?.sku_color === 1 && colorDropDown?.length > 0 && (
+                      <Box pl={'md'} pr={'md'} mt={"xs"}>
+                        <Grid columns={24} gutter={{ base: 1 }}>
+                          <Grid.Col span={12} fz={"sm"} mt={8}>
+                            {t("SelectColor")}
+                          </Grid.Col>
+                          <Grid.Col span={12}>
+                            <SelectForm
+                                tooltip={t("ChooseColor")}
+                                placeholder={t("ChooseColor")}
+                                name={"color_id"}
+                                form={form}
+                                dropdownValue={colorDropDown}
+                                mt={0}
+                                id={"color_id"}
+                                nextField={"brand_id"}
+                                searchable={true}
+                                value={colorData}
+                                changeValue={setColorData}
+                            />
+                          </Grid.Col>
+                        </Grid>
                       </Box>
                   )}
-                  {productConfig?.sku_brand === 1 && brandDropDown?.length > 0 && (
-                      <Box p={'xs'}>
-                        <SelectForm
-                            tooltip={t("ChooseBrand")}
-                            placeholder={t("ChooseBrand")}
-                            name={"brand_id"}
-                            form={form}
-                            dropdownValue={brandDropDown}
-                            mt={0}
-                            id={"brand_id"}
-                            nextField={"grade_id"}
-                            searchable={true}
-                            value={brandData}
-                            changeValue={setBrandData}
-                        />
-                      </Box>
-                  )}
-                  {productConfig?.sku_grade === 1 && gradeDropDown?.length > 0 && (
-                      <Box p={'xs'}>
-                        <SelectForm
-                            tooltip={t("ChooseProductGrade")}
-                            placeholder={t("ChooseProductGrade")}
-                            name={"grade_id"}
-                            form={form}
-                            dropdownValue={gradeDropDown}
-                            mt={0}
-                            id={"grade_id"}
-                            nextField={"model_id"}
-                            searchable={true}
-                            value={gradeData}
-                            changeValue={setGradeData}
-                        />
 
+                  {productConfig?.sku_brand === 1 &&  sizeDropDown?.length > 0 && (
+                      <Box pl={'md'} pr={'md'} mt={"xs"}>
+                        <Grid columns={24} gutter={{ base: 1 }}>
+                          <Grid.Col span={12} fz={"sm"} mt={8}>
+                            {t("SelectBrand")}
+                          </Grid.Col>
+                          <Grid.Col span={12}>
+                            <SelectForm
+                                tooltip={t("ChooseSize")}
+                                placeholder={t("ChooseSize")}
+                                name={"brand_id"}
+                                form={form}
+                                dropdownValue={sizeDropDown}
+                                mt={0}
+                                id={"brand_id"}
+                                searchable={true}
+                                value={sizeData}
+                                changeValue={setSizeData}
+                            />
+                          </Grid.Col>
+                        </Grid>
                       </Box>
                   )}
-                  {productConfig?.sku_model === 1 && modelDropDown?.length > 0 && (
-                      <Box p={'xs'}>
-                        <SelectForm
-                            tooltip={t("ChooseModel")}
-                            placeholder={t("ChooseModel")}
-                            name={"model_id"}
-                            form={form}
-                            dropdownValue={modelDropDown}
-                            mt={0}
-                            id={"model_id"}
-                            nextField={"EntityFormSubmitSkuItem"}
-                            searchable={true}
-                            value={gradeData}
-                            changeValue={setGradeData}
-                        />
-
+                  {productConfig?.sku_grade === 1 &&  gradeDropDown?.length > 0 && (
+                      <Box pl={'md'} pr={'md'} mt={"xs"}>
+                        <Grid columns={24} gutter={{ base: 1 }}>
+                          <Grid.Col span={12} fz={"sm"} mt={8}>
+                            {t("SelectGrade")}
+                          </Grid.Col>
+                          <Grid.Col span={12}>
+                            <SelectForm
+                                tooltip={t("ChooseProductGrade")}
+                                placeholder={t("ChooseProductGrade")}
+                                name={"grade_id"}
+                                form={form}
+                                dropdownValue={gradeDropDown}
+                                mt={0}
+                                id={"grade_id"}
+                                searchable={true}
+                                value={gradeData}
+                                changeValue={setGradeData}
+                            />
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
+                  )}
+                  {productConfig?.sku_model === 1 && (
+                      <Box pl={'md'} pr={'md'} mt={"xs"}>
+                        <Grid columns={24} gutter={{ base: 1 }}>
+                          <Grid.Col span={12} fz={"sm"} mt={8}>
+                            {t("ModelNo")}
+                          </Grid.Col>
+                          <Grid.Col span={12}>
+                            <InputForm
+                                tooltip={t("BarcodeValidateMessage")}
+                                placeholder={t("ModelNo")}
+                                required={false}
+                                form={form}
+                                name={"model_id"}
+                                id={"model_id"}
+                            />
+                          </Grid.Col>
+                        </Grid>
                       </Box>
                   )}
                 </ScrollArea>
@@ -671,19 +700,18 @@ function _SkuManagement(props) {
                   {!saveCreateLoading && isOnline && (
                       <>
                         {isOnline && (
+
                             <Button
-                                size="xs"
+                                size="md"
                                 className={'btnPrimaryBg'}
                                 type="submit"
                                 fullWidth={'true'}
                                 id="SkuManagementFormSubmit"
                                 leftSection={<IconDeviceFloppy size={16} />}
                             >
-                              <Flex direction={`column`} gap={0}>
-                                <Text fz={14} fw={400}>
-                                  {t("Add")}
-                                </Text>
-                              </Flex>
+                              <Text fz={18} fw={400}>
+                                {t("AddStockKeepingUnit")}
+                              </Text>
                             </Button>
                         )}
                       </>

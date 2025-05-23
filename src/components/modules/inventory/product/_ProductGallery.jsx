@@ -111,7 +111,7 @@ function _ProductGallery(props) {
 
   return (
       <Box>
-        <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
+        <ScrollArea h={height+8} scrollbarSize={2} scrollbars="y" type="never">
           <Box>
             <LoadingOverlay
                 visible={formLoad}
@@ -138,7 +138,7 @@ function _ProductGallery(props) {
                     });
                   }}
                   accept={["image/*"]}
-                  h={210}
+                  h={280}
                   p={0}
                   styles={{
                     root: {
@@ -155,7 +155,7 @@ function _ProductGallery(props) {
                                 ? handleFeatureImage()
                                 : `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/storage/${entityEditData.feature_image}`
                           }
-                          height={190}
+                          height={280}
                           fit="cover"
                           alt="Feature image"
                           style={{ pointerEvents: "none" }}
@@ -185,12 +185,12 @@ function _ProductGallery(props) {
                                 pointerEvents: "auto",
                               }}
                           >
-                            ✕
+
                           </div>
                       )}
                     </>
                 ) : (
-                    <Center h={190}>
+                    <Center h={280}>
                       <Text>{t("SelectFeatureImage")}</Text>
                     </Center>
                 )}
@@ -221,7 +221,7 @@ function _ProductGallery(props) {
                             });
                           }}
                           accept={["image/*"]}
-                          h={100}
+                          h={200}
                           p={0}
                           styles={{
                             root: {
@@ -234,7 +234,7 @@ function _ProductGallery(props) {
                             <>
                               <Image
                                   src={URL.createObjectURL(image)}
-                                  height={96}
+                                  height={200}
                                   width="100%"
                                   fit="cover"
                                   alt={`Additional image ${index + 1}`}
@@ -272,7 +272,7 @@ function _ProductGallery(props) {
                             <>
                               <Image
                                   src={`${import.meta.env.VITE_IMAGE_GATEWAY_URL}/storage/${imageSource}`}
-                                  height={96}
+                                  height={200}
                                   width="100%"
                                   fit="cover"
                                   alt={`image ${index + 1}`}
@@ -307,7 +307,7 @@ function _ProductGallery(props) {
                               )}
                             </>
                         ) : (
-                            <Center h={100}>
+                            <Center h={200}>
                               <Text>{t("SelectImage")}</Text>
                             </Center>
                         )}

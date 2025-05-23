@@ -202,7 +202,7 @@ function _UpdateProduct(props) {
       >
         <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
           <ScrollArea
-            h={height}
+            h={height-40}
             scrollbarSize={1}
             scrollbars="y"
             // type="never"
@@ -371,26 +371,24 @@ function _UpdateProduct(props) {
                       id={"min_quantity"}
                     />
                   </Grid.Col>
-                  <Grid.Col span={12}>
-                    <Button
-                        size="xs"
-                        className={'btnPrimaryBg'}
-                        type="submit"
-                        fullWidth={'true'}
-                        id="SkuManagementFormSubmit"
-                        leftSection={<IconDeviceFloppy size={16} />}
-                    >
-                      <Flex direction={`column`} gap={0}>
-                        <Text fz={14} fw={400}>
-                          {t("Add")}
-                        </Text>
-                      </Flex>
-                    </Button>
-                  </Grid.Col>
                 </Grid>
               </Box>
             </Box>
           </ScrollArea>
+          <Box>
+            <Button
+                size="md"
+                className={'btnPrimaryBg'}
+                type="submit"
+                fullWidth={'true'}
+                id="SkuManagementFormSubmit"
+                leftSection={<IconDeviceFloppy size={16} />}
+            >
+              <Text fz={18} fw={400}>
+                {t("UpdateProduct")}
+              </Text>
+            </Button>
+          </Box>
         </Box>
       </form>
     </Box>

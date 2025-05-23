@@ -46,7 +46,7 @@ function ProductUpdateForm(props) {
   const { t } = useTranslation();
   const { categoryDropdown, domainConfigData } = props;
   const product_config = domainConfigData?.inventory_config?.config_product;
-  const [activeTab, setActiveTab] = useState("skuManagement");
+  const [activeTab, setActiveTab] = useState("updateProduct");
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 104;
   const [products, setProducts] = useState([]);
@@ -54,10 +54,18 @@ function ProductUpdateForm(props) {
   // Define the tab mapping with proper identifiers
   const tabConfig = [
     { id: "updateProduct", displayName: "Update Product" },
-    { id: "skuManagement", displayName: "Sku Management" },
-    { id: "productMeasurement", displayName: "Product Measurement" },
-    { id: "productGallery", displayName: "Product Gallery" },
-    { id: "vatManagement", displayName: "Vat Management" },
+    ...(product_config.is_sku === 1
+        ? [{ id: "skuManagement", displayName: "Sku Management" }]
+        : []),
+    ...(product_config.is_measurement === 1
+        ? [{ id: "productMeasurement", displayName: "Product Measurement" }]
+        : []),
+    ...(product_config.is_product_gallery === 1
+        ? [{ id: "productGallery", displayName: "Product Gallery" }]
+        : []),
+    ...(domainConfigData?.inventory_config?.hs_code_enable === 1 && domainConfigData?.inventory_config?.vat_integration === 1
+        ? [{ id: "vatManagement", displayName: "Vat Management" }]
+        : []),
   ];
   const perPage = 50;
   const [page, setPage] = useState(1);
@@ -121,48 +129,11 @@ function ProductUpdateForm(props) {
         return <_UpdateProduct categoryDropdown={categoryDropdown} />;
     }
   };
-  const [isBrand, setBrand] = useState(product_config?.is_brand === 1);
-
-  const [vat_integration, setVat_integration] = useState(
-    product_config?.vat_integration === 1
-  );
-  const [is_measurement, setIs_measurement] = useState(
-    product_config?.is_measurement === 1
-  );
-  const [isColor, setColor] = useState(product_config?.is_color === 1);
-  const [isGrade, setGrade] = useState(product_config?.is_grade === 1);
-  const [isSize, setSize] = useState(product_config?.is_size === 1);
-  const [isModel, setModel] = useState(product_config?.is_model === 1);
-  const [isSku, setSku] = useState(product_config?.is_sku === 1);
-  const [vatEnable, setVatEnable] = useState(
-    domainConfigData?.inventory_config?.vat_enable === 1
-  );
-  const [isMultiPrice, setIsMultiPrice] = useState(
-    product_config?.is_multi_price === 1
-  );
-  const [is_product_gallery, setIs_product_gallery] = useState(
-    product_config?.is_product_gallery === 1
-  );
  // console.log(domainConfigData?.inventory_config?.vat_enable);
-
-  useEffect(() => {
-    setBrand(product_config?.is_brand === 1);
-    setVat_integration(product_config?.vat_integration === 1);
-    setIs_measurement(product_config?.is_measurement === 1);
-    setColor(product_config?.is_color === 1);
-    setGrade(product_config?.is_grade === 1);
-    setSize(product_config?.is_size === 1);
-    setModel(product_config?.is_model === 1);
-    setSku(product_config?.is_sku === 1);
-    setVatEnable(domainConfigData?.inventory_config?.vat_enable === 1);
-    setIsMultiPrice(product_config?.is_multi_price === 1);
-    setIs_product_gallery(product_config?.is_product_gallery === 1);
-  }, [product_config]);
-
   return (
     <Box>
       <Grid columns={32} gutter={{ base: 8 }}>
-        <Grid.Col span={4}>
+        <Grid.Col span={6}>
           <Card shadow="md" radius="4" className={classes.card} padding="xs">
             <Grid gutter={{ base: 2 }}>
               <Grid.Col span={11}>
@@ -207,7 +178,7 @@ function ProductUpdateForm(props) {
             </Grid>
           </Card>
         </Grid.Col>
-        <Grid.Col span={20}>
+        <Grid.Col span={26}>
           <Box bg={"white"} p={"xs"} mb={"8"}>
             <Box bg={"white"}>
               <Box
@@ -235,121 +206,8 @@ function ProductUpdateForm(props) {
             </Box>
           </Box>
         </Grid.Col>
-        <Grid.Col span={8}>
-          <Box bg={"white"} p={"xs"} className={"borderRadiusAll"} mb={"8"}>
-            <Box bg={"white"}>
-              <Box className={"borderRadiusAll"}>
-                <DataTable
-                    classNames={{
-                      root: tableCss.root,
-                      table: tableCss.table,
-                      header: tableCss.header,
-                      footer: tableCss.footer,
-                      pagination: tableCss.pagination,
-                    }}
-                    records={indexData.data}
-                    columns={[
-                      {
-                        accessor: "product_name",
-                        title:  <_ProductInlineSearch
-                            module={"product"}/>,
-                        render: (data, index) => (
-
-                      <Group
-                          wrap="nowrap"
-                          w="100%"
-                          gap={0}
-                          mx="auto"
-                          justify="space-between"
-                      >
-                        <Text fz={11} fw={400} ta="left">
-                          {index + 1}. {data.product_name}
-                        </Text>
-                        <Button.Group>
-                        <Button
-                            size="compact-xs"
-                            color={"#f8eedf"}
-                            radius={0}
-                            w="50"
-                            styles={{
-                              root: {
-                                height: "26px",
-                                borderRadius: 0,
-                                borderTopColor: "#905923",
-                                borderBottomColor: "#905923",
-                                borderLeftColor: "#905923",
-                              },
-                            }}
-                            onClick={() => {
-                            }}
-                        >
-                          <Text fz={9} fw={400} c={"black"}>
-                            {data.unit_name}
-                          </Text>
-                        </Button>
-                        <Button
-                            size="compact-xs"
-                            className={genericClass.invoiceAdd}
-                            radius={0}
-                            w="30"
-                            onClick={() => {
-                              dispatch(setInsertType("update"));
-                              dispatch(
-                                  editEntityData("inventory/product/" + data.product_id)
-                              );
-                              dispatch(setFormLoading(true));
-                              navigate(`/inventory/product/${data.product_id}`);
-                            }}
-                            styles={{
-                              root: {
-                                height: "26px",
-                                borderRadius:0,
-                                borderTopRightRadius:
-                                    "var(--mantine-radius-sm)",
-                                borderBottomRightRadius:
-                                    "var(--mantine-radius-sm)",
-                              },
-                            }}
-
-                        >
-                          <Flex direction={`column`} gap={0}>
-                            <IconPencil size={12}/>
-                          </Flex>
-                        </Button>
-                        </Button.Group>
-                      </Group>
-                        ),
-                      }
-                    ]}
-                    loaderSize="xs"
-                    loaderColor="grape"
-                    height={height+14}
-                    scrollAreaProps={{
-                      scrollbarSize: 4,
-                    }}
-                />
-                <Group wrap="nowrap"
-                       w="100%"
-                       gap={0}
-                       mx="auto"
-                       justify="space-between" className={'bodyBackgroundLight'}>
-                  <Text  size="xs" pl={'xs'} >Page - {page} / {Math.ceil(indexData.total/perPage)}</Text>
-                  <Button.Group mt={'4'} mb={'4'}  mr={'xs'}>
-                    <Button variant="default" size="xs" onClick={() => setPage((p) => p - 1)} disabled={!hasPrev}>
-                      <IconChevronLeft color="#905923" />
-                    </Button>
-                    <Button variant="default" size="xs" onClick={() => setPage((p) => p + 1)} disabled={!hasNext}>
-                      <IconChevronRight color="#905923" />
-                    </Button>
-                  </Button.Group>
-                </Group>
-              </Box>
-            </Box>
-          </Box>
-        </Grid.Col>
       </Grid>
     </Box>
   );
 }
-
 export default ProductUpdateForm;
