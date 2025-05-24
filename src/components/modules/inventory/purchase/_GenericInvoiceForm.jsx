@@ -486,10 +486,7 @@ function _GenericInvoiceForm(props) {
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
-        <Grid.Col span={1}>
-          <Navigation module={'purchase-invoice'} />
-        </Grid.Col>
-        <Grid.Col span={7}>
+        <Grid.Col span={8}>
           <form
             onSubmit={form.onSubmit((values) => {
               if (!values.barcode && !values.product_id) {

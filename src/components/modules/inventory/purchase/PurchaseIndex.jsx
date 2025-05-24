@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    Box,Progress
+    Box, Grid, Progress
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from "react-redux";
@@ -8,6 +8,8 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
 import _PurchaseTable from "./_PurchaseTable.jsx";
+import Navigation from "../common/Navigation";
+import _GenericInvoiceForm from "./_GenericInvoiceForm";
 
 function PurchaseIndex() {
     const { t, i18n } = useTranslation();
@@ -39,11 +41,17 @@ function PurchaseIndex() {
                                 currancySymbol={configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
-                                <_PurchaseTable
-                                    allowZeroPercentage={configData?.zero_stock}
-                                    currancySymbol={configData?.currency?.symbol}
-                                    isWarehouse={configData?.sku_warehouse}
-                                />
+                                <Grid columns={24} gutter={{ base: 8 }}>
+                                    <Grid.Col span={1} ><Navigation module={"purchase"}/></Grid.Col>
+                                    <Grid.Col span={23} >
+                                        <_PurchaseTable
+                                            allowZeroPercentage={configData?.zero_stock}
+                                            currancySymbol={configData?.currency?.symbol}
+                                            isWarehouse={configData?.sku_warehouse}
+                                        />
+                                    </Grid.Col>
+                                </Grid>
+
                             </Box>
 
                         </>

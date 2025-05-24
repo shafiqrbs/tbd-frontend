@@ -1,10 +1,12 @@
 import React from "react";
-import { Box, Progress } from "@mantine/core";
+import {Box, Grid, Progress} from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
 import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
+import Navigation from "../common/Navigation";
+import _SalesTable from "../sales/_SalesTable";
 
 function PurchaseInvoice() {
   const { t, i18n } = useTranslation();
@@ -41,7 +43,13 @@ function PurchaseInvoice() {
                 }
               />
               <Box p={"8"}>
-                  <_GenericInvoiceForm domainConfigData={domainConfigData} />
+                <Grid columns={24} gutter={{ base: 8 }}>
+                  <Grid.Col span={1} ><Navigation module={"purchase-invoice"}/></Grid.Col>
+                  <Grid.Col span={23} >
+                    <_GenericInvoiceForm domainConfigData={domainConfigData} />
+                  </Grid.Col>
+                </Grid>
+
               </Box>
             </>
           )}

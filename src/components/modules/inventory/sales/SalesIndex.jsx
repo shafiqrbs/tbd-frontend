@@ -1,12 +1,13 @@
 import React from "react";
 import {
-    Box,Progress,
+    Box, Grid, Progress,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesTable from "./_SalesTable.jsx";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
+import Navigation from "../common/Navigation";
 
 function SalesIndex() {
     const { t, i18n } = useTranslation();
@@ -35,12 +36,17 @@ function SalesIndex() {
                                 currancySymbol={configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
-                                <_SalesTable
+                                <Grid columns={24} gutter={{ base: 8 }}>
+                                <Grid.Col span={1} ><Navigation module={"sales"}/></Grid.Col>
+                                    <Grid.Col span={23} >
+                                    <_SalesTable
                                     configData={configData}
                                     allowZeroPercentage={configData?.zero_stock}
                                     currancySymbol={configData?.currency?.symbol}
                                     isWarehouse={configData?.sku_warehouse}
                                 />
+                                    </Grid.Col>
+                                </Grid>
                             </Box>
 
                         </>

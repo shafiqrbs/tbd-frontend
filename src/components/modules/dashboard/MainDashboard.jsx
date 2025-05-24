@@ -40,6 +40,7 @@ import classes from "../../../assets/css/FeaturesCards.module.css";
 import getConfigData from "../../global-hook/config-data/getConfigData.js";
 import pos from "../../../assets/images/pos/pos.png";
 import getDomainConfig from "../../global-hook/config-data/getDomainConfig.js";
+import getAccessControl from "../../global-hook/access_control/getAccessControl";
 
 function MainDashboard(props) {
     const {t, i18n} = useTranslation();
@@ -50,36 +51,8 @@ function MainDashboard(props) {
     const navigate = useNavigate();
     const theme = useMantineTheme();
     /* start for user role check */
-    const [userRole, setUserRole] = useState(() => {
-        const userRoleData = localStorage.getItem("user");
-        if (!userRoleData) return [];
 
-        try {
-            const parsedUser = JSON.parse(userRoleData);
-
-            if (!parsedUser.access_control_role) return [];
-
-            if (Array.isArray(parsedUser.access_control_role)) {
-                return parsedUser.access_control_role;
-            }
-
-            if (typeof parsedUser.access_control_role === 'string') {
-                try {
-
-                    if (parsedUser.access_control_role.trim() === '') return [];
-                    return JSON.parse(parsedUser.access_control_role);
-                } catch (parseError) {
-                    console.error("Error parsing access_control_role:", parseError);
-                    return [];
-                }
-            }
-
-            return [];
-        } catch (error) {
-            console.error("Error parsing user data from localStorage:", error);
-            return [];
-        }
-    });
+    const userRole = getAccessControl();
 
     useEffect(() => {
         const checkDomainConfig = () => {
