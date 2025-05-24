@@ -75,7 +75,7 @@ export default function __PosVendorSection(props) {
             <Box pl={"4"} pr={"4"}>
               <Box style={{ borderRadius:4}} className={genericClass.genericHighlightedBox}>
                 <Grid gutter={{ base: 6 }} mt={8}>
-                  <Grid.Col span={10} pl={"8"}>
+                  <Grid.Col span={9} pl={"8"}>
                     <SelectForm
                       tooltip={t("VendorValidateMessage")}
                       label=""
@@ -91,7 +91,7 @@ export default function __PosVendorSection(props) {
                       changeValue={setVendorData}
                     />
                   </Grid.Col>
-                  <Grid.Col span={2}>
+                  <Grid.Col span={3}>
                     <Box
                       mr={"12"}
                       mt={"4"}
