@@ -318,7 +318,7 @@ function AccountingForm(props) {
                                 label={""}
                                 placeholder={t("ChooseAccountCash")}
                                 required={false}
-                                nextField={"account_mobile_id"}
+                                nextField={"account_bank_id"}
                                 name={"account_cash_id"}
                                 form={form}
                                 dropdownValue={accountDropdownData}
@@ -341,7 +341,7 @@ function AccountingForm(props) {
                           label={""}
                           placeholder={t("ChooseAccountBank")}
                           required={false}
-                          nextField={"account_cash_id"}
+                          nextField={"account_mobile_id"}
                           name={"account_bank_id"}
                           form={form}
                           dropdownValue={accountDropdownData}
@@ -364,7 +364,7 @@ function AccountingForm(props) {
                                 label={""}
                                 placeholder={t("ChooseAccountMobile")}
                                 required={false}
-                                nextField={"account_stock_opening_id"}
+                                nextField={"capital_investment_id"}
                                 name={"account_mobile_id"}
                                 form={form}
                                 dropdownValue={accountDropdownData}
@@ -393,7 +393,7 @@ function AccountingForm(props) {
                                 label={""}
                                 placeholder={t("ChooseCapitalInvestment")}
                                 required={false}
-                                nextField={"account_bank_id"}
+                                nextField={"account_user_id"}
                                 name={"capital_investment_id"}
                                 form={form}
                                 dropdownValue={accountDropdownData}
@@ -416,7 +416,7 @@ function AccountingForm(props) {
                                 label={""}
                                 placeholder={t("ChooseAccountUser")}
                                 required={false}
-                                nextField={"account_mobile_id"}
+                                nextField={"account_customer_id"}
                                 name={"account_user_id"}
                                 form={form}
                                 dropdownValue={accountDropdownData}
@@ -439,7 +439,7 @@ function AccountingForm(props) {
                                 label={""}
                                 placeholder={t("ChooseAccountCustomer")}
                                 required={false}
-                                nextField={"voucher_stock_opening_id"}
+                                nextField={"account_vendor_id"}
                                 name={"account_customer_id"}
                                 form={form}
                                 dropdownValue={accountDropdownData}
@@ -462,7 +462,7 @@ function AccountingForm(props) {
                                 label={""}
                                 placeholder={t("ChooseAccountVendor")}
                                 required={false}
-                                nextField={"account_sales_id"}
+                                nextField={"account_stock_opening_id"}
                                 name={"account_vendor_id"}
                                 form={form}
                                 dropdownValue={accountDropdownData}
@@ -515,7 +515,7 @@ function AccountingForm(props) {
                                 label={""}
                                 placeholder={t("ChooseAccountProductGroup")}
                                 required={false}
-                                nextField={"account_category_id"}
+                                nextField={"account_purchase_id"}
                                 name={"account_product_group_id"}
                                 form={form}
                                 dropdownValue={accountDropdownData}
@@ -567,7 +567,7 @@ function AccountingForm(props) {
                                 label={""}
                                 placeholder={t("ChooseAccountVendor")}
                                 required={false}
-                                nextField={"account_vendor_id"}
+                                nextField={"account_sales_id"}
                                 name={"account_purchase_discount_id"}
                                 form={form}
                                 dropdownValue={accountDropdownData}

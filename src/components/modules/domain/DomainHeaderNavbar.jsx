@@ -23,7 +23,9 @@ function DomainHeaderNavbar(props) {
 
     const links = [
         { link: '/domain', label: t('Domains') },
-        { link: '/domain/user', label: t('DomainUser') },
+        { link: '/domain/user', label: t('DomainMasterUser') },
+        { link: '/domain/head', label: t('DomainHead') },
+        { link: '/domain/sitemap', label: t('Sitemap') },
     ];
     const items = links.map((link) => (
         <a
@@ -41,13 +43,13 @@ function DomainHeaderNavbar(props) {
 
     const menuItems = [
         {
-            label: 'Sitemap',
+            label: t('Sitemap'),
             path: '/domain/sitemap',
             icon: <IconMap2 style={{ width: rem(14), height: rem(14) }} />,
         },
         {
-            label: 'BranchManagement',
-            path: '/domain/branch-management',
+            label: t('DomainMasterUser'),
+            path: '/domain/user',
             icon: <IconBuildingStore style={{ width: rem(14), height: rem(14) }} />,
         },
     ];
