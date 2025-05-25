@@ -125,70 +125,7 @@ export default function _Navigation(props) {
               {t("Head")}
             </Flex>
           </Flex>
-          <Flex direction={`column`} align={"center"} pt={5}>
-            <Tooltip
-                label={t("DomainSubHead")}
-                px={16}
-                py={2}
-                withArrow
-                position={"left"}
-                c={"white"}
-                bg={"#dc3545"}
-                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-            >
-              <Button
-                  bg={"#dc3545"}
-                  size="md"
-                  pl={"12"}
-                  pr={"12"}
-                  variant={"light"}
-                  color={`black`}
-                  radius="xl"
-                  onClick={(e) => {
-                    navigate("/domain/sub-head");
-                  }}
-              >
-                <Flex direction={`column`} align={"center"}>
-                  <IconUsers size={16} color={"white"} />
-                </Flex>
-              </Button>
-            </Tooltip>
-            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
-              {t("Sub-Head")}
-            </Flex>
-          </Flex>
-          <Flex direction={`column`} align={"center"} pt={5}>
-            <Tooltip
-                label={t("DomainLedger")}
-                px={16}
-                py={2}
-                withArrow
-                position={"left"}
-                c={"white"}
-                bg={"#20c997"}
-                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-            >
-              <Button
-                  bg={"#20c997"}
-                  size="md"
-                  pl={"12"}
-                  pr={"12"}
-                  variant={"light"}
-                  color={`black`}
-                  radius="xl"
-                  onClick={(e) => {
-                    navigate("/domain/ledger");
-                  }}
-              >
-                <Flex direction={`column`} align={"center"}>
-                  <IconUsers size={16} color={"white"} />
-                </Flex>
-              </Button>
-            </Tooltip>
-            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
-              {t("Ledger")}
-            </Flex>
-          </Flex>
+
           <Flex direction={`column`} align={"center"} pt={5}>
             <Tooltip
                 label={t("SiteMap")}
