@@ -11,15 +11,12 @@ import { useOutletContext } from "react-router-dom";
 import VoucherTableInProgress from "./VoucherTableInProgress.jsx";
 import VoucherTableApprove from "./VoucherTableApprove.jsx";
 import VoucherTableArchive from "./VoucherTableArchive.jsx";
-function VoucherIndex() {
+import VoucherTable from "./VoucherTable.jsx";
+import _VoucherTable from "./voucher-forms/_VoucherTable.jsx";
+function VoucherIndex(props) {
   const { t, i18n } = useTranslation();
-  const dispatch = useDispatch();
-  const insertType = useSelector((state) => state.crudSlice.insertType);
-
-  const { configData } = getConfigData();
   const progress = getLoadingProgress();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 500;
 
   const [activeTab, setActiveTab] = useState("");
   useEffect(() => {
@@ -111,11 +108,18 @@ function VoucherIndex() {
                   </Tabs.Panel>
                   <Tabs.Panel value="VoucherEntry">
                     <Box bg={"white"}>
-                      <VoucherFormIndex
-                        currencySymbol={
-                          domainConfigData?.inventory_config?.currency?.symbol
-                        }
-                      />
+                      {props.type === 'index' && (
+                          <_VoucherTable
+                              currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
+                          />
+                      )}
+
+                      {props.type === 'create' && (
+                          <VoucherFormIndex
+                              currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
+                          />
+                      )}
+
                     </Box>
                   </Tabs.Panel>
                 </Tabs>

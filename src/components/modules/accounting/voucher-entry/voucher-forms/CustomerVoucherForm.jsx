@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useRef } from "react";
 import {
   Stack,
@@ -18,29 +15,32 @@ import { useOutletContext } from "react-router-dom";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
+
 import SelectForm from "../../../../form-builders/SelectForm";
 import InputNumberForm from "../../../../form-builders/InputNumberForm";
 import BankDrawer from "../../common/BankDrawer";
 
 export default function CustomerVoucherForm(props) {
-  // Props passed from parent
   const {
     ledgerHeadDropdownData,
     loadMyItemsFromStorage,
     mainLedgerHeadObject,
     activeVoucher,
+    ledgerHead,
+    setLedgerHead,
   } = props;
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
+
   const height = mainAreaHeight - 174;
 
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-  const [ledgerHead, setLedgerHead] = useState("");
   const [ledgerHeadObject, setLedgerHeadObject] = useState(null);
   const [bankDrawer, setBankDrawer] = useState(false);
   const [loadVoucher, setLoadVoucher] = useState(false);
+
   const amountInputRef = useRef(null);
 
   // Form
@@ -49,25 +49,31 @@ export default function CustomerVoucherForm(props) {
       amount: "",
     },
     validate: {
-      amount: (value) => (value ? null : "Amount is required"),
+      amount: (value) => (value ? null : t("AmountIsRequired")),
     },
   });
 
-  // Handle dropdown change
+  // Handle dropdown selection
   const handleLedgerHeadChange = (value) => {
-    const ledgerObject = activeVoucher?.ledger_account_head?.find(
-        (item) => item.id == value
-    );
+    const selected = activeVoucher?.ledger_account_head_secondary
+        ?.reduce((acc, group) => {
+          if (Array.isArray(group?.child_account_heads)) {
+            return [...acc, ...group.child_account_heads];
+          }
+          return acc;
+        }, [])
+        ?.find((x) => x.id == value);
+
     setLedgerHead(value);
-    setLedgerHeadObject(ledgerObject || null);
+    setLedgerHeadObject(selected || null);
   };
 
-  // Handle form submit
+  // Submit handler
   const handleSubmit = (values) => {
     if (!ledgerHead || !values.amount) {
       showNotification({
-        title: t("Validation Error"),
-        message: t("LedgerHead & Amount are required."),
+        title: t("ValidationError"),
+        message: t("LedgerHeadAmountarerequired."),
         color: "red",
       });
       return;
@@ -75,16 +81,17 @@ export default function CustomerVoucherForm(props) {
 
     if (!mainLedgerHeadObject) {
       showNotification({
-        title: t("Missing Entry"),
+        title: t("MissingEntry"),
         message: t("PleaseSelectCREntryFirst"),
         color: "red",
       });
       return;
     }
+
     handleAddProductByProductId("ledger", values.amount);
   };
 
-  // Add new item
+  // Add ledger entry (or update) in localStorage
   const handleAddProductByProductId = (addedType, amount) => {
     const cardProducts = localStorage.getItem("temp-voucher-entry");
     let myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
@@ -92,38 +99,31 @@ export default function CustomerVoucherForm(props) {
     const mode = activeVoucher?.mode === "credit" ? "debit" : "credit";
     const targetId = ledgerHead;
 
-    // Clone product list
+    // Clone data
     const updatedProducts = [...myCardProducts];
 
     // Check if the item already exists
     const existingIndex = updatedProducts.findIndex(
-        item => item.id === targetId && item.type === addedType
+        (item) => item.id === targetId && item.type === addedType
     );
 
-    // Update or add item
     if (existingIndex !== -1) {
-      if (mode === "debit") {
-        updatedProducts[existingIndex].debit = amount;
-        updatedProducts[existingIndex].credit = 0;
-      } else {
-        updatedProducts[existingIndex].credit = amount;
-        updatedProducts[existingIndex].debit = 0;
-      }
+      updatedProducts[existingIndex].debit = mode === "debit" ? amount : 0;
+      updatedProducts[existingIndex].credit = mode === "credit" ? amount : 0;
     } else {
-      const newItem = {
+      updatedProducts.push({
         id: targetId,
-        mode: mode,
+        mode,
         ledger_name: ledgerHeadObject?.display_name || "",
         account_head: ledgerHeadObject?.display_name || "",
         debit: mode === "debit" ? amount : 0,
         credit: mode === "credit" ? amount : 0,
-        type: addedType
-      };
-      updatedProducts.push(newItem);
+        type: addedType,
+      });
     }
 
-    // 🔄 Recalculate totals (excluding index 0 which we will rebalance)
-    const restItems = updatedProducts.slice(1); // all except first row
+    // ⚖ Auto-balance first row (index 0)
+    const restItems = updatedProducts.slice(1);
     const totals = restItems.reduce(
         (acc, item) => {
           acc.debit += Number(item.debit) || 0;
@@ -135,100 +135,96 @@ export default function CustomerVoucherForm(props) {
 
     const diff = totals.debit - totals.credit;
 
-    // ⚖️ Adjust the first row to balance totals
+    // Adjust first row
     if (updatedProducts.length > 0) {
       if (diff > 0) {
-        // More Debit → add to credit of first row
         updatedProducts[0].credit = diff;
         updatedProducts[0].debit = 0;
       } else if (diff < 0) {
-        // More Credit → add to debit of first row
         updatedProducts[0].debit = Math.abs(diff);
         updatedProducts[0].credit = 0;
       } else {
-        // Already balanced
         updatedProducts[0].debit = 0;
         updatedProducts[0].credit = 0;
       }
     }
 
-    // 💾 Save final data
     updateLocalStorageAndResetForm(updatedProducts, addedType);
   };
 
-  // Update localStorage and reset form
-  const updateLocalStorageAndResetForm = (addProducts, addedType) => {
-    localStorage.setItem("temp-voucher-entry", JSON.stringify(addProducts));
-    voucherForm.reset(); // clear amount
-    setLedgerHead(null); // clear ledger dropdown
-    setLedgerHeadObject(null); // reset selected object
-    loadMyItemsFromStorage(); // refresh data table via parent
+  // Final save
+  const updateLocalStorageAndResetForm = (data, type) => {
+    localStorage.setItem("temp-voucher-entry", JSON.stringify(data));
+    voucherForm.reset();
+    setLedgerHead(null);
+    setLedgerHeadObject(null);
+    loadMyItemsFromStorage();
   };
 
   return (
       <Box>
         <form id="voucherForm" onSubmit={voucherForm.onSubmit(handleSubmit)}>
-          <Box p={"xs"} pt={"0"} className={"borderRadiusAll"}>
+          <Box p="xs" pt={0} className="borderRadiusAll">
+            {/* Top label header */}
             <Box
-                pl={`xs`}
+                pl="xs"
                 pr={8}
-                pt={"6"}
-                pb={"6"}
-                mb={"4"}
-                mt={"xs"}
-                className={"boxBackground borderRadiusAll"}
+                pt={6}
+                pb={6}
+                mb={4}
+                mt="xs"
+                className="boxBackground borderRadiusAll"
             >
               <Grid>
                 <Grid.Col span={9}>
-                  <Title order={6} pl={"6"}>
+                  <Title order={6} pl={6}>
                     {t("AddLedgerHead")}
                   </Title>
                 </Grid.Col>
               </Grid>
             </Box>
 
-            <Box bg={"white"}>
-              <Box pl={"xs"} pr={"xs"} className={"borderRadiusAll"}>
-                <Grid columns={24}>
-                  <Grid.Col span={"auto"}>
-                    <ScrollArea
-                        h={height - 158}
-                        scrollbarSize={2}
-                        scrollbars="y"
-                        type="never"
-                        pb={"xs"}
-                    >
-                      <Box mt={"xs"}>
-                        <SelectForm
-                            tooltip={t("LedgerHead")}
-                            label=""
-                            placeholder={t("ChooseLedgerHead")}
-                            required
-                            nextField={"amount"}
-                            name="ledger_head"
-                            form={voucherForm}
-                            dropdownValue={ledgerHeadDropdownData}
-                            mt={8}
-                            id="ledger_head"
-                            searchable
-                            value={ledgerHead}
-                            changeValue={handleLedgerHeadChange}
-                        />
-                      </Box>
-                    </ScrollArea>
-                  </Grid.Col>
-                </Grid>
-              </Box>
+            <Box bg="white" pl="xs" pr="xs" className="borderRadiusAll">
+              <Grid columns={24}>
+                <Grid.Col span="auto">
+                  <ScrollArea
+                      h={height - 158}
+                      scrollbarSize={2}
+                      scrollbars="y"
+                      type="never"
+                      pb="xs"
+                  >
+                    <Box mt="xs">
+                      <SelectForm
+                          tooltip={t("LedgerHead")}
+                          label=""
+                          placeholder={t("ChooseLedgerHead")}
+                          required
+                          nextField="amount"
+                          name="ledger_head"
+                          form={voucherForm}
+                          dropdownValue={ledgerHeadDropdownData}
+                          mt={8}
+                          id="ledger_head"
+                          searchable
+                          value={ledgerHead}
+                          changeValue={handleLedgerHeadChange}
+                      />
+                    </Box>
+                  </ScrollArea>
+                </Grid.Col>
+              </Grid>
             </Box>
 
+            {/* Amount Entry and Add Button */}
             <Box
                 mt={4}
-                pl={`xs`}
+                pl="xs"
                 pr={8}
-                pt={"xs"}
-                pb={"6"}
-                mb={"4"}
-                className={"boxBackground borderRadiusAll"}
+                pt="xs"
+                pb={6}
+                mb={4}
+                className="boxBackground borderRadiusAll"
             >
               <Grid>
                 <Grid.Col span={8}>
@@ -237,13 +233,14 @@ export default function CustomerVoucherForm(props) {
                       label=""
                       placeholder={t("Amount")}
                       required
-                      nextField="EntityFormSubmit"
+                      nextField="voucherFormSubmit"
                       name="amount"
                       form={voucherForm}
                       id="amount"
                       ref={amountInputRef}
                   />
                 </Grid.Col>
+
                 <Grid.Col span={4}>
                   <Stack justify="flex-end" align="flex-end">
                     {!saveCreateLoading && isOnline && (
@@ -252,9 +249,8 @@ export default function CustomerVoucherForm(props) {
                             size="xs"
                             color="green.8"
                             type="submit"
-                            form="voucherForm"
-                            id="voucherFormSubmit"
                             leftSection={<IconDeviceFloppy size={16} />}
+                            id="voucherFormSubmit"
                         >
                           <Flex direction="column" gap={0}>
                             <Text fz={14} fw={400}>
@@ -270,7 +266,6 @@ export default function CustomerVoucherForm(props) {
           </Box>
         </form>
 
-        {/* Optional: Show bank modal interaction */}
         {bankDrawer && (
             <BankDrawer
                 bankDrawer={bankDrawer}

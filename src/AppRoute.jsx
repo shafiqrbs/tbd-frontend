@@ -563,9 +563,14 @@ function AppRoute() {
 
 				</Route>
 				<Route path="/accounting" element={<ProtectedModule modules={["accounting"]} />}>
+					<Route path="entry" element={
+						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+							<VoucherIndex type={'index'}/>
+						</ProtectedRoute>
+					} />
 					<Route path="voucher-entry" element={
 						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
-							<VoucherIndex />
+							<VoucherIndex type={'create'}/>
 						</ProtectedRoute>
 					} />
 					<Route path="ledger" element={
