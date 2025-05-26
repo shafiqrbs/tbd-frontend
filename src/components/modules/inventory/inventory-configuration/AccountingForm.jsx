@@ -737,7 +737,7 @@ function AccountingForm(props) {
                                 nextField={"voucher_stock_opening_id"}
                                 name={"account_zakat_id"}
                                 form={form}
-                                dropdownValue={accountDropdownData}
+                                dropdownValue={accountingLedgerDropdownData}
                                 id={"account_zakat_id"}
                                 searchable={true}
                                 value={accountZakatData}
