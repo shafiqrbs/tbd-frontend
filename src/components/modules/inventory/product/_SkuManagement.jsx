@@ -635,16 +635,16 @@ function _SkuManagement(props) {
                           </Grid.Col>
                           <Grid.Col span={12}>
                             <SelectForm
-                                tooltip={t("ChooseSize")}
-                                placeholder={t("ChooseSize")}
+                                tooltip={t("SelectBrand")}
+                                placeholder={t("SelectBrand")}
                                 name={"brand_id"}
                                 form={form}
-                                dropdownValue={sizeDropDown}
+                                dropdownValue={brandDropDown}
                                 mt={0}
                                 id={"brand_id"}
                                 searchable={true}
-                                value={sizeData}
-                                changeValue={setSizeData}
+                                value={brandData}
+                                changeValue={setBrandData}
                             />
                           </Grid.Col>
                         </Grid>
