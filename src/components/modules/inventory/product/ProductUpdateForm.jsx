@@ -116,7 +116,7 @@ function ProductUpdateForm(props) {
   const renderForm = () => {
     switch (activeTab) {
       case "updateProduct":
-        return <_UpdateProduct categoryDropdown={categoryDropdown} />;
+        return <_UpdateProduct categoryDropdown={categoryDropdown} product_config={product_config} />;
       case "skuManagement":
         return <_SkuManagement id={id} productConfig={product_config} />;
       case "productMeasurement":
