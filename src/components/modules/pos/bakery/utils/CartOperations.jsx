@@ -89,33 +89,40 @@ export const useCartOperations = ({
   );
 
   const handleDecrement = useCallback(
-    (productId) => {
-      const myCartProducts = getCartProducts();
+    async (productId) => {
+      let product;
+      if (!products) {
+        const storedProducts = localStorage.getItem("core-products");
+        const allProducts = storedProducts ? JSON.parse(storedProducts) : [];
+        product = allProducts.find((p) => p.id === productId);
+      } else {
+        product = products?.find((p) => p.id === productId);
+      }
+      const data = {
+        url: "inventory/pos/inline-update",
+        data: {
+          invoice_id: tableId,
+          field_name: "items",
+          value: {
+            ...product,
+            quantity: -1,
+          },
+        },
+      };
+      try {
+        const resultAction = await dispatch(storeEntityData(data));
 
-      const updatedProducts = myCartProducts
-        .map((item) => {
-          if (item.product_id === productId) {
-            const newQuantity = Math.max(0, item.quantity - 1);
-            return {
-              ...item,
-              quantity: newQuantity,
-              sub_total: newQuantity * item.sales_price,
-            };
-          }
-          return item;
-        })
-        .filter((item) => item.quantity > 0);
-
-      updateTableStatusIfNeeded(updatedProducts.length);
-      localStorage.setItem(getStorageKey(), JSON.stringify(updatedProducts));
-      setLoadCartProducts(true);
+        if (resultAction.payload?.status !== 200) {
+          showNotificationComponent(resultAction.payload?.message || "Error updating invoice", "red", "", true);
+        }
+      } catch (error) {
+        showNotificationComponent("Request failed. Please try again.", "red", "", true);
+        console.error("Error updating invoice:", error);
+      } finally {
+        setReloadInvoiceData(true);
+      }
     },
-    [
-      getStorageKey,
-      getCartProducts,
-      updateTableStatusIfNeeded,
-      setLoadCartProducts,
-    ]
+    [products, tableId, dispatch, setReloadInvoiceData]
   );
 
   const handleDelete = useCallback(
