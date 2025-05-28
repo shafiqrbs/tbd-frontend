@@ -455,12 +455,7 @@ export default function Invoice(props) {
             return
         }
 
-        if (!customerId) {
-            showNotificationComponent(t('ChooseCustomer'), 'red', '', true, 1000, true)
-            return
-        }
-
-        if (!invoiceData.payment) {
+        if (!invoiceData.payment && !isSplitPaymentActive) {
             showNotificationComponent(t('PaymentAmount'), 'red', '', true, 1000, true)
             return
         }
@@ -473,25 +468,7 @@ export default function Invoice(props) {
                     param: {}
                 }));
                 if (getIndexEntityData.fulfilled.match(resultAction)) {
-                    showNotificationComponent(t('SalesComplete'), 'blue', '', true, 1000, true)
-                    clearTableCustomer(tableId);
-                    setSalesByUser(null);
-                    setCustomerId(null);
-                    setTransactionModeId(null);
-                    setCurrentPaymentInput("");
-                    setSalesDiscountAmount(0);
-                    setSalesTotalAmount(0);
-                    setSalesTotalWithoutDiscountAmount(0);
-                    setSalesDueAmount(0);
-                    setReturnOrDueText("Due");
-                    setDiscountType("Percent");
-                    setCustomerObject({});
-                    updateTableStatus('Free');
-                    setReloadInvoiceData(true);
-                    setTableId(null);
-                    setIndexData(null);
-                    setInvoiceData(null);
-                    form.reset()
+                    resetAll();
                 } else {
                     console.error("Error fetching data:", resultAction);
                 }
@@ -508,6 +485,31 @@ export default function Invoice(props) {
         };
         fetchData();
     }
+
+    const resetAll = () => {
+        showNotificationComponent(t('SalesComplete'), 'blue', '', true, 1000, true)
+        clearTableCustomer(tableId);
+        setSalesByUser(null);
+        setCustomerId(null);
+        setTransactionModeId(null);
+        setCurrentPaymentInput("");
+        setSalesDiscountAmount(0);
+        setSalesTotalAmount(0);
+        setSalesTotalWithoutDiscountAmount(0);
+        setSalesDueAmount(0);
+        setReturnOrDueText("Due");
+        setDiscountType("Percent");
+        setCustomerObject({});
+        setAdditionalTableSelections({});
+        setChecked(false);
+        updateTableStatus('Free');
+        setReloadInvoiceData(true);
+        setTableId(null);
+        setIndexData(null);
+        setInvoiceData(null);
+        form.reset()
+    }
+
     return (
         <>
             <Box
