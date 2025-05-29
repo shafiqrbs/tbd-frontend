@@ -44,6 +44,9 @@ import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/g
 import PosForm from "./PosForm.jsx";
 import VatForm from "./VatForm.jsx";
 import getAccountingSubHeadDropdownData from "../../../global-hook/dropdown/getAccountingSubHeadDropdownData";
+import DomainIndex from "../../domain/domain/DomainIndex";
+import DomainForm from "../../domain/domain/DomainFrom";
+import DomainConfigForm from "./DomainConfigForm";
 
 function InventoryConfigarationForm() {
   const { t } = useTranslation();
@@ -53,7 +56,7 @@ function InventoryConfigarationForm() {
   const inventoryConfigData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
-  const [activeTab, setActiveTab] = useState("Accounting");
+  const [activeTab, setActiveTab] = useState("Domain");
 
   const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad);
 
@@ -115,6 +118,7 @@ function InventoryConfigarationForm() {
   let id = domainConfig?.id;
 
   const navItems = [
+    "Domain",
     "Inventory",
     "Product",
     "Sales",
@@ -125,7 +129,6 @@ function InventoryConfigarationForm() {
     "Requisition",
     "Accounting",
     "Production",
-    "Domain",
 
   ];
 
@@ -155,15 +158,16 @@ function InventoryConfigarationForm() {
 
   const renderForm = () => {
     switch (activeTab) {
+      case "Domain":
+        return (
+          <DomainConfigForm
+            height={height}
+          />
+        );
       case "Inventory":
         return (
           <InventoryForm
             height={height}
-            inventory_config={inventory_config}
-            id={id}
-            currencyList={currencyList}
-            countryList={countryList}
-            businessModelList={businessModelList}
           />
         );
       case "Product":
@@ -320,6 +324,7 @@ function InventoryConfigarationForm() {
                       <>
                         {isOnline &&
                           (activeTab === "Sales" ||
+                            activeTab === "Domain" ||
                             activeTab === "Purchase" ||
                             activeTab === "Requisition" ||
                             activeTab === "Accounting" ||
@@ -337,6 +342,10 @@ function InventoryConfigarationForm() {
                                 if (activeTab === "Sales") {
                                   document
                                     .getElementById("SalesFormSubmit")
+                                    .click();
+                                } else if (activeTab === "Domain") {
+                                  document
+                                    .getElementById("DomainFormSubmit")
                                     .click();
                                 } else if (activeTab === "Purchase") {
                                   document

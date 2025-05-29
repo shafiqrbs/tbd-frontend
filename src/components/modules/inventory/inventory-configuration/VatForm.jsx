@@ -148,7 +148,6 @@ function VatForm(props) {
     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
       <form onSubmit={form.onSubmit(handleVatFormSubmit)}>
         <Box pt={"xs"} pl={"xs"}>
-
           <Box mt={"xs"}>
             <Grid columns={24} gutter={{ base: 1 }}>
               <Grid.Col span={12} fz={"sm"} mt={8}>

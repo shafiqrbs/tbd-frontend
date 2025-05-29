@@ -246,7 +246,7 @@ function PosForm({ height,id }) {
             </Grid>
           </Box>
           <Box>
-            <InputCheckboxForm form={form} label={t("PosEnable")} field={'pos_print'}  name={'pos_print'} />
+            <InputCheckboxForm form={form} label={t("PosPrintEnable")} field={'pos_print'}  name={'pos_print'} />
           </Box>
           <Box>
             <InputCheckboxForm form={form} label={t("IsPOS")} field={'is_pos'}  name={'is_pos'} />

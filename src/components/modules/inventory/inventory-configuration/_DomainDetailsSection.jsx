@@ -17,15 +17,12 @@ export default function DomainDetailsSection({ domainConfig, height }) {
           className={"boxBackground borderRadiusAll"}
         >
           <Title order={6} pt={4}>
-            {t("SettingsDetails")}
+            {t("DomainDetails")}
           </Title>
         </Box>
         <Box className="borderRadiusAll" h={height}>
           <ScrollArea h={height} scrollbarSize={2}  classNames={scrollbar}>
               <Box p={'md'}>
-                <Box p={'xs'} mb={'xs'} ta="center" bg={'gray.1'}>
-                  <Title order={6} pt={'4'}>{t('DomainDetails')}</Title>
-                </Box>
                 {/* Basic Domain Info */}
                 <Grid columns={24}>
                   <Grid.Col span={9} align={"left"} fw={"300"} fz={"xs"}>
@@ -80,7 +77,7 @@ export default function DomainDetailsSection({ domainConfig, height }) {
                 {/* Product Configuration */}
                 {domainConfig?.inventory_config?.config_product && (
                     <>
-                      <Box p={'xs'} mb={'xs'} ta="center" bg={'gray.1'}>
+                      <Box ml={'-md'} pl={'md'} p={'xs'} mb={'xs'} ta="left" bg={'gray.1'}>
                         <Title order={6} pt={'4'}>{t('ProductConfiguration')}</Title>
                       </Box>
 
@@ -342,7 +339,7 @@ export default function DomainDetailsSection({ domainConfig, height }) {
                 {domainConfig?.inventory_config?.config_sales && (
                     <>
 
-                      <Box p={'xs'} mb={'xs'} ta="center" bg={'gray.1'}>
+                      <Box ml={'-md'} pl={'md'} p={'xs'} mb={'xs'} ta="left" bg={'gray.1'}>
                         <Title order={6} pt={'4'}>{t("SalesConfiguration")}</Title>
                       </Box>
 
@@ -533,7 +530,7 @@ export default function DomainDetailsSection({ domainConfig, height }) {
                 {domainConfig?.inventory_config?.config_purchase && (
                     <>
 
-                      <Box p={'xs'} mb={'xs'} ta="center" bg={'gray.1'}>
+                      <Box ml={'-md'} pl={'md'} p={'xs'} mb={'xs'} ta="left" bg={'gray.1'}>
                         <Title order={6} pt={'4'}>{t("PurchaseConfiguration")}</Title>
                       </Box>
                       <Grid columns={24}>
@@ -645,7 +642,7 @@ export default function DomainDetailsSection({ domainConfig, height }) {
                 {/* Production Configuration */}
                 {domainConfig?.production_config && (
                     <>
-                      <Box p={'xs'} mb={'xs'} ta="center" bg={'gray.1'}>
+                      <Box ml={'-md'} pl={'md'} p={'xs'} mb={'xs'} ta="left" bg={'gray.1'}>
                         <Title order={6} pt={'4'}>{t("ProductionConfiguration")}</Title>
                       </Box>
 
@@ -703,7 +700,7 @@ export default function DomainDetailsSection({ domainConfig, height }) {
                 {/* Discount Configuration */}
                 {domainConfig?.inventory_config?.config_discount && (
                     <>
-                      <Box p={'xs'} mb={'xs'} ta="center" bg={'gray.1'}>
+                      <Box ml={'-md'} pl={'md'} p={'xs'} mb={'xs'} ta="left" bg={'gray.1'}>
                         <Title order={6} pt={'4'}>{t("DiscountConfiguration")}</Title>
                       </Box>
                       <Grid columns={24}>
@@ -747,7 +744,7 @@ export default function DomainDetailsSection({ domainConfig, height }) {
                 {/* Accounting Configuration */}
                 {domainConfig?.account_config && (
                     <>
-                      <Box p={'xs'} mb={'xs'} ta="center" bg={'gray.1'}>
+                      <Box ml={'-md'} pl={'md'} p={'xs'} mb={'xs'} ta="left" bg={'gray.1'}>
                         <Title order={6} pt={'4'}>{t("AccountingConfiguration")}</Title>
                       </Box>
 

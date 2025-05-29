@@ -40,6 +40,9 @@ import classes from "../../../assets/css/FeaturesCards.module.css";
 import getConfigData from "../../global-hook/config-data/getConfigData.js";
 import pos from "../../../assets/images/pos/pos.png";
 import invoice from "../../../assets/images/pos/invoice.png";
+import voucher from "../../../assets/images/pos/voucher.png";
+import requisition from "../../../assets/images/pos/requisition.png";
+import production from "../../../assets/images/pos/production.png";
 import getDomainConfig from "../../global-hook/config-data/getDomainConfig.js";
 import getAccessControl from "../../global-hook/access_control/getAccessControl";
 
@@ -68,6 +71,8 @@ function MainDashboard(props) {
         return () => clearTimeout(timeoutId);
     }, [navigate]);
 
+    console.log(domainConfig);
+
     return (
         <>
             <Container fluid mt={"xs"}>
@@ -77,7 +82,7 @@ function MainDashboard(props) {
                             <Grid.Col span={6} >
                                 <Tooltip
                                     label={t("PointOfSales")} withArrow position="top-center"
-                                    bg={`red.4`}
+                                    bg={"#905a23"}
                                     px={16}
                                     py={2}
                                     c={'white'}
@@ -87,11 +92,11 @@ function MainDashboard(props) {
                                         bg={"#905a23"}
                                         h={60}
                                         radius="sm"
-                                        src={pos}
+                                        src={domainConfig.inventory_config.is_pos === 1 ?  pos : invoice}
                                         fit="cover"
                                         w="100%"
                                         onClick={() => {
-                                            navigate("/pos/bakery");
+                                            domainConfig.inventory_config.is_pos === 1 ?  navigate("/pos/bakery") :  navigate("/inventory/sales-invoice")
                                         }
                                         }
                                         style={{cursor: "pointer"}}
@@ -128,8 +133,8 @@ function MainDashboard(props) {
                                 <Grid gutter={{base: 2}}>
                                     <Grid.Col span={6} >
                                         <Tooltip
-                                            label={t("VoucherEntry")} withArrow position="top-center"
-                                            bg={`red.4`}
+                                            label={t("CreateNewVoucherEntry")} withArrow position="top-center"
+                                            bg={"#3d83d8"}
                                             px={16}
                                             py={2}
                                             c={'white'}
@@ -139,7 +144,7 @@ function MainDashboard(props) {
                                                 bg={"#3d83d8"}
                                                 h={60}
                                                 radius="sm"
-                                                src={invoice}
+                                                src={voucher}
                                                 fit="cover"
                                                 w="100%"
                                                 onClick={() => {
@@ -183,8 +188,8 @@ function MainDashboard(props) {
                                 <Grid gutter={{base: 2}}>
                                     <Grid.Col span={6} >
                                         <Tooltip
-                                            label={t("VoucherEntry")} withArrow position="top-center"
-                                            bg={`red.4`}
+                                            label={t("CreateNewRequisition")} withArrow position="top-center"
+                                            bg={"#8251dd"}
                                             px={16}
                                             py={2}
                                             c={'white'}
@@ -194,7 +199,7 @@ function MainDashboard(props) {
                                                 bg={"#8251dd"}
                                                 h={60}
                                                 radius="sm"
-                                                src={invoice}
+                                                src={requisition}
                                                 fit="cover"
                                                 w="100%"
                                                 onClick={() => {
@@ -235,8 +240,8 @@ function MainDashboard(props) {
                         <Grid gutter={{base: 2}}>
                             <Grid.Col span={6} >
                                 <Tooltip
-                                    label={t("VoucherEntry")} withArrow position="top-center"
-                                    bg={`red.4`}
+                                    label={t("ProductionsBatch")} withArrow position="top-center"
+                                    bg={"#75a54d"}
                                     px={16}
                                     py={2}
                                     c={'white'}
@@ -246,7 +251,7 @@ function MainDashboard(props) {
                                         bg={"#75a54d"}
                                         h={60}
                                         radius="sm"
-                                        src={invoice}
+                                        src={production}
                                         fit="cover"
                                         w="100%"
                                         onClick={() => {
