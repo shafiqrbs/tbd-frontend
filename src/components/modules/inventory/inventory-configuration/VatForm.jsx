@@ -35,50 +35,51 @@ function VatForm(props) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-  const {fetchDomainConfig} = getDomainConfig(false)
-
-  let id = domainConfigData?.id
-  let inventory_config = domainConfigData?.inventory_config?.config_vat
+  const {domainConfig,fetchDomainConfig} = getDomainConfig()
+  const id = domainConfig?.id;
+  let config_vat = domainConfig?.inventory_config?.config_vat
   const [vatModeData, setVatModeData] = useState(null);
   useEffect(() => {
-    setVatModeData(inventory_config?.vat_mode?.toString())
+    setVatModeData(config_vat?.vat_mode?.toString())
   }, [id]);
 
   const form = useForm({
     initialValues: {
-      vat_reg_no: inventory_config?.vat_reg_no || "",
-      vat_mode: inventory_config?.vat_mode || "",
-      vat_enable: inventory_config?.vat_enable || "",
-      vat_percent: inventory_config?.vat_percent || "",
-      vat_integration: inventory_config?.vat_integration || "",
-      ait_enable: inventory_config?.ait_enable || "",
-      ait_percent: inventory_config?.ait_percent || "",
-      zakat_enable: inventory_config?.zakat_enable || "",
-      zakat_percent: inventory_config?.zakat_percent || "",
-      hs_code_enable: inventory_config?.hs_code_enable || "",
-      sd_enable: inventory_config?.sd_enable || "",
-      sd_percent: inventory_config?.sd_percent || "",
+      vat_reg_no: config_vat?.vat_reg_no || "",
+      vat_mode: config_vat?.vat_mode || "",
+      vat_enable: config_vat?.vat_enable || "",
+      vat_percent: config_vat?.vat_percent || "",
+      vat_integration: config_vat?.vat_integration || "",
+      ait_enable: config_vat?.ait_enable || "",
+      ait_percent: config_vat?.ait_percent || "",
+      zakat_enable: config_vat?.zakat_enable || "",
+      zakat_percent: config_vat?.zakat_percent || "",
+      hs_code_enable: config_vat?.hs_code_enable || "",
+      sd_enable: config_vat?.sd_enable || "",
+      sd_percent: config_vat?.sd_percent || "",
     },
   });
 
   useEffect(() => {
-    if (inventory_config) {
+    if (config_vat) {
       form.setValues({
-        vat_reg_no: inventory_config?.vat_reg_no || "",
-        vat_mode: inventory_config?.vat_mode || "",
-        vat_enable: inventory_config?.vat_enable || 0,
-        vat_percent: inventory_config?.vat_percent || 0,
-        vat_integration: inventory_config?.vat_integration || 0,
-        ait_enable: inventory_config?.ait_enable || 0,
-        ait_percent: inventory_config?.ait_percent || 0,
-        zakat_enable: inventory_config?.zakat_enable ||0,
-        zakat_percent: inventory_config?.zakat_percent ||0,
-        hs_code_enable: inventory_config?.hs_code_enable || 0,
-        sd_enable: inventory_config?.sd_enable || 0,
-        sd_percent: inventory_config?.sd_percent ||0,
+        vat_reg_no: config_vat?.vat_reg_no || "",
+        vat_mode: config_vat?.vat_mode || "",
+        vat_enable: config_vat?.vat_enable || 0,
+        vat_percent: config_vat?.vat_percent || 0,
+        vat_integration: config_vat?.vat_integration || 0,
+        ait_enable: config_vat?.ait_enable || 0,
+        ait_percent: config_vat?.ait_percent || 0,
+        zakat_enable: config_vat?.zakat_enable ||0,
+        zakat_percent: config_vat?.zakat_percent ||0,
+        hs_code_enable: config_vat?.hs_code_enable || 0,
+        sd_enable: config_vat?.sd_enable || 0,
+        sd_percent: config_vat?.sd_percent ||0,
       });
     }
-  }, [dispatch, inventory_config]);
+  }, [dispatch, config_vat]);
+
+  console.log(config_vat);
 
   const handleVatFormSubmit = (values) => {
     dispatch(setValidationData(false));
@@ -274,7 +275,6 @@ function VatForm(props) {
                     tooltip={t("EnterZAKATPercent")}
                     placeholder={t("00.00")}
                     required={false}
-                    nextField={"address"}
                     name={"zakat_percent"}
                     form={form}
                     id={"zakat_percent"}

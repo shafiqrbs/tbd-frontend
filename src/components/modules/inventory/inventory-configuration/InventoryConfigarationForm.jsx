@@ -56,7 +56,7 @@ function InventoryConfigarationForm() {
   const inventoryConfigData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
-  const [activeTab, setActiveTab] = useState("Domain");
+  const [activeTab, setActiveTab] = useState("Vat");
 
   const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad);
 
@@ -101,9 +101,8 @@ function InventoryConfigarationForm() {
   let accountDropdownData = getAccountingSubHeadDropdownData();
   let accountingLedgerDropdownData = getAccountingLedgerDropdownData();
   let voucherDropdownData = getVoucherDropdownData();
-  let currencyList = getCurrencyDropdownData();
-  let countryList = getCountryDropdownData();
-  let businessModelList = getSettingBusinessModelDropdownData();
+
+
   const {domainConfig,fetchDomainConfig} = getDomainConfig()
   // const domainConfig = JSON.parse(localStorage.getItem('domain-config-data'))
 
@@ -244,7 +243,6 @@ function InventoryConfigarationForm() {
         return (
           <VatForm
             height={height}
-            domainConfig={domainConfig}
           />
         );
       default:
