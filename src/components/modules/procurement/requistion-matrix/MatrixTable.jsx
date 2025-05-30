@@ -144,7 +144,7 @@ export default function MatrixTable(props) {
                 showNotificationComponent(resultAction.payload.message, 'red', true, 1000, true)
             } else if (storeEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
-                    setFetching(true)
+                    // setFetching(true)
                     // showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
                 } else {
                     showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
