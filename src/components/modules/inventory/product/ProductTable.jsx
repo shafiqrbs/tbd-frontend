@@ -223,47 +223,18 @@ function ProductTable({categoryDropdown}) {
                                     .map((img) => `${img}`);
 
                                 return (
-                                    <>
-                                        <Image
-                                            mih={50}
-                                            mah={50}
-                                            fit="contain"
-                                            src={
-                                                import.meta.env.VITE_IMAGE_GATEWAY_URL+'/storage/'+images[0] ||
-                                                `https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(item.product_name)}`
-                                            }
-                                            style={{cursor: "pointer"}}
-                                            onClick={() => setOpened(true)}
-                                        />
-                                        <Modal
-                                            opened={opened}
-                                            onClose={() => setOpened(false)}
-                                            size="lg"
-                                            centered
-                                            styles={{content: {overflow: "hidden"}}}
-                                        >
-                                            <Carousel withIndicators height={700} onMouseEnter={autoplay.current.stop}
-                                                      onMouseLeave={autoplay.current.reset}>
-                                                {images.map((img, index) => (
-                                                    <Carousel.Slide key={index}>
-                                                        <div className="centered-slide">
-                                                            <Image
-                                                                src={import.meta.env.VITE_IMAGE_GATEWAY_URL+'/storage/'+img}
-                                                                fit="contain"
-                                                                style={{
-                                                                    transition: "transform 0.3s ease-in-out",
-                                                                    maxWidth: "100%",
-                                                                    maxHeight: "100%",
-                                                                }}
-                                                                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
-                                                                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                                                            />
-                                                        </div>
-                                                    </Carousel.Slide>
-                                                ))}
-                                            </Carousel>
-                                        </Modal>
-                                    </>
+                                    images && images[0] &&
+                                    <Image
+                                        mih={50}
+                                        mah={50}
+                                        fit="contain"
+                                        src={
+                                            import.meta.env.VITE_IMAGE_GATEWAY_URL + '/storage/' + images[0]
+                                        }
+                                        style={{cursor: "pointer"}}
+                                        onClick={() => setOpened(true)}
+                                    />
+
                                 );
                             },
                         },

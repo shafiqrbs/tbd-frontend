@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import {
   getIndexEntityData,
   setFetching,
-} from "../../../../store/production/crudSlice.js";
+} from "../../../../store/core/crudSlice.js";
 import tableCss from "../../../../assets/css/Table.module.css";
 import __StockSearch from "./__StockSearch.jsx";
 import { setDeleteMessage } from "../../../../store/inventory/crudSlice.js";
@@ -52,7 +52,8 @@ function StockTable(props) {
   const perPage = 50;
   const [page, setPage] = useState(1);
 
-  const fetching = useSelector((state) => state.crudSlice.fetching);
+  // const fetching = useSelector((state) => state.crudSlice.fetching);
+  const [fetching, setFetching] = useState(true);
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
   const [indexData, setIndexData] = useState([]);
   const productFilterData = useSelector(
@@ -111,7 +112,7 @@ function StockTable(props) {
           console.error("Error:", resultAction);
         } else if (getIndexEntityData.fulfilled.match(resultAction)) {
           setIndexData(resultAction.payload);
-          setFetching(false);
+          setFetching(false)
         }
       } catch (err) {
         console.error("Unexpected error:", err);
@@ -120,6 +121,7 @@ function StockTable(props) {
 
     fetchData();
   }, [fetching, downloadStockXLS, searchKeyword, productFilterData, page]);
+
   useEffect(() => {
     dispatch(setDeleteMessage(""));
     if (entityDataDelete === "success") {
@@ -133,7 +135,7 @@ function StockTable(props) {
       });
 
       setTimeout(() => {
-        dispatch(setFetching(true));
+        setFetching(true)
       }, 700);
     }
   }, [entityDataDelete]);
@@ -287,9 +289,7 @@ function StockTable(props) {
                       src={
                         images.length > 0
                           ? images[0]
-                          : `https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
-                              item.product_name
-                            )}`
+                          : ''
                       }
                       style={{ cursor: "pointer" }}
                       onClick={() => setOpened(true)}
@@ -524,7 +524,7 @@ function StockTable(props) {
           page={page}
           onPageChange={(p) => {
             setPage(p);
-            dispatch(setFetching(true));
+            setFetching(true)
           }}
           loaderSize="xs"
           loaderColor="grape"
