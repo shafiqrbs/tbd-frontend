@@ -16,23 +16,25 @@ import { setFormLoading } from "../../../../store/inventory/crudSlice";
 import DatePickerForm from "../../../form-builders/DatePicker.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+import getAccountingSubHeadDropdownData from "../../../global-hook/dropdown/getAccountingSubHeadDropdownData";
+import getAccountingLedgerDropdownData from "../../../global-hook/dropdown/getAccountingLedgerDropdownData";
+import getVoucherDropdownData from "../../../global-hook/dropdown/getVoucherDropdownData";
 
 function AccountingForm(props) {
   const {
-    accountDropdownData,
-    accountingLedgerDropdownData,
-    voucherDropdownData,
     height,
-    account_config,
-    id,
   } = props;
-
-  console.log(voucherDropdownData)
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-  const {fetchDomainConfig} = getDomainConfig(false)
+  const {domainConfig,fetchDomainConfig} = getDomainConfig()
+    const id = domainConfig?.id;
+    const account_config = domainConfig?.account_config;
+
+    let accountDropdownData = getAccountingSubHeadDropdownData();
+    let accountingLedgerDropdownData = getAccountingLedgerDropdownData();
+    let voucherDropdownData = getVoucherDropdownData();
 
   // State variables for each dropdown
   const [accountCapitalData, setAccountCapitalData] = useState(null);
@@ -62,6 +64,7 @@ function AccountingForm(props) {
   const [voucherStockReconciliationData, setVoucherStockReconciliationData] = useState(null);
 
   useEffect(() => {
+
     setAccountCapitalData(account_config?.capital_investment_id?.toString());
     setAccountBankData(account_config?.account_bank_id?.toString());
     setAccountCashData(account_config?.account_cash_id?.toString());
@@ -546,7 +549,7 @@ function AccountingForm(props) {
                                 nextField={"account_purchase_discount_id"}
                                 name={"account_purchase_id"}
                                 form={form}
-                                dropdownValue={accountDropdownData}
+                                dropdownValue={accountingLedgerDropdownData}
                                 id={"account_purchase_id"}
                                 searchable={true}
                                 value={accountPurchaseData}
@@ -570,7 +573,7 @@ function AccountingForm(props) {
                                 nextField={"account_sales_id"}
                                 name={"account_purchase_discount_id"}
                                 form={form}
-                                dropdownValue={accountDropdownData}
+                                dropdownValue={accountingLedgerDropdownData}
                                 id={"account_purchase_discount_id"}
                                 searchable={true}
                                 value={accountPurchaseDiscountData}
@@ -594,7 +597,7 @@ function AccountingForm(props) {
                                 nextField={"account_sales_discount_id"}
                                 name={"account_sales_id"}
                                 form={form}
-                                dropdownValue={accountDropdownData}
+                                dropdownValue={accountingLedgerDropdownData}
                                 id={"account_sales_id"}
                                 searchable={true}
                                 value={accountSalesData}
@@ -617,7 +620,7 @@ function AccountingForm(props) {
                                 nextField={"account_vat_id"}
                                 name={"account_sales_discount_id"}
                                 form={form}
-                                dropdownValue={accountDropdownData}
+                                dropdownValue={accountingLedgerDropdownData}
                                 id={"account_sales_discount_id"}
                                 searchable={true}
                                 value={accountSalesDiscountData}

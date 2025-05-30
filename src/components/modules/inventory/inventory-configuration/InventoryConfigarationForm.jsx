@@ -38,9 +38,6 @@ import InventoryForm from "./InventoryForm.jsx";
 import getAccountingDropdownData from "../../../global-hook/dropdown/getAccountingSubHeadDropdownData.jsx";
 import getAccountingLedgerDropdownData from "../../../global-hook/dropdown/getAccountingLedgerDropdownData.jsx";
 import getVoucherDropdownData from "../../../global-hook/dropdown/getVoucherDropdownData.jsx";
-import getCurrencyDropdownData from "../../../global-hook/dropdown/getCurrencyDropdownData.js";
-import getCountryDropdownData from "../../../global-hook/dropdown/getCountryDropdownData.js";
-import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData.js";
 import PosForm from "./PosForm.jsx";
 import VatForm from "./VatForm.jsx";
 import getAccountingSubHeadDropdownData from "../../../global-hook/dropdown/getAccountingSubHeadDropdownData";
@@ -56,7 +53,7 @@ function InventoryConfigarationForm() {
   const inventoryConfigData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
-  const [activeTab, setActiveTab] = useState("Vat");
+  const [activeTab, setActiveTab] = useState("Accounting");
 
   const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad);
 
@@ -96,11 +93,6 @@ function InventoryConfigarationForm() {
     dispatch(coreSettingDropdown(value));
     dispatch(setDropdownLoad(false));
   }, [dropdownLoad]);
-
-  // let accountDropdownData = getAccountingDropdownData();
-  let accountDropdownData = getAccountingSubHeadDropdownData();
-  let accountingLedgerDropdownData = getAccountingLedgerDropdownData();
-  let voucherDropdownData = getVoucherDropdownData();
 
 
   const {domainConfig,fetchDomainConfig} = getDomainConfig()
@@ -208,11 +200,6 @@ function InventoryConfigarationForm() {
         return (
           <AccountingForm
             height={height}
-            account_config={account_config}
-            id={id}
-            accountDropdownData={accountDropdownData}
-            accountingLedgerDropdownData={accountingLedgerDropdownData}
-            voucherDropdownData={voucherDropdownData}
           />
         );
       case "Production":

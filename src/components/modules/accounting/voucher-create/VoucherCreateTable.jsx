@@ -45,6 +45,7 @@ function VoucherCreateTable(props) {
 
   const [switchEnable, setSwitchEnable] = useState({});
 
+
   const handleSwitch = (event, item) => {
     setSwitchEnable((prev) => ({ ...prev, [item.id]: true }));
     // const value = {
@@ -175,6 +176,13 @@ function VoucherCreateTable(props) {
                       >
                         {t("Edit")}
                       </Menu.Item>
+                      <Menu.Item
+                          onClick={() => {
+                            setVoucherCreateViewDrawer(true)
+                          }}
+                      >
+                        {t("ManageHead")}
+                      </Menu.Item>
                       {data.is_private !== 1 &&(
                           <>
                       <Menu.Item
@@ -264,6 +272,7 @@ function VoucherCreateTable(props) {
       {voucherCrateViewDrawer &&
                 <_VoucherCreateViewDrawer voucherCrateViewDrawer={voucherCrateViewDrawer} setVoucherCreateViewDrawer={setVoucherCreateViewDrawer} />
             }
+
     </>
   );
 }

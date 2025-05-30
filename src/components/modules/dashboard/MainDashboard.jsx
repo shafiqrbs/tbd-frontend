@@ -76,12 +76,15 @@ function MainDashboard(props) {
     return (
         <>
             <Container fluid mt={"xs"}>
-                <SimpleGrid cols={{base: 1, md: 4}} spacing="xs" mb={"xs"}>
+                {domainConfig && domainConfig.id === 1 &&(
+                    <SimpleGrid cols={{base: 1, md: 4}} spacing="xs" mb={"xs"}>
                     <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                        {
+                            userRole && userRole.length > 0 && (userRole.includes("role_domain")) && (
                         <Grid gutter={{base: 2}}>
-                            <Grid.Col span={6} >
+                            <Grid.Col span={12} >
                                 <Tooltip
-                                    label={t("PointOfSales")} withArrow position="top-center"
+                                    label={t("Domain")} withArrow position="top-center"
                                     bg={"#905a23"}
                                     px={16}
                                     py={2}
@@ -92,46 +95,23 @@ function MainDashboard(props) {
                                         bg={"#905a23"}
                                         h={60}
                                         radius="sm"
-                                        src={domainConfig?.inventory_config?.is_pos === 1 ?  pos : invoice}
+                                        src={invoice}
                                         fit="cover"
                                         w="100%"
-                                        onClick={() => {
-                                            domainConfig.inventory_config.is_pos === 1 ?  navigate("/pos/bakery") :  navigate("/inventory/sales-invoice")
-                                        }
+                                        onClick={() => { navigate("/domain") }
                                         }
                                         style={{cursor: "pointer"}}
                                     />
                                 </Tooltip>
                             </Grid.Col>
-                            <Grid.Col span={"6"}>
-                                <Title order={4} align="center" mt={0} mb={0} >
-                                    {t("Sales")}
-                                </Title>
-                                <Divider my={5}/>
-                                <Grid columns={18} >
-                                    <Grid.Col span={8}>
-                                        <Title order={5} align="right" mt={0} mb={0} >
-                                        {configData?.currency?.symbol} 0.00
-                                        </Title>
-                                    </Grid.Col>
-                                    <Grid.Col span={2} >
-                                    <Box style={{border: "1px solid #e0e0e0", height: "100%", width: "2px"}}></Box>
-                                    </Grid.Col>
-                                    <Grid.Col span={8}>
-                                        <Title order={5} align="left" mt={0} mb={0} >
-                                            0
-                                        </Title>
-                                    </Grid.Col>
-                                </Grid>
-                            </Grid.Col>
                         </Grid>
+                            )}
                     </Card>
-                    
                     {
-                        userRole && userRole.length > 0 && (userRole.includes("role_accounting") || userRole.includes("role_domain")) && (
+                        userRole && userRole.length > 0 && (userRole.includes("role_domain")) && (
                             <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                 <Grid gutter={{base: 2}}>
-                                    <Grid.Col span={6} >
+                                    <Grid.Col span={12} >
                                         <Tooltip
                                             label={t("CreateNewVoucherEntry")} withArrow position="top-center"
                                             bg={"#3d83d8"}
@@ -148,45 +128,25 @@ function MainDashboard(props) {
                                                 fit="cover"
                                                 w="100%"
                                                 onClick={() => {
-                                                    navigate("/accounting/voucher-entry");
+                                                    navigate("/domain/user");
                                                 }
                                                 }
                                                 style={{cursor: "pointer"}}
                                             />
                                         </Tooltip>
                                     </Grid.Col>
-                                    <Grid.Col span={"6"}>
-                                        <Title order={4} align="center" mt={0} mb={0} >
-                                            {t("VoucherEntry")}
-                                        </Title>
-                                        <Divider my={5}/>
-                                        <Grid columns={18} >
-                                            <Grid.Col span={8}>
-                                                <Title order={5} align="right" mt={0} mb={0} >
-                                                    {configData?.currency?.symbol} 0.00
-                                                </Title>
-                                            </Grid.Col>
-                                            <Grid.Col span={2} >
-                                                <Box style={{border: "1px solid #e0e0e0", height: "100%", width: "2px"}}></Box>
-                                            </Grid.Col>
-                                            <Grid.Col span={8}>
-                                                <Title order={5} align="left" mt={0} mb={0} >
-                                                    0
-                                                </Title>
-                                            </Grid.Col>
-                                        </Grid>
-                                    </Grid.Col>
+
                                 </Grid>
                             </Card>
                         )
                     }
                     {}
                     {
-                        ["role_procurement","role_domain"].some((value) => userRole.includes(value)) &&
+                        ["role_domain"].some((value) => userRole.includes(value)) &&
                         (
                             <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                 <Grid gutter={{base: 2}}>
-                                    <Grid.Col span={6} >
+                                    <Grid.Col span={12} >
                                         <Tooltip
                                             label={t("CreateNewRequisition")} withArrow position="top-center"
                                             bg={"#8251dd"}
@@ -203,44 +163,24 @@ function MainDashboard(props) {
                                                 fit="cover"
                                                 w="100%"
                                                 onClick={() => {
-                                                    navigate("/procurement/new-requisition");
+                                                    navigate("/sitemap");
                                                 }
                                                 }
                                                 style={{cursor: "pointer"}}
                                             />
                                         </Tooltip>
                                     </Grid.Col>
-                                    <Grid.Col span={"6"}>
-                                        <Title order={4} align="center" mt={0} mb={0} >
-                                            {t("Requisition")}
-                                        </Title>
-                                        <Divider my={5}/>
-                                        <Grid columns={18} >
-                                            <Grid.Col span={8}>
-                                                <Title order={5} align="right" mt={0} mb={0} >
-                                                    {configData?.currency?.symbol} 0.00
-                                                </Title>
-                                            </Grid.Col>
-                                            <Grid.Col span={2} >
-                                                <Box style={{border: "1px solid #e0e0e0", height: "100%", width: "2px"}}></Box>
-                                            </Grid.Col>
-                                            <Grid.Col span={8}>
-                                                <Title order={5} align="left" mt={0} mb={0} >
-                                                    0
-                                                </Title>
-                                            </Grid.Col>
-                                        </Grid>
-                                    </Grid.Col>
+
                                 </Grid>
                         </Card>
                         )
                     }
-                    {["role_inventory","role_domain"].some((value) => userRole.includes(value)) && (
+                    {["role_domain"].some((value) => userRole.includes(value)) && (
                         <Card shadow="md" radius="md" className={classes.card} padding="lg">
                         <Grid gutter={{base: 2}}>
-                            <Grid.Col span={6} >
+                            <Grid.Col span={12} >
                                 <Tooltip
-                                    label={t("ProductionsBatch")} withArrow position="top-center"
+                                    label={t("DomainHead")} withArrow position="top-center"
                                     bg={"#75a54d"}
                                     px={16}
                                     py={2}
@@ -255,39 +195,234 @@ function MainDashboard(props) {
                                         fit="cover"
                                         w="100%"
                                         onClick={() => {
-                                            navigate("/production/batch");
+                                            navigate("/domain/head");
                                         }
                                         }
                                         style={{cursor: "pointer"}}
                                     />
                                 </Tooltip>
                             </Grid.Col>
-                            <Grid.Col span={"6"}>
-                                <Title order={4} align="center" mt={0} mb={0} >
-                                    {t("Production")}
-                                </Title>
-                                <Divider my={5}/>
-                                <Grid columns={18} >
-                                    <Grid.Col span={8}>
-                                        <Title order={5} align="right" mt={0} mb={0} >
-                                            {configData?.currency?.symbol} 0.00
-                                        </Title>
-                                    </Grid.Col>
-                                    <Grid.Col span={2} >
-                                        <Box style={{border: "1px solid #e0e0e0", height: "100%", width: "2px"}}>&nbsp;</Box>
-                                    </Grid.Col>
-                                    <Grid.Col span={8}>
-                                        <Title order={5} align="left" mt={0} mb={0} >
-                                            0
-                                        </Title>
-                                    </Grid.Col>
-                                </Grid>
-                            </Grid.Col>
+
                         </Grid>
                     </Card>
                     )}
                     
                 </SimpleGrid>
+                )}
+                {domainConfig && domainConfig.id !== 1 &&(
+                    <SimpleGrid cols={{base: 1, md: 4}} spacing="xs" mb={"xs"}>
+                        <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                            <Grid gutter={{base: 2}}>
+                                <Grid.Col span={6} >
+                                    <Tooltip
+                                        label={t("PointOfSales")} withArrow position="top-center"
+                                        bg={"#905a23"}
+                                        px={16}
+                                        py={2}
+                                        c={'white'}
+                                        offset={2}
+                                        transitionProps={{ transition: "pop-bottom-left", duration: 500 }}>
+                                        <Image
+                                            bg={"#905a23"}
+                                            h={60}
+                                            radius="sm"
+                                            src={domainConfig?.inventory_config?.is_pos === 1 ?  pos : invoice}
+                                            fit="cover"
+                                            w="100%"
+                                            onClick={() => {
+                                                domainConfig.inventory_config.is_pos === 1 ?  navigate("/pos/bakery") :  navigate("/inventory/sales-invoice")
+                                            }
+                                            }
+                                            style={{cursor: "pointer"}}
+                                        />
+                                    </Tooltip>
+                                </Grid.Col>
+                                <Grid.Col span={"6"}>
+                                    <Title order={4} align="center" mt={0} mb={0} >
+                                        {t("Sales")}
+                                    </Title>
+                                    <Divider my={5}/>
+                                    <Grid columns={18} >
+                                        <Grid.Col span={8}>
+                                            <Title order={5} align="right" mt={0} mb={0} >
+                                                {configData?.currency?.symbol} 0.00
+                                            </Title>
+                                        </Grid.Col>
+                                        <Grid.Col span={2} >
+                                            <Box style={{border: "1px solid #e0e0e0", height: "100%", width: "2px"}}></Box>
+                                        </Grid.Col>
+                                        <Grid.Col span={8}>
+                                            <Title order={5} align="left" mt={0} mb={0} >
+                                                0
+                                            </Title>
+                                        </Grid.Col>
+                                    </Grid>
+                                </Grid.Col>
+                            </Grid>
+                        </Card>
+
+                        {
+                            userRole && userRole.length > 0 && (userRole.includes("role_accounting") || userRole.includes("role_domain")) && (
+                                <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                                    <Grid gutter={{base: 2}}>
+                                        <Grid.Col span={6} >
+                                            <Tooltip
+                                                label={t("CreateNewVoucherEntry")} withArrow position="top-center"
+                                                bg={"#3d83d8"}
+                                                px={16}
+                                                py={2}
+                                                c={'white'}
+                                                offset={2}
+                                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}>
+                                                <Image
+                                                    bg={"#3d83d8"}
+                                                    h={60}
+                                                    radius="sm"
+                                                    src={voucher}
+                                                    fit="cover"
+                                                    w="100%"
+                                                    onClick={() => {
+                                                        navigate("/accounting/voucher-entry");
+                                                    }
+                                                    }
+                                                    style={{cursor: "pointer"}}
+                                                />
+                                            </Tooltip>
+                                        </Grid.Col>
+                                        <Grid.Col span={"6"}>
+                                            <Title order={4} align="center" mt={0} mb={0} >
+                                                {t("VoucherEntry")}
+                                            </Title>
+                                            <Divider my={5}/>
+                                            <Grid columns={18} >
+                                                <Grid.Col span={8}>
+                                                    <Title order={5} align="right" mt={0} mb={0} >
+                                                        {configData?.currency?.symbol} 0.00
+                                                    </Title>
+                                                </Grid.Col>
+                                                <Grid.Col span={2} >
+                                                    <Box style={{border: "1px solid #e0e0e0", height: "100%", width: "2px"}}></Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={8}>
+                                                    <Title order={5} align="left" mt={0} mb={0} >
+                                                        0
+                                                    </Title>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Grid.Col>
+                                    </Grid>
+                                </Card>
+                            )
+                        }
+                        {}
+                        {
+                            ["role_procurement","role_domain"].some((value) => userRole.includes(value)) &&
+                            (
+                                <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                                    <Grid gutter={{base: 2}}>
+                                        <Grid.Col span={6} >
+                                            <Tooltip
+                                                label={t("CreateNewRequisition")} withArrow position="top-center"
+                                                bg={"#8251dd"}
+                                                px={16}
+                                                py={2}
+                                                c={'white'}
+                                                offset={2}
+                                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}>
+                                                <Image
+                                                    bg={"#8251dd"}
+                                                    h={60}
+                                                    radius="sm"
+                                                    src={requisition}
+                                                    fit="cover"
+                                                    w="100%"
+                                                    onClick={() => {
+                                                        navigate("/procurement/new-requisition");
+                                                    }
+                                                    }
+                                                    style={{cursor: "pointer"}}
+                                                />
+                                            </Tooltip>
+                                        </Grid.Col>
+                                        <Grid.Col span={"6"}>
+                                            <Title order={4} align="center" mt={0} mb={0} >
+                                                {t("Requisition")}
+                                            </Title>
+                                            <Divider my={5}/>
+                                            <Grid columns={18} >
+                                                <Grid.Col span={8}>
+                                                    <Title order={5} align="right" mt={0} mb={0} >
+                                                        {configData?.currency?.symbol} 0.00
+                                                    </Title>
+                                                </Grid.Col>
+                                                <Grid.Col span={2} >
+                                                    <Box style={{border: "1px solid #e0e0e0", height: "100%", width: "2px"}}></Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={8}>
+                                                    <Title order={5} align="left" mt={0} mb={0} >
+                                                        0
+                                                    </Title>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Grid.Col>
+                                    </Grid>
+                                </Card>
+                            )
+                        }
+                        {["role_inventory","role_domain"].some((value) => userRole.includes(value)) && (
+                            <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                                <Grid gutter={{base: 2}}>
+                                    <Grid.Col span={6} >
+                                        <Tooltip
+                                            label={t("ProductionsBatch")} withArrow position="top-center"
+                                            bg={"#75a54d"}
+                                            px={16}
+                                            py={2}
+                                            c={'white'}
+                                            offset={2}
+                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}>
+                                            <Image
+                                                bg={"#75a54d"}
+                                                h={60}
+                                                radius="sm"
+                                                src={production}
+                                                fit="cover"
+                                                w="100%"
+                                                onClick={() => {
+                                                    navigate("/production/batch");
+                                                }
+                                                }
+                                                style={{cursor: "pointer"}}
+                                            />
+                                        </Tooltip>
+                                    </Grid.Col>
+                                    <Grid.Col span={"6"}>
+                                        <Title order={4} align="center" mt={0} mb={0} >
+                                            {t("Production")}
+                                        </Title>
+                                        <Divider my={5}/>
+                                        <Grid columns={18} >
+                                            <Grid.Col span={8}>
+                                                <Title order={5} align="right" mt={0} mb={0} >
+                                                    {configData?.currency?.symbol} 0.00
+                                                </Title>
+                                            </Grid.Col>
+                                            <Grid.Col span={2} >
+                                                <Box style={{border: "1px solid #e0e0e0", height: "100%", width: "2px"}}>&nbsp;</Box>
+                                            </Grid.Col>
+                                            <Grid.Col span={8}>
+                                                <Title order={5} align="left" mt={0} mb={0} >
+                                                    0
+                                                </Title>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Grid.Col>
+                                </Grid>
+                            </Card>
+                        )}
+
+                    </SimpleGrid>
+                )}
                 <ScrollArea h={height} scrollbarSize={2} type="never">
                     <SimpleGrid cols={{base: 1, md: 4}} spacing="xs">
                         {
