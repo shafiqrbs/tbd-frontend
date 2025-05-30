@@ -92,7 +92,7 @@ function MainDashboard(props) {
                                         bg={"#905a23"}
                                         h={60}
                                         radius="sm"
-                                        src={domainConfig.inventory_config.is_pos === 1 ?  pos : invoice}
+                                        src={domainConfig?.inventory_config?.is_pos === 1 ?  pos : invoice}
                                         fit="cover"
                                         w="100%"
                                         onClick={() => {
@@ -274,7 +274,7 @@ function MainDashboard(props) {
                                         </Title>
                                     </Grid.Col>
                                     <Grid.Col span={2} >
-                                        <Box style={{border: "1px solid #e0e0e0", height: "100%", width: "2px"}}></Box>
+                                        <Box style={{border: "1px solid #e0e0e0", height: "100%", width: "2px"}}>&nbsp;</Box>
                                     </Grid.Col>
                                     <Grid.Col span={8}>
                                         <Title order={5} align="left" mt={0} mb={0} >

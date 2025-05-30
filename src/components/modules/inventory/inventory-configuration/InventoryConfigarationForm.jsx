@@ -10,7 +10,7 @@ import {
   Text,
   Title,
   Stack,
-  Card,
+  Card, SimpleGrid,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconCheck, IconDeviceFloppy, IconX } from "@tabler/icons-react";
