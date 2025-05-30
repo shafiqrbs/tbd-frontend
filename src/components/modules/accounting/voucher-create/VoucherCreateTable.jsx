@@ -29,11 +29,12 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch.jsx";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
-import _VoucherCreateViewDrawer from "./_VoucherCreateViewDrawer.jsx";
+import _VoucherManageHeadDrawer from "./_VoucherManageHeadDrawer.jsx";
 
 function VoucherCreateTable(props) {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 98; //TabList height 104
   const perPage = 50;
@@ -42,19 +43,13 @@ function VoucherCreateTable(props) {
   const fetching = useSelector((state) => state.crudSlice.fetching);
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
   const indexData = useSelector((state) => state.crudSlice.indexEntityData);
-
   const [switchEnable, setSwitchEnable] = useState({});
+  const [manageVoucherHeadDrawer, setManageVoucherHeadDrawer] = useState(false);
+  const [manageVoucherData, setManageVoucherData] = useState(false);
 
 
   const handleSwitch = (event, item) => {
     setSwitchEnable((prev) => ({ ...prev, [item.id]: true }));
-    // const value = {
-    //   url: "inventory/product/status/inline-update/" + item.id,
-    // };
-    // dispatch(getStatusInlineUpdateData(value));
-    // setTimeout(() => {
-    //   setSwitchEnable((prev) => ({ ...prev, [item.id]: false }));
-    // }, 3000);
   };
 
   useEffect(() => {
@@ -67,10 +62,8 @@ function VoucherCreateTable(props) {
       },
     };
     dispatch(getIndexEntityData(value));
-  }, [fetching]);
+  }, [fetching,manageVoucherHeadDrawer]);
 
-  const navigate = useNavigate();
-  const [voucherCrateViewDrawer, setVoucherCreateViewDrawer] = useState(false);
   return (
     <>
       <Box
@@ -178,30 +171,15 @@ function VoucherCreateTable(props) {
                       </Menu.Item>
                       <Menu.Item
                           onClick={() => {
-                            setVoucherCreateViewDrawer(true)
+                            setManageVoucherData(data)
+                            setManageVoucherHeadDrawer(true)
                           }}
                       >
                         {t("ManageHead")}
                       </Menu.Item>
+
                       {data.is_private !== 1 &&(
                           <>
-                      <Menu.Item
-                        onClick={() => {
-                          console.log("ok")
-                          setVoucherCreateViewDrawer(true);
-                          dispatch(
-                            showEntityData(
-                              `accounting/voucher/${data.id}`
-                            )
-                          );
-                          // dispatch(showEntityData('core/customer/' + data.id))
-                        }}
-                        target="_blank"
-                        component="a"
-                        w={"200"}
-                      >
-                        {t("Show")}
-                      </Menu.Item>
                       <Menu.Item
                         // href={``}
                         target="_blank"
@@ -269,8 +247,14 @@ function VoucherCreateTable(props) {
           scrollAreaProps={{ type: "never" }}
         />
       </Box>
-      {voucherCrateViewDrawer &&
-                <_VoucherCreateViewDrawer voucherCrateViewDrawer={voucherCrateViewDrawer} setVoucherCreateViewDrawer={setVoucherCreateViewDrawer} />
+      {
+        manageVoucherHeadDrawer &&
+                <_VoucherManageHeadDrawer
+                    manageVoucherHeadDrawer={manageVoucherHeadDrawer}
+                    setManageVoucherHeadDrawer={setManageVoucherHeadDrawer}
+                    manageVoucherData={manageVoucherData}
+                    setManageVoucherData={setManageVoucherData}
+                />
             }
 
     </>

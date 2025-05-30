@@ -1150,6 +1150,10 @@
   "FormSubmitConfirmationTitle": "Form Submit Confirmation Title",
   "FormSubmitConfirmationMessage": "Form Submit Confirmation Message",
   "RequestQuantity": "Request Quantity",
-  "xxxxxx": "xxxxxxx",
-  "SettingsDetails": "Settings Details"
+  "SettingsDetails": "Settings Details",
+  "ManageHead": "Manage Head",
+  "VoucherSetupHead": "Manage voucher head",
+  "PrimaryVoucherHead": "Primary voucher head",
+  "SecondaryVoucherHead": "Secondary voucher head",
+  "xxxxxx": "xxxxxxx"
 }

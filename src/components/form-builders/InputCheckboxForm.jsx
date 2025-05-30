@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 function InputCheckboxForm({ label, field, form, mt = "xs" }) {
     const { t } = useTranslation();
-
+    // console.log(form.values)
     const handleToggle = () => {
         form.setFieldValue(field, form.values[field] === 1 ? 0 : 1);
     };
