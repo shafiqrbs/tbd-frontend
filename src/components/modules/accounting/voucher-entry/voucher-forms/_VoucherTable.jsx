@@ -116,8 +116,8 @@ function _VoucherTable(props) {
     const rows = salesViewData && salesViewData.journal_items && salesViewData.journal_items.map((element, index) => (
         <Table.Tr key={element.name}>
             <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
+            <Table.Td ta="left" fz="xs" width={'300'}>{element.head_name}</Table.Td>
             <Table.Td ta="left" fz="xs" width={'300'}>{element.ledger_name}</Table.Td>
-            <Table.Td ta="center" fz="xs" width={'60'}>{element.amount}</Table.Td>
             <Table.Td ta="center" fz="xs" width={'60'}>{element.debit}</Table.Td>
             <Table.Td ta="right" fz="xs" width={'80'}>{element.credit}</Table.Td>
         </Table.Tr>
@@ -202,7 +202,7 @@ function _VoucherTable(props) {
                                         }}
                                         loaderSize="xs"
                                         loaderColor="grape"
-                                        height={tableHeight}
+                                        height={tableHeight-30}
                                         scrollAreaProps={{ type: 'never' }}
                                         rowBackgroundColor={(item) => {
                                             if (item.invoice_no === selectedRow) return '#e2c2c263';
@@ -216,9 +216,9 @@ function _VoucherTable(props) {
 
                         </Grid.Col>
 
-                        <Grid.Col span={8} >
+                        <Grid.Col span={9} >
 
-                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} pos="relative">
+                            <Box bg={'white'} p={'xs'} h={tableHeight+40}  className={'borderRadiusAll'} pos="relative">
                                 {loading &&
                                     <LoadingOverlay
                                         visible={loading}
@@ -230,125 +230,117 @@ function _VoucherTable(props) {
                                 <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
                                     {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice}
                                 </Box>
-                                <Box className={'borderRadiusAll'} fz={'sm'}  >
-                                    <ScrollArea h={122} type="never">
-                                        <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
-                                            <Grid gutter={{ base: 4 }}>
-                                                <Grid.Col span={'6'}>
-                                                    <Grid columns={15} gutter={{ base: 4 }}>
-                                                        <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Voucher')}</Text></Grid.Col>
-                                                        <Grid.Col span={9} >
-                                                            <Text fz="sm" lh="xs">
-                                                                {salesViewData && salesViewData.voucher_name && salesViewData.voucher_name}
-                                                            </Text>
-                                                        </Grid.Col>
-                                                    </Grid>
-                                                    <Grid columns={15} gutter={{ base: 4 }}>
-                                                        <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mode')}</Text></Grid.Col>
-                                                        <Grid.Col span={9} >
-                                                            <Text fz="sm" lh="xs">
-                                                                {salesViewData && salesViewData.voucher_mode && salesViewData.voucher_mode}
-                                                            </Text>
-                                                        </Grid.Col>
-                                                    </Grid>
-                                                    <Grid columns={15} gutter={{ base: 4 }}>
-                                                        <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('InvoiceNo')}</Text></Grid.Col>
-                                                        <Grid.Col span={9} >
-                                                            <Text fz="sm" lh="xs">
-                                                                {salesViewData && salesViewData.invoice_no && salesViewData.invoice_no}
-                                                            </Text>
-                                                        </Grid.Col>
-                                                    </Grid>
-                                                    <Grid columns={15} gutter={{ base: 4 }}>
-                                                        <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('issueDate')}</Text></Grid.Col>
-                                                        <Grid.Col span={9} >
-                                                            <Text fz="sm" lh="xs">
-                                                                {salesViewData?.issue_date}
-                                                            </Text>
-                                                        </Grid.Col>
-                                                    </Grid>
-                                                </Grid.Col>
-                                                {/*<Grid.Col span={'6'}>
-                                                    <Grid columns={15} gutter={{ base: 4 }}>
-                                                        <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Created')}</Text></Grid.Col>
-                                                        <Grid.Col span={9} >
-                                                            <Text fz="sm" lh="xs">
-                                                                {salesViewData && salesViewData.created && salesViewData.created}
-                                                            </Text>
-                                                        </Grid.Col>
-                                                    </Grid>
-                                                    <Grid columns={15} gutter={{ base: 4 }}>
-                                                        <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('CreatedBy')}</Text></Grid.Col>
-                                                        <Grid.Col span={9} >
-                                                            <Text fz="sm" lh="xs">
-                                                                {salesViewData && salesViewData.createdByName && salesViewData.createdByName}
-                                                            </Text>
-                                                        </Grid.Col>
-                                                    </Grid>
-                                                    <Grid columns={15} gutter={{ base: 4 }}>
-                                                        <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('SalesBy')}</Text></Grid.Col>
-                                                        <Grid.Col span={9} >
-                                                            <Text fz="sm" lh="xs">
-                                                                {salesViewData && salesViewData.salesByUser && salesViewData.salesByUser}
-                                                            </Text>
-                                                        </Grid.Col>
-                                                    </Grid>
-                                                    <Grid columns={15} gutter={{ base: 4 }}>
-                                                        <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mode')}</Text></Grid.Col>
-                                                        <Grid.Col span={9} >
-                                                            <Text fz="sm" lh="xs">
-                                                                {salesViewData && salesViewData.mode_name && salesViewData.mode_name}
-                                                            </Text>
-                                                        </Grid.Col>
-                                                    </Grid>
-                                                    <Grid columns={15} gutter={{ base: 4 }}>
-                                                        <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Process')}</Text></Grid.Col>
-                                                        <Grid.Col span={9} >
-                                                            <Text fz="sm" lh="xs">
-                                                                {salesViewData && salesViewData.process && salesViewData.process}
-                                                            </Text>
-                                                        </Grid.Col>
-                                                    </Grid>
-                                                </Grid.Col>*/}
-                                            </Grid>
-                                        </Box>
-                                    </ScrollArea>
-                                    <ScrollArea h={height} scrollbarSize={2} type="never">
+                                <Box  className={'borderRadiusAll'} fz={'sm'}>
+                                    <Box h={'105'} pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
+                                        <Grid gutter={{ base: 4 }}>
+                                            <Grid.Col span={'6'}>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Voucher')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.voucher_name && salesViewData.voucher_name}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('InvoiceNo')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.invoice_no && salesViewData.invoice_no}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('CreatedDate')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData?.created}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('issueDate')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData?.issue_date}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Grid.Col>
+                                            <Grid.Col span={'6'}>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('CreatedBy')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.created_by_name && salesViewData.created_by_name}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                 <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('ApproveBy')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.approve_by_name && salesViewData.approve_by_name}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('RefNo')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.ref_no && salesViewData.ref_no}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Process')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.process && salesViewData.process}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+                                    <ScrollArea h={height+36} scrollbarSize={2} type="never">
                                         <Box >
                                             <Table stickyHeader>
                                                 <Table.Thead>
                                                     <Table.Tr>
                                                         <Table.Th fz="xs" w={'20'}>{t('S/N')}</Table.Th>
+                                                        <Table.Th fz="xs" ta="left" w={'300'}>{t('HeadName')}</Table.Th>
                                                         <Table.Th fz="xs" ta="left" w={'300'}>{t('LedgerName')}</Table.Th>
-
-                                                        <Table.Th fz="xs" ta="center" w={"60"}>
-                                                            {t("Amount")}
-                                                        </Table.Th>
-                                                        <Table.Th fz="xs" ta="center" w={'60'}>{t('Debit')}</Table.Th>
+                                                        <Table.Th fz="xs" ta="center" w={'80'}>{t('Debit')}</Table.Th>
                                                         <Table.Th ta="right" fz="xs" w={'80'}>{t('Credit')}</Table.Th>
                                                     </Table.Tr>
                                                 </Table.Thead>
                                                 <Table.Tbody>{rows}</Table.Tbody>
                                                 <Table.Tfoot>
                                                     <Table.Tr>
-                                                        <Table.Th colSpan={'4'} ta="right" fz="xs" w={'100'}>{t('Debit')}</Table.Th>
+                                                        <Table.Th colSpan={'4'} ta="right" fz="xs" w={'100'}>
+                                                            {salesViewData && salesViewData.credit && Number(salesViewData.credit).toFixed(2)}
+                                                        </Table.Th>
                                                         <Table.Th ta="right" fz="xs" w={'100'}>
                                                             {salesViewData && salesViewData.debit && Number(salesViewData.debit).toFixed(2)}
-                                                        </Table.Th>
-                                                    </Table.Tr>
-                                                    <Table.Tr>
-                                                        <Table.Th colSpan={'4'} ta="right" fz="xs" w={'100'}>{t('Credit')}</Table.Th>
-                                                        <Table.Th ta="right" fz="xs" w={'100'}>
-                                                            {salesViewData && salesViewData.credit && Number(salesViewData.credit).toFixed(2)}
                                                         </Table.Th>
                                                     </Table.Tr>
                                                 </Table.Tfoot>
                                             </Table>
                                         </Box>
+                                        <Box>
+                                            <Grid gutter={{ base: 4 }}>
+                                                <Grid.Col span={'12'}>
+                                                    <Text fz="sm" lh="xs">
+                                                        {t('Narration')} : {salesViewData?.description}
+                                                    </Text>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
                                     </ScrollArea>
                                 </Box>
                                 <Button.Group mb={'1'}>
-                                    {/*<Button
+                                    <Button
                                         fullWidth={true}
                                         variant="filled"
                                         leftSection={<IconPrinter size={14} />}
@@ -370,28 +362,11 @@ function _VoucherTable(props) {
                                     >
                                         {t('Pos')}
                                     </Button>
-                                    {!checked && <Button
-                                        onClick={() => navigate(`/inventory/sales/edit/${salesViewData?.id}`)}
-                                        component="a"
-                                        fullWidth={true}
-                                        variant="filled"
-                                        leftSection={<IconEdit size={14} />}
-                                        color="cyan.5"
-                                    >{t('Edit')}
-                                    </Button>}*/}
 
                                 </Button.Group>
                             </Box>
                         </Grid.Col>
-                        <Grid.Col span={1} >
-                            <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                                <__ShortcutTable
-                                    form=''
-                                    FormSubmit={'EntityFormSubmit'}
-                                    Name={'CompanyName'}
-                                />
-                            </Box>
-                        </Grid.Col>
+
                 </Grid>
             </Box>
         </Box>

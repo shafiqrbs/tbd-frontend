@@ -109,11 +109,7 @@ function _VoucherManageHeadDrawer(props) {
 
   const renderHeadCheckboxes = (type) => (
       <>
-        <Box bg="gray.1" ml="-md" px="sm" py="xs" mt={type === 'secondary' ? 'md' : 0}>
-          <Text fz={14} fw={600}>
-            {type === 'primary' ? t('PrimaryVoucherHead') : t('SecondaryVoucherHead')}
-          </Text>
-        </Box>
+
         {accountDropdownData?.map((head) => (
             <Box key={`${head.value}_${type}`}>
               <InputCheckboxForm
@@ -156,16 +152,34 @@ function _VoucherManageHeadDrawer(props) {
 
           <Box h={height}>
             <form onSubmit={form.onSubmit(handleVoucherFormSubmit)}>
-              <ScrollArea h={height - 20} scrollbarSize={2} scrollbars="y" type="never">
+              <Box>
+                <Box bg="gray.1"  px="sm" py="xs" >
+                  <Text fz={14} fw={600}>{t('PrimaryVoucherHead')}{height}</Text>
+                </Box>
+                <ScrollArea h={height - 450} scrollbarSize={2} scrollbars="y" >
+                  <Box p="md" className="borderRadiusAll">
+                    {manageVoucherData?.id && (
+                        <>
+                          {renderHeadCheckboxes('primary')}
+                        </>
+                    )}
+                  </Box>
+                </ScrollArea>
+              </Box>
+              <Box>
+              <Box bg="gray.1"  px="sm" py="xs" >
+                <Text fz={14} fw={600}>{t('SecondaryVoucherHead')}</Text>
+              </Box>
+              <ScrollArea h={height - 440} scrollbarSize={2} scrollbars="y" >
                 <Box p="md" className="borderRadiusAll">
                   {manageVoucherData?.id && (
                       <>
-                        {renderHeadCheckboxes('primary')}
                         {renderHeadCheckboxes('secondary')}
                       </>
                   )}
                 </Box>
               </ScrollArea>
+              </Box>
 
               <Box
                   pl="xs"
