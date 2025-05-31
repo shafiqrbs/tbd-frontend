@@ -71,7 +71,7 @@ function MainDashboard(props) {
         return () => clearTimeout(timeoutId);
     }, [navigate]);
 
-    console.log(domainConfig);
+
 
     return (
         <>
@@ -964,7 +964,7 @@ function MainDashboard(props) {
                                     <Box fz="sm" c="dimmed" mt="sm">
                                         <List spacing="ms" size="sm" center>
                                             {
-                                                configData?.child_domain_exists &&
+                                                domainConfig?.modules?.includes("domain") &&
                                                 (
                                                     <List.Item
                                                         pl={"xs"}
