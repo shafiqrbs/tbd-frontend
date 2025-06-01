@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import {
   IconX,
   IconDeviceFloppy,
-  IconSortAscendingNumbers,
+  IconSortAscendingNumbers, IconCalendar,
 } from "@tabler/icons-react";
 import { useDispatch } from "react-redux";
 import { useForm, isNotEmpty } from "@mantine/form";
@@ -25,6 +25,8 @@ import { showNotification } from "@mantine/notifications";
 import _SelectForm from "../../../../components/form-builders/_SelectForm";
 import _InputForm from "../../../../components/form-builders/_InputForm";
 import InputForm from "../../../form-builders/InputForm";
+import {DateInput, DatePickerInput} from "@mantine/dates";
+import DatePickerForm from "../../../form-builders/DatePicker.jsx";
 
 function BankDrawer(props) {
   const {
@@ -34,6 +36,7 @@ function BankDrawer(props) {
     setLoadVoucher,
     sourceForm,
     entryType,
+      setBankInfo
   } = props;
   const { isOnline, mainAreaHeight } = useOutletContext();
   const { t } = useTranslation();
@@ -61,11 +64,7 @@ function BankDrawer(props) {
   const bankForm = useForm({
     initialValues: {
       cheque_no: "",
-      amount: "",
-      pay_mode: "",
-      bank_name: "",
-      branch_name: "",
-      received_from: "",
+      amount: ""
     },
     validate: {
       amount: isNotEmpty(),
@@ -92,7 +91,9 @@ function BankDrawer(props) {
   };
 
   const handleSalesConfirmSubmit = async (values) => {
-    try {
+    setBankInfo(values)
+    // console.log(values)
+    /*try {
       // Get vouchers from local storage
       const storageKey =
         sourceForm === "customerVoucher"
@@ -137,7 +138,7 @@ function BankDrawer(props) {
     } catch (err) {
       console.error(err);
       showNotificationComponent(t("UpdateFailed"), "red");
-    }
+    }*/
   };
 
   return (
@@ -216,106 +217,228 @@ function BankDrawer(props) {
                   >
                     <form onSubmit={bankForm.onSubmit(handleSalesFormSubmit)}>
                       <Box>
-                        <Box mt={"xs"}>
-                          <InputForm
-                            tooltip={t("ChequeNo")}
-                            label={t("ChequeNo")}
-                            placeholder={t("ChequeNo")}
-                            required={true}
-                            nextField={"amount"}
-                            name={"cheque_no"}
-                            form={bankForm}
-                            mt={0}
-                            id={"cheque_no"}
-                            type="number"
-                            leftSection={
-                              <IconSortAscendingNumbers
-                                size={16}
-                                opacity={0.5}
-                              />
-                            }
-                          />
-                        </Box>
-                        <Box mt={"xs"}>
-                          <InputForm
-                            tooltip={t("Amount")}
-                            label={t("Amount")}
-                            placeholder={t("Amount")}
-                            required={true}
-                            nextField={"pay_mode"}
-                            name={"amount"}
-                            form={bankForm}
-                            mt={0}
-                            id={"amount"}
-                            type="number"
-                            leftSection={
-                              <IconSortAscendingNumbers
-                                size={16}
-                                opacity={0.5}
-                              />
-                            }
-                          />
-                        </Box>
-                        <Box mt={"xs"}>
-                          <_SelectForm
-                            tooltip={t("PaymentMode")}
-                            label={t("PaymentMode")}
-                            placeholder={t("ChoosePaymentMode")}
-                            required={true}
-                            nextField={"bank_name"}
-                            name={"pay_mode"}
-                            form={bankForm}
-                            dropdownValue={paymentModeData2}
-                            mt={8}
-                            id={"pay_mode"}
-                            searchable={false}
-                            value={paymentMode2}
-                            changeValue={(value) => {
-                              setPaymentMode2(value);
-                              bankForm.setFieldValue("pay_mode", value);
-                            }}
-                            ref={payModeInputRef}
-                          />
-                        </Box>
-                        <Box mt={"xs"}>
-                          <_InputForm
-                            tooltip={t("BankName")}
-                            label={t("BankName")}
-                            placeholder={t("BankName")}
-                            required={true}
-                            nextField={"branch_name"}
-                            name={"bank_name"}
-                            form={bankForm}
-                            mt={0}
-                            id={"bank_name"}
-                          />
-                        </Box>
-                        <Box mt={"xs"}>
-                          <_InputForm
-                            tooltip={t("BranchName")}
-                            label={t("BranchName")}
-                            placeholder={t("BranchName")}
-                            required={true}
-                            nextField={"received_from"}
-                            name={"branch_name"}
-                            form={bankForm}
-                            mt={0}
-                            id={"branch_name"}
-                          />
-                        </Box>
-                        <Box mt={"xs"}>
-                          <_InputForm
-                            tooltip={t("ReceivedFrom")}
-                            label={t("ReceivedFrom")}
-                            placeholder={t("ReceivedFrom")}
-                            required={true}
-                            nextField={"EntityBankFormSubmit"}
-                            name={"received_from"}
-                            form={bankForm}
-                            mt={0}
-                            id={"received_from"}
-                          />
-                        </Box>
+                        <Text>{entryType==='debit'?'Debit':'Credit'}</Text>
+                        {
+                          entryType === 'credit' &&
+                            <>
+                              <Box mt={"xs"}>
+                                <InputForm
+                                    tooltip={t("ChequeNo")}
+                                    label={t("ChequeNo")}
+                                    placeholder={t("ChequeNo")}
+                                    required={true}
+                                    nextField={"cheque_date"}
+                                    name={"cheque_no"}
+                                    form={bankForm}
+                                    mt={0}
+                                    id={"cheque_no"}
+                                    type="number"
+                                    leftSection={
+                                      <IconSortAscendingNumbers
+                                          size={16}
+                                          opacity={0.5}
+                                      />
+                                    }
+                                />
+                              </Box>
+                              <Box mt={"xs"}>
+                                <DatePickerForm
+                                    tooltip={t("ChequeDate")}
+                                    label={t("ChequeDate")}
+                                    placeholder={t("ChequeDate")}
+                                    required={true}
+                                    nextField={"cross_using"}
+                                    form={bankForm}
+                                    name={"cheque_date"}
+                                    id={"cheque_date"}
+                                    leftSection={<IconCalendar size={16} opacity={0.5}/>}
+                                    rightSectionWidth={30}
+                                    closeIcon={true}
+                                />
+
+                              </Box>
+                              <Box mt={"xs"}>
+                                <_SelectForm
+                                    tooltip={t("CrossUsing")}
+                                    label={t("CrossUsing")}
+                                    placeholder={t("CrossUsing")}
+                                    required={true}
+                                    nextField={"amount"}
+                                    name={"cross_using"}
+                                    form={bankForm}
+                                    dropdownValue={paymentModeData2}
+                                    mt={8}
+                                    id={"cross_using"}
+                                    searchable={false}
+                                    value={paymentMode2}
+                                    changeValue={(value) => {
+                                      setPaymentMode2(value);
+                                      bankForm.setFieldValue("pay_mode", value);
+                                    }}
+                                    ref={payModeInputRef}
+                                />
+                              </Box>
+                              <Box mt={"xs"}>
+                                <InputForm
+                                    tooltip={t("Amount")}
+                                    label={t("Amount")}
+                                    placeholder={t("Amount")}
+                                    required={true}
+                                    nextField={"pay_mode"}
+                                    name={"amount"}
+                                    form={bankForm}
+                                    mt={0}
+                                    id={"amount"}
+                                    type="number"
+                                    leftSection={
+                                      <IconSortAscendingNumbers
+                                          size={16}
+                                          opacity={0.5}
+                                      />
+                                    }
+                                />
+                              </Box>
+                              <Box mt={"xs"}>
+                                <_InputForm
+                                    tooltip={t("ForwardingName")}
+                                    label={t("ForwardingName")}
+                                    placeholder={t("ForwardingName")}
+                                    required={true}
+                                    nextField={"EntityBankFormSubmit"}
+                                    name={"forwarding_name"}
+                                    form={bankForm}
+                                    mt={0}
+                                    id={"forwarding_name"}
+                                />
+                              </Box>
+                            </>
+                        }
+                        {
+                          entryType === 'debit' &&
+                            <>
+                              <Box mt={"xs"}>
+                                <_SelectForm
+                                    tooltip={t("PaymentMode")}
+                                    label={t("PaymentMode")}
+                                    placeholder={t("ChoosePaymentMode")}
+                                    required={true}
+                                    nextField={"cheque_no"}
+                                    name={"pay_mode"}
+                                    form={bankForm}
+                                    dropdownValue={paymentModeData2}
+                                    mt={8}
+                                    id={"pay_mode"}
+                                    searchable={false}
+                                    value={paymentMode2}
+                                    changeValue={(value) => {
+                                      setPaymentMode2(value);
+                                      bankForm.setFieldValue("pay_mode", value);
+                                    }}
+                                    ref={payModeInputRef}
+                                />
+                              </Box>
+
+                              <Box mt={"xs"}>
+                                <InputForm
+                                    tooltip={t("ChequeNo")}
+                                    label={t("ChequeNo")}
+                                    placeholder={t("ChequeNo")}
+                                    required={true}
+                                    nextField={"cheque_date"}
+                                    name={"cheque_no"}
+                                    form={bankForm}
+                                    mt={0}
+                                    id={"cheque_no"}
+                                    type="number"
+                                    leftSection={
+                                      <IconSortAscendingNumbers
+                                          size={16}
+                                          opacity={0.5}
+                                      />
+                                    }
+                                />
+                              </Box>
+
+                              <Box mt={"xs"}>
+                                <DatePickerForm
+                                    tooltip={t("ChequeDate")}
+                                    label={t("ChequeDate")}
+                                    placeholder={t("ChequeDate")}
+                                    required={true}
+                                    nextField={"amount"}
+                                    form={bankForm}
+                                    name={"cheque_date"}
+                                    id={"cheque_date"}
+                                    leftSection={<IconCalendar size={16} opacity={0.5}/>}
+                                    rightSectionWidth={30}
+                                    closeIcon={true}
+                                />
+
+                              </Box>
+
+                              <Box mt={"xs"}>
+                                <InputForm
+                                    tooltip={t("Amount")}
+                                    label={t("Amount")}
+                                    placeholder={t("Amount")}
+                                    required={true}
+                                    nextField={"bank_name"}
+                                    name={"amount"}
+                                    form={bankForm}
+                                    mt={0}
+                                    id={"amount"}
+                                    type="number"
+                                    leftSection={
+                                      <IconSortAscendingNumbers
+                                          size={16}
+                                          opacity={0.5}
+                                      />
+                                    }
+                                />
+                              </Box>
+
+                              <Box mt={"xs"}>
+                                <_InputForm
+                                    tooltip={t("BankName")}
+                                    label={t("BankName")}
+                                    placeholder={t("BankName")}
+                                    required={true}
+                                    nextField={"branch_name"}
+                                    name={"bank_name"}
+                                    form={bankForm}
+                                    mt={0}
+                                    id={"bank_name"}
+                                />
+                              </Box>
+                              <Box mt={"xs"}>
+                                <_InputForm
+                                    tooltip={t("BranchName")}
+                                    label={t("BranchName")}
+                                    placeholder={t("BranchName")}
+                                    required={true}
+                                    nextField={"received_from"}
+                                    name={"branch_name"}
+                                    form={bankForm}
+                                    mt={0}
+                                    id={"branch_name"}
+                                />
+                              </Box>
+                              <Box mt={"xs"}>
+                                <_InputForm
+                                    tooltip={t("ReceivedFrom")}
+                                    label={t("ReceivedFrom")}
+                                    placeholder={t("ReceivedFrom")}
+                                    required={true}
+                                    nextField={"EntityBankFormSubmit"}
+                                    name={"received_from"}
+                                    form={bankForm}
+                                    mt={0}
+                                    id={"received_from"}
+                                />
+                              </Box>
+                            </>
+                        }
+
                       </Box>
                     </form>
                   </ScrollArea>

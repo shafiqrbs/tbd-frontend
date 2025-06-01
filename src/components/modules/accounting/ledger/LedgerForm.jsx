@@ -67,6 +67,7 @@ function LedgerForm(props) {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
+                form.values.display_name = form.values.name
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (

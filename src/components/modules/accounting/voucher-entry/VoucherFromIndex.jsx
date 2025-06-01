@@ -79,6 +79,7 @@ function VoucherFormIndex({ currencySymbol }) {
   const [primaryLedgerDropdownEnable, setPrimaryLedgerDropdownEnable] =
       useState(false);
   const [bankDrawer, setBankDrawer] = useState(false);
+  const [bankInfo, setBankInfo] = useState({});
 
   // Load ledger items from localStorage
   const loadMyItemsFromStorage = () => {
@@ -115,9 +116,80 @@ function VoucherFormIndex({ currencySymbol }) {
 
   useEffect(() => {
     if (mainLedgerHeadObject && mainLedgerHeadData) {
-      handleAddProductByProductId("main-ledger");
+      console.log(bankInfo)
+      // console.log(mainLedgerHeadObject)
+      // handleAddProductByProductId("main-ledger");
     }
-  }, [mainLedgerHeadObject, mainLedgerHeadData]);
+  }, [mainLedgerHeadObject, mainLedgerHeadData,bankInfo]);
+
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchSlug = async () => {
+      try {
+        if (mainLedgerHeadObject?.parent_id && mainLedgerHeadData) {
+          const { parentLedgerSlug } = await getParentLedgerSlugWithDetails(mainLedgerHeadObject.parent_id);
+
+          if (isMounted) {
+            setBankDrawer(parentLedgerSlug === 'bank-account');
+          }
+        } else {
+          if (isMounted) {
+            setBankDrawer(false); // fallback for blank or invalid data
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching parent ledger slug:', error);
+        if (isMounted) {
+          setBankDrawer(false);
+        }
+      }
+    };
+
+    // console.log(bankInfo)
+
+    const timeoutId = setTimeout(() => {
+      fetchSlug();
+    }, 300);
+
+    return () => {
+      clearTimeout(timeoutId);
+      isMounted = false;
+    };
+  }, [mainLedgerHeadObject?.parent_id, mainLedgerHeadData]);
+
+
+  const getParentLedgerSlugWithDetails = (id) => {
+    const topLevelAccounts = activeVoucher?.ledger_account_head_primary.filter(
+        item => !item.pivot?.primary_account_head_id || item.id === id
+    );
+
+    const parentLedgerSlug = topLevelAccounts?.[0]?.slug || null;
+
+    // Placeholder for additional logic such as API calls
+    // if needed api call code
+    // yours code
+    const response = null;
+
+    return { parentLedgerSlug, response };
+  };
+
+
+  /*const getParentLedgerSlug = (id) => {
+    const topLevelAccounts = activeVoucher?.ledger_account_head_primary.filter(item => !item.pivot?.primary_account_head_id || item.id === id);
+    let parentLedgerSlug = ''
+    if (topLevelAccounts[0]){
+      parentLedgerSlug = topLevelAccounts[0].slug
+    }else {
+      parentLedgerSlug = null
+    }
+
+    // if needed api call code
+    // yours code
+    let responnse = '11'
+    return {parentLedgerSlug,responnse}
+  }*/
 
   // Add main ledger entry
   const handleAddProductByProductId = (addedType) => {
@@ -686,7 +758,8 @@ function VoucherFormIndex({ currencySymbol }) {
                 module={"VoucherEntry"}
                 setLoadVoucher={setLoadVoucher}
                 sourceForm="main"
-                entryType={currentEntryType}
+                entryType={activeVoucher.mode}
+                setBankInfo={setBankInfo}
             />
         )}
       </Box>

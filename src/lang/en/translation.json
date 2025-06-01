@@ -1155,5 +1155,11 @@
   "VoucherSetupHead": "Manage voucher head",
   "PrimaryVoucherHead": "Primary voucher head",
   "SecondaryVoucherHead": "Secondary voucher head",
+  "ChequeNo": "Cheque no",
+  "ChequeDate": "Cheque date",
+  "CrossUsing": "Cross using",
+  "ForwardingName": "Forwarding name",
+  "BankName": "Bank name",
+  "ReceivedFrom": "Received from",
   "xxxxxx": "xxxxxxx"
 }
