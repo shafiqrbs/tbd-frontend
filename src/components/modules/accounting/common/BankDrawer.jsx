@@ -1,455 +1,345 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, {useState} from "react";
+import {useOutletContext} from "react-router-dom";
 import {
-  ActionIcon,
-  Box,
-  ScrollArea,
-  Drawer,
-  Text,
-  Flex,
-  Grid,
-  Button,
-  Title,
-  Stack,
+    ActionIcon,
+    Box,
+    ScrollArea,
+    Drawer,
+    Text,
+    Flex,
+    Grid,
+    Button,
+    Title,
+    Stack,
 } from "@mantine/core";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import {
-  IconX,
-  IconDeviceFloppy,
-  IconSortAscendingNumbers, IconCalendar,
+    IconX,
+    IconDeviceFloppy,
+    IconSortAscendingNumbers,
+    IconCalendar,
 } from "@tabler/icons-react";
-import { useDispatch } from "react-redux";
-import { useForm, isNotEmpty } from "@mantine/form";
-import { modals } from "@mantine/modals";
-import { showNotification } from "@mantine/notifications";
+import {useForm} from "@mantine/form";
+import {modals} from "@mantine/modals";
+
 import _SelectForm from "../../../../components/form-builders/_SelectForm";
 import _InputForm from "../../../../components/form-builders/_InputForm";
 import InputForm from "../../../form-builders/InputForm";
-import {DateInput, DatePickerInput} from "@mantine/dates";
 import DatePickerForm from "../../../form-builders/DatePicker.jsx";
+import getBanksDropdownData from "../../../global-hook/dropdown/getBanksDropdownData.js";
 
 function BankDrawer(props) {
-  const {
-    bankDrawer,
-    setBankDrawer,
-    module,
-    setLoadVoucher,
-    sourceForm,
-    entryType,
-      setBankInfo
-  } = props;
-  const { isOnline, mainAreaHeight } = useOutletContext();
-  const { t } = useTranslation();
-  const height = mainAreaHeight - 100;
-  const dispatch = useDispatch();
+    const {bankDrawer, setBankDrawer, module, entryType, onSubmit} = props;
+    const {isOnline, mainAreaHeight} = useOutletContext();
+    const {t} = useTranslation();
+    const height = mainAreaHeight - 100;
 
-  // Add refs for form inputs
-  const chequeNoInputRef = useRef(null);
-  const payModeInputRef = useRef(null);
+    const [payModeValue, setPayModeValue] = useState("");
+    const [bankData, setBankData] = useState("");
+    const banksDropdownData = getBanksDropdownData()
 
-  // Add state for payment mode
-  const [paymentMode2, setPaymentMode2] = useState("");
+    const paymentModeOptions = [
+        {value: "cash", label: t("Cash")},
+        {value: "cheque", label: t("Cheque")},
+        {value: "bank_transfer", label: t("BankTransfer")},
+    ];
 
-  // Payment mode dropdown data
-  const paymentModeData2 = [
-    { value: "cash", label: t("Cash") },
-    { value: "cheque", label: t("Cheque") },
-    { value: "bank_transfer", label: t("BankTransfer") },
-  ];
+    const closeDrawer = () => {
+        setBankDrawer(false);
+    };
 
-  const closeDrawer = () => {
-    setBankDrawer(false);
-  };
-
-  const bankForm = useForm({
-    initialValues: {
-      cheque_no: "",
-      amount: ""
-    },
-    validate: {
-      amount: isNotEmpty(),
-      cheque_no: isNotEmpty(),
-    },
-  });
-
-  const showNotificationComponent = (message, color) => {
-    showNotification({
-      title: message,
-      color: color,
+    const bankForm = useForm({
+        initialValues: {
+            cheque_date: "",
+            cross_using: "",
+            amount: "",
+            forwarding_name: "",
+            pay_mode: "",
+            bank_id: "",
+            branch_name: "",
+            received_from: "",
+            cheque_no: "",
+        },
+        validate: {
+            cheque_date: (value) =>
+                (entryType === "credit" || entryType === "debit") && !value
+                    ? t("ChequeDateRequired")
+                    : null,
+            cross_using: (value) =>
+                entryType === "credit" && !value ? t("CrossUsingRequired") : null,
+            amount: (value) =>
+                (entryType === "credit" || entryType === "debit") && !value
+                    ? t("AmountRequired")
+                    : null,
+            forwarding_name: (value) =>
+                entryType === "credit" && !value ? t("ForwardingNameRequired") : null,
+            pay_mode: (value) =>
+                entryType === "debit" && !value ? t("PayModeRequired") : null,
+            bank_id: (value) =>
+                entryType === "debit" && !value ? t("ChooseBank") : null,
+            branch_name: (value) =>
+                entryType === "debit" && !value ? t("BranchNameRequired") : null,
+            received_from: (value) =>
+                entryType === "debit" && !value ? t("ReceivedFromRequired") : null,
+            cheque_no: (value) =>
+                (entryType === "credit" || entryType === "debit") && !value
+                    ? t("ChequeNoRequired")
+                    : null,
+        },
     });
-  };
 
-  const handleSalesFormSubmit = (values) => {
-    modals.openConfirmModal({
-      title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
-      children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
-      labels: { confirm: t("Submit"), cancel: t("Cancel") },
-      confirmProps: { color: "red" },
-      onCancel: () => {},
-      onConfirm: () => handleSalesConfirmSubmit(values),
-    });
-  };
+    const handleSalesFormSubmit = (values) => {
+        modals.openConfirmModal({
+            title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
+            children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
+            labels: {confirm: t("Submit"), cancel: t("Cancel")},
+            confirmProps: {color: "red"},
+            onCancel: () => {
+            },
+            onConfirm: () => handleSalesConfirmSubmit(values),
+        });
+    };
 
-  const handleSalesConfirmSubmit = async (values) => {
-    setBankInfo(values)
-    // console.log(values)
-    /*try {
-      // Get vouchers from local storage
-      const storageKey =
-        sourceForm === "customerVoucher"
-          ? "vouchers-entry-form"
-          : "vouchers-entry";
-      const storedVouchers = JSON.parse(localStorage.getItem(storageKey)) || [];
+    const handleSalesConfirmSubmit = async (values) => {
+        onSubmit(values);
+    };
 
-      // Find bank entry and update it with safe checks for null values
-      const updatedVouchers = storedVouchers.map((voucher) => {
-        // Only update the bank entry with matching name with null check
-        if (voucher && voucher.name && voucher.name === entryType) {
-          return {
-            ...voucher,
-            credit:
-              entryType &&
-              entryType.startsWith("bank_account_") &&
-              voucher.mode === "CR"
-                ? values.amount
-                : voucher.credit,
-            debit:
-              entryType &&
-              entryType.startsWith("bank_account_") &&
-              voucher.mode === "DR"
-                ? values.amount
-                : voucher.debit,
-            cheque_no: values.cheque_no,
-            pay_mode: values.pay_mode,
-            bank_name: values.bank_name,
-            branch_name: values.branch_name,
-            received_from: values.received_from,
-          };
-        }
-        return voucher;
-      });
-
-      // Save updated vouchers to local storage
-      localStorage.setItem(storageKey, JSON.stringify(updatedVouchers));
-
-      showNotificationComponent(t("UpdateSuccessfully"), "teal");
-      setLoadVoucher(true);
-      closeDrawer();
-    } catch (err) {
-      console.error(err);
-      showNotificationComponent(t("UpdateFailed"), "red");
-    }*/
-  };
-
-  return (
-    <>
-      <Drawer.Root
-        opened={bankDrawer}
-        position="right"
-        onClose={closeDrawer}
-        size={"30%"}
-      >
-        <Drawer.Overlay />
-        <Drawer.Content>
-          <ScrollArea h={height + 190} scrollbarSize={2} type="never">
-            <Flex
-              mih={40}
-              gap="md"
-              justify="flex-end"
-              align="center"
-              direction="row"
-              wrap="wrap"
-            >
-              <ActionIcon
-                mr={"sm"}
-                radius="xl"
-                color="grey.6"
-                size="md"
-                variant="outline"
-                onClick={closeDrawer}
-              >
-                <IconX style={{ width: "80%", height: "80%" }} stroke={1.5} />
-              </ActionIcon>
-            </Flex>
-            <Box bg={"white"} className={"borderRadiusAll"} mb={"8"} mt={2}>
-              <Box bg={"white"}>
-                <Box
-                  pl={`xs`}
-                  pr={8}
-                  pt={"3"}
-                  pb={"3"}
-                  mb={"4"}
-                  className={"boxBackground borderRadiusAll"}
-                >
-                  <Grid>
-                    <Grid.Col span={6}>
-                      <Title order={6} pt={"4"}>
-                        {t(module)}
-                      </Title>
-                    </Grid.Col>
-                    <Grid.Col span={6}>
-                      <Stack align="flex-end">
-                        {isOnline && (
-                          <Button
-                            size="xs"
-                            className={"btnPrimaryBg"}
-                            id="EntityBankFormSubmit"
-                            leftSection={<IconDeviceFloppy size={16} />}
-                            onClick={() =>
-                              bankForm.onSubmit(handleSalesFormSubmit)()
-                            }
-                          >
-                            <Text fz={14} fw={400}>
-                              {t("UpdateAndSave")}
-                            </Text>
-                          </Button>
-                        )}
-                      </Stack>
-                    </Grid.Col>
-                  </Grid>
-                </Box>
-                <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
-                  <ScrollArea
-                    h={height + 71}
-                    scrollbarSize={2}
-                    scrollbars="y"
-                    type="never"
-                  >
-                    <form onSubmit={bankForm.onSubmit(handleSalesFormSubmit)}>
-                      <Box>
-                        <Text>{entryType==='debit'?'Debit':'Credit'}</Text>
-                        {
-                          entryType === 'credit' &&
-                            <>
-                              <Box mt={"xs"}>
-                                <InputForm
-                                    tooltip={t("ChequeNo")}
-                                    label={t("ChequeNo")}
-                                    placeholder={t("ChequeNo")}
-                                    required={true}
-                                    nextField={"cheque_date"}
-                                    name={"cheque_no"}
-                                    form={bankForm}
-                                    mt={0}
-                                    id={"cheque_no"}
-                                    type="number"
-                                    leftSection={
-                                      <IconSortAscendingNumbers
-                                          size={16}
-                                          opacity={0.5}
-                                      />
-                                    }
-                                />
-                              </Box>
-                              <Box mt={"xs"}>
-                                <DatePickerForm
-                                    tooltip={t("ChequeDate")}
-                                    label={t("ChequeDate")}
-                                    placeholder={t("ChequeDate")}
-                                    required={true}
-                                    nextField={"cross_using"}
-                                    form={bankForm}
-                                    name={"cheque_date"}
-                                    id={"cheque_date"}
-                                    leftSection={<IconCalendar size={16} opacity={0.5}/>}
-                                    rightSectionWidth={30}
-                                    closeIcon={true}
-                                />
-
-                              </Box>
-                              <Box mt={"xs"}>
-                                <_SelectForm
-                                    tooltip={t("CrossUsing")}
-                                    label={t("CrossUsing")}
-                                    placeholder={t("CrossUsing")}
-                                    required={true}
-                                    nextField={"amount"}
-                                    name={"cross_using"}
-                                    form={bankForm}
-                                    dropdownValue={paymentModeData2}
-                                    mt={8}
-                                    id={"cross_using"}
-                                    searchable={false}
-                                    value={paymentMode2}
-                                    changeValue={(value) => {
-                                      setPaymentMode2(value);
-                                      bankForm.setFieldValue("pay_mode", value);
-                                    }}
-                                    ref={payModeInputRef}
-                                />
-                              </Box>
-                              <Box mt={"xs"}>
-                                <InputForm
-                                    tooltip={t("Amount")}
-                                    label={t("Amount")}
-                                    placeholder={t("Amount")}
-                                    required={true}
-                                    nextField={"pay_mode"}
-                                    name={"amount"}
-                                    form={bankForm}
-                                    mt={0}
-                                    id={"amount"}
-                                    type="number"
-                                    leftSection={
-                                      <IconSortAscendingNumbers
-                                          size={16}
-                                          opacity={0.5}
-                                      />
-                                    }
-                                />
-                              </Box>
-                              <Box mt={"xs"}>
-                                <_InputForm
-                                    tooltip={t("ForwardingName")}
-                                    label={t("ForwardingName")}
-                                    placeholder={t("ForwardingName")}
-                                    required={true}
-                                    nextField={"EntityBankFormSubmit"}
-                                    name={"forwarding_name"}
-                                    form={bankForm}
-                                    mt={0}
-                                    id={"forwarding_name"}
-                                />
-                              </Box>
-                            </>
-                        }
-                        {
-                          entryType === 'debit' &&
-                            <>
-                              <Box mt={"xs"}>
-                                <_SelectForm
-                                    tooltip={t("PaymentMode")}
-                                    label={t("PaymentMode")}
-                                    placeholder={t("ChoosePaymentMode")}
-                                    required={true}
-                                    nextField={"cheque_no"}
-                                    name={"pay_mode"}
-                                    form={bankForm}
-                                    dropdownValue={paymentModeData2}
-                                    mt={8}
-                                    id={"pay_mode"}
-                                    searchable={false}
-                                    value={paymentMode2}
-                                    changeValue={(value) => {
-                                      setPaymentMode2(value);
-                                      bankForm.setFieldValue("pay_mode", value);
-                                    }}
-                                    ref={payModeInputRef}
-                                />
-                              </Box>
-
-                              <Box mt={"xs"}>
-                                <InputForm
-                                    tooltip={t("ChequeNo")}
-                                    label={t("ChequeNo")}
-                                    placeholder={t("ChequeNo")}
-                                    required={true}
-                                    nextField={"cheque_date"}
-                                    name={"cheque_no"}
-                                    form={bankForm}
-                                    mt={0}
-                                    id={"cheque_no"}
-                                    type="number"
-                                    leftSection={
-                                      <IconSortAscendingNumbers
-                                          size={16}
-                                          opacity={0.5}
-                                      />
-                                    }
-                                />
-                              </Box>
-
-                              <Box mt={"xs"}>
-                                <DatePickerForm
-                                    tooltip={t("ChequeDate")}
-                                    label={t("ChequeDate")}
-                                    placeholder={t("ChequeDate")}
-                                    required={true}
-                                    nextField={"amount"}
-                                    form={bankForm}
-                                    name={"cheque_date"}
-                                    id={"cheque_date"}
-                                    leftSection={<IconCalendar size={16} opacity={0.5}/>}
-                                    rightSectionWidth={30}
-                                    closeIcon={true}
-                                />
-
-                              </Box>
-
-                              <Box mt={"xs"}>
-                                <InputForm
-                                    tooltip={t("Amount")}
-                                    label={t("Amount")}
-                                    placeholder={t("Amount")}
-                                    required={true}
-                                    nextField={"bank_name"}
-                                    name={"amount"}
-                                    form={bankForm}
-                                    mt={0}
-                                    id={"amount"}
-                                    type="number"
-                                    leftSection={
-                                      <IconSortAscendingNumbers
-                                          size={16}
-                                          opacity={0.5}
-                                      />
-                                    }
-                                />
-                              </Box>
-
-                              <Box mt={"xs"}>
-                                <_InputForm
-                                    tooltip={t("BankName")}
-                                    label={t("BankName")}
-                                    placeholder={t("BankName")}
-                                    required={true}
-                                    nextField={"branch_name"}
-                                    name={"bank_name"}
-                                    form={bankForm}
-                                    mt={0}
-                                    id={"bank_name"}
-                                />
-                              </Box>
-                              <Box mt={"xs"}>
-                                <_InputForm
-                                    tooltip={t("BranchName")}
-                                    label={t("BranchName")}
-                                    placeholder={t("BranchName")}
-                                    required={true}
-                                    nextField={"received_from"}
-                                    name={"branch_name"}
-                                    form={bankForm}
-                                    mt={0}
-                                    id={"branch_name"}
-                                />
-                              </Box>
-                              <Box mt={"xs"}>
-                                <_InputForm
-                                    tooltip={t("ReceivedFrom")}
-                                    label={t("ReceivedFrom")}
-                                    placeholder={t("ReceivedFrom")}
-                                    required={true}
-                                    nextField={"EntityBankFormSubmit"}
-                                    name={"received_from"}
-                                    form={bankForm}
-                                    mt={0}
-                                    id={"received_from"}
-                                />
-                              </Box>
-                            </>
-                        }
-
-                      </Box>
-                    </form>
-                  </ScrollArea>
-                </Box>
-              </Box>
+    const renderCommonFields = () => (
+        <>
+            <Box mt="xs">
+                <DatePickerForm
+                    tooltip={t("ChequeDate")}
+                    label={t("ChequeDate")}
+                    placeholder={t("ChequeDate")}
+                    required
+                    nextField="cheque_no"
+                    form={bankForm}
+                    name="cheque_date"
+                    id="cheque_date"
+                    leftSection={<IconCalendar size={16} opacity={0.5}/>}
+                    rightSectionWidth={30}
+                    closeIcon
+                />
             </Box>
-          </ScrollArea>
-        </Drawer.Content>
-      </Drawer.Root>
-    </>
-  );
+
+            <Box mt="xs">
+                <InputForm
+                    tooltip={t("ChequeNo")}
+                    label={t("ChequeNo")}
+                    placeholder={t("ChequeNo")}
+                    required
+                    nextField="pay_mode"
+                    name="cheque_no"
+                    form={bankForm}
+                    mt={0}
+                    id="cheque_no"
+                    type="number"
+                    leftSection={<IconSortAscendingNumbers size={16} opacity={0.5}/>}
+                />
+            </Box>
+        </>
+    );
+
+    return (
+        <Drawer.Root opened={bankDrawer} position="right" onClose={closeDrawer} size={"30%"}>
+            <Drawer.Overlay/>
+            <Drawer.Content>
+                <ScrollArea h={height + 190} scrollbarSize={2} type="never">
+                    {/* Drawer Header */}
+                    <Flex justify="flex-end" align="center" p="sm">
+                        <ActionIcon
+                            radius="xl"
+                            color="grey.6"
+                            size="md"
+                            variant="outline"
+                            onClick={closeDrawer}
+                        >
+                            <IconX style={{width: "80%", height: "80%"}} stroke={1.5}/>
+                        </ActionIcon>
+                    </Flex>
+
+                    {/* Drawer Content */}
+                    <Box bg="white" className="borderRadiusAll" mb="md" mt={2}>
+                        <Box bg="white">
+                            <Box px="xs" pt="sm" pb="sm" mb="sm" className="boxBackground borderRadiusAll">
+                                <Grid align="center">
+                                    <Grid.Col span={6}>
+                                        <Title order={6}>{t(module)}</Title>
+                                    </Grid.Col>
+                                    <Grid.Col span={6}>
+                                        <Stack align="flex-end">
+                                            {isOnline && (
+                                                <Button
+                                                    size="xs"
+                                                    className="btnPrimaryBg"
+                                                    id="EntityBankFormSubmit"
+                                                    leftSection={<IconDeviceFloppy size={16}/>}
+                                                    onClick={() => bankForm.onSubmit(handleSalesFormSubmit)()}
+                                                >
+                                                    <Text fz={14} fw={400}>
+                                                        {t("UpdateAndSave")}
+                                                    </Text>
+                                                </Button>
+                                            )}
+                                        </Stack>
+                                    </Grid.Col>
+                                </Grid>
+                            </Box>
+
+                            <Box px="xs" className="borderRadiusAll">
+                                <ScrollArea h={height + 71} scrollbarSize={2} scrollbars="y" type="never">
+                                    <form onSubmit={bankForm.onSubmit(handleSalesFormSubmit)}>
+                                        <Text>{entryType === "debit" ? "Debit" : "Credit"}</Text>
+
+                                        {renderCommonFields()}
+
+                                        {entryType === "credit" && (
+                                            <>
+                                                <Box mt="xs">
+                                                    <_SelectForm
+                                                        tooltip={t("CrossUsing")}
+                                                        label={t("CrossUsing")}
+                                                        placeholder={t("CrossUsing")}
+                                                        required
+                                                        nextField="bank_amount"
+                                                        name="cross_using"
+                                                        form={bankForm}
+                                                        dropdownValue={paymentModeOptions}
+                                                        id="cross_using"
+                                                        searchable={false}
+                                                        value={payModeValue}
+                                                        changeValue={(value) => {
+                                                            setPayModeValue(value);
+                                                            bankForm.setFieldValue("cross_using", value);
+                                                        }}
+                                                    />
+                                                </Box>
+
+                                                <Box mt="xs">
+                                                    <InputForm
+                                                        tooltip={t("Amount")}
+                                                        label={t("Amount")}
+                                                        placeholder={t("Amount")}
+                                                        required
+                                                        nextField="forwarding_name"
+                                                        name="amount"
+                                                        form={bankForm}
+                                                        id="bank_amount"
+                                                        type="number"
+                                                        leftSection={<IconSortAscendingNumbers size={16}
+                                                                                               opacity={0.5}/>}
+                                                    />
+                                                </Box>
+
+                                                <Box mt="xs">
+                                                    <_InputForm
+                                                        tooltip={t("ForwardingName")}
+                                                        label={t("ForwardingName")}
+                                                        placeholder={t("ForwardingName")}
+                                                        required
+                                                        nextField="EntityBankFormSubmit"
+                                                        name="forwarding_name"
+                                                        form={bankForm}
+                                                        id="forwarding_name"
+                                                    />
+                                                </Box>
+                                            </>
+                                        )}
+
+                                        {entryType === "debit" && (
+                                            <>
+                                                <Box mt="xs">
+                                                    <_SelectForm
+                                                        tooltip={t("PaymentMode")}
+                                                        label={t("PaymentMode")}
+                                                        placeholder={t("ChoosePaymentMode")}
+                                                        required
+                                                        nextField="bank_amount"
+                                                        name="pay_mode"
+                                                        form={bankForm}
+                                                        dropdownValue={paymentModeOptions}
+                                                        id="pay_mode"
+                                                        searchable={false}
+                                                        value={payModeValue}
+                                                        changeValue={(value) => {
+                                                            setPayModeValue(value);
+                                                            bankForm.setFieldValue("pay_mode", value);
+                                                        }}
+                                                    />
+                                                </Box>
+
+                                                <Box mt="xs">
+                                                    <InputForm
+                                                        tooltip={t("Amount")}
+                                                        label={t("Amount")}
+                                                        placeholder={t("Amount")}
+                                                        required
+                                                        nextField="bank_id"
+                                                        name="amount"
+                                                        form={bankForm}
+                                                        id="bank_amount"
+                                                        type="number"
+                                                        leftSection={<IconSortAscendingNumbers size={16}
+                                                                                               opacity={0.5}/>}
+                                                    />
+                                                </Box>
+
+                                                <Box mt="xs">
+                                                    <_SelectForm
+                                                        tooltip={t("ChooseBank")}
+                                                        label={t("ChooseBank")}
+                                                        placeholder={t("ChooseBank")}
+                                                        required
+                                                        nextField="bank_amount"
+                                                        name="bank_id"
+                                                        form={bankForm}
+                                                        dropdownValue={banksDropdownData}
+                                                        id="bank_id"
+                                                        searchable={false}
+                                                        value={bankData}
+                                                        changeValue={(value) => {
+                                                            setBankData(value);
+                                                            bankForm.setFieldValue("bank_id", value);
+                                                        }}
+                                                    />
+                                                </Box>
+
+                                                <Box mt="xs">
+                                                    <_InputForm
+                                                        tooltip={t("BranchName")}
+                                                        label={t("BranchName")}
+                                                        placeholder={t("BranchName")}
+                                                        required
+                                                        nextField="received_from"
+                                                        name="branch_name"
+                                                        form={bankForm}
+                                                        id="branch_name"
+                                                    />
+                                                </Box>
+
+                                                <Box mt="xs">
+                                                    <_InputForm
+                                                        tooltip={t("ReceivedFrom")}
+                                                        label={t("ReceivedFrom")}
+                                                        placeholder={t("ReceivedFrom")}
+                                                        required
+                                                        nextField="EntityBankFormSubmit"
+                                                        name="received_from"
+                                                        form={bankForm}
+                                                        id="received_from"
+                                                    />
+                                                </Box>
+                                            </>
+                                        )}
+                                    </form>
+                                </ScrollArea>
+                            </Box>
+                        </Box>
+                    </Box>
+                </ScrollArea>
+            </Drawer.Content>
+        </Drawer.Root>
+    );
 }
 
 export default BankDrawer;

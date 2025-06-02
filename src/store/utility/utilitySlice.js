@@ -55,6 +55,19 @@ export const getCurrencyDropdown = createAsyncThunk(
   }
 );
 
+export const getBanksDropdown = createAsyncThunk(
+  "banks/select",
+  async (value) => {
+    try {
+      const response = getDataWithParam(value);
+      return response;
+    } catch (error) {
+      console.log("error", error.message);
+      throw error;
+    }
+  }
+);
+
 const utilitySlice = createSlice({
   name: "utility",
   initialState: {
@@ -69,6 +82,7 @@ const utilitySlice = createSlice({
     salesProcessTypeDropdownData: [],
     currencyDropdown: [],
     productUnitDropdown: [],
+    bankDropdown: [],
     productColorDropdown: [],
     productGradeDropdown: [],
     productBrandDropdown: [],
@@ -160,6 +174,10 @@ const utilitySlice = createSlice({
 
     builder.addCase(getCurrencyDropdown.fulfilled, (state, action) => {
       state.currencyDropdown = action.payload.data;
+    });
+
+    builder.addCase(getBanksDropdown.fulfilled, (state, action) => {
+      state.bankDropdown = action.payload.data;
     });
     builder.addCase(getSettingWithoutParamDropdown.fulfilled, (state, action) => {
       state.settingWithoutParamDropdown = action.payload.data;

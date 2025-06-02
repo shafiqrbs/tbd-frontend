@@ -44,7 +44,7 @@ function InputForm(props) {
                         {...form.getInputProps(name)}
                         onKeyDown={getHotkeyHandler([
                             ['Enter', (e) => {
-                                nextField && nextField === 'EntityFormSubmit' ?
+                                nextField && (nextField === 'EntityFormSubmit' || nextField === 'cheque_date') ?
                                     document.getElementById(nextField).click() :
                                     document.getElementById(nextField).focus()
                             }],
