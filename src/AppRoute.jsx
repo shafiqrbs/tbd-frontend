@@ -80,6 +80,7 @@ import LedgerViewIndex from "./components/modules/accounting/ledger-view/LedgerV
 import WarehouseListIndex from "./components/modules/core/warehouse-list/WarehouseListIndex.jsx";
 import HeadDomainIndex from "./components/modules/domain/head-group/HeadDomainIndex";
 import LedgerDomainIndex from "./components/modules/domain/ledger/LedgerDomainIndex";
+import WarehouseIssueIndex from "./components/modules/inventory/warehouse-issue/WarehouseIssueIndex.jsx";
 
 function AppRoute() {
 	return (
@@ -205,6 +206,14 @@ function AppRoute() {
 					/>
 				</Route>
 				<Route path="/inventory" element={<ProtectedModule modules={["sales-purchase", "inventory"]} />}>
+					<Route
+						path="warehouse-issue"
+						element={
+							<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+								<WarehouseIssueIndex />
+							</ProtectedRoute>
+						}
+					/>
 					<Route
 						path="sales/edit/:id"
 						element={
