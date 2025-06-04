@@ -154,7 +154,7 @@ function _VoucherManageHeadDrawer(props) {
             <form onSubmit={form.onSubmit(handleVoucherFormSubmit)}>
               <Box>
                 <Box bg="gray.1"  px="sm" py="xs" >
-                  <Text fz={14} fw={600}>{t('PrimaryVoucherHead')}{height}</Text>
+                  <Text fz={14} fw={600}>{t('PrimaryVoucherHead')}</Text>
                 </Box>
                 <ScrollArea h={height - 450} scrollbarSize={2} scrollbars="y" >
                   <Box p="md" className="borderRadiusAll">
