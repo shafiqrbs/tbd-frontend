@@ -2,9 +2,22 @@ import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {useOutletContext} from "react-router-dom";
-import {Grid, Box, Text, Card, ScrollArea, Loader, Center} from "@mantine/core";
+import {Grid, Box, Text, Card, ScrollArea, Loader, Center, TextInput, Tooltip} from "@mantine/core";
 import {getIndexEntityData} from "../../../../store/core/crudSlice.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
+import genericClass from "../../../../assets/css/Generic.module.css";
+import {IconInfoCircle, IconSearch, IconX} from "@tabler/icons-react";
+
+function useDebouncedValue(value, delay) {
+    const [debounced, setDebounced] = useState(value);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setDebounced(value), delay);
+        return () => clearTimeout(timer);
+    }, [value, delay]);
+
+    return debounced;
+}
 
 export default function VoucherNavigation({
                                               activeVoucher,
@@ -27,6 +40,22 @@ export default function VoucherNavigation({
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [searchValue, setSearchValue] = useState("");
+    const debouncedSearchValue = useDebouncedValue(searchValue, 250);
+
+    const filteredVoucherList = useMemo(() => {
+        if (!allVoucherList) return [];
+
+        const keyword = debouncedSearchValue.trim().toLowerCase();
+
+        if (!keyword) return allVoucherList;
+
+        return allVoucherList.filter((voucher) =>
+            voucher.name?.toLowerCase().includes(keyword)
+        );
+    }, [allVoucherList, debouncedSearchValue]);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -80,7 +109,7 @@ export default function VoucherNavigation({
     };
 
     const voucherListItems = useMemo(() => {
-        return allVoucherList?.map((item) => (
+        return filteredVoucherList.map((item) => (
             <Box
                 key={item.id}
                 className={`${classes.pressableCard} border-radius`}
@@ -95,7 +124,7 @@ export default function VoucherNavigation({
                 </Text>
             </Box>
         ));
-    }, [allVoucherList, activeVoucher]);
+    }, [filteredVoucherList, activeVoucher]);
 
     return (
         <Box>
@@ -103,7 +132,64 @@ export default function VoucherNavigation({
                 <Grid gutter={2}>
                     <Grid.Col span={11}>
                         <Text fz="md" fw={500} className={classes.cardTitle}>
-                            {t("VoucherNavigation")}
+
+                            <Box p={"xs"} className={genericClass.genericHighlightedBox}>
+                                <Tooltip
+                                    label={t("EnterSearchAnyKeyword")}
+                                    px={16}
+                                    py={2}
+                                    position="top-end"
+                                    color="red"
+                                    withArrow
+                                    offset={2}
+                                    zIndex={100}
+                                    transitionProps={{
+                                        transition: "pop-bottom-left",
+                                        duration: 1000,
+                                    }}
+                                >
+                                    <TextInput
+                                        leftSection={
+                                            <IconSearch size={16} opacity={0.5}/>
+                                        }
+                                        size="sm"
+                                        placeholder={t("Voucher")}
+                                        onChange={(e) => {
+                                            setSearchValue(e.target.value);
+                                        }}
+                                        value={searchValue}
+                                        id={"SearchKeyword"}
+                                        rightSection={
+                                            searchValue ? (
+                                                <Tooltip
+                                                    label={t("Close")}
+                                                    withArrow
+                                                    bg={`red.5`}
+                                                >
+                                                    <IconX
+                                                        color={`red`}
+                                                        size={16}
+                                                        opacity={0.5}
+                                                        onClick={() => {
+                                                            setSearchValue("");
+                                                        }}
+                                                    />
+                                                </Tooltip>
+                                            ) : (
+                                                <Tooltip
+                                                    label={t("FieldIsRequired")}
+                                                    withArrow
+                                                    position={"bottom"}
+                                                    c={"red"}
+                                                    bg={`red.1`}
+                                                >
+                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                </Tooltip>
+                                            )
+                                        }
+                                    />
+                                </Tooltip>
+                            </Box>
                         </Text>
                     </Grid.Col>
                 </Grid>

@@ -1,23 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
-    Grid,
-    Box,
-    Group,
-    Text,
-    ActionIcon,
-    Stack,
-    Button,
-    Flex,
-    NumberInput,
+    Grid, Box, Group, Text, ActionIcon, Stack, Button, Flex, NumberInput, SimpleGrid,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
-    IconCalendar,
-    IconTrashX,
-    IconDeviceFloppy,
-    IconPlus,
-    IconSum,
+    IconCalendar, IconTrashX, IconDeviceFloppy, IconPlus, IconSum, IconX,
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -26,8 +14,7 @@ import {modals} from "@mantine/modals";
 import {DataTable} from "mantine-datatable";
 
 import {
-    setFetching,
-    setValidationData,
+    setFetching, setValidationData,
 } from "../../../../store/accounting/crudSlice";
 import {storeEntityData} from "../../../../store/core/crudSlice";
 
@@ -45,6 +32,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import BankDrawer from "../common/BankDrawer";
 import Navigation from "../common/Navigation";
 import DatePickerForm from "../../../form-builders/DatePicker";
+import classes from './RowExpansion.module.css';
 
 function VoucherFormIndex({currencySymbol}) {
     const {t} = useTranslation();
@@ -108,8 +96,7 @@ function VoucherFormIndex({currencySymbol}) {
 
             const updatedData = secondaryLedgerHeadDropdownData.map(group => {
                 return {
-                    ...group,
-                    items: group.items.filter(item => item.value !== primaryLedgerHeadData)
+                    ...group, items: group.items.filter(item => item.value !== primaryLedgerHeadData)
                 };
             });
             setSecondaryLedgerHeadDropdownData(updatedData)
@@ -170,9 +157,7 @@ function VoucherFormIndex({currencySymbol}) {
     };
 
     const getParentLedgerSlugWithDetails = (id) => {
-        const topLevelAccounts = activeVoucher?.ledger_account_head_primary.filter(
-            item => !item.pivot?.primary_account_head_id || item.id === id
-        );
+        const topLevelAccounts = activeVoucher?.ledger_account_head_primary.filter(item => !item.pivot?.primary_account_head_id || item.id === id);
 
         const parentLedgerSlug = topLevelAccounts?.[0]?.slug || null;
 
@@ -183,9 +168,7 @@ function VoucherFormIndex({currencySymbol}) {
         const cardProducts = localStorage.getItem("temp-voucher-entry");
         const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
 
-        const alreadyExists = myCardProducts.some(
-            (p) => p.id === primaryLedgerHeadObject?.id
-        );
+        const alreadyExists = myCardProducts.some((p) => p.id === primaryLedgerHeadObject?.id);
 
         if (alreadyExists) return;
 
@@ -196,8 +179,7 @@ function VoucherFormIndex({currencySymbol}) {
             account_head: primaryLedgerHeadObject?.display_name,
             debit: 0,
             credit: 0,
-            type: addedType,
-            ...(bankInfo && Object.keys(bankInfo).length > 0 ? {bankInfo} : {})
+            type: addedType, ...(bankInfo && Object.keys(bankInfo).length > 0 ? {bankInfo} : {})
         };
 
         const updatedProducts = [...myCardProducts, newEntry];
@@ -224,14 +206,11 @@ function VoucherFormIndex({currencySymbol}) {
         }
 
         const restItems = updatedItems.slice(1);
-        const totals = restItems.reduce(
-            (acc, item) => {
-                acc.debit += Number(item.debit) || 0;
-                acc.credit += Number(item.credit) || 0;
-                return acc;
-            },
-            {debit: 0, credit: 0}
-        );
+        const totals = restItems.reduce((acc, item) => {
+            acc.debit += Number(item.debit) || 0;
+            acc.credit += Number(item.credit) || 0;
+            return acc;
+        }, {debit: 0, credit: 0});
 
         const diff = totals.debit - totals.credit;
 
@@ -256,14 +235,11 @@ function VoucherFormIndex({currencySymbol}) {
             updatedItems.splice(index, 1);
 
             const restItems = updatedItems.slice(1);
-            const totals = restItems.reduce(
-                (acc, item) => {
-                    acc.debit += Number(item.debit) || 0;
-                    acc.credit += Number(item.credit) || 0;
-                    return acc;
-                },
-                {debit: 0, credit: 0}
-            );
+            const totals = restItems.reduce((acc, item) => {
+                acc.debit += Number(item.debit) || 0;
+                acc.credit += Number(item.credit) || 0;
+                return acc;
+            }, {debit: 0, credit: 0});
 
             if (updatedItems.length > 0) {
                 const diff = totals.debit - totals.credit;
@@ -277,38 +253,29 @@ function VoucherFormIndex({currencySymbol}) {
     };
 
     const renderForm = () => {
-        return (
-            <CustomerVoucherForm
+        return (<CustomerVoucherForm
                 secondaryLedgerHeadDropdownData={secondaryLedgerHeadDropdownData}
                 loadMyItemsFromStorage={loadMyItemsFromStorage}
                 primaryLedgerHeadObject={primaryLedgerHeadObject}
                 activeVoucher={activeVoucher}
                 setSecondaryLedgerHead={setSecondaryLedgerHead}
                 secondaryLedgerHead={secondaryLedgerHead}
-            />
-        );
+            />);
     };
 
     const form = useForm({
         initialValues: {
-            ref_no: "",
-            issue_date: "",
-            description: "",
-        },
-        validate: {
-            ref_no: isNotEmpty(),
-            issue_date: isNotEmpty(),
+            ref_no: "", issue_date: "", description: "",
+        }, validate: {
+            ref_no: isNotEmpty(), issue_date: isNotEmpty(),
         },
     });
 
-    const totals = myItems.reduce(
-        (acc, item) => {
-            acc.debit += Number(item.debit) || 0;
-            acc.credit += Number(item.credit) || 0;
-            return acc;
-        },
-        {debit: 0, credit: 0}
-    );
+    const totals = myItems.reduce((acc, item) => {
+        acc.debit += Number(item.debit) || 0;
+        acc.credit += Number(item.credit) || 0;
+        return acc;
+    }, {debit: 0, credit: 0});
 
     const handleFormSubmit = (values) => {
         dispatch(setValidationData(false));
@@ -323,9 +290,7 @@ function VoucherFormIndex({currencySymbol}) {
 
                 const formValue = {
                     ...form.values,
-                    issue_date: values.issue_date
-                        ? new Date(values.issue_date).toLocaleDateString("en-CA", options)
-                        : new Date().toLocaleDateString("en-CA"),
+                    issue_date: values.issue_date ? new Date(values.issue_date).toLocaleDateString("en-CA", options) : new Date().toLocaleDateString("en-CA"),
                     debit: totals.debit,
                     credit: totals.credit,
                     voucher_id: activeVoucher?.id,
@@ -335,12 +300,7 @@ function VoucherFormIndex({currencySymbol}) {
                 const {parentLedgerSlug} = await getParentLedgerSlugWithDetails(primaryLedgerHeadObject.parent_id);
                 let isFormSubmit = false
                 if (parentLedgerSlug === 'bank-account') {
-                    if (
-                        myItems[0] &&
-                        myItems[0].bankInfo &&
-                        typeof myItems[0].bankInfo === 'object' &&
-                        Object.keys(myItems[0].bankInfo).length > 0
-                    ) {
+                    if (myItems[0] && myItems[0].bankInfo && typeof myItems[0].bankInfo === 'object' && Object.keys(myItems[0].bankInfo).length > 0) {
                         isFormSubmit = true
                     } else {
                         isFormSubmit = false
@@ -352,8 +312,7 @@ function VoucherFormIndex({currencySymbol}) {
 
                 if (isFormSubmit === true) {
                     const value = {
-                        url: "accounting/voucher-entry",
-                        data: formValue,
+                        url: "accounting/voucher-entry", data: formValue,
                     };
 
                     const resultAction = await dispatch(storeEntityData(value));
@@ -385,17 +344,9 @@ function VoucherFormIndex({currencySymbol}) {
         });
     };
 
-    useHotkeys(
-        [
-            ["alt+n", () => document.getElementById("main_ledger_head").click()],
-            ["alt+r", () => form.reset()],
-            ["alt+s", () => document.getElementById("EntityFormSubmit")?.click()],
-        ],
-        []
-    );
+    useHotkeys([["alt+n", () => document.getElementById("main_ledger_head").click()], ["alt+r", () => form.reset()], ["alt+s", () => document.getElementById("EntityFormSubmit")?.click()],], []);
 
-    return (
-        <Box pt={6} bg={"#f0f1f9"}>
+    return (<Box pt={6} bg={"#f0f1f9"}>
             <Box>
                 <Grid columns={24} gutter={{base: 6}}>
                     <Grid.Col span={1}>
@@ -427,11 +378,10 @@ function VoucherFormIndex({currencySymbol}) {
                             className={`borderRadiusAll ${genericClass.genericSecondaryBg}`}
                             mb={"6"}
                         >
-                            <Box p={"xs"} className={genericClass.genericHighlightedBox}>
-                                <Box
-                                    style={{borderRadius: 4}}
-                                    className={genericClass.genericHighlightedBox}
-                                >
+                            <Box p="xs" className={genericClass.genericHighlightedBox}
+                                 style={{display: 'flex', alignItems: 'center', gap: 8}}>
+                                <Box style={{borderRadius: 4, flexGrow: 1}}
+                                     className={genericClass.genericHighlightedBox}>
                                     <SelectForm
                                         tooltip={t("Head")}
                                         label={t("")}
@@ -448,6 +398,13 @@ function VoucherFormIndex({currencySymbol}) {
                                         disabled={primaryLedgerDropdownEnable}
                                     />
                                 </Box>
+
+                                {/* Reset icon */}
+                                {primaryLedgerHeadData && (
+                                    <ActionIcon onClick={() => handleDeleteVoucher(1, 'main-ledger')} variant="subtle"
+                                                size="sm" aria-label="Reset selection">
+                                        <IconX size={16} opacity={0.6}/>
+                                    </ActionIcon>)}
                             </Box>
                             <Box
                                 pl={"4"}
@@ -528,98 +485,153 @@ function VoucherFormIndex({currencySymbol}) {
                                                     pagination: tableCss.pagination,
                                                 }}
                                                 records={myItems}
-                                                columns={[
-                                                    {
-                                                        accessor: "item_index",
-                                                        title: t("S/N"),
-                                                        width: 70,
-                                                        render: (record) => (
-                                                            <ActionIcon color="red.5" size={"sm"}>
-                                                                <IconPlus height={18} width={18} stroke={1.5}/>
-                                                            </ActionIcon>
-                                                        ),
+                                                columns={[{
+                                                    accessor: "item_index",
+                                                    title: t("S/N"),
+                                                    width: 70,
+                                                    render: (record) => (record?.bankInfo?.amount &&
+                                                        <ActionIcon color="red.5" size={"sm"}>
+                                                            <IconPlus height={18} width={18} stroke={1.5}/>
+                                                        </ActionIcon>),
+                                                }, {
+                                                    accessor: "mode",
+                                                    title: t("Mode"),
+                                                    width: 100,
+                                                    render: (record) => {
+                                                        return record.mode === 'debit' ? 'Debit' : 'Credit'
+                                                    }
+                                                }, {
+                                                    accessor: "ledger_name", title: t("LedgerName"),
+                                                }, {
+                                                    accessor: "account_head", title: t("AccountHead"),
+                                                }, {
+                                                    accessor: "debit",
+                                                    title: t("Debit"),
+                                                    width: 120,
+                                                    render: (record, index) => (<NumberInput
+                                                            disabled={record.mode === "credit"}
+                                                            hideControls
+                                                            ta={"right"}
+                                                            value={record.debit}
+                                                            onChange={(val) => handleInputChange(index, "debit", val)}
+                                                        />),
+                                                    footer: (<Group gap="xs">
+                                                            <Box mb={-4}>
+                                                                <IconSum size={16}/>
+                                                            </Box>
+                                                            <div>{totals.debit}</div>
+                                                        </Group>),
+                                                }, {
+                                                    accessor: "credit",
+                                                    title: t("Credit"),
+                                                    width: 120,
+                                                    resizable: true,
+                                                    render: (record, index) => (<NumberInput
+                                                            disabled={record.mode === "debit"}
+                                                            hideControls
+                                                            ta={"right"}
+                                                            value={record.credit}
+                                                            onChange={(val) => handleInputChange(index, "credit", val)}
+                                                        />),
+                                                    footer: (<Group gap="xs">
+                                                            <Box mb={-4}>
+                                                                <IconSum size={16}/>
+                                                            </Box>
+                                                            <div>{totals.credit}</div>
+                                                        </Group>),
+                                                }, {
+                                                    accessor: "action",
+                                                    title: t("Action"),
+                                                    textAlign: "right",
+                                                    render: (record, index) => (
+                                                        <Group gap={8} justify="right" wrap="nowrap">
+                                                            {<ActionIcon
+                                                                size={"sm"}
+                                                                variant="transparent"
+                                                                color="red.5"
+                                                                onClick={() => handleDeleteVoucher(index, record.type)}
+                                                            >
+                                                                <IconTrashX size="xs" stroke={1.5}/>
+                                                            </ActionIcon>}
+                                                        </Group>),
+                                                },]}
+                                                rowExpansion={{
+                                                    collapseProps: {
+                                                        transitionDuration: 500,
+                                                        animateOpacity: false,
+                                                        transitionTimingFunction: 'ease-out',
                                                     },
-                                                    {
-                                                        accessor: "mode",
-                                                        title: t("Mode"),
-                                                        width: 100,
-                                                        render: (record) => {
-                                                            return record.mode === 'debit' ? 'Debit' : 'Credit'
-                                                        }
-                                                    },
-                                                    {
-                                                        accessor: "ledger_name",
-                                                        title: t("LedgerName"),
-                                                    },
-                                                    {
-                                                        accessor: "account_head",
-                                                        title: t("AccountHead"),
-                                                    },
-                                                    {
-                                                        accessor: "debit",
-                                                        title: t("Debit"),
-                                                        width: 120,
-                                                        render: (record, index) => (
-                                                            <NumberInput
-                                                                disabled={record.mode === "credit"}
-                                                                hideControls
-                                                                ta={"right"}
-                                                                value={record.debit}
-                                                                onChange={(val) => handleInputChange(index, "debit", val)}
-                                                            />
-                                                        ),
-                                                        footer: (
-                                                            <Group gap="xs">
-                                                                <Box mb={-4}>
-                                                                    <IconSum size={16}/>
-                                                                </Box>
-                                                                <div>{totals.debit}</div>
-                                                            </Group>
-                                                        ),
-                                                    },
-                                                    {
-                                                        accessor: "credit",
-                                                        title: t("Credit"),
-                                                        width: 120,
-                                                        resizable: true,
-                                                        render: (record, index) => (
-                                                            <NumberInput
-                                                                disabled={record.mode === "debit"}
-                                                                hideControls
-                                                                ta={"right"}
-                                                                value={record.credit}
-                                                                onChange={(val) => handleInputChange(index, "credit", val)}
-                                                            />
-                                                        ),
-                                                        footer: (
-                                                            <Group gap="xs">
-                                                                <Box mb={-4}>
-                                                                    <IconSum size={16}/>
-                                                                </Box>
-                                                                <div>{totals.credit}</div>
-                                                            </Group>
-                                                        ),
-                                                    },
-                                                    {
-                                                        accessor: "action",
-                                                        title: t("Action"),
-                                                        textAlign: "right",
-                                                        render: (record, index) => (
-                                                            <Group gap={8} justify="right" wrap="nowrap">
-                                                                {
-                                                                    <ActionIcon
-                                                                        size={"sm"}
-                                                                        variant="transparent"
-                                                                        color="red.5"
-                                                                        onClick={() => handleDeleteVoucher(index, record.type)}
-                                                                    >
-                                                                        <IconTrashX size="xs" stroke={1.5}/>
-                                                                    </ActionIcon>
-                                                                }
-                                                            </Group>
-                                                        ),
-                                                    },
-                                                ]}
+                                                    allowMultiple: true,
+                                                    content: ({record}) => (
+                                                        <Stack className={classes.details} p="xs" gap={6}>
+                                                            <SimpleGrid cols={2} spacing="sm" verticalSpacing="xs"
+                                                                        breakpoints={[{maxWidth: 'sm', cols: 1}]}>
+                                                                {record?.bankInfo?.cheque_date && (
+                                                                    <Group gap={6} align="start">
+                                                                        <div className={classes.label}>Cheque Date:
+                                                                        </div>
+                                                                        <div>
+                                                                            {(() => {
+                                                                                const date = new Date(record.bankInfo.cheque_date);
+                                                                                const formatted = date.toLocaleString('en-US', {
+                                                                                    year: 'numeric',
+                                                                                    month: 'long',
+                                                                                    day: 'numeric',
+                                                                                });
+                                                                                return formatted;
+                                                                            })()}
+                                                                        </div>
+                                                                    </Group>)}
+
+                                                                {record?.bankInfo?.cross_using && (
+                                                                    <Group gap={6} align="start">
+                                                                        <div className={classes.label}>Cross using:
+                                                                        </div>
+                                                                        <div>{record.bankInfo.cross_using}</div>
+                                                                    </Group>)}
+
+                                                                {record?.bankInfo?.amount && (
+                                                                    <Group gap={6} align="start">
+                                                                        <div className={classes.label}>Amount:</div>
+                                                                        <div>{record.bankInfo.amount}</div>
+                                                                    </Group>)}
+
+                                                                {record?.bankInfo?.forwarding_name && (
+                                                                    <Group gap={6} align="start">
+                                                                        <div className={classes.label}>Forwarding
+                                                                            name:
+                                                                        </div>
+                                                                        <div>{record.bankInfo.forwarding_name}</div>
+                                                                    </Group>)}
+
+                                                                {record?.bankInfo?.pay_mode && (
+                                                                    <Group gap={6} align="start">
+                                                                        <div className={classes.label}>Pay mode:</div>
+                                                                        <div>{record.bankInfo.pay_mode}</div>
+                                                                    </Group>)}
+
+                                                                {record?.bankInfo?.branch_name && (
+                                                                    <Group gap={6} align="start">
+                                                                        <div className={classes.label}>Branch name:
+                                                                        </div>
+                                                                        <div>{record.bankInfo.branch_name}</div>
+                                                                    </Group>)}
+
+                                                                {record?.bankInfo?.received_from && (
+                                                                    <Group gap={6} align="start">
+                                                                        <div className={classes.label}>Received from:
+                                                                        </div>
+                                                                        <div>{record.bankInfo.received_from}</div>
+                                                                    </Group>)}
+
+                                                                {record?.bankInfo?.cheque_no && (
+                                                                    <Group gap={6} align="start">
+                                                                        <div className={classes.label}>Cheque no:</div>
+                                                                        <div>{record.bankInfo.cheque_no}</div>
+                                                                    </Group>)}
+                                                            </SimpleGrid>
+                                                        </Stack>)
+                                                }}
                                                 fetching={fetching}
                                                 totalRecords={indexData.total}
                                                 key={"item_index"}
@@ -715,8 +727,7 @@ function VoucherFormIndex({currencySymbol}) {
                                                         <Grid.Col span={9}></Grid.Col>
                                                         <Grid.Col span={3}>
                                                             <Stack right align="flex-end">
-                                                                {!saveCreateLoading && isOnline && (
-                                                                    <Button
+                                                                {!saveCreateLoading && isOnline && (<Button
                                                                         size="xs"
                                                                         color={"green.8"}
                                                                         type="submit"
@@ -730,8 +741,7 @@ function VoucherFormIndex({currencySymbol}) {
                                                                                 {t("AddVoucher")}
                                                                             </Text>
                                                                         </Flex>
-                                                                    </Button>
-                                                                )}
+                                                                    </Button>)}
                                                             </Stack>
                                                         </Grid.Col>
                                                     </Grid>
@@ -756,8 +766,7 @@ function VoucherFormIndex({currencySymbol}) {
                     </Grid.Col>
                 </Grid>
             </Box>
-            {bankDrawer && (
-                <BankDrawer
+            {bankDrawer && (<BankDrawer
                     bankDrawer={bankDrawer}
                     setBankDrawer={setBankDrawer}
                     module={"VoucherEntry"}
@@ -766,10 +775,8 @@ function VoucherFormIndex({currencySymbol}) {
                     entryType={activeVoucher.mode}
                     setBankInfo={setBankInfo}
                     onSubmit={handleBankInfoSubmit}
-                />
-            )}
-        </Box>
-    );
+                />)}
+        </Box>);
 }
 
 export default VoucherFormIndex;
