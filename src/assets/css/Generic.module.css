@@ -3,34 +3,34 @@
 }
 
 .bodyBackground {
-    background-color:#fffbf459;
+    background-color:#f1f3f5;
 }
 
 .boxBackground {
-    background-color:#fffbf459!important;
+    background-color:#f1f3f5!important;
 }
 
 .boxBorderBackground {
-    background-color:#fffbf459;
-    border: 1px solid #fffbf459;
+    background-color:#f1f3f5;
+    border: 1px solid #e7f5ff;
 }
 
 .genericBackground{
-    background-color:#fffbf459;
+    background-color: #e9ecef;
 }
 .genericHighlightedBox{
-    background-color:#edd5af;
+    background-color:#e9ecef;
 }
 
 .genericSecondaryBg{
-    background-color:#fbf7ef;
+    background-color:#f8f9fa;
 }
 
 .genericPrimaryBg{
-    background-color: #905a23;
+    background-color: #a5d8ff;
 }
 .genericPrimaryFontColor{
-    color: #29190a;
+    color: #1864ab;
 }
 
 ._cardTitle_sz11i_29::after {

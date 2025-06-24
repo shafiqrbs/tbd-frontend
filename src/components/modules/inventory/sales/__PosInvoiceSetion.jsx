@@ -438,11 +438,11 @@ export default function __PosInvoiceSection(props) {
                                     label={t("MustBeNeedReceiveAmountWithoutCustomer")}
                                     opened={isDisabled && form.errors.receive_amount}
                                     position="top-center"
-                                    bg={"#905923"}
+                                    bg={"#e9ecef"}
                                     withArrow
                                 >
                                     <Grid gutter={{base: 1}}>
-                                        <Grid.Col span={10} bg={"#bc924f"} p={"14"} pr={"0"}>
+                                        <Grid.Col span={10} bg='var(--mantine-color-blue-3)' p={"14"} pr={"0"}>
                                             <InputNumberForm
                                                 type="number"
                                                 tooltip={t("ReceiveAmountValidateMessage")}
@@ -462,7 +462,7 @@ export default function __PosInvoiceSection(props) {
                                                 }}
                                             />
                                         </Grid.Col>
-                                        <Grid.Col span={2} bg={"#bc924f"} p={"18"} pl={"8"}>
+                                        <Grid.Col span={2} bg='var(--mantine-color-blue-3)' p={"18"} pl={"8"}>
                                             <Tooltip
                                                 multiline
                                                 bg={"#905923"}

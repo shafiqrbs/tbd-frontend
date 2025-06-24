@@ -319,7 +319,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
 					</Modal.Body>
 				</Modal.Content>
 			</Modal.Root>
-			<Box bg={"#C6AF9D"} mb={"2"} pos={`relative`}>
+			<Box bg={"#1c7ed6"} mb={"2"} pos={`relative`}>
 				<Grid columns={24} gutter={{ base: 2 }} justify="space-between">
 					<Grid.Col span={3}>
 						{configData?.path ? (
@@ -396,7 +396,7 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
 								component="button"
 								bg={"transparent"}
 								style={{
-									backgroundColor: "#C6AF9D",
+									backgroundColor: "#1c7ed6",
 									color: "white",
 									fontWeight: 800,
 									transition: "background 1s",

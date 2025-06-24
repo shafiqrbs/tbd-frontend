@@ -14,6 +14,7 @@ import {useDispatch} from "react-redux";
 import {storeEntityData, updateEntityData} from "../../../../store/inventory/crudSlice.js";
 import inputCss from "../../../../assets/css/InlineInputField.module.css";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import genericClass from "../../../../assets/css/Generic.module.css";
 
 // Utility: Parses localStorage safely
 const getJSON = (key, fallback = null) => {
@@ -664,7 +665,8 @@ export default function __PosSalesForm(props) {
                             justify="space-between"
                             align="center"
                             pt={0}
-                            bg={"#f8eedf"}
+                            bg={"#e9ecef"}
+
                         >
                             <Group spacing="xs" pl={"xs"}>
                                 <IconSum size="1.25em"/>
