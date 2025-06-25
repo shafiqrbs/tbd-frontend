@@ -325,13 +325,13 @@ export default function __PosInvoiceSection(props) {
                                 </Grid>
                                 <Grid gutter={{base: 4}}>
                                     <Grid.Col span={4}>
-                                        <Box h={1} ml={"xl"} mr={"xl"} bg={"#905a23"}></Box>
+                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'></Box>
                                     </Grid.Col>
                                     <Grid.Col span={4}>
-                                        <Box h={1} ml={"xl"} mr={"xl"} bg={"#905a23"}></Box>
+                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'></Box>
                                     </Grid.Col>
                                     <Grid.Col span={4}>
-                                        <Box h={1} ml={"xl"} mr={"xl"} bg={"#905a23"}></Box>
+                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'></Box>
                                     </Grid.Col>
                                 </Grid>
                                 <Grid gutter={{base: 4}}>

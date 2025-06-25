@@ -16,14 +16,14 @@
 }
 
 .genericBackground{
-    background-color: #e9ecef;
+    background-color: var( --theme-secondary-color-1)
 }
 .genericHighlightedBox{
-    background-color:#e9ecef;
+    background-color:var( --theme-secondary-color-4)
 }
 
 .genericSecondaryBg{
-    background-color:#f8f9fa;
+    background-color:var( --theme-secondary-color-3)
 }
 
 .genericPrimaryBg{
@@ -36,7 +36,7 @@
 ._cardTitle_sz11i_29::after {
     content: '';
     display: block;
-    background-color: #905a23;
+    background-color:var(--theme-primary-color-4);
     width: calc(2.8125rem * var(--mantine-scale));
     height: calc(0.125rem * var(--mantine-scale));
     margin-top: var(--mantine-spacing-sm);

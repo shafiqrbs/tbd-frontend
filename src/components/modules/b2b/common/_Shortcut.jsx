@@ -70,11 +70,11 @@ export default function _Shortcut(props) {
               withArrow
               position={"left"}
               c={"white"}
-              bg={"#905a23"}
+              bg='var(--theme-primary-color-4)'
               transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
-                bg={"#905a23"}
+                bg='var(--theme-primary-color-4)'
                 size="md"
                 pl={"12"}
                 pr={"12"}

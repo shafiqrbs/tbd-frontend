@@ -30,7 +30,7 @@
 &::after {
      content: '';
      display: block;
-     background-color: #905a23;
+     background-color:var(--theme-primary-color-4);
      width: rem(56px);
      height: rem(2px);
      margin-top: var(--mantine-spacing-sm);
@@ -38,5 +38,5 @@
 }
 
 .btnPrimaryBg {
-    background-color: #905a23;
+    background-color: var(--theme-primary-color-6);
 }

@@ -85,14 +85,14 @@ function MainDashboard(props) {
                             <Grid.Col span={12} >
                                 <Tooltip
                                     label={t("Domain")} withArrow position="top-center"
-                                    bg={"#905a23"}
+                                    bg='var(--theme-primary-color-4)'
                                     px={16}
                                     py={2}
                                     c={'white'}
                                     offset={2}
                                     transitionProps={{ transition: "pop-bottom-left", duration: 500 }}>
                                     <Image
-                                        bg={"#905a23"}
+                                        bg='var(--theme-primary-color-4)'
                                         h={60}
                                         radius="sm"
                                         src={invoice}
@@ -216,14 +216,14 @@ function MainDashboard(props) {
                                 <Grid.Col span={6} >
                                     <Tooltip
                                         label={t("PointOfSales")} withArrow position="top-center"
-                                        bg={"#905a23"}
+                                        bg='var(--theme-primary-color-4)'
                                         px={16}
                                         py={2}
                                         c={'white'}
                                         offset={2}
                                         transitionProps={{ transition: "pop-bottom-left", duration: 500 }}>
                                         <Image
-                                            bg={"#905a23"}
+                                            bg='var(--theme-primary-color-4)'
                                             h={60}
                                             radius="sm"
                                             src={domainConfig?.inventory_config?.is_pos === 1 ?  pos : invoice}

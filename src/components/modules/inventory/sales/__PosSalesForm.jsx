@@ -665,7 +665,7 @@ export default function __PosSalesForm(props) {
                             justify="space-between"
                             align="center"
                             pt={0}
-                            bg={"#e9ecef"}
+                            bg='var(--theme-primary-color-2)'
 
                         >
                             <Group spacing="xs" pl={"xs"}>

@@ -262,7 +262,7 @@ export default function CategoryTable({ id }) {
                                                         size="compact-xs"
                                                         radius="xs"
                                                         variant="filled"
-                                                        color={item.not_process === 1 ? "#905a23" : "red.3"}
+                                                        color={item.not_process === 1 ? 'var(--theme-primary-color-4)' : "red.3"}
                                                         fw={100}
                                                         fz={12}
                                                         disabled={item.not_process !== 1}

@@ -1,7 +1,7 @@
 
 /* Input.module.css */
 .input {
-    border: 1px solid #905a23;
+    border: 1px solid  var(--theme-primary-color-4);
     background: #fbf7ef;
     text-align: center;
 

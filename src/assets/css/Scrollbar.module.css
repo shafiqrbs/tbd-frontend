@@ -5,11 +5,11 @@
  }
 
 &[data-orientation='vertical'] .thumb {
-     background-color:#905a23;
+     background-color:var(--theme-primary-color-4);
  }
 
 &[data-orientation='horizontal'] .thumb {
-     background-color:#905a23;
+     background-color:var(--theme-primary-color-4);
  }
 }
 

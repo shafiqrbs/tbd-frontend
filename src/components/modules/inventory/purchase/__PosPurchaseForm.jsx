@@ -1,5 +1,5 @@
 import {isNotEmpty, useForm} from "@mantine/form";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import __PosVendorSection from "./__PosVendorSection";
 import {Box, Text, ActionIcon, Group, TextInput} from "@mantine/core";
 import {DataTable} from "mantine-datatable";
@@ -462,7 +462,7 @@ export default function __PosPurchaseForm(props) {
                             justify="space-between"
                             align="center"
                             pt={0}
-                            bg={"#f8eedf"}
+                            bg='var(--theme-primary-color-2)'
                         >
                             <Group spacing="xs" pl={"xs"}>
                                 <IconSum size="1.25em"/>

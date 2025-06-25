@@ -288,21 +288,25 @@ input[type=radio]:checked + label>img {
     z-index: 1000;
 }
 
+
 .btnPrimaryBg {
-    background-color: #905a23!important;
+    background-color: var(--mantine-color-blue-6)!important;
+@mixin hover {
+    background-color: var(--mantine-color-blue-8)!important;
+}
 }
 
 .btnPrimaryBgOutline {
-    color: #905a23!important;
+    color: var(--mantine-color-blue-6)!important;
     background-color: transparent!important;
-    border:  #905a23!important;
+    border:  var(--mantine-color-blue-6)!important;
 }
 
 .tooltipPrimaryBg {
-    background-color: #905a23!important;
+    background-color: var(--mantine-color-blue-8)!important;
 }
 .tooltipSecondaryBg {
-    background-color: #905a23!important;
+    background-color: var(--mantine-color-blue-8)!important;
 }
 
 /* Tooltip z-index */
@@ -321,7 +325,7 @@ input[type=radio]:checked + label>img {
 
     @mixin hover {
         /* background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));*/
-        color:  #905a23 !important;
+        color: var(--mantine-color-blue-6);
         background-color: whitesmoke;
     }
 }
