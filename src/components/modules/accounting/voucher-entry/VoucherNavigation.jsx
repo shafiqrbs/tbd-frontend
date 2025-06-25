@@ -128,74 +128,68 @@ export default function VoucherNavigation({
 
     return (
         <Box>
-            <Card shadow="md" radius="4" className={classes.card} padding="xs">
-                <Grid gutter={2}>
-                    <Grid.Col span={11}>
-                        <Text fz="md" fw={500} className={classes.cardTitle}>
-
-                            <Box p={"xs"} className={genericClass.genericHighlightedBox}>
-                                <Tooltip
-                                    label={t("EnterSearchAnyKeyword")}
-                                    px={16}
-                                    py={2}
-                                    position="top-end"
-                                    color="red"
-                                    withArrow
-                                    offset={2}
-                                    zIndex={100}
-                                    transitionProps={{
-                                        transition: "pop-bottom-left",
-                                        duration: 1000,
-                                    }}
-                                >
-                                    <TextInput
-                                        leftSection={
-                                            <IconSearch size={16} opacity={0.5}/>
-                                        }
-                                        size="sm"
-                                        placeholder={t("Voucher")}
-                                        onChange={(e) => {
-                                            setSearchValue(e.target.value);
-                                        }}
-                                        value={searchValue}
-                                        id={"SearchKeyword"}
-                                        rightSection={
-                                            searchValue ? (
-                                                <Tooltip
-                                                    label={t("Close")}
-                                                    withArrow
-                                                    bg={`red.5`}
-                                                >
-                                                    <IconX
-                                                        color={`red`}
-                                                        size={16}
-                                                        opacity={0.5}
-                                                        onClick={() => {
-                                                            setSearchValue("");
-                                                        }}
-                                                    />
-                                                </Tooltip>
-                                            ) : (
-                                                <Tooltip
-                                                    label={t("FieldIsRequired")}
-                                                    withArrow
-                                                    position={"bottom"}
-                                                    c={"red"}
-                                                    bg={`red.1`}
-                                                >
-                                                    <IconInfoCircle size={16} opacity={0.5}/>
-                                                </Tooltip>
-                                            )
-                                        }
-                                    />
-                                </Tooltip>
-                            </Box>
-                        </Text>
-                    </Grid.Col>
-                </Grid>
+            <Card shadow="md" radius="4" className={classes.card} >
+                <Box className={genericClass.genericHighlightedBox} mb={'xs'}>
+                    <Tooltip
+                        label={t("EnterSearchAnyKeyword")}
+                        px={8}
+                        py={2}
+                        position="top-end"
+                        color="red"
+                        withArrow
+                        offset={2}
+                        zIndex={100}
+                        transitionProps={{
+                            transition: "pop-bottom-left",
+                            duration: 1000,
+                        }}
+                    >
+                        <TextInput
+                            leftSection={
+                                <IconSearch size={16} opacity={0.5}/>
+                            }
+                            size="sm"
+                            required={false}
+                            placeholder={t("VoucherType")}
+                            onChange={(e) => {
+                                setSearchValue(e.target.value);
+                            }}
+                            value={searchValue}
+                            id={"SearchKeyword"}
+                            rightSection={
+                                searchValue ? (
+                                    <Tooltip
+                                        label={t("Close")}
+                                        withArrow
+                                        bg={`red.5`}
+                                    >
+                                        <IconX
+                                            color={`red`}
+                                            size={16}
+                                            opacity={0.5}
+                                            onClick={() => {
+                                                setSearchValue("");
+                                            }}
+                                        />
+                                    </Tooltip>
+                                ) : (
+                                    <Tooltip
+                                        label={t("FieldIsRequired")}
+                                        withArrow
+                                        position={"bottom"}
+                                        c={"red"}
+                                        bg={`red.1`}
+                                    >
+                                        <IconInfoCircle size={16} opacity={0.5}/>
+                                    </Tooltip>
+                                )
+                            }
+                        />
+                    </Tooltip>
+                </Box>
                 <Grid columns={9} gutter={1}>
                     <Grid.Col span={9}>
-                        <ScrollArea h={height + 42} scrollbarSize={2} scrollbars="y" type="never">
+                        <ScrollArea h={height + 38} scrollbarSize={2} scrollbars="y" type="never">
                             {loading ? (
                                 <Center><Loader size="sm"/></Center>
                             ) : error ? (

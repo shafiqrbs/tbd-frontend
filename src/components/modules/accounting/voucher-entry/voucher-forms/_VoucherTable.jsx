@@ -202,7 +202,7 @@ function _VoucherTable(props) {
                                         }}
                                         loaderSize="xs"
                                         loaderColor="grape"
-                                        height={tableHeight-30}
+                                        height={tableHeight-80}
                                         scrollAreaProps={{ type: 'never' }}
                                         rowBackgroundColor={(item) => {
                                             if (item.invoice_no === selectedRow) return '#e2c2c263';
