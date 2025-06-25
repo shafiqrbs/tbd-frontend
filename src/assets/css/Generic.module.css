@@ -78,54 +78,54 @@ input:checked + * > & {
 }
 
 .invoiceAdd{
-    background-color:#905a23;
+    background-color:var(--theme-add-btn-color);
     @mixin hover {
-        background-color: rgba(144, 90, 35, 0.88);
+        background-color:var(--theme-add-btn-color-hover);
     }
 }
 
 .invoiceSave{
-    background-color:#4c3a02;
+    background-color:var(--theme-save-btn-color);
     @mixin hover {
-        background-color: rgba(76, 58, 2, 0.85);
+        background-color: var(--theme-save-btn-color-hover);
     }
 }
 .invoicePos{
-    background-color:#977304;
+    background-color:var(--theme-pos-btn-color);
     @mixin hover {
-        background-color: rgba(151, 115, 4, 0.88);
+        background-color: var(--theme-pos-btn-color-hover);
     }
 
 }
 
 .invoicePrint{
-    background-color:#7b4c1e;
+    background-color:var(--theme-print-btn-color);
     @mixin hover {
-        background-color: rgba(123, 76, 30, 0.87);
+        background-color: var(--theme-print-btn-color-hover);
     }
 
 }
 
 .invoiceHold{
-    background-color:#e3ad05;
+    background-color:var(--theme-hold-btn-color);
     @mixin hover {
-        background-color: rgba(227, 173, 5, 0.85);
+        background-color: var(--theme-hold-btn-color-hover);
     }
 
 }
 
 .invoiceReset{
-    background-color:#e1bb7e;
+    background-color:var(--theme-reset-btn-color);
     @mixin hover {
-        background-color: rgba(225, 187, 126, 0.84);
+        background-color: var(--theme-reset-btn-color-hover);
     }
 
 }
 
 .invoiceEdit{
-    background-color: #dbcdb7;
+    background-color: var(--theme-edit-btn-color);
     @mixin hover {
-        background-color: rgba(219, 205, 183, 0.87);
+        background-color: var(--theme-pos-btn-color-hover);
     }
 
 }

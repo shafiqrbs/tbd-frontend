@@ -2,50 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
---mantine-color-blue-0: #e7f5ff;
---mantine-color-blue-1: #d0ebff;
---mantine-color-blue-2: #a5d8ff;
---mantine-color-blue-3: #74c0fc;
---mantine-color-blue-4: #4dabf7;
---mantine-color-blue-5: #339af0;
---mantine-color-blue-6: #228be6;
---mantine-color-blue-7: #1c7ed6;
---mantine-color-blue-8: #1971c2;
---mantine-color-blue-9: #1864ab;
---mantine-color-green-0: #ebfbee;
---mantine-color-green-1: #d3f9d8;
---mantine-color-green-2: #b2f2bb;
---mantine-color-green-3: #8ce99a;
---mantine-color-green-4: #69db7c;
---mantine-color-green-5: #51cf66;
---mantine-color-green-6: #40c057;
---mantine-color-green-7: #37b24d;
---mantine-color-green-8: #2f9e44;
---mantine-color-green-9: #2b8a3e;
---mantine-color-dark-0: #c9c9c9;
---mantine-color-dark-1: #b8b8b8;
---mantine-color-dark-2: #828282;
---mantine-color-dark-3: #696969;
---mantine-color-dark-4: #424242;
---mantine-color-dark-5: #3b3b3b;
---mantine-color-dark-6: #2e2e2e;
---mantine-color-dark-7: #242424;
---mantine-color-dark-8: #1f1f1f;
---mantine-color-dark-9: #141414;
---mantine-color-gray-0: #f8f9fa;
---mantine-color-gray-1: #f1f3f5;
---mantine-color-gray-2: #e9ecef;
---mantine-color-gray-3: #dee2e6;
---mantine-color-gray-4: #ced4da;
---mantine-color-gray-5: #adb5bd;
---mantine-color-gray-6: #868e96;
---mantine-color-gray-7: #495057;
---mantine-color-gray-8: #343a40;
---mantine-color-gray-9: #212529;
+:root {
 
- */
+    --theme-primary-color-0: var(--mantine-color-blue-0);
+    --theme-primary-color-1: var(--mantine-color-blue-1);
+    --theme-primary-color-2: var(--mantine-color-blue-2);
+    --theme-primary-color-3: var(--mantine-color-blue-3);
+    --theme-primary-color-4: var(--mantine-color-blue-4);
+    --theme-primary-color-5: var(--mantine-color-blue-5);
+    --theme-primary-color-6: var(--mantine-color-blue-6);
+    --theme-primary-color-7: var(--mantine-color-blue-7);
+    --theme-primary-color-8: var(--mantine-color-blue-8);
+    --theme-primary-color-9: var(--mantine-color-blue-9);
 
+    --theme-secondary-color-0: var(--mantine-color-gray-0);
+    --theme-secondary-color-1: var(--mantine-color-gray-1);
+    --theme-secondary-color-2: var(--mantine-color-gray-2);
+    --theme-secondary-color-3: var(--mantine-color-gray-3);
+    --theme-secondary-color-4: var(--mantine-color-gray-4);
+    --theme-secondary-color-5: var(--mantine-color-gray-5);
+    --theme-secondary-color-6: var(--mantine-color-gray-6);
+    --theme-secondary-color-7: var(--mantine-color-gray-7);
+    --theme-secondary-color-8: var(--mantine-color-gray-8);
+
+    --theme-success-color: var(--mantine-color-green-6);
+    --theme-error-color: var(--mantine-color-red-6);
+    --theme-warning-color: var(--mantine-color-yellow-6);
+    --theme-info-color: var(--mantine-color-blue-6);
+    --theme-notice-color: var(--mantine-color-gray-6);
+    --theme-validation-error-color: var(--mantine-color-red-6);
+    --theme-validation-success-color: var(--mantine-color-blue-6);
+
+
+    --theme-reset-btn-color: var(--mantine-color-red-6);
+    --theme-reset-btn-color-hover: var(--mantine-color-red-8);
+
+    --theme-hold-btn-color: var(--mantine-color-yellow-6);
+    --theme-hold-btn-color-hover: var(--mantine-color-yellow-8);
+
+    --theme-print-btn-color: var(--mantine-color-lime-8);
+    --theme-print-btn-color-hover: var(--mantine-color-lime-9);
+
+    --theme-pos-btn-color: var(--mantine-color-violet-7);
+    --theme-pos-btn-color-hover: var(--mantine-color-violet-8);
+
+    --theme-save-btn-color: var(--mantine-color-cyan-7);
+    --theme-save-btn-color-hover: var(--mantine-color-cyan-8);
+
+    --theme-submit-btn-color: var(--mantine-color-green-7);
+    --theme-submit-btn-color-hover: var(--mantine-color-green-8);
+
+    --theme-add-btn-color: var(--mantine-color-blue-8);
+    --theme-add-btn-color-hover: var(--mantine-color-blue-9);
+
+    --theme-edit-btn-color: var(--mantine-color-indigo-6);
+    --theme-edit-btn-color-hover: var(--mantine-color-indigo-8);
+
+}
 
 
 .form-grid{
