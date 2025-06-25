@@ -191,6 +191,7 @@ export default function WarehouseIssueForm(props) {
                     sales_price: data.sales_price,
                     stock_quantity: isWarehouse ? data.stock_quantity : data.quantity,
                     warehouse_id: isWarehouse ? data.warehouse_id : null,
+                    sub_total: Number(quantity)*data.purchase_price ?? 0 ,
                     type: 'general_issue',
                 };
 
@@ -455,6 +456,7 @@ export default function WarehouseIssueForm(props) {
                                                                                 sales_price: data.sales_price,
                                                                                 stock_quantity: isWarehouse ? data.stock_quantity : data.quantity,
                                                                                 warehouse_id: isWarehouse ? data.warehouse_id : null,
+                                                                                sub_total: Number(quantity)*data.purchase_price ?? 0,
                                                                             };
 
                                                                             setWarehouseIssueItems(prevItems => {

@@ -1,4 +1,4 @@
-import {useForm} from "@mantine/form";
+import {isNotEmpty, useForm} from "@mantine/form";
 import React, {useEffect, useMemo, useState} from "react";
 import {
     Box,
@@ -30,7 +30,7 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import inputCss from "../../../../assets/css/InputField.module.css";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import dayjs from "dayjs";
-import {updateEntityData} from "../../../../store/core/crudSlice.js";
+import {storeEntityData, updateEntityData} from "../../../../store/core/crudSlice.js";
 
 export default function WarehouseIssueSubmitForm(props) {
     const {
@@ -38,6 +38,7 @@ export default function WarehouseIssueSubmitForm(props) {
         warehousesIssueData,
         setWarehouseIssueItems
     } = props;
+
     const {id} = useParams();
 
     const {t} = useTranslation();
@@ -49,36 +50,34 @@ export default function WarehouseIssueSubmitForm(props) {
     const form = useForm({
         initialValues: {
             invoice_date: '',
-            issued_to_type: '',
-            factory_id: '',
-            vendor_id: '',
             warehouse_id: '',
-            issued_by_id: '',
-            narration: '',
+            created_by_id: '',
+            remark: '',
         },
         validate: {
-            // issued_to_type: isNotEmpty(t('ChooseIssueType')),
+            warehouse_id: isNotEmpty(),
+            created_by_id: isNotEmpty(),
         },
     });
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (warehousesIssueData) {
             setIssueType(String(warehousesIssueData.issue_type) || null);
-            setWarehouseId(String(warehousesIssueData.issue_warehouse_id) || null);
-            setIssuedById(String(warehousesIssueData.issued_by_id) || null);
+            setWarehouseId(String(warehousesIssueData.warehouse_id) || null);
+            setIssuedById(String(warehousesIssueData.created_by_id) || null);
 
             form.setValues({
                 invoice_date: warehousesIssueData.invoice_date
                     ? dayjs(warehousesIssueData.invoice_date, 'DD-MM-YYYY').toDate()
                     : new Date(),
-                issued_to_type: warehousesIssueData.issued_to_type || '',
-                vendor_id: warehousesIssueData.vendor_id || '',
+                // issued_to_type: warehousesIssueData.issued_to_type || '',
+                // vendor_id: warehousesIssueData.vendor_id || '',
                 warehouse_id: warehousesIssueData.warehouse_id || '',
-                issued_by_id: warehousesIssueData.issued_by_id || '',
-                narration: warehousesIssueData.narration || '',
+                created_by_id: warehousesIssueData.created_by_id || '',
+                remark: warehousesIssueData.remark || '',
             });
         }
-    }, [warehousesIssueData]);
+    }, [warehousesIssueData]);*/
 
     // sales by user hook
     const [salesByDropdownData, setSalesByDropdownData] = useState(null);
@@ -124,6 +123,11 @@ export default function WarehouseIssueSubmitForm(props) {
             ),
         },
         {
+            accessor: "unit_name",
+            title: t("UOM"),
+            textAlign: "center",
+        },
+        {
             accessor: "stock_quantity",
             title: t("Stock"),
             textAlign: "center",
@@ -139,7 +143,7 @@ export default function WarehouseIssueSubmitForm(props) {
                     setWarehouseIssueItems((prevItems) =>
                         prevItems.map((product) =>
                             product.stock_item_id === item.stock_item_id
-                                ? {...product, quantity: newQuantity}
+                                ? {...product, quantity: newQuantity,sub_total:item.purchase_price*newQuantity}
                                 : product
                         )
                     );
@@ -155,9 +159,10 @@ export default function WarehouseIssueSubmitForm(props) {
                 );
             },
         },
+
         {
-            accessor: "unit_name",
-            title: t("UOM"),
+            accessor: "sub_total",
+            title: t("Subtotal"),
             textAlign: "center",
         },
         {
@@ -172,14 +177,8 @@ export default function WarehouseIssueSubmitForm(props) {
                         radius="xl"
                         color="red"
                         onClick={() => {
-                            // const dataString = localStorage.getItem("temp-production-issue");
-                            // let data = dataString ? JSON.parse(dataString) : [];
-                            //
-                            // data = data.filter((d) => d.product_id !== item.product_id);
-                            //
-                            // const updatedDataString = JSON.stringify(data);
-
-                            // localStorage.setItem("temp-production-issue", updatedDataString);
+                            const filteredItems = warehouseIssueItems.filter(i => i.id !== item.id);
+                            setWarehouseIssueItems(filteredItems);
                         }}
                     >
                         <IconX
@@ -202,32 +201,29 @@ export default function WarehouseIssueSubmitForm(props) {
             batch_quantity: product?.total_quantity || null,
             unit_name: product.unit_name,
             purchase_price: product.purchase_price,
-            sub_total: product.quantity * product.sales_price,
+            sub_total: product.quantity * product.purchase_price,
             sales_price: product.sales_price,
         }));
         const options = {year: "numeric", month: "2-digit", day: "2-digit"};
         const formValue = {};
-        formValue["issue_date"] = values.invoice_date
+        formValue["invoice_date"] = values.invoice_date
             ? new Date(values.invoice_date).toLocaleDateString("en-CA", options)
             : new Date().toLocaleDateString("en-CA");
-        formValue["issued_by_id"] = form.values.issued_by_id;
-        formValue["issue_warehouse_id"] = form.values.warehouse_id;
+        formValue["created_by_id"] = form.values.created_by_id;
+        formValue["warehouse_id"] = form.values.warehouse_id;
         formValue["items"] = transformedArray;
-        formValue["narration"] = form.values.narration;
+        formValue["remark"] = form.values.remark;
 
         formValue["items"] = transformedArray;
 
-        console.log(formValue)
-
-        /*const value = {
-            url: 'production/issue/' + id,
+        const value = {
+            url: 'inventory/warehouse-issue',
             data: formValue
         }
 
-        const resultAction = await dispatch(updateEntityData(value));
-        if (updateEntityData.rejected.match(resultAction)) {
+        const resultAction = await dispatch(storeEntityData(value));
+        if (storeEntityData.rejected.match(resultAction)) {
             const fieldErrors = resultAction.payload.errors;
-
             // Check if there are field validation errors and dynamically set them
             if (fieldErrors) {
                 const errorObject = {};
@@ -237,18 +233,17 @@ export default function WarehouseIssueSubmitForm(props) {
                 // Display the errors using your form's `setErrors` function dynamically
                 form.setErrors(errorObject);
             }
-        } else if (updateEntityData.fulfilled.match(resultAction)) {
+        } else if (storeEntityData.fulfilled.match(resultAction)) {
 
             showNotificationComponent(t('CreateSuccessfully'), 'teal')
 
             setTimeout(() => {
-                setIssueType(null)
                 setWarehouseId(null)
                 setIssuedById(null)
                 setWarehouseIssueItems([])
                 form.reset();
             }, 700)
-        }*/
+        }
     }
 
 
@@ -322,10 +317,10 @@ export default function WarehouseIssueSubmitForm(props) {
                                         label=""
                                         placeholder={t("ChooseIssuedBy")}
                                         required={false}
-                                        name={"issued_by_id"}
+                                        name={"created_by_id"}
                                         form={form}
                                         dropdownValue={salesByDropdownData}
-                                        id={"issued_by_id"}
+                                        id={"created_by_id"}
                                         nextField={"save"}
                                         searchable={false}
                                         value={issuedById}
@@ -343,10 +338,10 @@ export default function WarehouseIssueSubmitForm(props) {
                                     placeholder={t('Narration')}
                                     required={false}
                                     nextField={'EntityFormSubmit'}
-                                    name={'narration'}
+                                    name={'remark'}
                                     form={form}
                                     mt={8}
-                                    id={'narration'}
+                                    id={'remark'}
                                     classNames={inputCss}
                                     autosize
                                     minRows={3}
