@@ -291,7 +291,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                         className={genericClass.genericSecondaryBg}
                     >
                         <Box className={genericClass.genericSecondaryBg}>
-                            <Box pb={"xs"} className={genericClass.genericSecondaryBg}>
+                            <Box className={genericClass.genericSecondaryBg}>
                                 <Grid gutter={{base: 4}}>
                                     <Grid.Col span={4}>
                                         <Center fz={"md"} ta="center" fw={"800"}>
@@ -343,11 +343,11 @@ export default function __PosPurchaseInvoiceSection(props) {
                                 </Grid>
                             </Box>
                             {/* Due Section */}
-                            <Box>
+                            <Box ml={'-md'}>
                                 <Stack justify="space-between">
                                     <Box className={genericClass.genericHighlightedBox}>
                                         <Grid columns={18} gutter={{base: 2}}>
-                                            <Grid.Col span={6} mt={"4"} pl={"6"}>
+                                            <Grid.Col span={7} mt={"4"} pl={"md"}>
                                                 <Tooltip
                                                     label={t("ClickRightButtonForPercentFlat")}
                                                     px={16}
@@ -411,7 +411,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                                                     />
                                                 </Tooltip>
                                             </Grid.Col>
-                                            <Grid.Col span={12} align="center" justify="center">
+                                            <Grid.Col span={11} align="center" justify="center">
                                                 <Box
                                                     fz={"md"}
                                                     p={"xs"}
@@ -435,16 +435,16 @@ export default function __PosPurchaseInvoiceSection(props) {
                                     </Box>
                                 </Stack>
                             </Box>
-                            <Box>
+                            <Box ml={'-md'}>
                                 <Tooltip
                                     label={t("MustBeNeedReceiveAmountWithoutCustomer")}
                                     opened={isDisabled && form.errors.receive_amount}
                                     position="top-center"
-                                    bg={"#905923"}
+                                    bg='var(--theme-primary-color-4)'
                                     withArrow
                                 >
                                     <Grid gutter={{base: 1}}>
-                                        <Grid.Col span={10} bg={"#bc924f"} p={"14"} pr={"0"}>
+                                        <Grid.Col span={10} bg='var(--theme-primary-color-4)' p={"14"} pr={"0"}>
                                             <InputNumberForm
                                                 type="number"
                                                 tooltip={t("ReceiveAmountValidateMessage")}
@@ -464,9 +464,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                                                 }}
                                             />
                                         </Grid.Col>
-                                        <Grid.Col span={2} bg={"#bc924f"} p={"14"} pl={"8"}>
-
-                                        </Grid.Col>
+                                        <Grid.Col span={2} bg='var(--theme-primary-color-4)' p={"14"} pl={"8"}></Grid.Col>
                                     </Grid>
                                 </Tooltip>
                             </Box>

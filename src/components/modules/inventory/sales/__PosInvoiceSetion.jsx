@@ -353,11 +353,11 @@ export default function __PosInvoiceSection(props) {
                                 </Grid>
                             </Box>
                             {/* Due Section */}
-                            <Box>
+                            <Box ml={'-md'}>
                                 <Stack justify="space-between">
                                     <Box className={genericClass.genericHighlightedBox}>
                                         <Grid columns={18} gutter={{base: 2}}>
-                                            <Grid.Col span={6} mt={"4"} pl={"6"}>
+                                            <Grid.Col span={7} mt={"4"} pl={"md"}>
                                                 <Tooltip
                                                     label={t("ClickRightButtonForPercentFlat")}
                                                     px={16}
@@ -409,7 +409,7 @@ export default function __PosInvoiceSection(props) {
                                                     />
                                                 </Tooltip>
                                             </Grid.Col>
-                                            <Grid.Col span={12} align="center" justify="center">
+                                            <Grid.Col span={11} align="center" justify="center">
                                                 <Box
                                                     fz={"md"}
                                                     p={"xs"}
@@ -433,7 +433,7 @@ export default function __PosInvoiceSection(props) {
                                     </Box>
                                 </Stack>
                             </Box>
-                            <Box>
+                            <Box ml={'-md'}>
                                 <Tooltip
                                     label={t("MustBeNeedReceiveAmountWithoutCustomer")}
                                     opened={isDisabled && form.errors.receive_amount}
