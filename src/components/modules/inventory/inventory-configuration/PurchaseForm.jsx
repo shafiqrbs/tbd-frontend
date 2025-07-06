@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import { useTranslation } from "react-i18next";
 import {
   Box,
@@ -24,17 +24,19 @@ import SelectForm from "../../../form-builders/SelectForm";
 import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 
 
 function PurchaseForm(props) {
 
-  const { vendorGroupDropdownData, height, domainConfigData, closeDrawer} = props;
+  const { vendorGroupDropdownData, height, domainConfig, closeDrawer} = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const {fetchDomainConfig} = getDomainConfig(false)
 
-  let config_purchase = domainConfigData?.inventory_config?.config_purchase
-  let id = domainConfigData?.id
+  let config_purchase = domainConfig?.inventory_config?.config_purchase
+  let id = domainConfig?.id
+  const productNature = getSettingProductTypeDropdownData();
 
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [vendorGroupData, setVendorGroupData] = useState(null);
@@ -42,6 +44,37 @@ function PurchaseForm(props) {
   useEffect(() => {
     setVendorGroupData(config_purchase?.default_vendor_group_id?.toString())
   }, [id]);
+
+
+  const productNatureSelectedIds = useMemo(() => {
+    try {
+      const rawValue = config_purchase?.purchase_product_nature;
+      if (!rawValue) return [];
+      const parsed = JSON.parse(rawValue);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.error('Invalid JSON in purchase_product_nature:', e);
+      return [];
+    }
+  }, [config_purchase]);
+
+
+  useEffect(() => {
+    if (!config_purchase?.purchase_product_nature) return;
+
+    const parsedProductNature = Array.isArray(config_purchase.purchase_product_nature)
+        ? config_purchase.purchase_product_nature
+        : JSON.parse(config_purchase.purchase_product_nature || '[]');
+
+    if (!parsedProductNature.length) return;
+
+    const values = {};
+    parsedProductNature.forEach((nature) => {
+      const natureId = Number(nature);
+      values[`${natureId}_purchaseProductNature`] = productNatureSelectedIds.includes(natureId) ? 1 : 0;
+    });
+    form.setValues(values);
+  }, [dispatch, config_purchase, productNatureSelectedIds]);
 
   const form = useForm({
     initialValues: {
@@ -107,6 +140,18 @@ function PurchaseForm(props) {
       values[property] =
         values[property] === true || values[property] === 1 ? 1 : 0;
     });
+
+    const selectedProductNature = [];
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (value === 1 && key.includes('purchaseProductNature')) {
+        const [nature_id, group] = key.split('_');
+        if (group === 'purchaseProductNature') selectedProductNature.push(Number(nature_id));
+      }
+    });
+
+    values['purchase_product_nature'] = selectedProductNature
+
     const payload = {
       url: `domain/config/inventory-purchase/`+id,
       data: values,
@@ -147,6 +192,22 @@ function PurchaseForm(props) {
     []
   );
 
+  const renderHeadCheckboxes = (type) => (
+      <>
+
+        {productNature?.map((head) => (
+            <Box key={`${head.value}_${type}`}>
+              <InputCheckboxForm
+                  form={form}
+                  label={head.label}
+                  field={`${head.value}_${type}`}
+                  name={`${head.value}_${type}`}
+                  value={head.value}
+              />
+            </Box>
+        ))}
+      </>
+  );
   return (
     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
       <form onSubmit={form.onSubmit(handlePurchaseFormSubmit)}>
@@ -174,6 +235,19 @@ function PurchaseForm(props) {
                 />
               </Grid.Col>
             </Grid>
+          </Box>
+
+          <Box bg="gray.1" px="sm" py="xs" mt="xs">
+            <Text fz={14} fw={600}>Product purchase nature</Text>
+          </Box>
+          <Box pl="sm">
+            <Box>
+              {productNature && (
+                  <>
+                    {renderHeadCheckboxes('purchaseProductNature')}
+                  </>
+              )}
+            </Box>
           </Box>
 
           {/* Purchase Settings */}

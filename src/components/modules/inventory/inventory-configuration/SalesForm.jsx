@@ -10,6 +10,7 @@ import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
 import SelectForm from "../../../form-builders/SelectForm";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
+import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 
 function SalesForm({customerGroupDropdownData, height, id, config_sales, closeDrawer}) {
     const {t} = useTranslation();
@@ -17,6 +18,8 @@ function SalesForm({customerGroupDropdownData, height, id, config_sales, closeDr
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const {fetchDomainConfig} = getDomainConfig(false)
     const [customerGroupData, setCustomerGroupData] = useState(null);
+
+    const productNature = getSettingProductTypeDropdownData();
 
     useEffect(() => {
         setCustomerGroupData(config_sales?.default_customer_group_id?.toString())
@@ -46,6 +49,37 @@ function SalesForm({customerGroupDropdownData, height, id, config_sales, closeDr
             default_customer_group_id: isNotEmpty(),
         }
     });
+    
+
+    const productNatureSelectedIds = useMemo(() => {
+        try {
+            const rawValue = config_sales?.sales_product_nature;
+            if (!rawValue) return [];
+            const parsed = JSON.parse(rawValue);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            console.error('Invalid JSON in sales_product_nature:', e);
+            return [];
+        }
+    }, [config_sales]);
+
+    useEffect(() => {
+        if (!config_sales?.sales_product_nature) return;
+
+        const parsedProductNature = Array.isArray(config_sales.sales_product_nature)
+            ? config_sales.sales_product_nature
+            : JSON.parse(config_sales.sales_product_nature || '[]');
+
+        if (!parsedProductNature.length) return;
+
+        const values = {};
+        parsedProductNature.forEach((nature) => {
+            const natureId = Number(nature);
+            values[`${natureId}_salesProductNature`] = productNatureSelectedIds.includes(natureId) ? 1 : 0;
+        });
+        form.setValues(values);
+    }, [dispatch, config_sales, productNatureSelectedIds]);
+
 
     useEffect(() => {
         if (config_sales) {
@@ -108,6 +142,17 @@ function SalesForm({customerGroupDropdownData, height, id, config_sales, closeDr
                 values[property] === true || values[property] == 1 ? 1 : 0;
         });
 
+        const selectedProductNature = [];
+
+        Object.entries(values).forEach(([key, value]) => {
+            if (value === 1 && key.includes('salesProductNature')) {
+                const [id, group] = key.split('_');
+                if (group === 'salesProductNature') selectedProductNature.push(Number(id));
+            }
+        });
+
+        values['sales_product_nature'] = selectedProductNature
+
         const payload = {
             url: `domain/config/inventory-sales/${id}`,
             data: values,
@@ -138,6 +183,23 @@ function SalesForm({customerGroupDropdownData, height, id, config_sales, closeDr
         ["alt+s", () => document.getElementById("SalesFormSubmit")?.click()]
     ], []);
 
+    const renderHeadCheckboxes = (type) => (
+        <>
+
+            {productNature?.map((head) => (
+                <Box key={`${head.value}_${type}`}>
+                    <InputCheckboxForm
+                        form={form}
+                        label={head.label}
+                        field={`${head.value}_${type}`}
+                        name={`${head.value}_${type}`}
+                        value={head.value}
+                    />
+                </Box>
+            ))}
+        </>
+    );
+
 
     return (
         <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
@@ -166,6 +228,20 @@ function SalesForm({customerGroupDropdownData, height, id, config_sales, closeDr
                                 />
                             </Grid.Col>
                         </Grid>
+                    </Box>
+
+
+                    <Box bg="gray.1" px="sm" py="xs" mt="xs">
+                        <Text fz={14} fw={600}>Product sales nature</Text>
+                    </Box>
+                    <Box pl="sm">
+                        <Box>
+                            {productNature && (
+                                <>
+                                    {renderHeadCheckboxes('salesProductNature')}
+                                </>
+                            )}
+                        </Box>
                     </Box>
 
                     <Box bg="gray.1" px="sm" py="xs" mt="xs">
