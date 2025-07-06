@@ -480,7 +480,7 @@ export default function NewSales(props) {
                                                                             setIsValidBarcode(true);
                                                                         }}
                                                                     >
-                                                                        <IconX color="red" size={16}/>
+                                                                        <IconX color='var(--theme-primary-color-6)' size={16}/>
                                                                     </ActionIcon>
                                                                 </Tooltip>
                                                             ) : (
@@ -514,7 +514,7 @@ export default function NewSales(props) {
                                                         searchValue ? (
                                                             <Tooltip label="Clear" withArrow position="top">
                                                                 <IconX
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     size={16}
                                                                     opacity={0.5}
                                                                     style={{cursor: "pointer"}}
@@ -529,7 +529,7 @@ export default function NewSales(props) {
                                                                 label="Field is required"
                                                                 withArrow
                                                                 position="top"
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                             >
                                                                 <IconInfoCircle size={16} opacity={0.5}/>
                                                             </Tooltip>
@@ -1010,7 +1010,7 @@ export default function NewSales(props) {
                                                                             setIsValidBarcode(true);
                                                                         }}
                                                                     >
-                                                                        <IconX color="red" size={16}/>
+                                                                        <IconX color='var(--theme-primary-color-6)' size={16}/>
                                                                     </ActionIcon>
                                                                 </Tooltip>
                                                             ) : (
@@ -1044,7 +1044,7 @@ export default function NewSales(props) {
                                                         searchValue ? (
                                                             <Tooltip label="Clear" withArrow position="top">
                                                                 <IconX
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     size={16}
                                                                     opacity={0.5}
                                                                     style={{cursor: "pointer"}}
@@ -1059,7 +1059,7 @@ export default function NewSales(props) {
                                                                 label="Field is required"
                                                                 withArrow
                                                                 position="top"
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                             >
                                                                 <IconInfoCircle size={16} opacity={0.5}/>
                                                             </Tooltip>

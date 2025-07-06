@@ -703,7 +703,7 @@ function _UserUpdateForm() {
                                                                 nextField={"EntityFormSubmit"}
                                                                 name={"enabled"}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={"enabled"}
                                                                 position={"left"}
                                                                 checked={entityEditData.enabled || false}
@@ -1208,7 +1208,7 @@ function _UserUpdateForm() {
                                                     px={16}
                                                     py={2}
                                                     position="top-end"
-                                                    color="red"
+                                                    color='var(--theme-primary-color-6)'
                                                     withArrow
                                                     offset={2}
                                                     zIndex={999}
@@ -1265,7 +1265,7 @@ function _UserUpdateForm() {
                                                     px={16}
                                                     py={2}
                                                     position="top-end"
-                                                    color="red"
+                                                    color='var(--theme-primary-color-6)'
                                                     withArrow
                                                     offset={2}
                                                     zIndex={999}

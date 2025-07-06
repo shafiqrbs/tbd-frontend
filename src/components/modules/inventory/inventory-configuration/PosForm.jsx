@@ -179,7 +179,7 @@ function PosForm({ height,id }) {
           <Checkbox
             pr="xs"
             checked={form.values[field] === 1}
-            color="red"
+            color='var(--theme-primary-color-6)'
             {...form.getInputProps(field, {
               type: "checkbox",
             })}

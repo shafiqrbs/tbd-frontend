@@ -108,7 +108,7 @@ function VoucherCreateTable(props) {
                           <Switch
                             disabled={switchEnable[data.id] || false || data.parent_id}
                             defaultChecked={data.status === 1 ? true : false}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             radius="xs"
                             size="md"
                             onLabel="Enable"
@@ -142,7 +142,7 @@ function VoucherCreateTable(props) {
                       <ActionIcon
                         size="sm"
                         variant="outline"
-                        color="red"
+                        color='var(--theme-primary-color-6)'
                         radius="xl"
                         aria-label="Settings"
                       >

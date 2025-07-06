@@ -223,7 +223,7 @@ export default function __SplitPayment(props) {
                                   offset={2}
                                   zIndex={999}
                                   position="top"
-                                  color="red"
+                                  color='var(--theme-primary-color-6)'
                                 >
                                   <Image
                                     mih={50}

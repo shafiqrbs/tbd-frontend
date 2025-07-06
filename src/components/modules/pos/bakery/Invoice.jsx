@@ -1002,7 +1002,7 @@ export default function Invoice(props) {
                                                                 offset={2}
                                                                 zIndex={999}
                                                                 position="top"
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                             >
                                                                 <Image
                                                                     mih={48}
@@ -1606,7 +1606,7 @@ export default function Invoice(props) {
                                     label={t("Hold")}
                                     px={16}
                                     py={2}
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={100}
@@ -1633,7 +1633,7 @@ export default function Invoice(props) {
                                         label={t("PrintAll")}
                                         px={16}
                                         py={2}
-                                        color="red"
+                                        color='var(--theme-primary-color-6)'
                                         withArrow
                                         offset={2}
                                         zIndex={100}

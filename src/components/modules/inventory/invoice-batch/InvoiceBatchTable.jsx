@@ -264,7 +264,7 @@ function InvoiceBatchTable() {
                                             render: (item) => (
 
                                                 <Group gap={4} justify="right" wrap="nowrap">
-                                                    <Button size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
+                                                    <Button size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'}  color='var(--theme-primary-color-6)' mr={'4'}
                                                         onClick={(e) => {
                                                             e.preventDefault();
                                                             setAddTransactionDrawer(true)
@@ -274,7 +274,7 @@ function InvoiceBatchTable() {
                                                     >  {t('AddBill')}</Button>
                                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                                         <Menu.Target>
-                                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
+                                                            <ActionIcon size="sm" variant="outline" color='var(--theme-primary-color-6)' radius="xl" aria-label="Settings">
                                                                 <IconDotsVertical height={'16'} width={'16'} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Menu.Target>

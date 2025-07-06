@@ -207,7 +207,7 @@ function ConfigurationForm() {
                                             <Box>
                                                 {
                                                     Object.keys(form.errors).length > 0 && validationMessage != 0 &&
-                                                    <Alert variant="light" color="red" radius="md" title={
+                                                    <Alert variant="light" color='var(--theme-primary-color-6)' radius="md" title={
                                                         <List withPadding size="sm">
                                                             {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
                                                             {validationMessage.mobile && <List.Item>{t('MobileValidateMessage')}</List.Item>}
@@ -265,7 +265,7 @@ function ConfigurationForm() {
                                             <Box>
                                                 {
                                                     Object.keys(form.errors).length > 0 && validationMessage != 0 &&
-                                                    <Alert variant="light" color="red" radius="md" title={
+                                                    <Alert variant="light" color='var(--theme-primary-color-6)' radius="md" title={
                                                         <List withPadding size="sm">
                                                             {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
                                                             {validationMessage.mobile && <List.Item>{t('MobileValidateMessage')}</List.Item>}
@@ -282,7 +282,7 @@ function ConfigurationForm() {
                                                                 nextField={'printWithOutstanding'}
                                                                 name={'print_logo'}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={'printLogo'}
                                                                 position={'left'}
                                                                 defaultChecked={1}
@@ -300,7 +300,7 @@ function ConfigurationForm() {
                                                                 nextField={'posPrint'}
                                                                 name={'print_with_outstanding'}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={'printWithOutstanding'}
                                                                 position={'left'}
                                                                 defaultChecked={1}
@@ -318,7 +318,7 @@ function ConfigurationForm() {
                                                                 nextField={'printHeader'}
                                                                 name={'pos_print'}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={'posPrint'}
                                                                 position={'left'}
                                                                 defaultChecked={1}
@@ -336,7 +336,7 @@ function ConfigurationForm() {
                                                                 nextField={'printInvoiceTitle'}
                                                                 name={'print_header'}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={'printHeader'}
                                                                 position={'left'}
                                                                 defaultChecked={1}
@@ -354,7 +354,7 @@ function ConfigurationForm() {
                                                                 nextField={'printFooter'}
                                                                 name={'print_invoice_title'}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={'printInvoiceTitle'}
                                                                 position={'left'}
                                                                 defaultChecked={1}
@@ -372,7 +372,7 @@ function ConfigurationForm() {
                                                                 nextField={'printPowered'}
                                                                 name={'print_footer'}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={'printFooter'}
                                                                 position={'left'}
                                                                 defaultChecked={0}
@@ -390,7 +390,7 @@ function ConfigurationForm() {
                                                                 nextField={'PrintFooterText'}
                                                                 name={'print_powered'}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={'printPowered'}
                                                                 position={'left'}
                                                                 defaultChecked={0}
@@ -433,7 +433,7 @@ function ConfigurationForm() {
                                                                 nextField={'InvoiceWidth'}
                                                                 name={'remove_image'}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={'RemoveImage'}
                                                                 position={'left'}
                                                                 defaultChecked={0}
@@ -581,7 +581,7 @@ function ConfigurationForm() {
                                             <Box>
                                                 {
                                                     Object.keys(form.errors).length > 0 && validationMessage != 0 &&
-                                                    <Alert variant="light" color="red" radius="md" title={
+                                                    <Alert variant="light" color='var(--theme-primary-color-6)' radius="md" title={
                                                         <List withPadding size="sm">
                                                             {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
                                                             {validationMessage.mobile && <List.Item>{t('MobileValidateMessage')}</List.Item>}

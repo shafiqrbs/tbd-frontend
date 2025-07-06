@@ -417,7 +417,7 @@ export default function __PosPurchaseUpdateForm(props) {
                                             <ActionIcon
                                                 size="sm"
                                                 variant="subtle"
-                                                color="red"
+                                                color='var(--theme-primary-color-6)'
                                                 onClick={() => {
                                                     let data = tempCardProducts ? tempCardProducts : [];
                                                     data = data.filter((d) => d.id !== item.id);

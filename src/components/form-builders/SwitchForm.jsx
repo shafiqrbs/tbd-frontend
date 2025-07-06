@@ -27,7 +27,7 @@ function SwitchForm(props) {
                         defaultChecked={defaultChecked}
                         labelPosition={position}
                         mt={mt}
-                        color="red"
+                        color='var(--theme-primary-color-6)'
                         label={label}
                         size="md"
                         thumbIcon={

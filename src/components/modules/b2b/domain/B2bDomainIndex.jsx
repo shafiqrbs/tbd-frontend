@@ -15,7 +15,7 @@ export default function B2bDomainIndex() {
     return (
         <>
             {progress !== 100 && (
-                <Progress color="red" size={"sm"} striped animated value={progress}/>
+                <Progress color='var(--theme-primary-color-6)' size={"sm"} striped animated value={progress}/>
             )}
             {progress === 100 && (
                 <>

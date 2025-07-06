@@ -171,7 +171,7 @@ function _RecipeItemsTable(props) {
                             render: (item) => (
                                 item.process != 'approved' ?
                                     <Group gap={4} justify="right" wrap="nowrap">
-                                        <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
+                                        <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'}  color='var(--theme-primary-color-6)' mr={'4'}
                                             onClick={() => {
                                                 {
                                                     navigate(`/production/recipe-update/${item.id}`)
@@ -181,7 +181,7 @@ function _RecipeItemsTable(props) {
                                     </Group>
                                     :
                                     <Group gap={4} justify="right" wrap="nowrap">
-                                        <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
+                                        <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'}  color='var(--theme-primary-color-6)' mr={'4'}
                                         >  {t('Amendment')}</Button>
                                     </Group>
                             ),

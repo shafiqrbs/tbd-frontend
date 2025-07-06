@@ -196,7 +196,7 @@ export default function BatchIssueSubmitForm(props) {
                         size="sm"
                         variant="outline"
                         radius="xl"
-                        color="red"
+                        color='var(--theme-primary-color-6)'
                         onClick={() => {
                             // const dataString = localStorage.getItem("temp-production-issue");
                             // let data = dataString ? JSON.parse(dataString) : [];

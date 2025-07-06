@@ -329,7 +329,7 @@ function ProductTable(props) {
                   <Switch
                     disabled={switchEnable[item.product_id] || false || item.parent_id}
                     defaultChecked={item.status == 1 ? true : false}
-                    color="red"
+                    color='var(--theme-primary-color-6)'
                     radius="xs"
                     size="md"
                     onLabel="Enable"
@@ -359,7 +359,7 @@ function ProductTable(props) {
                       <ActionIcon
                         size="sm"
                         variant="outline"
-                        color="red"
+                        color='var(--theme-primary-color-6)'
                         radius="xl"
                         aria-label="Settings"
                       >

@@ -241,7 +241,7 @@ export default function _RequisitionTable(props) {
                                                     variant="filled"
                                                     fw={"100"}
                                                     fz={"12"}
-                                                    color="red.3"
+                                                     color='var(--theme-primary-color-6)'
                                                     mr={"4"}
                                                     w={60}
                                                 >
@@ -267,7 +267,7 @@ export default function _RequisitionTable(props) {
                                                             <ActionIcon
                                                                 size="sm"
                                                                 variant="outline"
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 radius="xl"
                                                                 aria-label="Settings"
                                                             >

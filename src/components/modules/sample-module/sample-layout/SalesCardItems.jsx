@@ -41,7 +41,7 @@ function SalesCardItems(props) {
                 <Center>
                     <ActionIcon
                         variant="transparent"
-                        color="red"
+                        color='var(--theme-primary-color-6)'
                         size="sm"
                         aria-label="Settings"
                         onClick={() => {

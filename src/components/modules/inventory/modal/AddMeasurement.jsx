@@ -210,7 +210,8 @@ function AddMeasurement(props) {
             <ActionIcon
               mr={"sm"}
               radius="xl"
-              color="red.6"
+              variant="outline"
+              color='var(--theme-secondary-color-4)'
               size="md"
               onClick={closeModel}
             >
@@ -271,22 +272,7 @@ function AddMeasurement(props) {
                 });
               })}
             >
-              <Box
-                pl={`xs`}
-                pb={"6"}
-                pr={8}
-                pt={"6"}
-                mb={"4"}
-                className={"boxBackground borderRadiusAll"}
-              >
-                <Grid>
-                  <Grid.Col span={12}>
-                    <Title order={6} pt={"6"} pb={"4"}>
-                      {t("UnitMeasurement")}
-                    </Title>
-                  </Grid.Col>
-                </Grid>
-              </Box>
+
               <Box
                 pl={8}
                 pb={"3"}
@@ -295,7 +281,25 @@ function AddMeasurement(props) {
                 mb={"4"}
                 className={"boxBackground borderRadiusAll"}
               >
-                <Grid gutter={"4"}>
+                <Grid gutter={"8"}>
+                  <Grid.Col span={6}>
+                    <SelectForm
+                        tooltip={t("ChooseProductUnit")}
+                        label=""
+                        placeholder={t("ChooseProductUnit")}
+                        required={true}
+                        name={"unit_id"}
+                        form={form}
+                        dropdownValue={getSettingParticularDropdownData(
+                            "product-unit"
+                        )}
+                        id={"unit_id"}
+                        nextField={"quantity"}
+                        searchable={true}
+                        value={measurementUnitData}
+                        changeValue={setMeasurementUnitData}
+                    />
+                  </Grid.Col>
                   <Grid.Col span={3}>
                     <InputButtonForm
                       tooltip={t("EnterQuantity")}
@@ -317,38 +321,21 @@ function AddMeasurement(props) {
                       closeIcon={false}
                     />
                   </Grid.Col>
-                  <Grid.Col span={5}>
-                    <SelectForm
-                      tooltip={t("ChooseProductUnit")}
-                      label=""
-                      placeholder={t("ChooseProductUnit")}
-                      required={true}
-                      name={"unit_id"}
-                      form={form}
-                      dropdownValue={getSettingParticularDropdownData(
-                        "product-unit"
-                      )}
-                      id={"unit_id"}
-                      nextField={"quantity"}
-                      searchable={true}
-                      value={measurementUnitData}
-                      changeValue={setMeasurementUnitData}
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={4}>
+
+                  <Grid.Col span={3}>
                     <Stack right align="flex-end" pt={"3"}>
                       <>
                         {!saveCreateLoading && isOnline && (
                           <Button
                             size="xs"
-                            color={`red.3`}
+                            color='var(--theme-primary-color-6)'
                             type="submit"
                             id="EntityFormSubmit"
                             leftSection={<IconDeviceFloppy size={18} />}
                           >
                             <Flex direction={`column`} gap={0}>
-                              <Text fz={14} fw={400}>
-                                {t("AddMeasurement")}
+                              <Text fz={12} fw={400}>
+                                {t("Add")}
                               </Text>
                             </Flex>
                           </Button>
@@ -418,7 +405,7 @@ function AddMeasurement(props) {
                                       "is_sales"
                                     );
                                   }}
-                                  color="red"
+                                  color='var(--theme-primary-color-6)'
                                   variant="outline"
                                   radius="xl"
                                   size="md"
@@ -436,7 +423,7 @@ function AddMeasurement(props) {
                                       "is_purchase"
                                     );
                                   }}
-                                  color="red"
+                                  color='var(--theme-primary-color-6)'
                                   variant="outline"
                                   radius="xl"
                                   size="md"
@@ -447,7 +434,7 @@ function AddMeasurement(props) {
                                 <ActionIcon
                                   size="sm"
                                   variant="transparent"
-                                  color="red"
+                                  color='var(--theme-delete-color)'
                                   onClick={() => {
                                     dispatch(
                                       deleteEntityData(

@@ -51,7 +51,7 @@ function WarehouseIndex() {
     <>
       {progress < 100 && (
         <Progress
-          color="red"
+          color='var(--theme-primary-color-6)'
           size="sm"
           striped
           animated

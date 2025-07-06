@@ -284,7 +284,7 @@ function _SettingsForm(props) {
                             nextField={"stock_item"}
                             name={"zero_stock"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"zero_stock"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.zero_stock}
@@ -304,7 +304,7 @@ function _SettingsForm(props) {
                             nextField={"is_stock_history"}
                             name={"stock_item"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"stock_item"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.stock_item}
@@ -324,7 +324,7 @@ function _SettingsForm(props) {
                             nextField={"pos_sales"}
                             name={"is_stock_history"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"is_stock_history"}
                             position={"left"}
                             defaultChecked={
@@ -346,7 +346,7 @@ function _SettingsForm(props) {
                             nextField="pay_first"
                             name={"pos_sales"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"pos_sales"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.pos_sales}
@@ -366,7 +366,7 @@ function _SettingsForm(props) {
                             nextField={"mrp_price"}
                             name={"pay_first"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"pay_first"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.pos_sales}
@@ -395,7 +395,7 @@ function _SettingsForm(props) {
                                     )
                                   }
                                   ml="sm"
-                                  color="red"
+                                  color='var(--theme-primary-color-6)'
                                 />
                               </Grid.Col>
                               <Grid.Col span={6} fz={"sm"}>
@@ -472,7 +472,7 @@ function _SettingsForm(props) {
                               nextField={"total_price"}
                               name={"mrp_price"}
                               form={form}
-                              color="red"
+                              color='var(--theme-primary-color-6)'
                               id={"mrp_price"}
                               position={"left"}
                               defaultChecked={inventoryConfigData.mrp_price}
@@ -492,7 +492,7 @@ function _SettingsForm(props) {
                               nextField={"purchase_price"}
                               name={"total_price"}
                               form={form}
-                              color="red"
+                              color='var(--theme-primary-color-6)'
                               id={"total_price"}
                               position={"left"}
                               defaultChecked={inventoryConfigData.total_price}
@@ -512,7 +512,7 @@ function _SettingsForm(props) {
                               nextField={"is_measurement"}
                               name={"purchase_price"}
                               form={form}
-                              color="red"
+                              color='var(--theme-primary-color-6)'
                               id={"purchase_price"}
                               position={"left"}
                               defaultChecked={
@@ -592,7 +592,7 @@ function _SettingsForm(props) {
                             nextField={"stockable"}
                             name={"raw_materials"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"raw_materials"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.raw_materials}
@@ -612,7 +612,7 @@ function _SettingsForm(props) {
                             nextField={"post_production"}
                             name={"stockable"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"stockable"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.stockable}
@@ -632,7 +632,7 @@ function _SettingsForm(props) {
                             nextField={"mid_production"}
                             name={"post_production"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"post_production"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.post_production}
@@ -652,7 +652,7 @@ function _SettingsForm(props) {
                             nextField={"pre_production"}
                             name={"mid_production"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"mid_production"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.mid_production}
@@ -672,7 +672,7 @@ function _SettingsForm(props) {
                             nextField={"is_brand"}
                             name={"pre_production"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"pre_production"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.pre_production}
@@ -696,7 +696,7 @@ function _SettingsForm(props) {
                             nextField={"is_grade"}
                             name={"is_brand"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"is_brand"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.is_brand}
@@ -716,7 +716,7 @@ function _SettingsForm(props) {
                             nextField={"is_color"}
                             name={"is_grade"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"is_grade"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.is_grade}
@@ -736,7 +736,7 @@ function _SettingsForm(props) {
                             nextField={"is_size"}
                             name={"is_color"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"is_color"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.is_color}
@@ -756,7 +756,7 @@ function _SettingsForm(props) {
                             nextField={"is_model"}
                             name={"is_size"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"is_size"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.is_size}
@@ -776,7 +776,7 @@ function _SettingsForm(props) {
                             nextField={"is_barcode_productName"}
                             name={"is_model"}
                             form={form}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             id={"is_model"}
                             position={"left"}
                             defaultChecked={inventoryConfigData.is_model}

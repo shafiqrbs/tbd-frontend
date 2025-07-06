@@ -199,7 +199,7 @@ function CustomerLedger(props) {
                                                     <ActionIcon
                                                         size="sm"
                                                         variant="subtle"
-                                                        color="red"
+                                                        color='var(--theme-primary-color-6)'
                                                     >
                                                         <IconTrash size={16}/>
                                                     </ActionIcon>
@@ -444,7 +444,7 @@ function CustomerLedger(props) {
                                                 cente
                                                 center
                                                 icon={
-                                                    <ThemeIcon color="red" size={24} radius="xl">
+                                                    <ThemeIcon color='var(--theme-primary-color-6)' size={24} radius="xl">
                                                         <IconCurrency style={{width: rem(16), height: rem(16)}}/>
                                                     </ThemeIcon>
                                                 }

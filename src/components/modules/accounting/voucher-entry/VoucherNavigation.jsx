@@ -116,7 +116,7 @@ export default function VoucherNavigation({
                 mih={40}
                 mt={4}
                 style={{cursor: "pointer"}}
-                bg={activeVoucher?.id === item.id ? "#f8eedf" : "gray.1"}
+                bg={activeVoucher?.id === item.id ? 'var(--theme-primary-color-2)' : 'var(--theme-secondary-color-2)'}
                 onClick={() => handleActiveVoucher(item)}
             >
                 <Text size="sm" pt={8} pl={8} fw={500} color="black">
@@ -128,14 +128,14 @@ export default function VoucherNavigation({
 
     return (
         <Box>
-            <Card shadow="md" radius="4" className={classes.card} >
-                <Box className={genericClass.genericHighlightedBox} mb={'xs'}>
+            <Card shadow="md" radius="4" className={classes.card}  >
+                <Box  bg='var(--theme-primary-color-4)' mb={'xs'} p={'4'} ml={'-md'} mr={'-md'}>
                     <Tooltip
                         label={t("EnterSearchAnyKeyword")}
                         px={8}
                         py={2}
                         position="top-end"
-                        color="red"
+                        color='var(--theme-primary-color-6)'
                         withArrow
                         offset={2}
                         zIndex={100}
@@ -187,21 +187,19 @@ export default function VoucherNavigation({
                         />
                     </Tooltip>
                 </Box>
-                <Grid columns={9} gutter={1}>
-                    <Grid.Col span={9}>
-                        <ScrollArea h={height + 38} scrollbarSize={2} scrollbars="y" type="never">
-                            {loading ? (
-                                <Center><Loader size="sm"/></Center>
-                            ) : error ? (
-                                <Center><Text color="red">{error}</Text></Center>
-                            ) : voucherListItems?.length ? (
-                                voucherListItems
-                            ) : (
-                                <Center><Text>{t("NoVouchersFound")}</Text></Center>
-                            )}
-                        </ScrollArea>
-                    </Grid.Col>
-                </Grid>
+               <box>
+                   <ScrollArea h={height + 30} scrollbarSize={2} scrollbars="y" type="never">
+                       {loading ? (
+                           <Center><Loader size="sm"/></Center>
+                       ) : error ? (
+                           <Center><Text color='var(--theme-primary-color-6)'>{error}</Text></Center>
+                       ) : voucherListItems?.length ? (
+                           voucherListItems
+                       ) : (
+                           <Center><Text>{t("NoVouchersFound")}</Text></Center>
+                       )}
+                   </ScrollArea>
+               </box>
             </Card>
         </Box>
     );

@@ -352,7 +352,7 @@ function _ProductMeasurement(props) {
                                 "is_sales"
                               );
                             }}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             variant="outline"
                             radius="xl"
                             size="md"
@@ -370,7 +370,7 @@ function _ProductMeasurement(props) {
                                 "is_purchase"
                               );
                             }}
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             variant="outline"
                             radius="xl"
                             size="md"
@@ -381,7 +381,7 @@ function _ProductMeasurement(props) {
                           <ActionIcon
                             size="sm"
                             variant="transparent"
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             onClick={() => {
                               dispatch(
                                 deleteEntityData(

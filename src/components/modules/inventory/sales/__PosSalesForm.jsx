@@ -623,7 +623,7 @@ export default function __PosSalesForm(props) {
                                                 size="sm"
                                                 variant="outline"
                                                 radius="xl"
-                                                color="red"
+                                                color='var(--theme-primary-color-6)'
                                                 onClick={() => {
                                                     const dataString = localStorage.getItem(
                                                         "temp-sales-products"

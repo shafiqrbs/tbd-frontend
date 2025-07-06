@@ -70,7 +70,7 @@ function _ProductInlineSearch(props) {
               label={t("EnterSearchAnyKeyword")}
               opened={searchKeywordTooltip}
               position="top-end"
-              color="red"
+              color='var(--theme-primary-color-6)'
               withArrow
               offset={2}
               zIndex={100}

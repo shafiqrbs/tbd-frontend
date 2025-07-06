@@ -93,7 +93,7 @@ function FullTable() {
                                 <ActionIcon
                                     size="sm"
                                     variant="subtle"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                 >
                                     <IconTrash size={16}/>
                                 </ActionIcon>

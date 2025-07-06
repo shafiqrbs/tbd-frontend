@@ -186,7 +186,7 @@ function ProductCategoryDrawer(props) {
                                                                             nextField={saveId}
                                                                             name={'status'}
                                                                             form={categoryForm}
-                                                                            color="red"
+                                                                            color='var(--theme-primary-color-6)'
                                                                             id={'category_status'}
                                                                             position={'left'}
                                                                             defaultChecked={1}

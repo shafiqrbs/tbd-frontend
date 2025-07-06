@@ -13,7 +13,7 @@ export default function SettingIndex() {
     const progress = getLoadingProgress();
 
     if (progress !== 100) {
-        return <Progress color="red" size="sm" striped animated value={progress}/>;
+        return <Progress color='var(--theme-primary-color-6)' size="sm" striped animated value={progress}/>;
     }
     return (
         <>

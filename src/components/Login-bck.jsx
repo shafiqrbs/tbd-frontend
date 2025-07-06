@@ -110,7 +110,7 @@ export default function LoginBack() {
             <Paper>
                 {
                     errorMessage &&
-                    <Alert variant="light" color="red" radius="md" title={errorMessage} icon={icon}></Alert>
+                    <Alert variant="light" color='var(--theme-primary-color-6)' radius="md" title={errorMessage} icon={icon}></Alert>
                 }
 
                 <Tooltip
@@ -176,7 +176,7 @@ export default function LoginBack() {
                     </Anchor>
                     <Button type='submit' id={"LoginSubmit"} className={LoginPage.control} rightSection={<IconLogin/>}>
                         {
-                            spinner ? <Loader color="red" type="dots" size={30} /> : 'Login'
+                            spinner ? <Loader color='var(--theme-primary-color-6)' type="dots" size={30} /> : 'Login'
                         }
                     </Button>
                 </Group>

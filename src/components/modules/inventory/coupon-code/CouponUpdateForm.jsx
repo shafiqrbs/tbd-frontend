@@ -320,7 +320,7 @@ export default function CouponUpdateForm() {
                               nextField={"EntityFormSubmit"}
                               name={"is_sms"}
                               form={form}
-                              color="red"
+                              color='var(--theme-primary-color-6)'
                               id={"is_sms"}
                               position={"left"}
                               defaultChecked={1}

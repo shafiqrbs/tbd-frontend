@@ -42,7 +42,7 @@ function ProductTable({categoryDropdown}) {
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const {mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 155;
+    const height = mainAreaHeight - 150;
 
     const scrollViewportRef = useRef(null);
 
@@ -168,7 +168,6 @@ function ProductTable({categoryDropdown}) {
             <Box pl="xs" pr={8} pt="6" pb="4" className="boxBackground borderRadiusAll border-bottom-none">
                 <_ProductSearch module="product" categoryDropdown={categoryDropdown}/>
             </Box>
-
             <Box className="borderRadiusAll border-top-none">
                 <DataTable
                     classNames={tableCss}
@@ -180,27 +179,28 @@ function ProductTable({categoryDropdown}) {
                             textAlignment: "right",
                             render: (item) => indexData.data.indexOf(item) + 1,
                         },
-                        {accessor: "product_type", title: t("NatureOfProduct")},
-                        {accessor: "category_name", title: t("Category")},
                         {accessor: "product_name", title: t("Name")},
-                        {accessor: "alternative_name", title: t("DisplayName")},
+                        {accessor: "category_name", title: t("Category")},
+                        {accessor: "product_type", title: t("NatureOfProduct")},
                         {
                             accessor: "unit_name",
                             title: t("Unit"),
                             render: (item) => (
-                                <Text
+                                <Button
                                     component="a"
-                                    size="sm"
-                                    variant="subtle"
-                                    color="red.4"
+                                    size="compact-xs"
+                                    radius="xs"
+                                    color='var(--theme-primary-color-4)'
+                                    variant="filled"
+                                    fw={"100"}
+                                    fz={"12"}
                                     onClick={() => {
                                         setId(item.product_id);
                                         setMeasurementDrawer(true);
                                     }}
-                                    style={{cursor: "pointer"}}
                                 >
                                     {item.unit_name}
-                                </Text>
+                                </Button>
                             ),
                         },
                         {accessor: "quantity", title: t("Quantity"), textAlign: "center"},
@@ -247,7 +247,7 @@ function ProductTable({categoryDropdown}) {
                                     <Switch
                                         disabled={switchEnable[item.product_id] || item.parent_id}
                                         defaultChecked={item.status === 1}
-                                        color="red"
+                                        color='var(--theme-primary-color-6)'
                                         radius="xs"
                                         size="md"
                                         onLabel="Enable"
@@ -266,7 +266,7 @@ function ProductTable({categoryDropdown}) {
                                     <Menu position="bottom-end" withArrow trigger="hover"  width={200}s openDelay={100}
                                           closeDelay={400}>
                                         <Menu.Target>
-                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl">
+                                            <ActionIcon size="sm" variant="outline" color='var(--theme-primary-color-6)' radius="xl">
                                                 <IconDotsVertical height={18} width={18} stroke={1.5}/>
                                             </ActionIcon>
                                         </Menu.Target>
@@ -336,7 +336,7 @@ function ProductTable({categoryDropdown}) {
                     scrollViewportRef={scrollViewportRef}
                     onScrollToBottom={handleScrollToBottom}
                 />
-                <Paper p="md" mt="sm" withBorder>
+                <Paper p="xs" mt="xs" withBorder>
                     <Group justify="space-between">
                         <Text size="sm">
                             Showing <b>{indexData.data.length}</b> of <b>{indexData.total}</b> products

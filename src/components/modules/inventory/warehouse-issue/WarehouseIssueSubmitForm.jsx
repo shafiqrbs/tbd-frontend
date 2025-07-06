@@ -175,7 +175,7 @@ export default function WarehouseIssueSubmitForm(props) {
                         size="sm"
                         variant="outline"
                         radius="xl"
-                        color="red"
+                        color='var(--theme-primary-color-6)'
                         onClick={() => {
                             const filteredItems = warehouseIssueItems.filter(i => i.id !== item.id);
                             setWarehouseIssueItems(filteredItems);

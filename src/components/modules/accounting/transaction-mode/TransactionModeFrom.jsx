@@ -284,7 +284,7 @@ function TransactionModeForm(props) {
                                                             nextField={'is_selected'}
                                                             name={'is_selected'}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={'is_selected'}
                                                             position={'left'}
                                                             defaultChecked={form.is_selected}
@@ -297,7 +297,7 @@ function TransactionModeForm(props) {
                                                             px={16}
                                                             py={2}
                                                             position="top-end"
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             withArrow
                                                             offset={2}
                                                             zIndex={999}

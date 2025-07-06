@@ -159,7 +159,7 @@ export default function BarcodePrintForm(props) {
         <Table.Td fz="xs">
           <Center>
             <Checkbox
-              color="red"
+              color='var(--theme-primary-color-6)'
               checked={item.is_checked || false}
               onChange={() => {
                 // Create a new array with the updated item

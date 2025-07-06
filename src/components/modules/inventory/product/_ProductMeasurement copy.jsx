@@ -287,7 +287,7 @@ function _ProductMeasurement(props) {
                                         {!saveCreateLoading && isOnline && (
                                             <Button
                                                 size="xs"
-                                                color={`red.3`}
+                                                color='var(--theme-primary-color-6)'
                                                 type="submit"
                                                 id="EntityFormSubmit"
                                                 leftSection={<IconDeviceFloppy size={18}/>}
@@ -364,7 +364,7 @@ function _ProductMeasurement(props) {
                                                                     'is_sales'
                                                                 );
                                                             }}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             variant="outline"
                                                             radius="xl"
                                                             size="md"
@@ -382,7 +382,7 @@ function _ProductMeasurement(props) {
                                                                     'is_purchase'
                                                                 );
                                                             }}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             variant="outline"
                                                             radius="xl"
                                                             size="md"
@@ -393,7 +393,7 @@ function _ProductMeasurement(props) {
                                                         <ActionIcon
                                                             size="sm"
                                                             variant="transparent"
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             onClick={() => {
                                                                 dispatch(deleteEntityData(
                                                                         "inventory/product/measurement/" + unit.id

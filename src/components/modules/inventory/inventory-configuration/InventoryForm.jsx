@@ -160,44 +160,6 @@ function InventoryForm(props) {
     ],
     []
   );
-
-  // Helper function to create checkbox items
-  const renderCheckboxItem = (name, labelKey) => {
-    return (
-      <Box mt={"xs"}>
-        <Grid
-          gutter={{ base: 1 }}
-          style={{ cursor: "pointer" }}
-          onClick={() =>
-            form.setFieldValue(name, form.values[name] === 1 ? 0 : 1)
-          }
-        >
-          <Grid.Col span={11} fz={"sm"} pt={"1"}>
-            {t(labelKey)}
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <Checkbox
-              pr="xs"
-              checked={form.values[name] === 1}
-              color="red"
-              {...form.getInputProps(name, {
-                type: "checkbox",
-              })}
-              onChange={(event) =>
-                form.setFieldValue(name, event.currentTarget.checked ? 1 : 0)
-              }
-              styles={(theme) => ({
-                input: {
-                  borderColor: "red",
-                },
-              })}
-            />
-          </Grid.Col>
-        </Grid>
-      </Box>
-    );
-  };
-
   return (
     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
       <form onSubmit={form.onSubmit(handleInventoryFormSubmit)}>

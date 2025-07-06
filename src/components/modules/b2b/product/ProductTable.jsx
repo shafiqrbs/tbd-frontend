@@ -257,7 +257,7 @@ export default function ProductTable({id}) {
                         </Box>
                         <Box className={"borderRadiusAll"}>
                             {state.error ? (
-                                <Text color="red">{state.error}</Text>
+                                <Text color='var(--theme-primary-color-6)'>{state.error}</Text>
                             ) : (
                                 <DataTable
                                     classNames={{

@@ -352,7 +352,7 @@ function VoucherFormIndex({currencySymbol}) {
                     <Grid.Col span={1}>
                         <Navigation module={"voucher-entry"}/>
                     </Grid.Col>
-                    <Grid.Col span={3}>
+                    <Grid.Col span={4}>
                         <Box bg={"white"}>
                             <VoucherNavigation
                                 activeVoucher={activeVoucher}
@@ -371,7 +371,7 @@ function VoucherFormIndex({currencySymbol}) {
                             />
                         </Box>
                     </Grid.Col>
-                    <Grid.Col span={19}>
+                    <Grid.Col span={18}>
                         <Box
                             p={"xs"}
                             style={{borderRadius: 4}}
@@ -401,7 +401,7 @@ function VoucherFormIndex({currencySymbol}) {
 
                                 {/* Reset icon */}
                                 {primaryLedgerHeadData && (
-                                    <ActionIcon onClick={() => handleDeleteVoucher(1, 'main-ledger')} variant="subtle"
+                                    <ActionIcon  bg='var(--theme-delete-color)' color={'white'} onClick={() => handleDeleteVoucher(1, 'main-ledger')} variant="subtle"
                                                 size="sm" aria-label="Reset selection">
                                         <IconX size={16} opacity={0.6}/>
                                     </ActionIcon>)}

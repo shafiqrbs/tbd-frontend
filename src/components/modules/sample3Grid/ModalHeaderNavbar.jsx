@@ -68,7 +68,7 @@ function ModalHeaderNavbar(props) {
                                 <Menu.Label>Danger zone</Menu.Label>
 
                                 <Menu.Item
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
                                 >
                                     Delete my account

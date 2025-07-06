@@ -352,7 +352,7 @@ export default function BranchManagementForm() {
                                                     <Checkbox
                                                         pr="xs"
                                                         checked={!!checkedStates[branch.id]}
-                                                        color="red"
+                                                        color='var(--theme-primary-color-6)'
                                                         form={form}
                                                         disabled={!!checkboxDisable[branch.id]} // Disable if loading
                                                         onChange={(event) =>
@@ -501,7 +501,7 @@ export default function BranchManagementForm() {
                                                                     pr="xs"
                                                                     value={category.id + '#' + branch.id}
                                                                     label={category.name}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     onChange={(e) => {
                                                                         handleCategoryData(e.currentTarget.value, branch.id,e.currentTarget.checked,branch.customer_id)
                                                                     }}

@@ -490,7 +490,7 @@ function _SkuManagement(props) {
                                           <ActionIcon
                                               size="sm"
                                               variant="transparent"
-                                              color="red"
+                                              color='var(--theme-primary-color-6)'
                                               onMouseEnter={(e) =>
                                                   (e.currentTarget.style.color = "red")
                                               }

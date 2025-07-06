@@ -106,7 +106,7 @@ function DashBoard() {
                 position={"bottom"}
                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
-                <Button size="sm" color={`red.3`} variant="light">
+                <Button size="sm" color='var(--theme-primary-color-6)' variant="light">
                     <IconX size={18} />
                 </Button>
             </Tooltip>

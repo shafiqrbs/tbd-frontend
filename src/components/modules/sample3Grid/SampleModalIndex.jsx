@@ -40,7 +40,7 @@ function SampleModalIndex() {
                 <Spotlight.Search
                     ref={ref}
                     placeholder={t('SearchMenu')}
-                    leftSection={<IconSearch size={16} color="red" />}
+                    leftSection={<IconSearch size={16} color='var(--theme-primary-color-6)' />}
                     rightSection={
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             {query ? (
@@ -111,7 +111,7 @@ function SampleModalIndex() {
                 </Spotlight.ActionsList>
             </Spotlight.Root>
 
-            {progress !== 100 && <Progress color="red" size={"sm"} striped animated value={progress} />}
+            {progress !== 100 && <Progress color='var(--theme-primary-color-6)' size={"sm"} striped animated value={progress} />}
             {progress === 100 &&
                 <>
                     <AccountingHeaderNavbar

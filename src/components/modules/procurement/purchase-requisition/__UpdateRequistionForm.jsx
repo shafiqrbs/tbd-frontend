@@ -190,7 +190,7 @@ export default function __UpdateRequistionForm(props) {
                                             <ActionIcon
                                                 size="sm"
                                                 variant="subtle"
-                                                color="red"
+                                                color='var(--theme-primary-color-6)'
                                                 onClick={() => {
                                                     setTempCardProducts(tempCardProducts.filter(
                                                         (d) => d.product_id !== item.product_id

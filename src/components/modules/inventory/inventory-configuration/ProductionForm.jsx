@@ -203,7 +203,7 @@ function ProductionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.is_measurement === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("is_measurement", {
                     type: "checkbox",
                   })}
@@ -242,7 +242,7 @@ function ProductionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.is_warehouse === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("is_warehouse", {
                     type: "checkbox",
                   })}
@@ -281,7 +281,7 @@ function ProductionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.issue_by_production_batch === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("issue_by_production_batch", {
                     type: "checkbox",
                   })}
@@ -320,7 +320,7 @@ function ProductionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.issue_with_warehouse === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("issue_with_warehouse", {
                     type: "checkbox",
                   })}

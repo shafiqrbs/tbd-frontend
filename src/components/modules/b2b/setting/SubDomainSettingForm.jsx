@@ -469,7 +469,7 @@ function SubDomainSettingForm(props) {
                                                                                 pr="xs"
                                                                                 checked={selectedCategories.includes(Number(data.id))}
 
-                                                                                color="red"
+                                                                                color='var(--theme-primary-color-6)'
                                                                                 form={form}
                                                                                 disabled={saveCreateLoading} // Disable during form submission
                                                                                 onChange={() => handleCategoryToggle(data.id)}

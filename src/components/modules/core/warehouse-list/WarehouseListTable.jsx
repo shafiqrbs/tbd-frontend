@@ -117,13 +117,13 @@ export default function WarehouseListTable() {
 								);
 							}}
                             radius="sm"
-                            color="red"
+                            color='var(--theme-primary-color-6)'
                             onLabel="ON" offLabel="OFF"
                             thumbIcon={
                                 warehouse.enabled ? (
-                                  <IconCheck size={12} color="red" stroke={3} />
+                                  <IconCheck size={12} color='var(--theme-primary-color-6)' stroke={3} />
                                 ) : (
-                                  <IconX size={12} color="red" stroke={3} />
+                                  <IconX size={12} color='var(--theme-primary-color-6)' stroke={3} />
                                 )
                               }
 						/>

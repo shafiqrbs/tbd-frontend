@@ -309,7 +309,7 @@ function _RecipeTable() {
                                 <>
                                     <Switch
                                         defaultChecked={item.status==1?true:false}
-                                        color="red"
+                                        color='var(--theme-primary-color-6)'
                                         radius="xs"
                                         size="md"
                                         onLabel="Enable"
@@ -339,7 +339,7 @@ function _RecipeTable() {
                                     <ActionIcon
                                         size="sm"
                                         variant="subtle"
-                                        color="red"
+                                        color='var(--theme-primary-color-6)'
                                         onClick={() => {
                                             dispatch(deleteEntityData('production/recipe/'+data.id))
                                             dispatch(setFetching(true))

@@ -99,7 +99,7 @@ function StockTable(props) {
           alternative_name: productFilterData.alternative_name,
           sku: productFilterData.sku,
           sales_price: productFilterData.sales_price,
-          page: page,
+          page: searchKeyword ? 1: page,
           offset: perPage,
           type: "stock",
         },
@@ -223,30 +223,34 @@ function StockTable(props) {
               accessor: "index",
               title: t("S/N"),
               textAlignment: "right",
-              render: (item) => indexData.data.indexOf(item) + 1 + (page - 1) * perPage,
+             // render: (item) => indexData.data.indexOf(item) + 1,
+              render: (_row, index) => index + 1 + (page - 1) * perPage,
             },
-            // { accessor: "product_type", title: t("NatureOfProduct") },
-            { accessor: "category_name", title: t("Category") },
             { accessor: "product_name", title: t("Name") },
             { accessor: "barcode", title: t("Barcode") },
-            // { accessor: "alternative_name", title: t("AlternativeName") },
+            { accessor: "category_name", title: t("Category") },
+            { accessor: "product_type", title: t("NatureOfProduct") },
             {
               accessor: "unit_name",
               title: t("Unit"),
               render: (item) => (
-                <Text
-                  component="a"
-                  size="sm"
-                  variant="subtle"
-                  c="red.4"
-                  onClick={() => {
-                    setId(item.product_id);
-                    setMeasurementDrawer(true);
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  {item.unit_name}
-                </Text>
+                  <Button
+                      component="a"
+                      size="compact-xs"
+                      radius="xs"
+                      color='var(--theme-primary-color-4)'
+                      variant="filled"
+                      fw={"100"}
+                      fz={"12"}
+                      onClick={() => {
+                        setId(item.product_id);
+                        setMeasurementDrawer(true);
+                      }}
+                  >
+                    {item.unit_name}
+                  </Button>
+
+
               ),
             },
             {
@@ -259,107 +263,9 @@ function StockTable(props) {
               title: t("SalesPrice"),
               textAlign: "center",
             },
-            {
-              accessor: "feature_image",
-              textAlign: "center",
-              title: t("Image"),
-              render: (item) => {
-                const [opened, setOpened] = useState(false);
-                const autoplay = useRef(Autoplay({ delay: 2000 }));
-
-                const baseUrl = import.meta.env.VITE_IMAGE_GATEWAY_URL;
-                const imageKeys = [
-                  'feature_image',
-                  'path_one',
-                  'path_two',
-                  'path_three',
-                  'path_four'
-                ];
-                const images = imageKeys
-                    .map((key) => item?.images?.[key])
-                    .filter(Boolean)
-                    .map((path) => `${baseUrl}/${path}`);
-
-                return (
-                  <>
-                    <Image
-                      mih={50}
-                      mah={50}
-                      fit="contain"
-                      src={
-                        images.length > 0
-                          ? images[0]
-                          : ''
-                      }
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setOpened(true)}
-                    />
-
-                    <Modal
-                      opened={opened}
-                      onClose={() => setOpened(false)}
-                      size="lg"
-                      centered
-                      styles={{
-                        content: { overflow: "hidden" }, // Ensure modal content doesn't overflow
-                      }}
-                    >
-                      <Carousel
-                        withIndicators
-                        height={700}
-                        // plugins={[autoplay.current]}
-                        onMouseEnter={autoplay.current.stop}
-                        onMouseLeave={autoplay.current.reset}
-                      >
-                        {images.map((img, index) => (
-                          <Carousel.Slide key={index}>
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                height: "100%",
-                                overflow: "hidden",
-                              }}
-                            >
-                              <Image
-                                src={img}
-                                fit="contain"
-                                style={{
-                                  transition: "transform 0.3s ease-in-out",
-                                  maxWidth: "100%", // Ensure image fits within the slide
-                                  maxHeight: "100%",
-                                }}
-                                onMouseEnter={(e) =>
-                                  (e.currentTarget.style.transform =
-                                    "scale(1.2)")
-                                }
-                                onMouseLeave={(e) =>
-                                  (e.currentTarget.style.transform = "scale(1)")
-                                }
-                              />
-                            </div>
-                          </Carousel.Slide>
-                        ))}
-                      </Carousel>
-                    </Modal>
-                  </>
-                );
-              },
-            },
             { accessor: "vat", title: t("Vat") },
-            // { accessor: "average_price", title: t("AveragePrice"), textAlign : "center" },
-            {
-              accessor: "bonus_quantity",
-              title: t("BonusQuantityTable"),
-              textAlign: "center",
-            },
-            { accessor: "quantity", title: t("Quantity"), textAlign: "center" },
-            {
-              accessor: "rem_quantity",
-              title: t("RemainQuantity"),
-              textAlign: "center",
-            },
+
+            { accessor: "rem_quantity", title: t("Quantity"), textAlign: "center" },
             { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
             { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
             { accessor: "color_name", title: t("Color"), hidden: !isColor },
@@ -372,41 +278,14 @@ function StockTable(props) {
                 <>
                   <Switch
                     disabled={swtichEnable[item.product_id] || false}
-                    checked={checked[item.product_id] || item.status == 1}
-                    color="red"
+                    checked={checked[item.product_id] || item.status === 1}
+                    color='var(--theme-primary-color-6)'
                     radius="xs"
                     size="md"
                     onLabel="Enable"
                     offLabel="Disable"
                     onChange={(event) => {
                       handleSwtich(event, item);
-                    }}
-                  />
-                </>
-              ),
-            },
-            {
-              accessor: "location",
-              title: t("Rack"),
-              width:120,
-              textAlign: "center",
-              render: (item) => (
-                <>
-                  <SelectForm
-                    tooltip={t("ChooseProductLocation")}
-                    placeholder={t("Rack")}
-                    required={true}
-                    name={"location_id"}
-                    form={form}
-                    dropdownValue={locationData}
-                    id={"location_id"}
-                    searchable={true}
-                    value={locationMap[item.product_id] || null}
-                    changeValue={(value) => {
-                      setLocationMap((prev) => ({
-                        ...prev,
-                        [item.product_id]: value,
-                      }));
                     }}
                   />
                 </>
@@ -425,7 +304,7 @@ function StockTable(props) {
                     variant="filled"
                     fw={"100"}
                     fz={"12"}
-                    color="red.3"
+                    color='var(--theme-primary-color-6)'
                     mr={"4"}
                     onClick={() => {
                       dispatch(showEntityData("inventory/product/" + item.product_id));
@@ -448,7 +327,7 @@ function StockTable(props) {
                       <ActionIcon
                           size="sm"
                           variant="outline"
-                          color="red"
+                          color='var(--theme-primary-color-6)'
                           radius="xl"
                           aria-label="Settings"
                       >

@@ -190,7 +190,7 @@ function SettingsForm(props) {
                                                                 nextField={saveId}
                                                                 name={'status'}
                                                                 form={settingsForm}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={'status'}
                                                                 position={'left'}
                                                                 defaultChecked={1}

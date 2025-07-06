@@ -212,7 +212,7 @@ function FileUploadTable() {
                             textAlign: "center",
                             render: (item) => (
                                 item.process_row > 0 &&
-                                <Button variant="subtle" color="red" radius="xl">{item.process_row}</Button>
+                                <Button variant="subtle" color='var(--theme-primary-color-6)' radius="xl">{item.process_row}</Button>
                             ),
                         },
 
@@ -234,7 +234,7 @@ function FileUploadTable() {
                                             <ActionIcon
                                                 size="sm"
                                                 variant="outline"
-                                                color="red"
+                                                color='var(--theme-primary-color-6)'
                                                 radius="xl"
                                                 aria-label="Settings"
                                             >

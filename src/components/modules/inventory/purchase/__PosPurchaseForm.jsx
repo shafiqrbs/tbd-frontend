@@ -419,7 +419,7 @@ export default function __PosPurchaseForm(props) {
                                             <ActionIcon
                                                 size="sm"
                                                 variant="subtle"
-                                                color="red"
+                                                color='var(--theme-primary-color-6)'
                                                 onClick={() => {
                                                     const dataString = localStorage.getItem(
                                                         "temp-purchase-products"

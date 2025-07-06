@@ -15,8 +15,7 @@ function InputCheckboxForm({ label, field, form, mt = "xs" }) {
                 align="center"
                 gutter={{ base: 1 }}
                 style={{ cursor: "pointer" }}
-                onClick={handleToggle}
-            >
+                onClick={handleToggle}>
                 <Grid.Col span={11} fz="sm" pt={1}>
                     {t(label)}
                 </Grid.Col>
@@ -26,8 +25,8 @@ function InputCheckboxForm({ label, field, form, mt = "xs" }) {
                         checked={form.values[field] === 1}
                         onClick={(e) => e.stopPropagation()}
                         onChange={handleToggle}
-                        color="red"
-                        styles={{ input: { borderColor: "red" } }}
+                        color='var(--theme-primary-color-6)'
+                        styles={{ input: { borderColor: 'var(--theme-primary-color-8)' } }}
                     />
                 </Grid.Col>
             </Grid>

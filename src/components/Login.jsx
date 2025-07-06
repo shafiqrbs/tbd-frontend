@@ -97,7 +97,7 @@ export default function Login() {
                     </Title>
                     {
                         errorMessage &&
-                        <Alert variant="light" color="red" radius="md" title={errorMessage} icon={icon}></Alert>
+                        <Alert variant="light" color='var(--theme-primary-color-6)' radius="md" title={errorMessage} icon={icon}></Alert>
                     }
                     <Tooltip
                         label={t('UserNameRequired')}
@@ -162,7 +162,7 @@ export default function Login() {
                         </Anchor>
                         <Button fullWidth={true} mt="xl" bg={'red.5'} size="md" type='submit' id={"LoginSubmit"} className={LoginPage.control} rightSection={<IconLogin />}>
                             {
-                                spinner ? <Loader color="red" type="dots" size={30} /> : 'Login'
+                                spinner ? <Loader color='var(--theme-primary-color-6)' type="dots" size={30} /> : 'Login'
                             }
                         </Button>
                     </Group>

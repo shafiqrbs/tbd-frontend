@@ -918,7 +918,7 @@ function GeneralSalesForm(props) {
                                                 <Button fullWidth={true} onClick={() => discountType()} variant="filled" fz={'xs'}
                                                     leftSection={
                                                         value === 'Flat' ? <IconCurrencyTaka size={14} /> : <IconPercentage size={14} />
-                                                    } color="red">{value}</Button>
+                                                    } color='var(--theme-primary-color-6)'>{value}</Button>
                                             </Grid.Col>
                                             <Grid.Col span={3}>
                                                 <InputForm
@@ -984,7 +984,7 @@ function GeneralSalesForm(props) {
                             <Box mt={'xs'} style={{ borderTop: '1px solid red' }} pt={'xs'}>
                                 <Button.Group >
                                     <Button fullWidth={true} variant="filled" leftSection={<IconPrinter size={14} />} color="green">Print</Button>
-                                    <Button fullWidth={true} variant="filled" leftSection={<IconReceipt size={14} />} color="red">Pos</Button>
+                                    <Button fullWidth={true} variant="filled" leftSection={<IconReceipt size={14} />} color='var(--theme-primary-color-6)'>Pos</Button>
                                     <Button fullWidth={true} variant="filled" leftSection={<IconDeviceFloppy size={14} />} color="indigo">Save</Button>
                                     <Button fullWidth={true} variant="filled" leftSection={<IconStackPush size={14} />} color="yellow">Hold</Button>
                                 </Button.Group>

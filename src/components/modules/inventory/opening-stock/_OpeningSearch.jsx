@@ -77,7 +77,7 @@ function _OpeningSearch(props) {
                   px={16}
                   py={2}
                   position="top-end"
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   withArrow
                   offset={2}
                   zIndex={100}
@@ -239,7 +239,7 @@ function _OpeningSearch(props) {
             <ActionIcon
               size="md"
               variant="transparent"
-              color="red"
+              color='var(--theme-primary-color-6)'
               aria-label="Settings"
             >
               <IconDotsVertical height={"20"} width={"20"} stroke={1.5} />
@@ -274,7 +274,7 @@ function _OpeningSearch(props) {
                   px={16}
                   py={2}
                   position="top-end"
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   withArrow
                   offset={2}
                   zIndex={100}
@@ -457,7 +457,7 @@ function _OpeningSearch(props) {
                       <ActionIcon
                           size="md"
                           variant="transparent"
-                          color="red"
+                          color='var(--theme-primary-color-6)'
                           aria-label="Settings"
                       >
                           <IconDotsVertical height={"20"} width={"20"} stroke={1.5} />

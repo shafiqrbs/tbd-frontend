@@ -260,7 +260,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"stockable"}
                                                             name={"raw_materials"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"raw_materials"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.raw_materials}
@@ -280,7 +280,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"post_production"}
                                                             name={"stockable"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"stockable"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.stockable}
@@ -300,7 +300,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"mid_production"}
                                                             name={"post_production"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"post_production"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.post_production}
@@ -320,7 +320,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"pre_production"}
                                                             name={"mid_production"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"mid_production"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.mid_production}
@@ -340,7 +340,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_brand"}
                                                             name={"pre_production"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"pre_production"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.pre_production}
@@ -365,7 +365,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_grade"}
                                                             name={"is_brand"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_brand"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.is_brand}
@@ -385,7 +385,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_color"}
                                                             name={"is_grade"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_grade"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.is_grade}
@@ -405,7 +405,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_size"}
                                                             name={"is_color"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_color"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.is_color}
@@ -425,7 +425,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_model"}
                                                             name={"is_size"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_size"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.is_size}
@@ -445,7 +445,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_barcode_productName"}
                                                             name={"is_model"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_model"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.is_model}
@@ -496,7 +496,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_barcode_sku"}
                                                             name={"is_barcode_productName"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_barcode_productName"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.is_barcode_productName}
@@ -516,7 +516,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_barcode_companyName"}
                                                             name={"is_barcode_sku"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_barcode_sku"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.is_barcode_sku}
@@ -536,7 +536,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_barcode_price"}
                                                             name={"is_barcode_companyName"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_barcode_companyName"}
                                                             position={"left"}
                                                             defaultChecked={
@@ -558,7 +558,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField="zero_stock"
                                                             name={"is_barcode_price"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_barcode_price"}
                                                             position={"left"}
                                                             defaultChecked={
@@ -613,7 +613,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"stock_item"}
                                                             name={"zero_stock"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"zero_stock"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.zero_stock}
@@ -633,7 +633,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_stock_history"}
                                                             name={"stock_item"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"stock_item"}
                                                             position={"left"}
                                                             defaultChecked={inventoryConfigData.stock_item}
@@ -653,7 +653,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"pos_sales"}
                                                             name={"is_stock_history"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_stock_history"}
                                                             position={"left"}
                                                             defaultChecked={
@@ -675,7 +675,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField="pay_first"
                                                             name={"pos_sales"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"pos_sales"}
                                                             position={"left"}
                                                             defaultChecked={
@@ -697,7 +697,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"mrp_price"}
                                                             name={"pay_first"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"pay_first"}
                                                             position={"left"}
                                                             defaultChecked={
@@ -721,7 +721,7 @@ function InventoryConfigurationFormOBK() {
                                                                 checked={form.values.with_table === 1}
                                                                 onChange={(event) => form.setFieldValue('with_table', event.currentTarget.checked ? 1 : 0)}
                                                                 ml="sm"
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                             />
                                                             </Grid.Col>
                                                             <Grid.Col span={6} fz={"sm"}>
@@ -776,7 +776,7 @@ function InventoryConfigurationFormOBK() {
                                                                 nextField={"total_price"}
                                                                 name={"mrp_price"}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={"mrp_price"}
                                                                 position={"left"}
                                                                 defaultChecked={inventoryConfigData.mrp_price}
@@ -796,7 +796,7 @@ function InventoryConfigurationFormOBK() {
                                                                 nextField={"purchase_price"}
                                                                 name={"total_price"}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={"total_price"}
                                                                 position={"left"}
                                                                 defaultChecked={inventoryConfigData.total_price}
@@ -816,7 +816,7 @@ function InventoryConfigurationFormOBK() {
                                                                 nextField={"is_measurement"}
                                                                 name={"purchase_price"}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={"purchase_price"}
                                                                 position={"left"}
                                                                 defaultChecked={
@@ -894,7 +894,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_product_gallery"}
                                                             name={"is_measurement"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_measurement"}
                                                             position={"left"}
                                                             defaultChecked={
@@ -917,7 +917,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_multi_price"}
                                                             name={"is_product_gallery"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_product_gallery"}
                                                             position={"left"}
                                                             defaultChecked={
@@ -939,7 +939,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_sku"}
                                                             name={"is_multi_price"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_multi_price"}
                                                             position={"left"}
                                                             defaultChecked={
@@ -961,7 +961,7 @@ function InventoryConfigurationFormOBK() {
                                                             nextField={"is_batch_invoice"}
                                                             name={"is_sku"}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={"is_sku"}
                                                             position={"left"}
                                                             defaultChecked={
@@ -1015,7 +1015,7 @@ function InventoryConfigurationFormOBK() {
                                                                 nextField={"is_provision"}
                                                                 name={"is_batch_invoice"}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={"is_batch_invoice"}
                                                                 position={"left"}
                                                                 defaultChecked={
@@ -1037,7 +1037,7 @@ function InventoryConfigurationFormOBK() {
                                                                 nextField={"EntityFormSubmit"}
                                                                 name={"is_provision"}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={"is_provision"}
                                                                 position={"left"}
                                                                 defaultChecked={

@@ -326,7 +326,7 @@ function TransactionModeUpdateFrom(props) {
                                                             nextField={'is_selected'}
                                                             name={'is_selected'}
                                                             form={form}
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             id={'is_selected'}
                                                             position={'left'}
                                                             checked={form.values?.is_selected == 1 ? true : false}
@@ -339,7 +339,7 @@ function TransactionModeUpdateFrom(props) {
                                                             px={16}
                                                             py={2}
                                                             position="top-end"
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             withArrow
                                                             offset={2}
                                                             zIndex={999}

@@ -165,7 +165,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}
@@ -191,7 +191,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}
@@ -219,7 +219,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}
@@ -246,7 +246,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}
@@ -273,7 +273,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}
@@ -299,7 +299,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}
@@ -327,7 +327,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}
@@ -354,7 +354,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}
@@ -381,7 +381,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}
@@ -407,7 +407,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}
@@ -435,7 +435,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}
@@ -462,7 +462,7 @@ function TwoGrid(props) {
                                     px={20}
                                     py={3}
                                     position="top-end"
-                                    color="red"
+                                    color='var(--theme-primary-color-6)'
                                     withArrow
                                     offset={2}
                                     zIndex={0}

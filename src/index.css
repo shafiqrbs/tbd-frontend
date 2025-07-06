@@ -25,8 +25,12 @@
     --theme-secondary-color-7: var(--mantine-color-gray-7);
     --theme-secondary-color-8: var(--mantine-color-gray-8);
 
+    --theme-link-text-color: var(--mantine-color-gray-0);
+    --theme-link-bg-color: var(--mantine-color-green-6);
+
     --theme-success-color: var(--mantine-color-green-6);
     --theme-error-color: var(--mantine-color-red-6);
+    --theme-delete-color: var(--mantine-color-red-6);
     --theme-warning-color: var(--mantine-color-yellow-6);
     --theme-info-color: var(--mantine-color-blue-6);
     --theme-notice-color: var(--mantine-color-gray-6);
@@ -147,6 +151,16 @@ textarea:focus {
 .borderRadiusAll{
     border: 1px solid #fbf7ef;
     border-radius:4px;
+}
+
+.linkTextBtn{
+    border: 1px solid #fbf7ef;
+    border-radius:4px;
+    background: var(--mantine-color-blue-8)!important;
+    color: white!important;
+    padding: 4px!important;
+    padding-top: 0px!important;
+    padding-bottom: 0px!important;
 }
 
 .borderRadiusAllVoucherNew{

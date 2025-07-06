@@ -123,7 +123,7 @@ export default function __FilterPopover(props) {
                           px={16}
                           py={2}
                           position="top-end"
-                          color="red"
+                          color='var(--theme-primary-color-6)'
                           withArrow
                           offset={2}
                           zIndex={100}
@@ -204,7 +204,7 @@ export default function __FilterPopover(props) {
                           px={16}
                           py={2}
                           position="top-end"
-                          color="red"
+                          color='var(--theme-primary-color-6)'
                           withArrow
                           offset={2}
                           zIndex={100}
@@ -242,7 +242,7 @@ export default function __FilterPopover(props) {
                           px={16}
                           py={2}
                           position="top-end"
-                          color="red"
+                          color='var(--theme-primary-color-6)'
                           withArrow
                           offset={2}
                           zIndex={100}

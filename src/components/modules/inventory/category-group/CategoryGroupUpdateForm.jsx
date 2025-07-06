@@ -181,7 +181,7 @@ function CategoryGroupUpdateForm() {
                                                                 nextField={'CategoryFormSubmit'}
                                                                 name={'status'}
                                                                 form={form}
-                                                                color="red"
+                                                                color='var(--theme-primary-color-6)'
                                                                 id={'status'}
                                                                 position={'left'}
                                                                 checked={form.values.status}

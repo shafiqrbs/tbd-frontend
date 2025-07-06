@@ -144,7 +144,7 @@ function RequisitionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.search_by_vendor === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("search_by_vendor", {
                     type: "checkbox",
                   })}
@@ -181,7 +181,7 @@ function RequisitionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.search_by_product_nature === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("search_by_product_nature", {
                     type: "checkbox",
                   })}
@@ -218,7 +218,7 @@ function RequisitionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.search_by_category === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("search_by_category", {
                     type: "checkbox",
                   })}
@@ -255,7 +255,7 @@ function RequisitionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.show_product === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("show_product", {
                     type: "checkbox",
                   })}
@@ -292,7 +292,7 @@ function RequisitionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.is_measurement_enable === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("is_measurement_enable", {
                     type: "checkbox",
                   })}
@@ -329,7 +329,7 @@ function RequisitionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.is_purchase_auto_approved === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("is_purchase_auto_approved", {
                     type: "checkbox",
                   })}
@@ -366,7 +366,7 @@ function RequisitionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.default_vendor_group_id === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("default_vendor_group_id", {
                     type: "checkbox",
                   })}
@@ -403,7 +403,7 @@ function RequisitionForm(props) {
                 <Checkbox
                   pr="xs"
                   checked={form.values.search_by_warehouse === 1}
-                  color="red"
+                  color='var(--theme-primary-color-6)'
                   {...form.getInputProps("search_by_warehouse", {
                     type: "checkbox",
                   })}

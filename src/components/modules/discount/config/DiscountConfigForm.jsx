@@ -210,7 +210,7 @@ function DiscountConfig(props) {
                                             <Checkbox
                                                 pr="xs"
                                                 checked={form.values.discount_with_customer === 1}
-                                                color="red"
+                                                color='var(--theme-primary-color-6)'
                                                 {...form.getInputProps("discount_with_customer", {
                                                     type: "checkbox",
                                                 })}
@@ -247,7 +247,7 @@ function DiscountConfig(props) {
                                             <Checkbox
                                                 pr="xs"
                                                 checked={form.values.online_customer === 1}
-                                                color="red"
+                                                color='var(--theme-primary-color-6)'
                                                 {...form.getInputProps("online_customer", {
                                                     type: "checkbox",
                                                 })}

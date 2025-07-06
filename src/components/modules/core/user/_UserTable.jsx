@@ -145,7 +145,7 @@ function _UserTable() {
                       <ActionIcon
                         size="sm"
                         variant="outline"
-                        color="red"
+                        color='var(--theme-primary-color-6)'
                         radius="xl"
                         aria-label="Settings"
                       >

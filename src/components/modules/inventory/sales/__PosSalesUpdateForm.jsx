@@ -581,7 +581,7 @@ export default function __PosSalesUpdateForm(props) {
                                             <ActionIcon
                                                 size="sm"
                                                 variant="subtle"
-                                                color="red"
+                                                color='var(--theme-primary-color-6)'
                                                 onClick={() => {
                                                     let data = tempCardProducts ? tempCardProducts : [];
                                                     data = data.filter(

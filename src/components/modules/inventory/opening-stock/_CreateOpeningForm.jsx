@@ -866,7 +866,7 @@ function _CreateOpeningForm(props) {
                                                         <ActionIcon
                                                             size="sm"
                                                             variant="subtle"
-                                                            color="red"
+                                                            color='var(--theme-primary-color-6)'
                                                             onClick={() => {
                                                                 modals.openConfirmModal({
                                                                     title: (

@@ -201,7 +201,7 @@ function DomainConfigForm(props) {
             <Checkbox
               pr="xs"
               checked={form.values[name] === 1}
-              color="red"
+              color='var(--theme-primary-color-6)'
               {...form.getInputProps(name, {
                 type: "checkbox",
               })}

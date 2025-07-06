@@ -67,7 +67,7 @@ function OverViewDetails(props) {
                                                         <Grid.Col span={7}>
                                                             <Text fz="xs" fw={600}>
                                                                 {showEntityData?.status === 1 ? (
-                                                                    <Chip checked={true} color="red" size="xs" radius="xs">
+                                                                    <Chip checked={true} color='var(--theme-primary-color-6)' size="xs" radius="xs">
                                                                         {t('Active')}
                                                                     </Chip>
                                                                 ) : (

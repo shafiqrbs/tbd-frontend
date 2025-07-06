@@ -62,7 +62,7 @@ function CustomerGroupModel(props) {
                     px={20}
                     py={3}
                     position="top-end"
-                    color="red"
+                    color='var(--theme-primary-color-6)'
                     withArrow
                     offset={2}
                     transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
@@ -106,7 +106,7 @@ function CustomerGroupModel(props) {
                     px={20}
                     py={3}
                     position="top-end"
-                    color="red"
+                    color='var(--theme-primary-color-6)'
                     withArrow
                     offset={2}
                     zIndex={0}

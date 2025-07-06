@@ -322,7 +322,7 @@ function ConfigurationForm() {
                                                                     nextField={'sku_category'}
                                                                     name={'sku_warehouse'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'sku_warehouse'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.sku_warehouse}
@@ -341,7 +341,7 @@ function ConfigurationForm() {
                                                                     nextField={'vat_percent'}
                                                                     name={'sku_category'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'sku_category'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.sku_category}
@@ -363,7 +363,7 @@ function ConfigurationForm() {
                                                                     nextField={'vat_percent'}
                                                                     name={'hs_code_enable'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'hs_code_enable'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.hs_code_enable}
@@ -399,7 +399,7 @@ function ConfigurationForm() {
                                                                                 nextField={'sd_percent'}
                                                                                 name={'vat_enable'}
                                                                                 form={form}
-                                                                                color="red"
+                                                                                color='var(--theme-primary-color-6)'
                                                                                 id={'vat_enable'}
                                                                                 position={'left'}
                                                                                 defaultChecked={configData.vat_enable}
@@ -437,7 +437,7 @@ function ConfigurationForm() {
                                                                                 nextField={'ait_percent'}
                                                                                 name={'sd_enable'}
                                                                                 form={form}
-                                                                                color="red"
+                                                                                color='var(--theme-primary-color-6)'
                                                                                 id={'sd_enable'}
                                                                                 position={'left'}
                                                                                 defaultChecked={configData.sd_enable}
@@ -475,7 +475,7 @@ function ConfigurationForm() {
                                                                                 nextField={'zakat_percent'}
                                                                                 name={'ait_enable'}
                                                                                 form={form}
-                                                                                color="red"
+                                                                                color='var(--theme-primary-color-6)'
                                                                                 id={'ait_enable'}
                                                                                 position={'left'}
                                                                                 defaultChecked={configData.ait_enable}
@@ -513,7 +513,7 @@ function ConfigurationForm() {
                                                                                 nextField={'invoice_comment'}
                                                                                 name={'zakat_enable'}
                                                                                 form={form}
-                                                                                color="red"
+                                                                                color='var(--theme-primary-color-6)'
                                                                                 id={'zakat_enable'}
                                                                                 position={'left'}
                                                                                 defaultChecked={configData.zakat_enable}
@@ -553,7 +553,7 @@ function ConfigurationForm() {
                                                                     nextField={'invoice_print_logo'}
                                                                     name={'remove_image'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'remove_image'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.remove_image}
@@ -626,7 +626,7 @@ function ConfigurationForm() {
                                                                     nextField={'is_print_header'}
                                                                     name={'pos_print'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'pos_print'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.pos_print}
@@ -645,7 +645,7 @@ function ConfigurationForm() {
                                                                     name={'is_pay_first'}
                                                                     nextField={'is_pos'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_pay_first}
                                                                 />
@@ -664,7 +664,7 @@ function ConfigurationForm() {
                                                                     name={'is_pos'}
                                                                     nextField={'is_kitchen'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_pos}
                                                                 />
@@ -684,7 +684,7 @@ function ConfigurationForm() {
                                                                     name={'is_kitchen'}
                                                                     nextField={'custom_invoice'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_kitchen}
                                                                 />
@@ -705,7 +705,7 @@ function ConfigurationForm() {
                                                                     nextField={'is_stock_history'}
                                                                     name={'custom_invoice_print'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'custom_invoice_print'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.custom_invoice_print}
@@ -724,7 +724,7 @@ function ConfigurationForm() {
                                                                     nextField={'print_outstanding'}
                                                                     name={'invoice_print_logo'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'invoice_print_logo'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.invoice_print_logo}
@@ -743,7 +743,7 @@ function ConfigurationForm() {
                                                                     nextField={'pos_print'}
                                                                     name={'print_outstanding'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'print_outstanding'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.print_outstanding}
@@ -762,7 +762,7 @@ function ConfigurationForm() {
                                                                     nextField={'is_invoice_title'}
                                                                     name={'is_print_header'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'is_print_header'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_print_header}
@@ -781,7 +781,7 @@ function ConfigurationForm() {
                                                                     nextField={'is_print_footer'}
                                                                     name={'is_invoice_title'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'is_invoice_title'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_invoice_title}
@@ -800,7 +800,7 @@ function ConfigurationForm() {
                                                                     nextField={'is_powered'}
                                                                     name={'is_print_footer'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'is_print_footer'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_print_footer}
@@ -819,7 +819,7 @@ function ConfigurationForm() {
                                                                     nextField={'pos_invoice_mode_id'}
                                                                     name={'is_powered'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'is_powered'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_powered}
@@ -1047,7 +1047,7 @@ function ConfigurationForm() {
                                                                     nextField={'bonus_from_stock'}
                                                                     name={'custom_invoice'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'custom_invoice'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.custom_invoice}
@@ -1067,7 +1067,7 @@ function ConfigurationForm() {
                                                                     name={'is_sales_auto_approved'}
                                                                     nextField={'is_purchase_auto_approved'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_sales_auto_approved}
                                                                 />
@@ -1085,7 +1085,7 @@ function ConfigurationForm() {
                                                                     nextField={'is_zero_receive_allow'}
                                                                     name={'due_sales_without_customer'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'due_sales_without_customer'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.due_sales_without_customer}
@@ -1104,7 +1104,7 @@ function ConfigurationForm() {
                                                                     nextField={'sr_commission'}
                                                                     name={'sales_return'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'sales_return'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.sales_return}
@@ -1124,7 +1124,7 @@ function ConfigurationForm() {
                                                                     name={'is_purchase_auto_approved'}
                                                                     nextField={'is_pay_first'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_purchase_auto_approved}
                                                                 />
@@ -1143,7 +1143,7 @@ function ConfigurationForm() {
                                                                     nextField={'is_description'}
                                                                     name={'is_unit_price'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'is_unit_price'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_unit_price}
@@ -1163,7 +1163,7 @@ function ConfigurationForm() {
                                                                     nextField={'is_purchase_by_purchase_price'}
                                                                     name={'is_zero_receive_allow'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'is_zero_receive_allow'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_zero_receive_allow}
@@ -1182,7 +1182,7 @@ function ConfigurationForm() {
                                                                     nextField={'is_active_sms'}
                                                                     name={'is_purchase_by_purchase_price'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'is_purchase_by_purchase_price'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_purchase_by_purchase_price}
@@ -1204,7 +1204,7 @@ function ConfigurationForm() {
                                                                     nextField={'zero_stock'}
                                                                     name={'is_description'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'is_description'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_description}
@@ -1223,7 +1223,7 @@ function ConfigurationForm() {
                                                                     nextField={'stock_item'}
                                                                     name={'zero_stock'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'zero_stock'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.zero_stock}
@@ -1242,7 +1242,7 @@ function ConfigurationForm() {
                                                                     nextField={'custom_invoice_print'}
                                                                     name={'stock_item'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'stock_item'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.stock_item}
@@ -1261,7 +1261,7 @@ function ConfigurationForm() {
                                                                     nextField={'is_unit_price'}
                                                                     name={'bonus_from_stock'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'bonus_from_stock'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.bonus_from_stock}
@@ -1280,7 +1280,7 @@ function ConfigurationForm() {
                                                                     nextField={'condition_sales'}
                                                                     name={'is_stock_history'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'is_stock_history'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_stock_history}
@@ -1302,7 +1302,7 @@ function ConfigurationForm() {
                                                                     nextField={'store_ledger'}
                                                                     name={'condition_sales'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'condition_sales'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.condition_sales}
@@ -1321,7 +1321,7 @@ function ConfigurationForm() {
                                                                     nextField={'is_marketing_executive'}
                                                                     name={'store_ledger'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'store_ledger'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.store_ledger}
@@ -1340,7 +1340,7 @@ function ConfigurationForm() {
                                                                     nextField={'fuel_station'}
                                                                     name={'is_marketing_executive'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'is_marketing_executive'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_marketing_executive}
@@ -1360,7 +1360,7 @@ function ConfigurationForm() {
                                                                     nextField={'sales_return'}
                                                                     name={'tlo_commission'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'tlo_commission'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.tlo_commission}
@@ -1380,7 +1380,7 @@ function ConfigurationForm() {
                                                                     nextField={'due_sales_without_customer'}
                                                                     name={'sr_commission'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'sr_commission'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.sr_commission}
@@ -1400,7 +1400,7 @@ function ConfigurationForm() {
                                                                     nextField={'EntityFormSubmit'}
                                                                     name={'is_active_sms'}
                                                                     form={form}
-                                                                    color="red"
+                                                                    color='var(--theme-primary-color-6)'
                                                                     id={'is_active_sms'}
                                                                     position={'left'}
                                                                     defaultChecked={configData.is_active_sms}
