@@ -558,6 +558,9 @@ function _SkuManagement(props) {
                 <Box pl={`xs`} pb={'6'} pr={8} pt={'6'} mb={'4'} className={'bodyBackground borderRadiusAll'} >
                   <Title order={6} pt={'2'} c={'white'}>{t("AddStockKeepingUnit")}</Title>
                 </Box>
+                <Grid columns={32} gutter={{ base: 8 }}>
+                  <Grid.Col span={16}>sdasdas</Grid.Col>
+                  <Grid.Col span={16}>
                 <ScrollArea h={height-360} scrollbarSize={2}   scrollbars="y">
                   <Box pl={'md'} pr={'md'} mt={"xs"}>
                     <Grid columns={24} gutter={{ base: 1 }}>
@@ -577,7 +580,7 @@ function _SkuManagement(props) {
                       </Grid.Col>
                     </Grid>
                   </Box>
-                  {productConfig?.sku_color === 1 && colorDropDown?.length > 0 && (
+                  {productConfig?.sku_size === 1 && sizeDropDown?.length > 0 && (
                       <Box pl={'md'} pr={'md'} mt={"xs"}>
                         <Grid columns={24} gutter={{ base: 1 }}>
                           <Grid.Col span={12} fz={"sm"} mt={8}>
@@ -627,7 +630,7 @@ function _SkuManagement(props) {
                       </Box>
                   )}
 
-                  {productConfig?.sku_brand === 1 &&  sizeDropDown?.length > 0 && (
+                  {productConfig?.sku_brand === 1 &&  brandDropDown?.length > 0 && (
                       <Box pl={'md'} pr={'md'} mt={"xs"}>
                         <Grid columns={24} gutter={{ base: 1 }}>
                           <Grid.Col span={12} fz={"sm"} mt={8}>
@@ -693,6 +696,8 @@ function _SkuManagement(props) {
                       </Box>
                   )}
                 </ScrollArea>
+                  </Grid.Col>
+                   </Grid>
                 <Box
                     p={`xs`}
                     className={"titleBackground"}
