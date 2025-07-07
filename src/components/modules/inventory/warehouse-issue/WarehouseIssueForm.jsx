@@ -456,7 +456,7 @@ export default function WarehouseIssueForm(props) {
                                                                                 sales_price: data.sales_price,
                                                                                 stock_quantity: isWarehouse ? data.stock_quantity : data.quantity,
                                                                                 warehouse_id: isWarehouse ? data.warehouse_id : null,
-                                                                                sub_total: Number(quantity)*data.purchase_price ?? 0,
+                                                                                sub_total: (Number(quantity) * (data.purchase_price ? data.purchase_price:0)),
                                                                             };
 
                                                                             setWarehouseIssueItems(prevItems => {
