@@ -47,6 +47,7 @@ import {showNotificationComponent} from "../../../core-component/showNotificatio
 function _SkuManagement(props) {
   const { id,productConfig, isBrand, isColor, isGrade, isSize, isMultiPrice, isModel } =
     props;
+  console.log(productConfig);
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -110,6 +111,7 @@ function _SkuManagement(props) {
   }, [reloadSkuItemData]);
 
   const [brandData, setBrandData] = useState(null);
+  const [modelData, setModelData] = useState(null);
   const [colorData, setColorData] = useState(null);
   const [sizeData, setSizeData] = useState(null);
   const [gradeData, setGradeData] = useState(null);
@@ -299,6 +301,7 @@ function _SkuManagement(props) {
                       setBrandData(null);
                       setSizeData(null);
                       setGradeData(null);
+                      setModelData(null);
                       setReloadSkuItemData(true);
                       setSaveCreateLoading(false);
                     }, 500);
@@ -556,10 +559,10 @@ function _SkuManagement(props) {
               </Box>
               <Box className={"borderRadiusAll"}>
                 <Box pl={`xs`} pb={'6'} pr={8} pt={'6'} mb={'4'} className={'bodyBackground borderRadiusAll'} >
-                  <Title order={6} pt={'2'} c={'white'}>{t("AddStockKeepingUnit")}</Title>
+                  <Title order={6} pt={'2'} c={'black'}>{t("AddStockKeepingUnit")}</Title>
                 </Box>
                 <Grid columns={32} gutter={{ base: 8 }}>
-                  <Grid.Col span={16}>sdasdas</Grid.Col>
+                  <Grid.Col span={16}></Grid.Col>
                   <Grid.Col span={16}>
                 <ScrollArea h={height-360} scrollbarSize={2}   scrollbars="y">
                   <Box pl={'md'} pr={'md'} mt={"xs"}>
@@ -683,13 +686,18 @@ function _SkuManagement(props) {
                             {t("ModelNo")}
                           </Grid.Col>
                           <Grid.Col span={12}>
-                            <InputForm
-                                tooltip={t("BarcodeValidateMessage")}
-                                placeholder={t("ModelNo")}
-                                required={false}
-                                form={form}
+
+                            <SelectForm
+                                tooltip={t("SelectModel")}
+                                placeholder={t("SelectModelNo")}
                                 name={"model_id"}
+                                form={form}
+                                dropdownValue={modelDropDown}
+                                mt={0}
                                 id={"model_id"}
+                                searchable={true}
+                                value={modelData}
+                                changeValue={setModelData}
                             />
                           </Grid.Col>
                         </Grid>

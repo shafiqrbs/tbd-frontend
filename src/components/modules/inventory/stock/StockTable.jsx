@@ -65,9 +65,10 @@ function StockTable(props) {
 
   // Sync `configData` with localStorage
   const [configData, setConfigData] = useState(() => {
-    const storedConfigData = localStorage.getItem("config-data");
+    const storedConfigData = localStorage.getItem("domain-config-data");
     return storedConfigData ? JSON.parse(storedConfigData) : [];
   });
+  const product_config = configData?.inventory_config?.config_product;
 
   const [viewModal, setViewModal] = useState(false);
 
@@ -140,11 +141,11 @@ function StockTable(props) {
     }
   }, [entityDataDelete]);
 
-  const [isColor, setColor] = useState(configData?.is_color === 1);
-  const [isGrade, setGrade] = useState(configData?.is_grade === 1);
-  const [isSize, setSize] = useState(configData?.is_size === 1);
-  const [isModel, setModel] = useState(configData?.is_model === 1);
-  const [isBrand, setBrand] = useState(configData?.is_brand === 1);
+  const [isColor, setColor] = useState(product_config?.sku_color === 1);
+  const [isGrade, setGrade] = useState(product_config?.sku_grade === 1);
+  const [isSize, setSize] = useState(product_config?.sku_size === 1);
+  const [isModel, setModel] = useState(product_config?.sku_model === 1);
+  const [isBrand, setBrand] = useState(product_config?.sku_brand === 1);
 
   useEffect(() => {
     if (downloadStockXLS) {
@@ -228,6 +229,12 @@ function StockTable(props) {
             },
             { accessor: "product_name", title: t("Name") },
             { accessor: "barcode", title: t("Barcode") },
+            { accessor: "rem_quantity", title: t("Quantity"), textAlign: "center" },
+            { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
+            { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
+            { accessor: "color_name", title: t("Color"), hidden: !isColor },
+            { accessor: "size_name", title: t("Size"), hidden: !isSize },
+            { accessor: "model_name", title: t("Model"), hidden: !isModel },
             { accessor: "category_name", title: t("Category") },
             { accessor: "product_type", title: t("NatureOfProduct") },
             {
@@ -265,12 +272,7 @@ function StockTable(props) {
             },
             { accessor: "vat", title: t("Vat") },
 
-            { accessor: "rem_quantity", title: t("Quantity"), textAlign: "center" },
-            { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
-            { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
-            { accessor: "color_name", title: t("Color"), hidden: !isColor },
-            { accessor: "size_name", title: t("Size"), hidden: !isSize },
-            { accessor: "model_name", title: t("Model"), hidden: !isModel },
+
             {
               accessor: "status",
               title: t("Status"),

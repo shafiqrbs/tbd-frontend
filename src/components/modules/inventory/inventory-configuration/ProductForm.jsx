@@ -25,6 +25,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import { setFormLoading } from "../../../../store/inventory/crudSlice";
 import InputForm from "../../../form-builders/InputForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
+import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
 
 function ProductForm(props) {
   const { height, config_product, id,fetchDomainConfig } = props;
@@ -222,38 +223,31 @@ function ProductForm(props) {
               {t("ProductAttributes")}
             </Text>
           </Center>
-
-          {renderCheckboxItem("is_brand", "Brand")}
-          {renderCheckboxItem("is_color", "Color")}
-          {renderCheckboxItem("is_size", "Size")}
-          {renderCheckboxItem("is_model", "Model")}
-          {renderCheckboxItem("is_grade", "Grade")}
-          {renderCheckboxItem("is_measurement", "Measurement")}
-          {renderCheckboxItem("is_multi_price", "MultiPrice")}
-          {renderCheckboxItem("is_product_gallery", "ProductGallery")}
-          {renderCheckboxItem("is_sku", "SKU")}
-
+          <Box><InputCheckboxForm form={form} label={t('Measurement')} field={'is_measurement'} name={'is_measurement'}/></Box>
+          <Box><InputCheckboxForm form={form} label={t('MultiPrice')} field={'is_multi_price'} name={'is_multi_price'}/></Box>
+          <Box><InputCheckboxForm form={form} label={t('ProductGallery')} field={'is_product_gallery'} name={'is_product_gallery'}/></Box>
+          <Box><InputCheckboxForm form={form} label={t('SKU')} field={'is_sku'} name={'is_sku'}/></Box>
           <Center>
             <Text fw={800} fz={16} mt="md" mb="xs">
               {t("BarcodeSettings")}
             </Text>
           </Center>
-          {renderCheckboxItem("barcode_brand", "BarcodeBrand")}
-          {renderCheckboxItem("barcode_color", "BarcodeColor")}
-          {renderCheckboxItem("barcode_size", "BarcodeSize")}
-          {renderCheckboxItem("barcode_print", "BarcodePrint")}
-          {renderCheckboxItem("barcode_price_hide", "BarcodePriceHide")}
+          <Box><InputCheckboxForm form={form}  field={'barcode_brand'} name={'barcode_brand'} label={t('BarcodeBrand')} /></Box>
+          <Box><InputCheckboxForm form={form}  field={'barcode_color'} name={'barcode_color'} label={t('BarcodeColor')} /></Box>
+          <Box><InputCheckboxForm form={form}  field={'barcode_size'} name={'barcode_size'} label={t('BarcodeSize')} /></Box>
+          <Box><InputCheckboxForm form={form}  field={'barcode_print'} name={'barcode_print'} label={t('BarcodePrint')} /></Box>
+          <Box><InputCheckboxForm form={form}  field={'barcode_price_hide'} name={'barcode_price_hide'} label={t('BarcodePriceHide')} /></Box>
 
           <Center>
             <Text fw={800} fz={16} mt="md" mb="xs">
             {t("SKUSettings")}
           </Text>
           </Center>
-          {renderCheckboxItem("sku_brand", "SKUBrand")}
-          {renderCheckboxItem("sku_grade", "SKUGrade")}
-          {renderCheckboxItem("sku_color", "SKUColor")}
-          {renderCheckboxItem("sku_model", "SKUModel")}
-          {renderCheckboxItem("sku_size", "SKUSize")}
+          <Box><InputCheckboxForm form={form}  field={'sku_brand'} name={'sku_brand'} label={t('SKUBrand')} /></Box>
+          <Box><InputCheckboxForm form={form}  field={'sku_grade'} name={'sku_grade'} label={t('SKUGrade')} /></Box>
+          <Box><InputCheckboxForm form={form}  field={'sku_color'} name={'sku_color'} label={t('SKUColor')} /></Box>
+          <Box><InputCheckboxForm form={form}  field={'sku_model'} name={'sku_model'} label={t('SKUModel')} /></Box>
+          <Box><InputCheckboxForm form={form}  field={'sku_size'} name={'sku_size'} label={t('SKUSize')} /></Box>
         </Box>
         <Button
           id="ProductFormSubmit"

@@ -1162,5 +1162,7 @@
   "BankName": "Bank name",
   "ReceivedFrom": "Received from",
   "WarehouseIssue": "Warehouse issue",
+  "AddStockKeepingUnit": "Add Stock Keeping Unit",
+  "xxxxxx": "xxxxxxx",
   "xxxxxx": "xxxxxxx"
 }
