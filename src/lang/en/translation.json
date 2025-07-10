@@ -1163,6 +1163,9 @@
   "ReceivedFrom": "Received from",
   "WarehouseIssue": "Warehouse issue",
   "AddStockKeepingUnit": "Add Stock Keeping Unit",
+  "AddLedgerHead": "Add Ledger Head",
+  "AddLedger": "Add Ledger",
+  "ApproveConformation": "Approve Conformation",
   "xxxxxx": "xxxxxxx",
   "xxxxxx": "xxxxxxx"
 }

@@ -292,26 +292,7 @@ function VoucherForm(props) {
                               changeValue={setMode}
                             />
                           </Box>
-                          <Box mt={"xs"}>
-                            <Grid gutter={{ base: 1 }}>
-                              <Grid.Col span={2}>
-                                <SwitchForm
-                                  tooltip={t("Status")}
-                                  label=""
-                                  nextField={"EntityFormSubmit"}
-                                  name={"status"}
-                                  form={form}
-                                  color='var(--theme-primary-color-6)'
-                                  id={"status"}
-                                  position={"left"}
-                                  defaultChecked={1}
-                                />
-                              </Grid.Col>
-                              <Grid.Col span={6} fz={"sm"} pt={"1"}>
-                                {t("Status")}
-                              </Grid.Col>
-                            </Grid>
-                          </Box>
+
                         </Box>
                       </ScrollArea>
                     </Grid.Col>

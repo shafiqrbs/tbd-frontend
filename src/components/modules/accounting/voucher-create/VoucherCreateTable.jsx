@@ -50,6 +50,11 @@ function VoucherCreateTable(props) {
 
   const handleSwitch = (event, item) => {
     setSwitchEnable((prev) => ({ ...prev, [item.id]: true }));
+    dispatch(
+        editEntityData(
+            `accounting/voucher/status-update/${item.id}`
+        )
+    );
   };
 
   useEffect(() => {
@@ -106,7 +111,6 @@ function VoucherCreateTable(props) {
                   {data.is_private !== 1 &&(
                       <Flex justify="center" align="center">
                           <Switch
-                            disabled={switchEnable[data.id] || false || data.parent_id}
                             defaultChecked={data.status === 1 ? true : false}
                             color='var(--theme-primary-color-6)'
                             radius="xs"

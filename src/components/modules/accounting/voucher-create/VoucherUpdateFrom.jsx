@@ -45,6 +45,7 @@ import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/getAccountHeadAllDropdownData";
+import {setInsertType} from "../../../../store/generic/crudSlice.js";
 
 function VoucherUpdateFrom(props) {
   const { voucherDropdown } = props;
@@ -70,12 +71,12 @@ function VoucherUpdateFrom(props) {
   }, [entityEditData]);
 
 
+
   const form = useForm({
     initialValues: {
       name: entityEditData?.name || "",
       short_name: entityEditData?.short_name || "",
       short_code: entityEditData?.short_code || "",
-      status: entityEditData?.status || "",
       mode: entityEditData?.mode || "",
       voucher_type_id: entityEditData?.voucher_type_id || "",
       ledger_account_head_id: entityEditData?.ledger_account_head_id || "",
@@ -95,7 +96,6 @@ function VoucherUpdateFrom(props) {
         name: entityEditData?.name || "",
         short_name: entityEditData?.short_name || "",
         short_code: entityEditData?.short_code || "",
-        status: entityEditData?.status || "",
         mode: entityEditData?.mode || "debit",
         voucher_type_id: entityEditData?.voucher_type_id || "",
         ledger_account_head_id: entityEditData?.ledger_account_head_id || "",
@@ -182,6 +182,7 @@ function VoucherUpdateFrom(props) {
                 form.reset();
                 setVoucherType(null);
                 setAccountHeadData(null);
+                dispatch(setInsertType("create"))
               }, 500);
             },
           });
@@ -257,9 +258,9 @@ function VoucherUpdateFrom(props) {
                           </Box>
                           <Box mt={"8"}>
                             <SelectForm
-                                tooltip={t("ChooseVoucherType")}
+                                tooltip={t("ChooseAccountLedgerHead")}
                                 label={t("AccountLedgerHead")}
-                                placeholder={t("ChooseVoucherType")}
+                                placeholder={t("ChooseAccountLedgerHead")}
                                 required={true}
                                 nextField={"name"}
                                 name={"ledger_account_head_id"}
@@ -330,26 +331,6 @@ function VoucherUpdateFrom(props) {
                               value={mode}
                               changeValue={setMode}
                             />
-                          </Box>
-                          <Box mt={"xs"}>
-                            <Grid gutter={{ base: 1 }}>
-                              <Grid.Col span={2}>
-                                <SwitchForm
-                                  tooltip={t("Status")}
-                                  label=""
-                                  nextField={"EntityFormSubmit"}
-                                  name={"status"}
-                                  form={form}
-                                  color='var(--theme-primary-color-6)'
-                                  id={"status"}
-                                  position={"left"}
-                                  defaultChecked={1}
-                                />
-                              </Grid.Col>
-                              <Grid.Col span={6} fz={"sm"} pt={"1"}>
-                                {t("Status")}
-                              </Grid.Col>
-                            </Grid>
                           </Box>
                         </Box>
                       </ScrollArea>

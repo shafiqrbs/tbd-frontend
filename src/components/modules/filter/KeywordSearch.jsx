@@ -48,7 +48,7 @@ function KeywordSearch(props) {
     const fileUploadFilterData = useSelector((state) => state.crudSlice.fileUploadFilterData)
     const [loading,setLoading] = useState(false)
 
-    const handleSyncAllLedgerMaterdata = () => {
+    const handleSyncAllLedgerMasterdata = () => {
         modals.openConfirmModal({
             title: (
                 <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -352,11 +352,11 @@ function KeywordSearch(props) {
                             bg={`red.1`}
                             transitionProps={{transition: "pop-bottom-left", duration: 500}}
                         >
-                            <ActionIcon.GroupSection
-                                onClick={handleSyncAllLedgerMaterdata}
+                            <ActionIcon.Group
+                                onClick={handleSyncAllLedgerMasterdata}
                                 variant="default" c={'white'} fz={'16'}  size="lg" bg='var(--theme-primary-color-6)' miw={80}>
                                 {t('Sync')}
-                            </ActionIcon.GroupSection>
+                            </ActionIcon.Group>
                         </Tooltip>
                     </ActionIcon.Group>
                 </Grid.Col>

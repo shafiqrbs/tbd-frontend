@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box, Grid,
-    ActionIcon, Text, Title, Stack, rem, Menu
+    ActionIcon, Text, Title, Stack, rem, Menu, Button, Modal
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconEye, IconEdit, IconTrash, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
@@ -21,6 +21,9 @@ import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
 import LedgerViewDrawer from "./LedgerViewDrawer.jsx";
+import {useDisclosure} from "@mantine/hooks";
+import LedgerDetailsModel from "./LedgerDetailsModel.jsx";
+import ledgerDetailsModel from "./LedgerDetailsModel.jsx";
 
 
 function LedgerTable(props) {
@@ -36,6 +39,8 @@ function LedgerTable(props) {
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+
+    const [ledgerDetails,setLedgerDetails] = useState(null)
 
     useEffect(() => {
         const value = {
@@ -86,8 +91,20 @@ function LedgerTable(props) {
                             textAlign: "right",
                             render: (data) => (
                                 <>
-                                {data.is_private !== 1 &&(
                                 <Group gap={4} justify="right" wrap="nowrap">
+
+                                    <Button
+                                        size="compact-xs"
+                                        radius="xs"
+                                        variant="filled"
+                                        fw={'100'} fz={'12'}  color='var(--theme-primary-color-6)' mr={'4'}
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            setLedgerDetails(data)
+                                        }}
+                                    >  {t('Details')}</Button>
+
+                                    {data.is_private !== 1 &&(
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                         <Menu.Target>
                                             <ActionIcon size="sm" variant="outline" color='var(--theme-primary-color-6)' radius="xl" aria-label="Settings">
@@ -96,7 +113,6 @@ function LedgerTable(props) {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
-                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('accounting/account-head/' + data.id))
@@ -152,8 +168,9 @@ function LedgerTable(props) {
                                             </Menu.Item>
                                         </Menu.Dropdown>
                                     </Menu>
+                                            )}
+
                                 </Group>
-                                )}
                                 </>
                             ),
                         },
@@ -175,6 +192,9 @@ function LedgerTable(props) {
             </Box>
             {ledgerViewDrawer &&
                 <LedgerViewDrawer ledgerViewDrawer={ledgerViewDrawer} setLedgerViewDrawer={setLedgerViewDrawer} />
+            }
+            {ledgerDetails &&
+                <LedgerDetailsModel ledgerDetails={ledgerDetails} setLedgerDetails={setLedgerDetails} />
             }
         </>
 

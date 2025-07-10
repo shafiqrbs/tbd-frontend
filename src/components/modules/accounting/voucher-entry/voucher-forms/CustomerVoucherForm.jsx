@@ -278,6 +278,7 @@ export default function CustomerVoucherForm(props) {
                                             tooltip={t("LedgerHead")}
                                             placeholder={t("ChooseLedgerHead")}
                                             required
+                                            disabled={primaryLedgerHeadObject?false:true}
                                             nextField="amount"
                                             name="ledger_head"
                                             form={voucherForm}

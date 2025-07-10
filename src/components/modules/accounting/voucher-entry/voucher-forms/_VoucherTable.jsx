@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
-    IconDotsVertical, IconChevronsRight, IconPrinter, IconReceipt
+    IconDotsVertical, IconChevronsRight, IconPrinter, IconReceipt, IconTrashX
 } from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
@@ -190,8 +190,35 @@ function _VoucherTable(props) {
                                             title: t("Action"),
                                             textAlign: "right",
                                             render: (data) => (
-
                                                 <Group gap={4} justify="right" wrap="nowrap">
+                                                    {
+                                                        data.process === 'Created' &&
+                                                        <Button
+                                                            size="compact-xs"
+                                                            radius="xs"
+                                                            variant="filled"
+                                                            fw={'100'} fz={'12'}  color='var(--theme-primary-color-6)' mr={'4'}
+                                                                onClick={(e) => {
+                                                                   e.preventDefault()
+                                                                    modals.openConfirmModal({
+                                                                        title: (<Text
+                                                                            size="md"> {t("ApproveConformation")}</Text>),
+                                                                        children: (
+                                                                            <Text
+                                                                                size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                        labels: {
+                                                                            confirm: 'Confirm',
+                                                                            cancel: 'Cancel'
+                                                                        },
+                                                                        onCancel: () => console.log('Cancel'),
+                                                                        onConfirm: () => {
+                                                                            handleVoucherApprove(data.id)
+                                                                        },
+                                                                    });
+                                                                }}
+                                                        >  {t('Approve')}</Button>
+                                                    }
+
                                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover"
                                                           openDelay={100} closeDelay={400}>
                                                         <Menu.Target>
@@ -202,25 +229,11 @@ function _VoucherTable(props) {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
-                                                            {
+                                                            {/*{
                                                                 data.process === 'Created' &&
                                                                 <Menu.Item
                                                                     onClick={() => {
-                                                                        modals.openConfirmModal({
-                                                                            title: (<Text
-                                                                                size="md"> {t("ApproveConformation")}</Text>),
-                                                                            children: (
-                                                                                <Text
-                                                                                    size="sm"> {t("FormConfirmationMessage")}</Text>),
-                                                                            labels: {
-                                                                                confirm: 'Confirm',
-                                                                                cancel: 'Cancel'
-                                                                            },
-                                                                            onCancel: () => console.log('Cancel'),
-                                                                            onConfirm: () => {
-                                                                                handleVoucherApprove(data.id)
-                                                                            },
-                                                                        });
+
                                                                     }}
                                                                     component="a"
                                                                     color="green"
@@ -235,7 +248,7 @@ function _VoucherTable(props) {
                                                                 >
                                                                     {t("Approve")}
                                                                 </Menu.Item>
-                                                            }
+                                                            }*/}
                                                         </Menu.Dropdown>
                                                     </Menu>
                                                 </Group>
