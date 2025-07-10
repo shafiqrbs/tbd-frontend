@@ -125,7 +125,6 @@ function _GenericInvoiceForm(props) {
       const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
       const filteredProducts = localProducts.filter((product) => {
         const isAllowedNature = domainProductNature.includes(product.product_nature_id);
-
         if (!isAllowedNature) return false;
         return true;
       });
@@ -408,12 +407,13 @@ function _GenericInvoiceForm(props) {
   useEffect(() => {
     const storedProducts = localStorage.getItem("core-products");
     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-    let filteredProducts = localProducts.filter((product) => {
-      // return product.product_nature !== "raw-materials";
-      return product;
+    const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
+    const filteredProducts = localProducts.filter((product) => {
+      const isAllowedNature = domainProductNature.includes(product.product_nature_id);
+      if (!isAllowedNature) return false;
+      return true;
     });
 
-    console.log(configPurchase);
     if (searchValue) {
       const searchValueLower = searchValue.toLowerCase();
       filteredProducts = filteredProducts.filter(product =>
@@ -493,6 +493,7 @@ function _GenericInvoiceForm(props) {
     ],
     []
   );
+
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
