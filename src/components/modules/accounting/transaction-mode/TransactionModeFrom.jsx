@@ -1,9 +1,9 @@
-import React, {useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem, Flex,
-    Grid, Box, ScrollArea, Text, Title, Stack, SimpleGrid, Image, Tooltip
+    Grid, Box, ScrollArea, Text, Title, Stack, SimpleGrid, Image, Tooltip, Tabs
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -30,8 +30,11 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
+import getSettingAccountModeDropdownData from "../../../global-hook/dropdown/getSettingAccountModeDropdownData.js";
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
+import getBanksDropdownData from "../../../global-hook/dropdown/getBanksDropdownData";
+import _SelectForm from "../../../form-builders/_SelectForm";
 
 function TransactionModeForm(props) {
     const { t, i18n } = useTranslation();
@@ -41,11 +44,26 @@ function TransactionModeForm(props) {
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [authorisedData, setAuthorisedData] = useState(null);
+    const [bankMode, setBankMode] = useState('External');
     const [methodData, setMethodData] = useState(null);
     const [accountTypeData, setAccountTypeData] = useState(null);
+    const [accountModeData, setAccountModeData] = useState(null);
 
     const authorizedDropdown = getSettingAuthorizedTypeDropdownData()
     const accountDropdown = getSettingAccountTypeDropdownData()
+    const accountModeDropdown = getSettingAccountModeDropdownData()
+    const transactionMethods = getTransactionMethodDropdownData()
+    const banksDropdownData = getBanksDropdownData()
+    const [bankData, setBankData] = useState("");
+
+
+
+    const [activeTab, setActiveTab] = useState("21");
+    useEffect(() => {
+        form.setValues({
+            method_id: 21,
+        })
+    }, []);
 
     const [files, setFiles] = useState([]);
 
@@ -56,22 +74,13 @@ function TransactionModeForm(props) {
 
     const form = useForm({
         initialValues: {
-            method_id: '', name: '', short_name: '', authorised_mode_id: '', account_mode_id: '', service_charge: '', account_owner: '', path: '',is_selected:0
+            method_id: '', name: '', short_name: '', mobile: '',authorised_mode_id: '',account_mode_id: '',bank_id: '',account_number: '', account_type_mode_id: '', service_charge: '', account_owner: '', path: '',is_selected:0
         },
         validate: {
-            method_id: isNotEmpty(),
+            method_id : isNotEmpty(),
             name: hasLength({ min: 2}),
             short_name: hasLength({ min: 2}),
-            path: isNotEmpty(),
-            service_charge: (value, values) => {
-                if (value) {
-                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
-                    if (!isNumberOrFractional) {
-                        return true;
-                    }
-                }
-                return null;
-            },
+
         }
     });
 
@@ -128,6 +137,7 @@ function TransactionModeForm(props) {
                                     setFiles([])
                                     setMethodData(null)
                                     setAccountTypeData(null)
+                                    setAccountModeData(null)
                                     setAuthorisedData(null)
                                     dispatch(setFetching(true))
                                 }, 700)
@@ -170,24 +180,38 @@ function TransactionModeForm(props) {
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box>
-                                                    <Box mt={'xs'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseMethod')}
-                                                            label={t('Method')}
-                                                            placeholder={t('ChooseMethod')}
-                                                            required={true}
-                                                            nextField={'name'}
-                                                            name={'method_id'}
-                                                            form={form}
-                                                            dropdownValue={getTransactionMethodDropdownData()}
-                                                            mt={8}
-                                                            id={'method_id'}
-                                                            searchable={false}
-                                                            value={methodData}
-                                                            changeValue={setMethodData}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
+                                                    {
+                                                        transactionMethods &&
+
+                                                        <Tabs
+                                                            height={50}
+                                                            p={4}
+                                                            bg={"#f0f1f9"}
+                                                            defaultValue="VoucherEntry"
+                                                            color="var(--theme-primary-color-6)"
+                                                            variant="pills"
+                                                            radius="sm"
+                                                            value={activeTab}
+                                                            onChange={(value) => {
+                                                                setActiveTab(value)
+                                                                form.setValues({
+                                                                    method_id: value,
+                                                                })
+                                                            }}
+                                                        >
+                                                            <Tabs.List grow>
+                                                                {
+                                                                    transactionMethods.map((item, index) => (
+                                                                        <Tabs.Tab key={index} m={2} value={item.value}>
+                                                                            {t(item.label)}
+                                                                        </Tabs.Tab>
+                                                                    ))
+                                                                }
+                                                            </Tabs.List>
+                                                        </Tabs>
+                                                    }
+
+                                                            <Box mt={'xs'}>
                                                         <InputForm
                                                             tooltip={t('TransactionModeNameValidateMessage')}
                                                             label={t('Name')}
@@ -200,97 +224,196 @@ function TransactionModeForm(props) {
                                                             id={'name'}
                                                         />
                                                     </Box>
-                                                    <Box mt={'xs'}>
+                                                            <Box mt={'xs'}>
                                                         <InputForm
                                                             tooltip={t('ShortNameValidateMessage')}
                                                             label={t('ShortName')}
                                                             placeholder={t('ShortName')}
                                                             required={true}
-                                                            nextField={'authorised_mode_id'}
+                                                            nextField={'account_owner'}
                                                             name={'short_name'}
                                                             form={form}
                                                             mt={0}
                                                             id={'short_name'}
                                                         />
                                                     </Box>
-                                                    <Box mt={'xs'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseAuthorised')}
-                                                            label={t('Authorised')}
-                                                            placeholder={t('ChooseAuthorised')}
-                                                            required={false}
-                                                            nextField={'account_mode_id'}
-                                                            name={'authorised_mode_id'}
-                                                            form={form}
-                                                            dropdownValue={authorizedDropdown}
-                                                            mt={8}
-                                                            id={'authorised_mode_id'}
-                                                            searchable={false}
-                                                            value={authorisedData}
-                                                            changeValue={setAuthorisedData}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseAccountType')}
-                                                            label={t('AccountType')}
-                                                            placeholder={t('ChooseAccountType')}
-                                                            required={false}
-                                                            nextField={'service_charge'}
-                                                            name={'account_mode_id'}
-                                                            form={form}
-                                                            dropdownValue={accountDropdown}
-                                                            mt={8}
-                                                            id={'account_mode_id'}
-                                                            searchable={false}
-                                                            value={accountTypeData}
-                                                            changeValue={setAccountTypeData}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
-                                                            tooltip={t('ServiceChargeValidationMessage')}
-                                                            label={t('ServiceCharge')}
-                                                            placeholder={t('ServiceCharge')}
-                                                            required={false}
-                                                            nextField={'account_owner'}
-                                                            name={'service_charge'}
-                                                            form={form}
-                                                            mt={'md'}
-                                                            id={'service_charge'}
-                                                            type={'number'}
-                                                            leftSection={
-                                                                <IconPlusMinus size={16} opacity={0.5} />
-                                                            }
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
-                                                            tooltip={t('AccountOwnerValidateMessage')}
-                                                            label={t('AccountOwner')}
-                                                            placeholder={t('AccountOwner')}
-                                                            required={false}
-                                                            nextField={'is_selected'}
-                                                            name={'account_owner'}
-                                                            form={form}
-                                                            mt={8}
-                                                            id={'account_owner'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <SwitchForm
-                                                            tooltip={t('IsSelected')}
-                                                            label={t('IsSelected')}
-                                                            nextField={'is_selected'}
-                                                            name={'is_selected'}
-                                                            form={form}
-                                                            color='var(--theme-primary-color-6)'
-                                                            id={'is_selected'}
-                                                            position={'left'}
-                                                            defaultChecked={form.is_selected}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
+                                                        {activeTab === '21' &&
+                                                            <>
+                                                                <Box mt={'xs'}>
+                                                                    <InputForm
+                                                                        tooltip={t('AccountOwnerValidateMessage')}
+                                                                        label={t('AccountOwner')}
+                                                                        placeholder={t('AccountOwner')}
+                                                                        required={false}
+                                                                        nextField={'bank_id'}
+                                                                        name={'account_owner'}
+                                                                        form={form}
+                                                                        mt={8}
+                                                                        id={'account_owner'}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                        <SelectForm
+                                                                        tooltip={t("ChooseBank")}
+                                                                        label={t("ChooseBank")}
+                                                                        placeholder={t("ChooseBank")}
+                                                                        required={false}
+                                                                        nextField="account_mode_id"
+                                                                        name="bank_id"
+                                                                        form={form}
+                                                                        dropdownValue={banksDropdownData}
+                                                                        id="bank_id"
+                                                                        searchable={false}
+                                                                        value={bankData}
+                                                                        changeValue={(value) => {
+                                                                        setBankData(value);
+                                                                        form.setFieldValue("bank_id", value);
+                                                                    }}
+                                                                        />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <SelectForm
+                                                                        tooltip={t('ChooseBankMode')}
+                                                                        label={t('BankMode')}
+                                                                        placeholder={t('BankMode')}
+                                                                        required={false}
+                                                                        nextField={'account_type_mode_id'}
+                                                                        name={'account_mode_id'}
+                                                                        form={form}
+                                                                        dropdownValue={accountModeDropdown}
+                                                                        mt={8}
+                                                                        id={'account_mode_id'}
+                                                                        searchable={false}
+                                                                        value={accountModeData}
+                                                                        changeValue={setAccountModeData}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <SelectForm
+                                                                        tooltip={t('ChooseAccountType')}
+                                                                        label={t('AccountType')}
+                                                                        placeholder={t('ChooseAccountType')}
+                                                                        required={false}
+                                                                        nextField={'account_number'}
+                                                                        name={'account_type_mode_id'}
+                                                                        form={form}
+                                                                        dropdownValue={accountDropdown}
+                                                                        mt={8}
+                                                                        id={'account_type_mode_id'}
+                                                                        searchable={false}
+                                                                        value={accountTypeData}
+                                                                        changeValue={setAccountTypeData}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <InputForm
+                                                                        tooltip={t('AccountNumberValidationMessage')}
+                                                                        label={t('AccountNumber')}
+                                                                        placeholder={t('AccountNumber')}
+                                                                        required={false}
+                                                                        nextField={'service_charge'}
+                                                                        name={'account_number'}
+                                                                        form={form}
+                                                                        mt={'md'}
+                                                                        id={'account_number'}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <InputForm
+                                                                        tooltip={t('ServiceChargeValidationMessage')}
+                                                                        label={t('ServiceCharge')}
+                                                                        placeholder={t('ServiceCharge')}
+                                                                        required={false}
+                                                                        nextField={''}
+                                                                        name={'service_charge'}
+                                                                        form={form}
+                                                                        mt={'md'}
+                                                                        id={'service_charge'}
+                                                                        type={'number'}
+                                                                        leftSection={
+                                                                            <IconPlusMinus size={16} opacity={0.5} />
+                                                                        }
+                                                                    />
+                                                                </Box>
+                                                            </>
+                                                        }
+                                                        {activeTab === '22' &&
+                                                            <>
+                                                                <Box mt={'xs'}>
+                                                                    <InputForm
+                                                                        tooltip={t('AccountOwnerValidateMessage')}
+                                                                        label={t('AccountOwner')}
+                                                                        placeholder={t('AccountOwner')}
+                                                                        required={false}
+                                                                        nextField={'is_selected'}
+                                                                        name={'account_owner'}
+                                                                        form={form}
+                                                                        mt={8}
+                                                                        id={'account_owner'}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <InputForm
+                                                                        tooltip={t('MobileAccountValidateMessage')}
+                                                                        label={t('MobileAccount')}
+                                                                        placeholder={t('MobileAccount')}
+                                                                        required={false}
+                                                                        nextField={'account_mode_id'}
+                                                                        name={'mobile'}
+                                                                        form={form}
+                                                                        mt={0}
+                                                                        id={'mobile'}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <SelectForm
+                                                                        tooltip={t('ChooseAuthorised')}
+                                                                        label={t('Authorised')}
+                                                                        placeholder={t('ChooseAuthorised')}
+                                                                        required={false}
+                                                                        nextField={'service_charge'}
+                                                                        name={'authorised_mode_id'}
+                                                                        form={form}
+                                                                        dropdownValue={authorizedDropdown}
+                                                                        mt={8}
+                                                                        id={'authorised_mode_id'}
+                                                                        searchable={false}
+                                                                        value={authorisedData}
+                                                                        changeValue={setAuthorisedData}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <InputForm
+                                                                        tooltip={t('ServiceChargeValidationMessage')}
+                                                                        label={t('ServiceCharge')}
+                                                                        placeholder={t('ServiceCharge')}
+                                                                        required={false}
+                                                                        name={'service_charge'}
+                                                                        form={form}
+                                                                        mt={'md'}
+                                                                        id={'service_charge'}
+                                                                        type={'number'}
+                                                                        leftSection={
+                                                                            <IconPlusMinus size={16} opacity={0.5} />
+                                                                        }
+                                                                    />
+                                                                </Box>
+                                                            </>
+                                                        }
+                                                        <Box mt={'xs'}>
+                                                            <SwitchForm
+                                                                tooltip={t('IsSelected')}
+                                                                label={t('IsSelected')}
+                                                                nextField={'is_selected'}
+                                                                name={'is_selected'}
+                                                                form={form}
+                                                                color='var(--theme-primary-color-6)'
+                                                                id={'is_selected'}
+                                                                position={'left'}
+                                                                defaultChecked={form.is_selected}
+                                                            />
+                                                        </Box>
+                                                        <Box mt={'xs'}>
                                                         <Tooltip
                                                             label={t('ChooseImage')}
                                                             opened={('path' in form.errors) && !!form.errors['path']}

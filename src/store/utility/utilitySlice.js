@@ -142,6 +142,11 @@ const utilitySlice = createSlice({
       if (action.payload.type === "account-type") {
         state.accountDropdownData = action.payload.data.data;
       }
+
+      if (action.payload.type === "account-mode") {
+        state.accountModeDropdownData = action.payload.data.data;
+      }
+
       if (action.payload.type === "authorised-type") {
         state.authorizedDropdownData = action.payload.data.data;
       }
