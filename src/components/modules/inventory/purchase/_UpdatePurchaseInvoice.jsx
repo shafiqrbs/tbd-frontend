@@ -109,9 +109,16 @@ function _UpdatePurchaseInvoice(props) {
             const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
             // Filter products where product_nature is not 'post-production'
-            const filteredProducts = localProducts.filter(
+           /* const filteredProducts = localProducts.filter(
                 (product) => product.product_nature !== "post-production"
-            );
+            );*/
+            const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
+            const filteredProducts = localProducts.filter((product) => {
+                const isAllowedNature = domainProductNature.includes(product.product_nature_id);
+
+                if (!isAllowedNature) return false;
+                return true;
+            });
 
             const lowerCaseSearchTerm = searchValue.toLowerCase();
             const fieldsToSearch = ["product_name"];

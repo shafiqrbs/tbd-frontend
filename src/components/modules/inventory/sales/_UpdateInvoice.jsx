@@ -377,15 +377,20 @@ function _UpdateInvoice(props) {
     useEffect(() => {
         const storedProducts = localStorage.getItem("core-products");
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+        const domainProductNature = JSON.parse(salesConfig?.sales_product_nature || '[]');
         const filteredProducts = localProducts.filter((product) => {
+            const isAllowedNature = domainProductNature.includes(product.product_nature_id);
+
+            if (!isAllowedNature) return false;
             if (categoryData) {
                 return (
-                    product.product_nature !== "raw-materials" &&
                     product.category_id === Number(categoryData) &&
                     product.sales_price !== 0
                 );
             }
-            return product.product_nature !== "raw-materials";
+
+            return true;
         });
 
         setProducts(filteredProducts);

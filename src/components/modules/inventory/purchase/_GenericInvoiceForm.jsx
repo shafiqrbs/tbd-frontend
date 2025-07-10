@@ -121,9 +121,14 @@ function _GenericInvoiceForm(props) {
       const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
       // Filter products where product_nature is not 'raw-materials'
-      const filteredProducts = localProducts.filter(
-        (product) => product.product_nature !== "raw-materials"
-      );
+
+      const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
+      const filteredProducts = localProducts.filter((product) => {
+        const isAllowedNature = domainProductNature.includes(product.product_nature_id);
+
+        if (!isAllowedNature) return false;
+        return true;
+      });
 
       const lowerCaseSearchTerm = searchValue.toLowerCase();
       const fieldsToSearch = ["product_name"];
@@ -248,8 +253,13 @@ function _GenericInvoiceForm(props) {
     const filteredProducts = localProducts.filter(
       (product) => product.id === Number(form.values.product_id)
     );
+    /*const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
+    const filteredProducts = localProducts.filter((product) => {
+      const isAllowedNature = domainProductNature.includes(product.product_nature_id);
 
-
+      if (!isAllowedNature) return false;
+      return true;
+    });*/
 
     if (filteredProducts.length > 0) {
       const selectedProduct = filteredProducts[0];
