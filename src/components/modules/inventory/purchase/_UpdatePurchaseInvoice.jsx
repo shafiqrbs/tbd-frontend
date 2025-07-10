@@ -108,7 +108,7 @@ function _UpdatePurchaseInvoice(props) {
             const storedProducts = localStorage.getItem("core-products");
             const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
-            const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
+            const domainProductNature = JSON.parse(configPurchase?.purchase_product_nature || '[]');
             let filteredProducts = localProducts.filter((product) => {
                 const isAllowedNature = domainProductNature.includes(product.product_nature_id);
 
@@ -381,7 +381,7 @@ function _UpdatePurchaseInvoice(props) {
         const storedProducts = localStorage.getItem("core-products");
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
-        const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
+        const domainProductNature = JSON.parse(configPurchase?.purchase_product_nature || '[]');
         let filteredProducts = localProducts.filter((product) => {
             const isAllowedNature = domainProductNature.includes(product.product_nature_id);
             if (!isAllowedNature) return false;

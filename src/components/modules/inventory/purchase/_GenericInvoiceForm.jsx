@@ -120,7 +120,7 @@ function _GenericInvoiceForm(props) {
       const storedProducts = localStorage.getItem("core-products");
       const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
-      const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
+      const domainProductNature = JSON.parse(configPurchase?.purchase_product_nature || '[]');
       const filteredProducts = localProducts.filter((product) => {
         const isAllowedNature = domainProductNature.includes(product.product_nature_id);
         if (!isAllowedNature) return false;
@@ -250,7 +250,7 @@ function _GenericInvoiceForm(props) {
     const filteredProducts = localProducts.filter(
       (product) => product.id === Number(form.values.product_id)
     );
-    /*const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
+    /*const domainProductNature = JSON.parse(configPurchase?.purchase_product_nature || '[]');
     const filteredProducts = localProducts.filter((product) => {
       const isAllowedNature = domainProductNature.includes(product.product_nature_id);
 
@@ -405,7 +405,7 @@ function _GenericInvoiceForm(props) {
   useEffect(() => {
     const storedProducts = localStorage.getItem("core-products");
     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-    const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
+    const domainProductNature = JSON.parse(configPurchase?.purchase_product_nature || '[]');
     let filteredProducts = localProducts.filter((product) => {
       const isAllowedNature = domainProductNature.includes(product.product_nature_id);
       if (!isAllowedNature) return false;
