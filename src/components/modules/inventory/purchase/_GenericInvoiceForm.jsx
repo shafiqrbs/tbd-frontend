@@ -120,8 +120,6 @@ function _GenericInvoiceForm(props) {
       const storedProducts = localStorage.getItem("core-products");
       const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
-      // Filter products where product_nature is not 'raw-materials'
-
       const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
       const filteredProducts = localProducts.filter((product) => {
         const isAllowedNature = domainProductNature.includes(product.product_nature_id);
@@ -408,7 +406,7 @@ function _GenericInvoiceForm(props) {
     const storedProducts = localStorage.getItem("core-products");
     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
     const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
-    const filteredProducts = localProducts.filter((product) => {
+    let filteredProducts = localProducts.filter((product) => {
       const isAllowedNature = domainProductNature.includes(product.product_nature_id);
       if (!isAllowedNature) return false;
       return true;

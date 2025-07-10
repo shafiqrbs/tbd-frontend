@@ -108,12 +108,8 @@ function _UpdatePurchaseInvoice(props) {
             const storedProducts = localStorage.getItem("core-products");
             const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
-            // Filter products where product_nature is not 'post-production'
-           /* const filteredProducts = localProducts.filter(
-                (product) => product.product_nature !== "post-production"
-            );*/
             const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
-            const filteredProducts = localProducts.filter((product) => {
+            let filteredProducts = localProducts.filter((product) => {
                 const isAllowedNature = domainProductNature.includes(product.product_nature_id);
 
                 if (!isAllowedNature) return false;
@@ -384,15 +380,12 @@ function _UpdatePurchaseInvoice(props) {
     useEffect(() => {
         const storedProducts = localStorage.getItem("core-products");
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-        const filteredProducts = localProducts.filter((product) => {
-            if (categoryData) {
-                return (
-                    product.product_nature !== "raw-materials" &&
-                    product.category_id === Number(categoryData) &&
-                    product.purchase_price !== 0
-                );
-            }
-            return product.product_nature !== "raw-materials";
+
+        const domainProductNature = JSON.parse(configPurchase?.sales_product_nature || '[]');
+        let filteredProducts = localProducts.filter((product) => {
+            const isAllowedNature = domainProductNature.includes(product.product_nature_id);
+            if (!isAllowedNature) return false;
+            return true;
         });
 
         setProducts(filteredProducts);
