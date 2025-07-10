@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     rem,
-    Grid, Tooltip, TextInput, ActionIcon
+    Grid, Tooltip, TextInput, ActionIcon, Button, Text, LoadingOverlay
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -10,7 +10,7 @@ import {
     IconInfoCircle,
     IconRestore,
     IconSearch,
-    IconX, IconPdf, IconFileTypeXls
+    IconX, IconPdf, IconFileTypeXls,IconPhoto,IconArrowRight
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +24,9 @@ import {
 import FilterModel from "./FilterModel.jsx";
 import { setProductFilterData, setCategoryFilterData } from "../../../store/inventory/crudSlice.js";
 import { setProductionSettingFilterData } from "../../../store/production/crudSlice.js";
+import {modals} from "@mantine/modals";
+import {editEntityData, storeEntityData} from "../../../store/accounting/crudSlice";
+import {showNotificationComponent} from "../../core-component/showNotificationComponent";
 
 function KeywordSearch(props) {
     const { t, i18n } = useTranslation();
@@ -43,6 +46,39 @@ function KeywordSearch(props) {
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
     const fileUploadFilterData = useSelector((state) => state.crudSlice.fileUploadFilterData)
+    const [loading,setLoading] = useState(false)
+
+    const handleSyncAllLedgerMaterdata = () => {
+        modals.openConfirmModal({
+            title: (
+                <Text size="md"> {t("FormConfirmationTitle")}</Text>
+            ),
+            children: (
+                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+            ),
+            labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'blue' },
+            onCancel: () => console.log('Cancel'),
+            onConfirm: async () => {
+                setLoading(true)
+                try {
+                    const action = await dispatch(editEntityData('accounting/account-ledger-reset'));
+                    const payload = action.payload;
+                    if (payload?.status === 200) {
+                        showNotificationComponent(t("Account head created successfully"), "green");
+                    } else {
+                        showNotificationComponent(t("Something went wrong"), "red");
+                    }
+                } catch (error) {
+                    showNotificationComponent(t("Request failed"), "red");
+                } finally {
+                    setTimeout(()=>{
+                        setLoading(false)
+                    },1000)
+                }
+            },
+        });
+
+    }
 
     useHotkeys(
         [['alt+F', () => {
@@ -66,6 +102,8 @@ function KeywordSearch(props) {
 
     return (
         <>
+            <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+
             <Grid justify="space-between" align="stretch" gutter={{ base: 2 }} grow>
                 <Grid.Col span="8">
                     <Tooltip
@@ -304,7 +342,22 @@ function KeywordSearch(props) {
                                 <IconFileTypeXls style={{width: rem(18)}} stroke={1.5}/>
                             </Tooltip>
                         </ActionIcon>
-
+                        <Tooltip
+                            label={t('AllDataSync')}
+                            px={16}
+                            py={2}
+                            withArrow
+                            position={"bottom"}
+                            c={'red'}
+                            bg={`red.1`}
+                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                        >
+                            <ActionIcon.GroupSection
+                                onClick={handleSyncAllLedgerMaterdata}
+                                variant="default" c={'white'} fz={'16'}  size="lg" bg='var(--theme-primary-color-6)' miw={80}>
+                                {t('Sync')}
+                            </ActionIcon.GroupSection>
+                        </Tooltip>
                     </ActionIcon.Group>
                 </Grid.Col>
             </Grid>

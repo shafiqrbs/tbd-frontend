@@ -57,7 +57,7 @@ function LedgerTable(props) {
 
         <>
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                <KeywordSearch module={'customer'} />
+                <KeywordSearch module={'ledger'} />
             </Box>
             <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
