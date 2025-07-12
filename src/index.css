@@ -91,18 +91,17 @@
 }
 
 .boxBackground {
-    /* background-color: rgba(208, 191, 191, 0.17) !important; */
-    background-color: #f8f9fa!important;
+    background-color: var(--mantine-color-gray-3)!important;
 }
 
 .boxBorderBackground {
     /*background-color:rgba(226,194,194,0.39);*/
-    background-color:#fbf7ef!important;
-    border: 1px solid #fbf7ef;
+    background-color:var(--mantine-color-gray-3)!important;
+    border: 1px solid var(--mantine-color-gray-3)!important;
 }
 
 .borderTop,.borderBottom,.borderLeft,.borderRight{
-    border: 1px solid rgba(182, 138, 61, 0.35);
+    border: 1px solid var(--mantine-color-blue-2)!important;
 }
 
 .m-5a3e5f7b::before {
@@ -222,7 +221,7 @@ textarea:focus {
 }
 
 input[type=radio]:checked + label>img {
-    border: 2px solid #e37474;
+    border: 2px solid var(--mantine-color-blue-3)!important;;
 }
 
 /* Stuff after this is only to make things more pretty */
@@ -290,11 +289,11 @@ input[type=radio]:checked + label>img {
 
 .hoveredItem .title {
     font-weight: bold !important;
-    color: #eb0f0f !important; 
+    color:var(--mantine-color-blue-6)!important;
 }
 
 .hoveredItem .description {
-    color: #e61d1d !important; 
+    color: var(--mantine-color-blue-6)!important;
 }
 .ActionIconCustom{
     position: absolute;

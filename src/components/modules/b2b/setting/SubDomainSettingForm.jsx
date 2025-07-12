@@ -468,19 +468,14 @@ function SubDomainSettingForm(props) {
                                                                             <Checkbox
                                                                                 pr="xs"
                                                                                 checked={selectedCategories.includes(Number(data.id))}
-
                                                                                 color='var(--theme-primary-color-6)'
                                                                                 form={form}
                                                                                 disabled={saveCreateLoading} // Disable during form submission
                                                                                 onChange={() => handleCategoryToggle(data.id)}
-
                                                                                 styles={(theme) => ({
-                                                                                    input: {
-                                                                                        borderColor: "red",
-                                                                                    },
+                                                                                    input: {borderColor: "var(--theme-primary-color-6)" },
                                                                                 })}
                                                                             />
-
                                                                         </Box>
                                                                     </Grid.Col>
                                                                 </Grid>

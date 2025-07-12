@@ -184,11 +184,11 @@ export default function B2bDomainTable({ id }) {
                                 return index + 1 + (page - 1) * perPage;
                             },
                         },
+                        {accessor: 'business_model',title: t("BusinessModel")},
                         { accessor: "company_name", title: t("CompanyName") },
                         { accessor: "name", title: t("ClientName") },
                         { accessor: "mobile", title: t("Mobile") },
                         { accessor: "email", title: t("Email") },
-                        { accessor: "unique_code", title: t("LicenseNo") },
                         {
                             accessor: "domain_type",
                             title: t("DomainType"),

@@ -5,7 +5,7 @@
 .table {
   th,
   td {
-    border-color: var(--mantine-color-orange-6);
+    border-color: var(--theme-primary-color-6);
   }
   tr {
     height: 46px;

@@ -80,7 +80,7 @@ function _ModalInvoice(props) {
                                     component="a"
                                     size="sm"
                                     variant="subtle"
-                                // c="red.6"
+                                // c='var(--theme-primary-color-6)'
                                 // style={{ cursor: "pointer" }}
                                 >
                                     {rowData.name}
@@ -96,7 +96,7 @@ function _ModalInvoice(props) {
                                     component="a"
                                     size="sm"
                                     variant="subtle"
-                                // c="red.6"
+                                // c='var(--theme-primary-color-6)'
                                 // style={{ cursor: "pointer" }}
                                 >
                                     {rowData.quantity}
@@ -112,7 +112,7 @@ function _ModalInvoice(props) {
                                     component="a"
                                     size="sm"
                                     variant="subtle"
-                                // c="red.6"
+                                // c='var(--theme-primary-color-6)'
                                 // style={{ cursor: "pointer" }}
                                 >
                                     {rowData.price}

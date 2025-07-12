@@ -84,6 +84,7 @@ function DomainUpdateForm(props) {
             business_model_id: entityEditData?.business_model_id || '',
             company_name: entityEditData?.company_name || '',
             mobile: entityEditData?.mobile || '',
+            short_name: entityEditData?.short_name || '',
             alternative_mobile: entityEditData?.alternative_mobile || '',
             name: entityEditData?.name || '',
             address: entityEditData?.address || '',
@@ -129,6 +130,7 @@ function DomainUpdateForm(props) {
             form.setValues({
                 business_model_id: entityEditData?.business_model_id || '',
                 company_name: entityEditData?.company_name || '',
+                short_name: entityEditData?.short_name || '',
                 mobile: entityEditData?.mobile || '',
                 alternative_mobile: entityEditData?.alternative_mobile || '',
                 name: entityEditData?.name || '',
@@ -263,11 +265,24 @@ function DomainUpdateForm(props) {
                                                             label={t('CompanyStoreName')}
                                                             placeholder={t('CompanyStoreName')}
                                                             required={true}
-                                                            nextField={'mobile'}
+                                                            nextField={'short_name'}
                                                             name={'company_name'}
                                                             form={form}
                                                             mt={0}
                                                             id={'company_name'}
+                                                        />
+                                                    </Box>
+                                                     <Box mt={'8'}>
+                                                        <InputForm
+                                                            tooltip={t('ShortNameValidateMessage')}
+                                                            label={t('ShortName')}
+                                                            placeholder={t('ShortName')}
+                                                            required={false}
+                                                            nextField={'mobile'}
+                                                            name={'short_name'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'short_name'}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>

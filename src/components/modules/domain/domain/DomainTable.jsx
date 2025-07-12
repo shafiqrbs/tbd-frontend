@@ -122,14 +122,14 @@ function DomainTable(props) {
                         title: t('S/N'),
                         textAlignment: 'right',
                         render: (item) => (indexData.data.indexOf(item) + 1)
-                    }, {accessor: 'company_name', title: t('CompanyName')}, {
-                        accessor: 'name',
-                        title: t('ClientName')
-                    }, {accessor: 'mobile', title: t('Mobile')}, {
-                        accessor: 'email',
-                        title: t("Email")
-                    }, {accessor: 'unique_code', title: t("LicenseNo")}, {
-                        accessor: "action",
+                    },
+                        {accessor: 'business_model',title: t("BusinessModel")},
+                        {accessor: 'company_name', title: t('CompanyName')},
+                        {accessor: 'short_name',title: t('ClientName')},
+                        {accessor: 'mobile', title: t('Mobile')},
+                        {accessor: 'license_no', title: t("LicenseNo")},
+                        {accessor: 'unique_code', title: t("ActiveNo")},
+                        {accessor: "action",
                         title: t("Action"),
                         textAlign: "right",
                         render: (data) => (<Group gap={4} justify="right" wrap="nowrap">

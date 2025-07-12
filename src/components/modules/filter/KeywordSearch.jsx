@@ -342,22 +342,11 @@ function KeywordSearch(props) {
                                 <IconFileTypeXls style={{width: rem(18)}} stroke={1.5}/>
                             </Tooltip>
                         </ActionIcon>
-                        <Tooltip
-                            label={t('AllDataSync')}
-                            px={16}
-                            py={2}
-                            withArrow
-                            position={"bottom"}
-                            c={'red'}
-                            bg={`red.1`}
-                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                        >
-                            <ActionIcon.Group
-                                onClick={handleSyncAllLedgerMasterdata}
-                                variant="default" c={'white'} fz={'16'}  size="lg" bg='var(--theme-primary-color-6)' miw={80}>
+                        {props.module === 'ledger' &&(
+                            <ActionIcon.GroupSection onClick={handleSyncAllLedgerMasterdata} variant="default" c={'white'} size="lg" bg='var(--theme-primary-color-6)' miw={60}>
                                 {t('Sync')}
-                            </ActionIcon.Group>
-                        </Tooltip>
+                            </ActionIcon.GroupSection>
+                        )}
                     </ActionIcon.Group>
                 </Grid.Col>
             </Grid>

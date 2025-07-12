@@ -137,13 +137,15 @@ export default function CategoryTable({ id }) {
     }, [fetchTableData, reloadList, onlyReloadSetting]);
 
     const handleInlineUpdate = (id, field, value) => {
-        dispatch(
-            storeEntityData({
-                url: "domain/b2b/inline-update/category",
-                data: { id, field_name: field, value },
-            })
-        );
-        setOnlyReloadSetting(true);
+        setTimeout(() => {
+            dispatch(
+                storeEntityData({
+                    url: "domain/b2b/inline-update/category",
+                    data: { id, field_name: field, value },
+                })
+            );
+            setOnlyReloadSetting(true);
+        },1500)
     };
 
     return (

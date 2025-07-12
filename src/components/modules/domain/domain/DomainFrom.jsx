@@ -42,7 +42,7 @@ function DomainForm(props) {
 
     const form = useForm({
         initialValues: {
-            business_model_id:'',company_name: '', mobile: '', alternative_mobile: '', name: '', username: '', address: '', email: ''
+            business_model_id:'',company_name: '',short_name: '', mobile: '', alternative_mobile: '', name: '', username: '', address: '', email: ''
         },
         validate: {
             business_model_id: isNotEmpty(),
@@ -230,6 +230,19 @@ function DomainForm(props) {
                                                             form={form}
                                                             mt={0}
                                                             id={'company_name'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'8'}>
+                                                        <InputForm
+                                                            tooltip={t('ShortNameValidateMessage')}
+                                                            label={t('ShortName')}
+                                                            placeholder={t('ShortName')}
+                                                            required={false}
+                                                            nextField={'mobile'}
+                                                            name={'short_name'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'short_name'}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>

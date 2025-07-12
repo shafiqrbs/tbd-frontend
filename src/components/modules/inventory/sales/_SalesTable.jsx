@@ -273,7 +273,7 @@ function _SalesTable(props) {
                                                     component="a"
                                                     size="sm"
                                                     variant="subtle"
-                                                    c="red.6"
+                                                    c='var(--theme-primary-color-6)'
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setLoading(true)

@@ -5,7 +5,7 @@
 .table {
 th,
 td {
-    border-color: var(--mantine-color-orange-6);
+    border-color: var(--theme-primary-color-6);
 }
 }
 
@@ -13,7 +13,7 @@ td {
 
 th {
     border-bottom: 1px solid #f8eedf;
-    background-color:#339af0!important;
+    background-color:var(--theme-primary-color-6)!important;
     font-size: 14px;
     color: white;
 }

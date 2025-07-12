@@ -304,7 +304,7 @@ function ProductTable({categoryDropdown}) {
                                             ["role_inventory_manager", "role_domain"].some(role => userRole.includes(role)) && (
                                                 <Menu.Item
                                                     bg="red.1"
-                                                    c="red.6"
+                                                    c='var(--theme-primary-color-6)'
                                                     onClick={() =>
                                                         modals.openConfirmModal({
                                                             title: <Text

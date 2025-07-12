@@ -164,7 +164,7 @@ function WarehouseTable() {
                                             <Menu.Item
                                                 w="200"
                                                 bg="red.1"
-                                                c="red.6"
+                                                c='var(--theme-primary-color-6)'
                                                 onClick={() => {
                                                     modals.openConfirmModal({
                                                         title: <Text size="md">{t("FormConfirmationTitle")}</Text>,

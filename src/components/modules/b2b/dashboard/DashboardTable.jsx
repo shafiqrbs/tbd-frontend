@@ -20,7 +20,11 @@ import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
 import {IconMoneybag} from "@tabler/icons-react";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
-import {getIndexEntityData} from "../../../../store/core/crudSlice.js";
+import {getIndexEntityData,deleteEntityData} from "../../../../store/core/crudSlice.js";
+import {modals} from "@mantine/modals";
+import {editEntityData} from "../../../../store/accounting/crudSlice";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
+import {storeEntityData} from "../../../../store/core/crudSlice";
 
 export default function DashBoardTable() {
     const {mainAreaHeight} = useOutletContext();
@@ -90,6 +94,37 @@ export default function DashBoardTable() {
             return [];
         }
     });
+
+    const handleSubDomainDelete = async (id) => {
+        modals.openConfirmModal({
+            title: (
+                <Text size="md"> {t("FormConfirmationTitle")}</Text>
+            ),
+            children: (
+                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+            ),
+            labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'blue' },
+            onCancel: () => console.log('Cancel'),
+            onConfirm: async () => {
+
+                try {
+                    const action = await dispatch(deleteEntityData(`domain/b2b/sub-domain/delete/`+id));
+                    const payload = action.payload;
+                    if (payload?.status === 200) {
+                        showNotificationComponent(t("Account head deleted successfully"), "green");
+                    } else {
+                        showNotificationComponent(t("Something went wrong"), "red");
+                    }
+                } catch (error) {
+                    showNotificationComponent(t("Request failed"), "red");
+                } finally {
+                    // optional cleanup or state update
+                }
+            },
+        });
+    };
+
+
 
     return (
         <Box style={{position : "relative"}}>
@@ -196,6 +231,20 @@ export default function DashBoardTable() {
                                             }}
                                         >
                                             {t("Manage")}
+                                        </Button>
+                                        <Button
+                                            component="a"
+                                            size="compact-xs"
+                                            radius="xs"
+                                            variant="filled"
+                                            fw={"100"}
+                                            bg={'red'}
+                                            fz={"12"}
+                                            mr={"4"}
+                                            onClick={() => handleSubDomainDelete(data.id)}
+
+                                        >
+                                            {t("Delete")}
                                         </Button>
                                     </Group>
                                 ),

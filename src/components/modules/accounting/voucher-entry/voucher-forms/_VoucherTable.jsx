@@ -165,7 +165,7 @@ function _VoucherTable(props) {
                                                     component="a"
                                                     size="sm"
                                                     variant="subtle"
-                                                    c="red.6"
+                                                    c='var(--theme-primary-color-6)'
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setLoading(true)
@@ -219,38 +219,7 @@ function _VoucherTable(props) {
                                                         >  {t('Approve')}</Button>
                                                     }
 
-                                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover"
-                                                          openDelay={100} closeDelay={400}>
-                                                        <Menu.Target>
-                                                            <ActionIcon size="sm" variant="outline" color="red"
-                                                                        radius="xl" aria-label="Settings">
-                                                                <IconDotsVertical height={'18'} width={'18'}
-                                                                                  stroke={1.5}/>
-                                                            </ActionIcon>
-                                                        </Menu.Target>
-                                                        <Menu.Dropdown>
-                                                            {/*{
-                                                                data.process === 'Created' &&
-                                                                <Menu.Item
-                                                                    onClick={() => {
 
-                                                                    }}
-                                                                    component="a"
-                                                                    color="green"
-                                                                    leftSection={
-                                                                        <IconChevronsRight
-                                                                            style={{
-                                                                                width: rem(14),
-                                                                                height: rem(14)
-                                                                            }}/>
-                                                                    }
-                                                                    w={'200'}
-                                                                >
-                                                                    {t("Approve")}
-                                                                </Menu.Item>
-                                                            }*/}
-                                                        </Menu.Dropdown>
-                                                    </Menu>
                                                 </Group>
                                             ),
                                         }
@@ -266,7 +235,7 @@ function _VoucherTable(props) {
                                     }}
                                     loaderSize="xs"
                                     loaderColor="grape"
-                                    height={tableHeight - 80}
+                                    height={tableHeight-32}
                                     scrollAreaProps={{type: 'never'}}
                                     rowBackgroundColor={(item) => {
                                         if (item.invoice_no === selectedRow) return '#e2c2c263';
