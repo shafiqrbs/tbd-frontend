@@ -216,11 +216,11 @@ export default function __PosVendorSection(props) {
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <Text fz={"sm"} order={1} fw={"800"}>
-                      {currencySymbol + " "}
+                      {" "+currencySymbol + " "}
                       {vendorData &&
                       vendorObject &&
                       vendorData != defaultVendorId
-                        ? Number(vendorObject?.balance).toFixed(2)
+                        ? Number(vendorObject?.closing_balance).toFixed(2)
                         : "0.00"}
                     </Text>
                   </Grid.Col>

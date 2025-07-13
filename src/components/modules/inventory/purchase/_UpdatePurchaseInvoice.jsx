@@ -58,7 +58,7 @@ function _UpdatePurchaseInvoice(props) {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const itemFromHeight = mainAreaHeight - 198;
     let currencySymbol = domainConfigData?.inventory_config?.currency?.symbol;
-    let isWarehouse = domainConfigData?.inventory_config?.config_purchase?.search_by_warehouse;
+    let isWarehouse = domainConfigData?.inventory_config?.config_purchase?.is_warehouse;
 
     let inventory_config = domainConfigData?.inventory_config;
 
@@ -1269,9 +1269,10 @@ function _UpdatePurchaseInvoice(props) {
                         domainId={domainConfigData?.domain_id}
                         isSMSActive={domainConfigData?.is_active_sms}
                         setLoadCardProducts={setLoadCardProducts}
-                        isWarehouse={domainConfigData?.sku_warehouse}
+                        isWarehouse={isWarehouse}
                         editedData={editedData}
                         setTempCardProducts={setTempCardProducts}
+                        domainConfigData={domainConfigData}
                     />
                 </Grid.Col>
             </Grid>

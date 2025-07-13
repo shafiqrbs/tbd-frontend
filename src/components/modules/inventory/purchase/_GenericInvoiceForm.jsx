@@ -58,14 +58,14 @@ function _GenericInvoiceForm(props) {
   let allowZeroPercentage = true;
   let domainId = domainConfigData?.inventory_config?.domain_id;
   let isSMSActive = domainConfigData?.inventory_config?.is_active_sms;
-  let isWarehouse =
-    domainConfigData?.inventory_config?.config_purchase?.search_by_warehouse;
-  let isPurchaseByPurchasePrice =
-    domainConfigData?.inventory_config?.is_purchase_by_purchase_price;
+  let isWarehouse = domainConfigData?.inventory_config?.config_purchase?.is_warehouse;
+  let isPurchaseByPurchasePrice = domainConfigData?.inventory_config?.is_purchase_by_purchase_price;
 
   let inventory_config = domainConfigData?.inventory_config;
   let configPurchase = inventory_config?.config_purchase;
   let id = domainConfigData?.id;
+
+  // console.log(configPurchase)
 
   //common hooks and variables
   const { t, i18n } = useTranslation();

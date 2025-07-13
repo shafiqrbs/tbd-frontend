@@ -33,6 +33,7 @@ export default function __PosPurchaseForm(props) {
     const height = mainAreaHeight - 170;
     const [fetching, setFetching] = useState(false);
     const dispatch = useDispatch();
+    const [warehouseData, setWarehouseData] = useState(null);
 
     // form
     const form = useForm({
@@ -51,6 +52,7 @@ export default function __PosPurchaseForm(props) {
         validate: {
             transaction_mode_id: isNotEmpty(),
             vendor_id: isNotEmpty(),
+            warehouse_id: (value) => (isWarehouse ? isNotEmpty()(value) : null),
         },
     });
 
@@ -199,6 +201,7 @@ export default function __PosPurchaseForm(props) {
                     // formValue["created_by_id"] = Number(createdBy["id"]);
                     formValue["process"] = form.values.order_process;
                     formValue["narration"] = form.values.narration;
+                    formValue["warehouse_id"] = form.values.warehouse_id;
                     formValue["invoice_date"] =
                         form.values.invoice_date &&
                         new Date(form.values.invoice_date).toLocaleDateString(
@@ -228,6 +231,7 @@ export default function __PosPurchaseForm(props) {
                         setOrderProcess(null);
                         setLoadCardProducts(true);
                         setVendorObject(null);
+                        setWarehouseData(null)
                     }, 700);
                 })}
             >
@@ -499,6 +503,8 @@ export default function __PosPurchaseForm(props) {
                         purchaseDueAmount={purchaseDueAmount}
                         setLoadCardProducts={setLoadCardProducts}
                         isWarehouse={isWarehouse}
+                        warehouseData={warehouseData}
+                        setWarehouseData={setWarehouseData}
                     />
                 </Box>
             </form>

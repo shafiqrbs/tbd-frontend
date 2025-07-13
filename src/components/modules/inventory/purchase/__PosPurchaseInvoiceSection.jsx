@@ -59,7 +59,9 @@ export default function __PosPurchaseInvoiceSection(props) {
         setLastClicked,
         handleClick,
         isWarehouse,
-        domainConfigData
+        domainConfigData,
+        warehouseData,
+        setWarehouseData
     } = props;
 
     //common hooks
@@ -80,7 +82,6 @@ export default function __PosPurchaseInvoiceSection(props) {
     const [defaultVendorId, setDefaultVendorId] = useState(null);
 
     let warehouseDropdownData = getCoreWarehouseDropdownData();
-    const [warehouseData, setWarehouseData] = useState(null);
 
     // get default customer id
     useEffect(() => {

@@ -24,6 +24,7 @@ export default function __PosPurchaseUpdateForm(props) {
         isWarehouse,
         editedData,
         setTempCardProducts,
+        domainConfigData
     } = props;
 
     const toNumber = (value) => (isNaN(Number(value)) ? 0 : Number(value));
@@ -38,6 +39,7 @@ export default function __PosPurchaseUpdateForm(props) {
     const initialDatabaseDiscountType = editedData?.discount_type === "Percent" ? "Percent" : "Flat";
     // Local state: Discount type toggle (controlled after form init)
     const [discountType, setDiscountType] = useToggle(["Flat", "Percent"]);
+    const [warehouseData, setWarehouseData] = useState(String(editedData.warehouse_id) ?? null);
 
     // Calculate initial discount value based on DB & type
     const initialDiscountValue = useMemo(() => {
@@ -64,6 +66,7 @@ export default function __PosPurchaseUpdateForm(props) {
         validate: {
             transaction_mode_id: isNotEmpty(),
             vendor_id: isNotEmpty(),
+            warehouse_id: (value) => (isWarehouse ? isNotEmpty()(value) : null),
         },
     });
     const navigate = useNavigate();
@@ -211,6 +214,7 @@ export default function __PosPurchaseUpdateForm(props) {
         formValue["process"] = orderProcess;
         formValue["narration"] = form.values.narration;
         formValue["items"] = transformedArray ? transformedArray : [];
+        formValue["warehouse_id"] = form.values.warehouse_id;
 
         if (transformedArray && transformedArray.length > 0) {
             const data = {
@@ -467,6 +471,9 @@ export default function __PosPurchaseUpdateForm(props) {
                         setLoadCardProducts={setLoadCardProducts}
                         editedData={editedData}
                         isWarehouse={isWarehouse}
+                        domainConfigData={domainConfigData}
+                        setWarehouseData={setWarehouseData}
+                        warehouseData={warehouseData}
                     />
                 </Box>
             </form>
