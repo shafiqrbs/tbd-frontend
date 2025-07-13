@@ -1,21 +1,19 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useOutletContext } from "react-router-dom";
+import React, {useEffect, useState, useCallback} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {useOutletContext} from "react-router-dom";
 import {
     Grid,
     Box,
     Button,
     Group,
     TextInput,
-    LoadingOverlay,
-    Tooltip,
+    LoadingOverlay, Text, rem,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { DataTable } from "mantine-datatable";
-import { useTranslation } from "react-i18next";
-import { getHotkeyHandler } from "@mantine/hooks";
+import {useForm} from "@mantine/form";
+import {DataTable} from "mantine-datatable";
+import {useTranslation} from "react-i18next";
+import {getHotkeyHandler} from "@mantine/hooks";
 
-import tableCss from "../../../../assets/css/Table.module.css";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 
 import _Search from "../common/_Search.jsx";
@@ -28,55 +26,22 @@ import {
 import {
     setDropdownLoad,
 } from "../../../../store/inventory/crudSlice.js";
-
 import {
-    getIndexEntityData,
+    getIndexEntityData, setFetching,
     storeEntityData,
 } from "../../../../store/core/crudSlice.js";
 
-import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import {modals} from "@mantine/modals";
+import {notifications} from "@mantine/notifications";
+import {IconCheck} from "@tabler/icons-react";
 
-// ─── Reusable Input for Inline Percentage Fields ──────────────────────────────
-const EditableNumberInput = ({ item, field, value, onUpdate }) => {
-    const [inputValue, setInputValue] = useState(value);
-
-    useEffect(() => {
-        setInputValue(value);
-    }, [value]);
-
-    const handleChange = (e) => {
-        const val = e.currentTarget.value;
-        setInputValue(val);
-        onUpdate(item.id, field, val);
-    };
-
-    return (
-        <TextInput
-            type="number"
-            size="xs"
-            id={`inline-update-${field}-${item.id}`}
-            value={inputValue}
-            onChange={handleChange}
-            onKeyDown={getHotkeyHandler([
-                [
-                    "Enter",
-                    () => {
-                        document
-                            .getElementById(`inline-update-${field}-${item.id}`)
-                            .focus();
-                    },
-                ],
-            ])}
-        />
-    );
-};
-
-// ─── Main Component ───────────────────────────────────────────────────────────
-export default function CategoryTable({ id }) {
+export default function CategoryTable({id}) {
     const dispatch = useDispatch();
-    const { t } = useTranslation();
-    const { mainAreaHeight } = useOutletContext();
+    const {t} = useTranslation();
+    const {mainAreaHeight} = useOutletContext();
 
+    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad);
     const height = mainAreaHeight - 120;
     const perPage = 50;
 
@@ -84,21 +49,20 @@ export default function CategoryTable({ id }) {
     const [reloadList, setReloadList] = useState(true);
     const [onlyReloadSetting, setOnlyReloadSetting] = useState(false);
     const [fetching, setFetching] = useState(false);
+
     const [selectedDomainId, setSelectedDomainId] = useState(id);
     const [subDomainCategoryData, setSubDomainCategoryData] = useState(null);
-
     const [modeMap, setModeMap] = useState({});
-    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad);
+    const [percentValues, setPercentValues] = useState({});
+    const [modifiedRows, setModifiedRows] = useState(new Set());
 
-    const form = useForm({ initialValues: { mode_id: "" } });
+    const form = useForm({initialValues: {mode_id: ""}});
 
     useEffect(() => {
-        dispatch(
-            getCategoryDropdown({
-                url: "inventory/select/category",
-                param: { type: "all" },
-            })
-        );
+        dispatch(getCategoryDropdown({
+            url: "inventory/select/category",
+            param: {type: "all"},
+        }));
         dispatch(setDropdownLoad(false));
     }, [dropdownLoad, dispatch]);
 
@@ -115,11 +79,11 @@ export default function CategoryTable({ id }) {
                 const payload = resultAction.payload.data;
                 setSubDomainCategoryData(payload);
 
-                const initialMap = {};
-                payload?.sub_domain_category.forEach((item) => {
-                    initialMap[item.id] = item.percent_mode || null;
+                const initialModes = {};
+                payload?.sub_domain_category?.forEach((item) => {
+                    initialModes[item.id] = item.percent_mode || null;
                 });
-                setModeMap(initialMap);
+                setModeMap(initialModes);
             }
         } catch (err) {
             console.error("Fetching error:", err);
@@ -136,23 +100,106 @@ export default function CategoryTable({ id }) {
         }
     }, [fetchTableData, reloadList, onlyReloadSetting]);
 
-    const handleInlineUpdate = (id, field, value) => {
-        setTimeout(() => {
-            dispatch(
-                storeEntityData({
-                    url: "domain/b2b/inline-update/category",
-                    data: { id, field_name: field, value },
-                })
-            );
-            setOnlyReloadSetting(true);
-        },1500)
+    useEffect(() => {
+        if (subDomainCategoryData?.sub_domain_category?.length > 0) {
+            const initial = {};
+            subDomainCategoryData.sub_domain_category.forEach((item) => {
+                initial[item.id] = {
+                    mrp_percent: item.mrp_percent ?? null,
+                    purchase_percent: item.purchase_percent ?? null,
+                    bonus_percent: item.bonus_percent ?? null,
+                };
+            });
+            setPercentValues(initial);
+        }
+    }, [subDomainCategoryData]);
+
+    const updateModifiedTracking = (id, changedMode, changedPercents, original) => {
+        if (!original) return;
+
+        const isModified =
+            changedMode !== original.percent_mode ||
+            changedPercents.purchase_percent !== original.purchase_percent ||
+            changedPercents.mrp_percent !== original.mrp_percent ||
+            changedPercents.bonus_percent !== original.bonus_percent;
+
+        setModifiedRows((prev) => {
+            const next = new Set(prev);
+            isModified ? next.add(id) : next.delete(id);
+            return next;
+        });
+    };
+
+    const handleModeChange = (id, value) => {
+        const original = subDomainCategoryData?.sub_domain_category.find((item) => item.id === id);
+        setModeMap((prev) => {
+            const updated = {...prev, [id]: value};
+            updateModifiedTracking(id, updated[id], percentValues[id] || {}, original);
+            return updated;
+        });
+    };
+
+    const handlePercentChange = (id, key, value) => {
+        const original = subDomainCategoryData?.sub_domain_category.find((item) => item.id === id);
+        setPercentValues((prev) => {
+            const updated = {...prev[id], [key]: value};
+            const next = {...prev, [id]: updated};
+            updateModifiedTracking(id, modeMap[id], updated, original);
+            return next;
+        });
+    };
+
+    const handleProcessClick = async (item) => {
+        modals.openConfirmModal({
+            title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
+            children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
+            labels: { confirm: t('Submit'), cancel: t('Cancel') },
+            confirmProps: { color: 'red' },
+            onCancel: () => console.log('Cancel'),
+            onConfirm: async () => {
+                const mode = modeMap[item.id];
+                const inputValues = percentValues[item.id];
+
+                const payload = {
+                    id: item.id,
+                    percent_mode: mode,
+                    ...inputValues,
+                };
+
+                setReloadList(true);
+                try {
+                    const requestData = {
+                        url: `domain/b2b/category-wise/price-update/${item.id}`,
+                        data: payload,
+                    };
+                    const resultAction = await dispatch(storeEntityData(requestData));
+                    if (storeEntityData.fulfilled.match(resultAction)) {
+                        showNotificationComponent(resultAction.payload.data.message, "red", "", true);
+                    }
+                } catch (err) {
+                    console.error("Update error", err);
+                } finally {
+                    setModifiedRows((prev) => {
+                        const updated = new Set(prev);
+                        updated.delete(item.id);
+                        return updated;
+                    });
+                    setReloadList(false);
+                }
+            },
+        });
     };
 
     return (
-        <Box style={{ position: "relative" }}>
-            <LoadingOverlay visible={reloadList} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} loaderProps={{color : "red"}} />
+        <Box style={{position: "relative"}}>
+            <LoadingOverlay
+                visible={reloadList}
+                zIndex={1000}
+                overlayProps={{radius: "sm", blur: 2}}
+                loaderProps={{color: "red"}}
+            />
 
-            <Grid columns={24} gutter={{ base: 8 }}>
+            <Grid columns={24} gutter={{base: 8}}>
                 <Grid.Col span={4}>
                     <_ManageBranchAndFranchise
                         classes={classes}
@@ -160,19 +207,25 @@ export default function CategoryTable({ id }) {
                         selectedDomainId={selectedDomainId}
                         setReloadList={setReloadList}
                         id={id}
-                        module={"category"}
+                        module="category"
                     />
                 </Grid.Col>
 
                 <Grid.Col span={20}>
                     <Box p="xs" bg="white" className="borderRadiusAll">
-                        <Box pl="xs" pb="xs" pr={8} pt="xs" mb="xs" className="boxBackground borderRadiusAll">
-                            <_Search module="product" />
+                        <Box
+                            pl="xs"
+                            pb="xs"
+                            pr={8}
+                            pt="xs"
+                            mb="xs"
+                            className="boxBackground borderRadiusAll"
+                        >
+                            <_Search module="product"/>
                         </Box>
 
                         <Box className="borderRadiusAll">
                             <DataTable
-                                classNames={tableCss}
                                 records={subDomainCategoryData?.sub_domain_category || []}
                                 columns={[
                                     {
@@ -184,8 +237,10 @@ export default function CategoryTable({ id }) {
                                             1 +
                                             (page - 1) * perPage,
                                     },
-                                    { accessor: "category_name", title: t("Category") },
-
+                                    {
+                                        accessor: "category_name",
+                                        title: t("Category"),
+                                    },
                                     {
                                         accessor: "percent_mode",
                                         title: t("Mode"),
@@ -201,95 +256,110 @@ export default function CategoryTable({ id }) {
                                                 dropdownValue={["Increase", "Decrease"]}
                                                 id={`percent_mode_${item.id}`}
                                                 searchable
-                                                value={modeMap[item.id] || null}
-                                                changeValue={(value) => {
-                                                    setModeMap((prev) => ({ ...prev, [item.id]: value }));
-                                                    handleInlineUpdate(item.id, "percent_mode", value);
-                                                }}
+                                                value={modeMap[item.id] || item.percent_mode}
+                                                changeValue={(value) => handleModeChange(item.id, value)}
                                             />
                                         ),
                                     },
                                     {
                                         accessor: "purchase_percent",
                                         title: t("Purchase(%)"),
-                                        textAlign: "center",
                                         width: "220px",
+                                        textAlign: "center",
                                         render: (item) => (
-                                            <EditableNumberInput
-                                                item={item}
-                                                field="purchase_percent"
-                                                value={item.purchase_percent}
-                                                onUpdate={handleInlineUpdate}
+                                            <TextInput
+                                                type="text"
+                                                size="xs"
+                                                id={`inline-update-purchase_percent-${item.id}`}
+                                                value={
+                                                    percentValues[item.id]?.purchase_percent ?? item.purchase_percent ?? ""
+                                                }
+                                                onChange={(e) =>
+                                                    handlePercentChange(item.id, "purchase_percent", Number(e.target.value))
+                                                }
+                                                onKeyDown={getHotkeyHandler([
+                                                    [
+                                                        "Enter",
+                                                        () => {
+                                                            document
+                                                                .getElementById(`inline-update-mrp_percent-${item.id}`)
+                                                                ?.focus();
+                                                        },
+                                                    ],
+                                                ])}
                                             />
                                         ),
                                     },
                                     {
                                         accessor: "mrp_percent",
                                         title: t("MRP(%)"),
-                                        textAlign: "center",
                                         width: "220px",
+                                        textAlign: "center",
                                         render: (item) => (
-                                            <EditableNumberInput
-                                                item={item}
-                                                field="mrp_percent"
-                                                value={item.mrp_percent}
-                                                onUpdate={handleInlineUpdate}
+                                            <TextInput
+                                                type="text"
+                                                size="xs"
+                                                id={`inline-update-mrp_percent-${item.id}`}
+                                                value={percentValues[item.id]?.mrp_percent ?? item.mrp_percent ?? ""}
+                                                onChange={(e) =>
+                                                    handlePercentChange(item.id, "mrp_percent", Number(e.target.value))
+                                                }
+                                                onKeyDown={getHotkeyHandler([
+                                                    [
+                                                        "Enter",
+                                                        () => {
+                                                            document
+                                                                .getElementById(`inline-update-bonus_percent-${item.id}`)
+                                                                ?.focus();
+                                                        },
+                                                    ],
+                                                ])}
                                             />
                                         ),
                                     },
-
                                     {
                                         accessor: "bonus_percent",
                                         title: t("Bonus(%)"),
-                                        textAlign: "center",
                                         width: "220px",
+                                        textAlign: "center",
                                         render: (item) => (
-                                            <EditableNumberInput
-                                                item={item}
-                                                field="bonus_percent"
-                                                value={item.bonus_percent}
-                                                onUpdate={handleInlineUpdate}
+                                            <TextInput
+                                                type="text"
+                                                size="xs"
+                                                id={`inline-update-bonus_percent-${item.id}`}
+                                                value={percentValues[item.id]?.bonus_percent ?? item.bonus_percent ?? ""}
+                                                onChange={(e) =>
+                                                    handlePercentChange(item.id, "bonus_percent", Number(e.target.value))
+                                                }
+                                                onKeyDown={getHotkeyHandler([
+                                                    [
+                                                        "Enter",
+                                                        () => {
+                                                            // Final field — maybe trigger save?
+                                                        },
+                                                    ],
+                                                ])}
                                             />
                                         ),
                                     },
-
                                     {
                                         accessor: "action",
                                         title: t("Action"),
                                         textAlign: "right",
                                         render: (item) => (
                                             <Group gap={4} justify="right" wrap="nowrap">
-                                                
-                                                    <Button
-                                                        size="compact-xs"
-                                                        radius="xs"
-                                                        variant="filled"
-                                                        color={item.not_process === 1 ? 'var(--theme-primary-color-4)' : "red.3"}
-                                                        fw={100}
-                                                        fz={12}
-                                                        disabled={item.not_process !== 1}
-                                                        onClick={async () => {
-                                                            setReloadList(true);
-                                                            try {
-                                                                const resultAction = await dispatch(
-                                                                    getIndexEntityData({
-                                                                        url: `domain/b2b/category-wise/price-update/${item.id}`,
-                                                                        param: {},
-                                                                    })
-                                                                );
-
-                                                                if (getIndexEntityData.fulfilled.match(resultAction)) {
-                                                                    showNotificationComponent(resultAction?.payload?.message, "red", "", true);
-                                                                }
-                                                            } catch (err) {
-                                                                console.error("Update error", err);
-                                                            } finally {
-                                                                setReloadList(false);
-                                                            }
-                                                        }}
-                                                    >
-                                                        {t("Process")}
-                                                    </Button>
+                                                <Button
+                                                    size="compact-xs"
+                                                    radius="xs"
+                                                    variant="filled"
+                                                    color="var(--theme-primary-color-6)"
+                                                    fw={100}
+                                                    fz={12}
+                                                    disabled={!modifiedRows.has(item.id)}
+                                                    onClick={() => handleProcessClick(item)}
+                                                >
+                                                    {t("Process")}
+                                                </Button>
                                             </Group>
                                         ),
                                     },
@@ -298,11 +368,11 @@ export default function CategoryTable({ id }) {
                                 totalRecords={subDomainCategoryData?.sub_domain_category?.length || 0}
                                 recordsPerPage={perPage}
                                 page={page}
-                                onPageChange={(p) => setPage(p)}
+                                onPageChange={setPage}
                                 loaderSize="xs"
                                 loaderColor="grape"
                                 height={height}
-                                scrollAreaProps={{ type: "never" }}
+                                scrollAreaProps={{type: "never"}}
                             />
                         </Box>
                     </Box>
