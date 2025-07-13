@@ -19,11 +19,11 @@
     background-color: var( --theme-secondary-color-1)
 }
 .genericHighlightedBox{
-    background-color:var( --theme-secondary-color-4)
+    background-color:var( --theme-secondary-color-2)
 }
 
 .genericSecondaryBg{
-    background-color:var( --theme-secondary-color-3)
+    background-color:var( --theme-secondary-color-0)
 }
 
 .genericPrimaryBg{
