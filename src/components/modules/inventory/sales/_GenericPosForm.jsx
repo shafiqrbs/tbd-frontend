@@ -291,7 +291,7 @@ function _GenericPosForm({domainConfigData}) {
     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
     const domainProductNature = JSON.parse(salesConfig?.sales_product_nature || '[]');
-    const filteredProducts = localProducts.filter((product) => {
+    let filteredProducts = localProducts.filter((product) => {
       const isAllowedNature = domainProductNature.includes(product.product_nature_id);
 
       if (!isAllowedNature) return false;

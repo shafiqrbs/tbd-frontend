@@ -108,7 +108,6 @@ function VoucherCreateTable(props) {
               textAlign: "center",
               render: (data) => (
                   <>
-                  {data.is_private !== 1 &&(
                       <Flex justify="center" align="center">
                           <Switch
                             defaultChecked={data.status === 1 ? true : false}
@@ -122,7 +121,6 @@ function VoucherCreateTable(props) {
                             }}
                           />
                       </Flex>
-                  )}
                   </>
               ),
             },

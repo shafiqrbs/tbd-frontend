@@ -123,6 +123,7 @@ function _UserTable() {
               textAlignment: "right",
               render: (item) => indexData.data.indexOf(item) + 1,
             },
+            { accessor: "user_group", title: t("UserGroup") },
             { accessor: "name", title: t("Name") },
             { accessor: "username", title: t("UserName") },
             { accessor: "email", title: t("Email") },

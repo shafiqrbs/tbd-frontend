@@ -91,33 +91,8 @@ function LedgerDetailsModel(props) {
         }
     }, [ledgerDetails, dispatch]);
 
-    /*const rows = journalItems?.ledgerDetails.flatMap((element) => [
-        <Table.Tr key={element.id} bg="red.6">
-            <Table.Td>{element.ledger_name}</Table.Td>
-            <Table.Td >{element.mode==='debit'?'Debit':'Credit'}</Table.Td>
-            <Table.Td>{element.amount}</Table.Td>
-            <Table.Td>{element.created_date}</Table.Td>
-        </Table.Tr>,
-        ...(element.childItems || []).map((c) => (
-            <Table.Tr key={c.id} bg="red.4">
-                <Table.Td>{c.ledger_name}</Table.Td>
-                <Table.Td>{c.mode==='debit'?'Debit':'Credit'}</Table.Td>
-                <Table.Td>{c.amount}</Table.Td>
-                <Table.Td>{c.created_date}</Table.Td>
-            </Table.Tr>
-        )),
-    ]);
 
-    const rows2 = journalItems?.ledgerItems.map((element) => [
-        <Table.Tr key={element.id} bg="blue.6">
-            <Table.Td>{element.ledger_name}</Table.Td>
-            <Table.Td >{element.mode==='debit'?'Debit':'Credit'}</Table.Td>
-            <Table.Td>{element.amount}</Table.Td>
-            <Table.Td>{element.created_date}</Table.Td>
-        </Table.Tr>
-    ]);*/
-
-    const rows = journalItems?.ledgerDetails?.flatMap((element) => [
+    /*const rows = journalItems?.ledgerDetails?.flatMap((element) => [
         <Table.Tr key={element.id} bg="red.6">
             <Table.Td>{element.ledger_name}</Table.Td>
             <Table.Td>{element.mode === 'debit' ? 'Debit' : 'Credit'}</Table.Td>
@@ -132,17 +107,27 @@ function LedgerDetailsModel(props) {
                 <Table.Td>{c.created_date}</Table.Td>
             </Table.Tr>
         )),
-    ]);
+    ]);*/
 
     const rows2 = journalItems?.ledgerItems?.map((element) => (
         <Table.Tr key={element.id} bg="blue.6">
             <Table.Td>{element.ledger_name}</Table.Td>
-            <Table.Td>{element.mode === 'debit' ? 'Debit' : 'Credit'}</Table.Td>
-            <Table.Td>{element.amount}</Table.Td>
+            {/*<Table.Td>{element.mode === 'debit' ? 'Debit' : 'Credit'}</Table.Td>*/}
+            <Table.Td>{element.opening_amount}</Table.Td>
+            <Table.Td>{element.mode === 'debit' && element.amount}</Table.Td>
+            <Table.Td>{element.mode === 'credit' && element.amount}</Table.Td>
+            <Table.Td>{element.closing_amount
+            }</Table.Td>
             <Table.Td>{element.created_date}</Table.Td>
         </Table.Tr>
     ));
 
+    /*<Table.Th>Ledger Name</Table.Th>
+    <Table.Th >Opening</Table.Th>
+    <Table.Th>Debit</Table.Th>
+    <Table.Th>Credit</Table.Th>
+    <Table.Th>Closing</Table.Th>
+    <Table.Th>Date</Table.Th>*/
 
     return (
         <>
@@ -223,13 +208,15 @@ function LedgerDetailsModel(props) {
                                 <Table.Thead>
                                     <Table.Tr>
                                         <Table.Th>Ledger Name</Table.Th>
-                                        <Table.Th >Mode</Table.Th>
-                                        <Table.Th>Amount</Table.Th>
+                                        <Table.Th >Opening</Table.Th>
+                                        <Table.Th>Debit</Table.Th>
+                                        <Table.Th>Credit</Table.Th>
+                                        <Table.Th>Closing</Table.Th>
                                         <Table.Th>Date</Table.Th>
                                     </Table.Tr>
                                 </Table.Thead>
-                                <Table.Tbody>{rows}</Table.Tbody>
-                                <hr/>
+                                {/*<Table.Tbody>{rows}</Table.Tbody>*/}
+                                {/*<hr/>*/}
                                 <Table.Tbody>{rows2}</Table.Tbody>
                             </Table>
                             </Box>
