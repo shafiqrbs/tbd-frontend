@@ -343,7 +343,7 @@ function ProductForm(props) {
                                                         label={t('Barcode')}
                                                         placeholder={t('Barcode')}
                                                         required={false}
-                                                        nextField={'sales_price'}
+                                                        nextField={'purchase_price'}
                                                         form={form}
                                                         name={'barcode'}
                                                         mt={8}
@@ -355,30 +355,31 @@ function ProductForm(props) {
 
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('SalesPriceValidateMessage')}
-                                                        label={t('SalesPrice')}
-                                                        placeholder={t('SalesPrice')}
-                                                        required={false}
-                                                        nextField={'purchase_price'}
-                                                        form={form}
-                                                        name={'sales_price'}
-                                                        mt={8}
-                                                        id={'sales_price'}
-                                                    />
-                                                </Grid.Col>
+
                                                 <Grid.Col span={6}>
                                                     <InputForm
                                                         tooltip={t('PurchasePriceValidateMessage')}
                                                         label={t('PurchasePrice')}
                                                         placeholder={t('PurchasePrice')}
                                                         required={false}
-                                                        nextField={'unit_id'}
+                                                        nextField={'sales_price'}
                                                         form={form}
                                                         name={'purchase_price'}
                                                         mt={8}
                                                         id={'purchase_price'}
+                                                    />
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <InputForm
+                                                        tooltip={t('SalesPriceValidateMessage')}
+                                                        label={t('SalesPrice')}
+                                                        placeholder={t('SalesPrice')}
+                                                        required={false}
+                                                        nextField={'unit_id'}
+                                                        form={form}
+                                                        name={'sales_price'}
+                                                        mt={8}
+                                                        id={'sales_price'}
                                                     />
                                                 </Grid.Col>
                                             </Grid>

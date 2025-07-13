@@ -227,6 +227,8 @@ function StockTable(props) {
              // render: (item) => indexData.data.indexOf(item) + 1,
               render: (_row, index) => index + 1 + (page - 1) * perPage,
             },
+            { accessor: "product_type", title: t("NatureOfProduct") },
+            { accessor: "category_name", title: t("Category") },
             { accessor: "product_name", title: t("Name") },
             { accessor: "barcode", title: t("Barcode") },
             { accessor: "rem_quantity", title: t("Quantity"), textAlign: "center" },
@@ -235,8 +237,7 @@ function StockTable(props) {
             { accessor: "color_name", title: t("Color"), hidden: !isColor },
             { accessor: "size_name", title: t("Size"), hidden: !isSize },
             { accessor: "model_name", title: t("Model"), hidden: !isModel },
-            { accessor: "category_name", title: t("Category") },
-            { accessor: "product_type", title: t("NatureOfProduct") },
+
             {
               accessor: "unit_name",
               title: t("Unit"),
