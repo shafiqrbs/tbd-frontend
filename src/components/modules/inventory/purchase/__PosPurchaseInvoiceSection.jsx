@@ -21,7 +21,6 @@ import {
     IconCurrencyTaka,
     IconCurrency,
     IconPlusMinus,
-    IconDotsVertical,
     IconRefresh,
     IconStackPush,
     IconPrinter,
@@ -64,23 +63,16 @@ export default function __PosPurchaseInvoiceSection(props) {
         setWarehouseData
     } = props;
 
-    //common hooks
     const {isOnline, mainAreaHeight} = useOutletContext();
     const {t} = useTranslation();
-
-    // transaction mode array
     const transactionModeData = JSON.parse(
         localStorage.getItem("accounting-transaction-mode")
     )
         ? JSON.parse(localStorage.getItem("accounting-transaction-mode"))
         : [];
 
-    // transaction modes hover hook
     const [hoveredModeId, setHoveredModeId] = useState(false);
-
-    //default customer id hook
     const [defaultVendorId, setDefaultVendorId] = useState(null);
-
     let warehouseDropdownData = getCoreWarehouseDropdownData();
 
     // get default customer id
@@ -465,7 +457,8 @@ export default function __PosPurchaseInvoiceSection(props) {
                                                 }}
                                             />
                                         </Grid.Col>
-                                        <Grid.Col span={2} bg='var(--theme-primary-color-4)' p={"14"} pl={"8"}></Grid.Col>
+                                        <Grid.Col span={2} bg='var(--theme-primary-color-4)' p={"14"}
+                                                  pl={"8"}></Grid.Col>
                                     </Grid>
                                 </Tooltip>
                             </Box>

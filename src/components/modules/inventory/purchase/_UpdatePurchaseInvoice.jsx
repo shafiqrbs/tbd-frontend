@@ -325,12 +325,12 @@ function _UpdatePurchaseInvoice(props) {
     }, [form.values.sub_total]);
     /*END SUBTOTAL WISE PURCHASE PRICE*/
 
-  // Keyboard shortcuts
-  useHotkeys([
-    ['alt+n', () => document.getElementById('product_id')?.focus()],
-    ['alt+r', () => form.reset()],
-    ['alt+s', () => document.getElementById('EntityFormSubmit')?.click()]
-  ]);
+    // Keyboard shortcuts
+    useHotkeys([
+        ['alt+n', () => document.getElementById('product_id')?.focus()],
+        ['alt+r', () => form.reset()],
+        ['alt+s', () => document.getElementById('EntityFormSubmit')?.click()]
+    ]);
     const inputGroupText = (
         <Text
             style={{textAlign: "right", width: "100%", paddingRight: 16}}

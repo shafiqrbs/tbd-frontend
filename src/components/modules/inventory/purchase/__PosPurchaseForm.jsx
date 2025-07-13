@@ -5,7 +5,7 @@ import {Box, Text, ActionIcon, Group, TextInput} from "@mantine/core";
 import {DataTable} from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
 import {useTranslation} from "react-i18next";
-import {IconPercentage, IconSum, IconX} from "@tabler/icons-react";
+import {IconSum, IconX} from "@tabler/icons-react";
 import {useOutletContext} from "react-router-dom";
 import __PosPurchaseInvoiceSection from "./__PosPurchaseInvoiceSection.jsx";
 import {getHotkeyHandler, useToggle} from "@mantine/hooks";
@@ -20,7 +20,6 @@ export default function __PosPurchaseForm(props) {
     const {
         isSMSActive,
         currencySymbol,
-        domainId,
         tempCardProducts,
         setLoadCardProducts,
         isWarehouse,
@@ -56,13 +55,8 @@ export default function __PosPurchaseForm(props) {
         },
     });
 
-    //calculate subTotal amount
     let purchaseSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
-
-    //customer dropdown data
     const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
-
-    //customer hook
     const [vendorData, setVendorData] = useState(null);
 
     // setting defualt customer
@@ -85,31 +79,14 @@ export default function __PosPurchaseForm(props) {
         fetchVendors();
     }, []);
 
-    //default customer hook
     const [defaultVendorId, setDefaultVendorId] = useState(null);
-
-    //Custoemr object hook
     const [vendorObject, setVendorObject] = useState({});
-
-    //sales discount amount hook
     const [purchaseDiscountAmount, setPurchaseDiscountAmount] = useState(0);
-
-    //order process hook
     const [orderProcess, setOrderProcess] = useState(null);
-
-    //vat amount hook
     const [purchaseVatAmount, setPurchaseVatAmount] = useState(0);
-
-    //sales total amount hook
     const [purchaseTotalAmount, setPurchaseTotalAmount] = useState(0);
-
-    // sales due amount hook
     const [purchaseDueAmount, setPurchaseDueAmount] = useState(0);
-
-    //return or due text hook
     const [returnOrDueText, setReturnOrDueText] = useState("Due");
-
-    //discount type hook
     const [discountType, setDiscountType] = useToggle(["Flat", "Percent"]);
 
     // calculate sales total amount after discount and vat change
