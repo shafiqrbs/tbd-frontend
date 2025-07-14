@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Box, Grid, ScrollArea, Button, Text, rem } from "@mantine/core";
+import {Box, Grid, ScrollArea, Button,Group, Text, rem, NavLink, List} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDispatch, useSelector } from "react-redux";
 import { modals } from "@mantine/modals";
@@ -19,6 +19,7 @@ import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
 import getAccountingSubHeadDropdownData from "../../../global-hook/dropdown/getAccountingSubHeadDropdownData";
 import getAccountingLedgerDropdownData from "../../../global-hook/dropdown/getAccountingLedgerDropdownData";
 import getVoucherDropdownData from "../../../global-hook/dropdown/getVoucherDropdownData";
+import axios from "axios";
 
 function AccountingForm(props) {
   const {
@@ -211,7 +212,7 @@ function AccountingForm(props) {
     });
   };
 
-  const handleAccountingConfirmSubmit = async (values) => {
+    const handleAccountingConfirmSubmit = async (values) => {
 
     // Format dates properly for MySQL
     const formattedValues = {
@@ -243,6 +244,41 @@ function AccountingForm(props) {
     }
 
   }
+
+    function AccountingDataProcess(url){
+        modals.openConfirmModal({
+            title: (
+                <Text size="md"> {t("FormConfirmationTitle")}</Text>
+            ),
+            children: (
+                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+            ),
+            labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'red' },
+            onCancel: () => console.log('Cancel'),
+            onConfirm: async () => {
+                const response = await axios.get(
+                    `${import.meta.env.VITE_API_GATEWAY_URL}${url}`,{
+                        headers : {
+                            "Accept" : "application/json",
+                            "Content-Type" : "application/json",
+                            "X-Api-Key": import.meta.env.VITE_API_KEY,
+                            "X-Api-User": JSON.parse(localStorage.getItem('user')).id
+                        }
+                    }
+                )
+                if(response.data.message === "success"){
+                    notifications.show({
+                        color: 'teal',
+                        title: t('CreateSuccessfully'),
+                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                        loading: false,
+                        autoClose: 700,
+                        style: { backgroundColor: 'lightgray' },
+                    });
+                }
+            },
+        })
+    }
 
   useHotkeys(
     [
@@ -751,7 +787,14 @@ function AccountingForm(props) {
                 </Box>
             </Box>
             <Box bg="gray.1" px="sm" py="xs" mt="xs">
-                <Text fz={14} fw={600}> {t("VoucherSetup")}</Text>
+                <Group justify="space-between">
+                    <Text fz={14} fw={600}> {t("VoucherSetup")}</Text>
+                    <Button variant="default" variant="filled" color="var(--theme-secondary-color-8)" size="xs" onClick={
+                        ()=>{AccountingDataProcess('accounting/account-voucher-reset')}
+                    }>{t("Reset")}</Button>
+                </Group>
+
+
             </Box>
             <Box pl="sm">
           <Box mt={"xs"}>

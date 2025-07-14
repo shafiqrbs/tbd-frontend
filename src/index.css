@@ -15,15 +15,15 @@
     --theme-primary-color-8: var(--mantine-color-blue-8);
     --theme-primary-color-9: var(--mantine-color-blue-9);
 
-    --theme-secondary-color-0: var(--mantine-color-gray-0);
-    --theme-secondary-color-1: var(--mantine-color-gray-1);
-    --theme-secondary-color-2: var(--mantine-color-gray-2);
-    --theme-secondary-color-3: var(--mantine-color-gray-3);
-    --theme-secondary-color-4: var(--mantine-color-gray-4);
-    --theme-secondary-color-5: var(--mantine-color-gray-5);
-    --theme-secondary-color-6: var(--mantine-color-gray-6);
-    --theme-secondary-color-7: var(--mantine-color-gray-7);
-    --theme-secondary-color-8: var(--mantine-color-gray-8);
+    --theme-secondary-color-0: var(--mantine-color-green-0);
+    --theme-secondary-color-1: var(--mantine-color-green-1);
+    --theme-secondary-color-2: var(--mantine-color-green-2);
+    --theme-secondary-color-3: var(--mantine-color-green-3);
+    --theme-secondary-color-4: var(--mantine-color-green-4);
+    --theme-secondary-color-5: var(--mantine-color-green-5);
+    --theme-secondary-color-6: var(--mantine-color-green-6);
+    --theme-secondary-color-7: var(--mantine-color-green-7);
+    --theme-secondary-color-8: var(--mantine-color-green-8);
 
     --theme-link-text-color: var(--mantine-color-gray-0);
     --theme-link-bg-color: var(--mantine-color-green-6);

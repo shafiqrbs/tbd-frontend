@@ -38,6 +38,7 @@ import {
 	IconSearch,
 	IconWindowMaximize,
 	IconWindowMinimize,
+	IconSettings,
 	IconWifiOff,
 	IconWifi,
 	IconEdit,
@@ -856,6 +857,23 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
 									) : (
 										<IconWindowMaximize size={24} />
 									)}
+								</ActionIcon>
+							</Tooltip>
+							<Tooltip
+								label={t("Setting")}
+								bg={"#635031"}
+								withArrow
+							>
+								<ActionIcon
+									mt={"6"}
+									onClick={toggle}
+									variant="subtle"
+									color={"white"}
+									onClick={(e) => {
+										navigate("/inventory/config");
+									}}
+								>
+									<IconSettings size={24} />
 								</ActionIcon>
 							</Tooltip>
 							<Menu shadow="md" width={200}>
