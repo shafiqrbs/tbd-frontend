@@ -99,9 +99,9 @@ function VoucherSearch(props) {
                                     <Tooltip
                                         label={t("Close")}
                                         withArrow
-                                        bg={`red.5`}
+                                        bg={`red`}
                                     >
-                                        <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
+                                        <IconX color='var( --theme-remove-color)'  size={16} opacity={0.5} onClick={() => {
                                             dispatch(setSalesFilterData({ ...salesFilterData, ['searchKeyword']: '' }))
                                         }} />
                                     </Tooltip>
@@ -140,9 +140,9 @@ function VoucherSearch(props) {
                                 <Tooltip
                                     label={t("Close")}
                                     withArrow
-                                    bg={`red.5`}
+                                    bg={`red`}
                                 >
-                                    <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
+                                    <IconX color='var( --theme-remove-color)'  size={16} opacity={0.5} onClick={() => {
                                         dispatch(setSalesFilterData({ ...salesFilterData, ['searchKeyword']: '' }))
                                     }} />
                                 </Tooltip>

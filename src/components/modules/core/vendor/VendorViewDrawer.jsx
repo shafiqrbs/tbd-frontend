@@ -37,7 +37,7 @@ function VendorViewDrawer(props) {
             <ActionIcon
               className="ActionIconCustom"
               radius="xl"
-              color="red.6"
+              color='var( --theme-remove-color)'
               size="lg"
               onClick={closeDrawer}
             >

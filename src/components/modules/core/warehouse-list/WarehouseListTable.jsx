@@ -123,7 +123,7 @@ export default function WarehouseListTable() {
                                 warehouse.enabled ? (
                                   <IconCheck size={12} color='var(--theme-primary-color-6)' stroke={3} />
                                 ) : (
-                                  <IconX size={12} color='var(--theme-primary-color-6)' stroke={3} />
+                                  <IconX size={12} color='var( --theme-remove-color)'  stroke={3} />
                                 )
                               }
 						/>

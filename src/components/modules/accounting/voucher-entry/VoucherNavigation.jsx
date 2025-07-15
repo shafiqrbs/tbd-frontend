@@ -161,10 +161,10 @@ export default function VoucherNavigation({
                                     <Tooltip
                                         label={t("Close")}
                                         withArrow
-                                        bg={`red.5`}
+                                        bg={`red`}
                                     >
                                         <IconX
-                                            color={`red`}
+                                            color='var( --theme-remove-color)'
                                             size={16}
                                             opacity={0.5}
                                             onClick={() => {

@@ -95,10 +95,10 @@ function FileUploadModel(props) {
                         <ActionIcon
                             mr={'sm'}
                             radius="xl"
-                            color="red.6" size="md"
+                            color='var( --theme-remove-color)'  size="md"
                             onClick={closeModel}
                         >
-                            <IconX style={{width: '100%', height: '100%'}} stroke={1.5}/>
+                            <IconX  color='var( --theme-remove-color)'  style={{width: '100%', height: '100%'}} stroke={1.5}/>
                         </ActionIcon>
                     </Group>
 

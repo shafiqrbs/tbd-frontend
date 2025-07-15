@@ -280,7 +280,7 @@ export default function __AdditionalItems(props) {
                     <ActionIcon
                       variant="transparent"
                       size="sm"
-                      color="red.6"
+                      color='var( --theme-remove-color)'
                       onClick={closeDrawer}
                       ml={"4"}
                     >

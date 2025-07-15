@@ -72,7 +72,7 @@ function CategoryGroupDrawer(props) {
                             <ActionIcon
                                 mr={'sm'}
                                 radius="xl"
-                                color="red.6" size="md"
+                                color='var( --theme-remove-color)'  size="md"
                                 onClick={closeModel}
                             >
                                 <IconX style={{ width: '100%', height: '100%' }} stroke={1.5} />
@@ -173,7 +173,7 @@ function CategoryGroupDrawer(props) {
                                                                 <ActionIcon
                                                                     variant="transparent"
                                                                     size="sm"
-                                                                    color="red.6"
+                                                                    color='var( --theme-remove-color)'
                                                                     onClick={closeModel}
                                                                     ml={'4'}
                                                                 >

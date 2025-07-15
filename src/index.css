@@ -29,6 +29,8 @@
     --theme-link-bg-color: var(--mantine-color-green-6);
 
     --theme-success-color: var(--mantine-color-green-6);
+    --theme-remove-color: var(--mantine-color-red-6);
+    --theme-delete-color: var(--mantine-color-red-6);
     --theme-error-color: var(--mantine-color-red-6);
     --theme-delete-color: var(--mantine-color-red-6);
     --theme-warning-color: var(--mantine-color-yellow-6);

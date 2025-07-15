@@ -27,7 +27,7 @@ const TooltipContent = forwardRef(
         {value ? (
           <IconX
             size={16}
-            color="#ff6b6b"
+            color='var( --theme-remove-color)'
             opacity={0.7}
             onClick={() => form.setFieldValue(name, "")}
           />

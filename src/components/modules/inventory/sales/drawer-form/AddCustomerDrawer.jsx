@@ -64,7 +64,7 @@ function AddCustomerDrawer(props) {
                             <ActionIcon
                                 mr={"sm"}
                                 radius="xl"
-                                color="red.6"
+                                color='var( --theme-remove-color)'
                                 size="md"
                                 onClick={closeModel}
                             >

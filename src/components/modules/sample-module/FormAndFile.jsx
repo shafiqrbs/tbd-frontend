@@ -457,7 +457,7 @@ function FormAndFile() {
                                             style={{
                                                 width: rem(52),
                                                 height: rem(52),
-                                                color: "var(--mantine-color-red-6)",
+                                                color:"var(--theme-remove-color)",
                                             }}
                                             stroke={1.5}
                                         />

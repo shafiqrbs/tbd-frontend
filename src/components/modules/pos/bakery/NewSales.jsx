@@ -480,7 +480,7 @@ export default function NewSales(props) {
                                                                             setIsValidBarcode(true);
                                                                         }}
                                                                     >
-                                                                        <IconX color='var(--theme-primary-color-6)' size={16}/>
+                                                                        <IconX color='var( --theme-remove-color)'  size={16}/>
                                                                     </ActionIcon>
                                                                 </Tooltip>
                                                             ) : (
@@ -514,7 +514,7 @@ export default function NewSales(props) {
                                                         searchValue ? (
                                                             <Tooltip label="Clear" withArrow position="top">
                                                                 <IconX
-                                                                    color='var(--theme-primary-color-6)'
+                                                                    color='var( --theme-remove-color)'
                                                                     size={16}
                                                                     opacity={0.5}
                                                                     style={{cursor: "pointer"}}
@@ -1010,7 +1010,7 @@ export default function NewSales(props) {
                                                                             setIsValidBarcode(true);
                                                                         }}
                                                                     >
-                                                                        <IconX color='var(--theme-primary-color-6)' size={16}/>
+                                                                        <IconX color='var( --theme-remove-color)' size={16}/>
                                                                     </ActionIcon>
                                                                 </Tooltip>
                                                             ) : (
@@ -1044,7 +1044,7 @@ export default function NewSales(props) {
                                                         searchValue ? (
                                                             <Tooltip label="Clear" withArrow position="top">
                                                                 <IconX
-                                                                    color='var(--theme-primary-color-6)'
+                                                                    color='var( --theme-remove-color)'
                                                                     size={16}
                                                                     opacity={0.5}
                                                                     style={{cursor: "pointer"}}

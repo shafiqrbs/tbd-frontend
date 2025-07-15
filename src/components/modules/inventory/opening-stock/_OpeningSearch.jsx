@@ -107,7 +107,7 @@ function _OpeningSearch(props) {
                           purchaseItemsFilterData.searchKeyword ? (
                               <Tooltip label={t("Close")} withArrow bg={`red.5`}>
                                   <IconX
-                                      color={`red`}
+                                      color='var( --theme-remove-color)'
                                       size={16}
                                       opacity={0.5}
                                       onClick={() => {
@@ -304,7 +304,7 @@ function _OpeningSearch(props) {
                           purchaseItemsFilterData.searchKeyword ? (
                               <Tooltip label={t("Close")} withArrow bg={`red.5`}>
                                   <IconX
-                                      color={`red`}
+                                      color='var( --theme-remove-color)'
                                       size={16}
                                       opacity={0.5}
                                       onClick={() => {

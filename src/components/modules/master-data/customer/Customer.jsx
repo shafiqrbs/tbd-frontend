@@ -287,7 +287,7 @@ function Customer(props) {
                                                 withArrow
                                                 bg={`red.5`}
                                             >
-                                                <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                <IconX color='var( --theme-remove-color)'  size={16} opacity={0.5} onClick={()=>{
                                                     form.setFieldValue('name', '');
                                                 }}/>
                                             </Tooltip>
@@ -401,7 +401,7 @@ function Customer(props) {
                                                     withArrow
                                                     bg={`red.5`}
                                                 >
-                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                    <IconX color='var( --theme-remove-color)'  size={16} opacity={0.5} onClick={()=>{
                                                         form.setFieldValue('credit_limit', '');
                                                     }}/>
                                                 </Tooltip>
@@ -449,7 +449,7 @@ function Customer(props) {
                                                     withArrow
                                                     bg={`red.5`}
                                                 >
-                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                    <IconX color='var( --theme-remove-color)'  size={16} opacity={0.5} onClick={()=>{
                                                         form.setFieldValue('old_reference_no', '');
                                                     }}/>
                                                 </Tooltip>
@@ -498,7 +498,7 @@ function Customer(props) {
                                                     withArrow
                                                     bg={`red.5`}
                                                 >
-                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                    <IconX color='var( --theme-remove-color)'  size={16} opacity={0.5} onClick={()=>{
                                                         form.setFieldValue('mobile', '');
                                                     }}/>
                                                 </Tooltip>
@@ -546,7 +546,7 @@ function Customer(props) {
                                                     withArrow
                                                     bg={`red.5`}
                                                 >
-                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                    <IconX color='var( --theme-remove-color)'  size={16} opacity={0.5} onClick={()=>{
                                                         form.setFieldValue('alternative_mobile', '');
                                                     }}/>
                                                 </Tooltip>
@@ -594,7 +594,7 @@ function Customer(props) {
                                                     withArrow
                                                     bg={`red.5`}
                                                 >
-                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                    <IconX color='var( --theme-remove-color)'  size={16} opacity={0.5} onClick={()=>{
                                                         form.setFieldValue('email', '');
                                                     }}/>
                                                 </Tooltip>
@@ -709,7 +709,7 @@ function Customer(props) {
                                                     withArrow
                                                     bg={`red.5`}
                                                 >
-                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                    <IconX color='var( --theme-remove-color)'  size={16} opacity={0.5} onClick={()=>{
                                                         form.setFieldValue('address', '');
                                                     }}/>
                                                 </Tooltip>

@@ -735,7 +735,7 @@ function _GenericInvoiceForm(props) {
                                                 <ActionIcon
                                                     size="sm"
                                                     variant="subtle"
-                                                    color='var(--theme-primary-color-6)'
+                                                    color='var( --theme-remove-color)'
                                                     onClick={() => {
                                                         const dataString = localStorage.getItem('temp-sales-products');
                                                         let data = dataString ? JSON.parse(dataString) : [];

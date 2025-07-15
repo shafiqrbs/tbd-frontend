@@ -49,7 +49,7 @@ export default function _CommonDrawer(props) {
               <ActionIcon
                 mr={"sm"}
                 radius="xl"
-                color="grey.6"
+                color='var( --theme-remove-color)'
                 size="md"
                 onClick={closeDrawer}
                 variant="outline"

@@ -74,7 +74,7 @@ function KeywordSearch(props) {
                                         withArrow
                                         bg={`red.5`}
                                     >
-                                        <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
+                                        <IconX color='var( --theme-remove-color)'  size={16} opacity={0.5} onClick={() => {
                                             dispatch(setSearchKeyword(''))
                                         }} />
                                     </Tooltip>

@@ -381,7 +381,7 @@ function _ProductMeasurement(props) {
                           <ActionIcon
                             size="sm"
                             variant="transparent"
-                            color='var(--theme-primary-color-6)'
+                            color='var( --theme-remove-color)'
                             onClick={() => {
                               dispatch(
                                 deleteEntityData(

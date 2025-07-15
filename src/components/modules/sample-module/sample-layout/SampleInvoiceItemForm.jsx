@@ -727,7 +727,7 @@ function SampleInvoiceItemForm(props) {
                                                   <ActionIcon
                                                       size="sm"
                                                       variant="subtle"
-                                                      color='var(--theme-primary-color-6)'
+                                                      color='var( --theme-remove-color)'
                                                       onClick={() => {
                                                           modals.openConfirmModal({
                                                               title: (

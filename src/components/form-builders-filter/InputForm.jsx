@@ -100,7 +100,7 @@ function InputForm(props) {
                             (module === 'warehouse' && warehouseFilterData[name]) ||
                             (module === 'vendor' && vendorFilterData[name]) || (module === 'file-upload' && fileUploadFilterData[name]) ? (
                             <Tooltip label={t("Close")} withArrow bg={`red.5`}>
-                                <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
+                                <IconX color='var( --theme-remove-color)'  size={16} opacity={0.5} onClick={() => {
                                     if (module === 'customer') {
                                         dispatch(setCustomerFilterData({
                                             ...customerFilterData,

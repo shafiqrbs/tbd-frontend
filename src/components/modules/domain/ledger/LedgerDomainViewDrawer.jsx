@@ -46,7 +46,8 @@ function LedgerDomainViewDrawer(props) {
                         <ActionIcon
                             className="ActionIconCustom"
                             radius="xl"
-                            color="red.6" size="lg"
+                            color='var( --theme-remove-color)'
+                            size="lg"
                             onClick={closeDrawer}
                         >
                             <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />

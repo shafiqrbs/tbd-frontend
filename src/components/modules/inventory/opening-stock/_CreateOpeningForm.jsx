@@ -885,7 +885,7 @@ function _CreateOpeningForm(props) {
                                                                 });
                                                             }}
                                                         >
-                                                            <IconX size={16} style={{ width: '70%', height: '70%' }}
+                                                            <IconX color='var( --theme-remove-color)'   size={16} style={{ width: '70%', height: '70%' }}
                                                                    stroke={1.5} />
                                                         </ActionIcon>
                                                     </Group>

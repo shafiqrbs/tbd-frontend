@@ -1234,7 +1234,7 @@ function _UpdateInvoice(props) {
                                                                         bg={`red.5`}
                                                                     >
                                                                         <IconX
-                                                                            color={`red`}
+                                                                            color='var( --theme-remove-color)'
                                                                             size={16}
                                                                             opacity={0.5}
                                                                             onClick={() => {

@@ -235,7 +235,7 @@ function AddCustomerDrawerForm(props) {
                                                     <ActionIcon
                                                         variant="transparent"
                                                         size="sm"
-                                                        color="red.6"
+                                                        color='var( --theme-remove-color)'
                                                         onClick={closeModel}
                                                         ml={'4'}
                                                     >

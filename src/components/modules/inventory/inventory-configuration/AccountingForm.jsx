@@ -789,7 +789,7 @@ function AccountingForm(props) {
             <Box bg="gray.1" px="sm" py="xs" mt="xs">
                 <Group justify="space-between">
                     <Text fz={14} fw={600}> {t("VoucherSetup")}</Text>
-                    <Button variant="default" variant="filled" color="var(--theme-secondary-color-8)" size="xs" onClick={
+                    <Button variant="filled" color="var(--theme-secondary-color-8)" size="xs" onClick={
                         ()=>{AccountingDataProcess('accounting/account-voucher-reset')}
                     }>{t("Reset")}</Button>
                 </Group>

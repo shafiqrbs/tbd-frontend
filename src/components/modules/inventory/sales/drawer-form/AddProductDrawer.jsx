@@ -50,7 +50,7 @@ function AddProductDrawer(props) {
               <ActionIcon
                 mr={"sm"}
                 radius="xl"
-                color="grey.6"
+                color='var( --theme-remove-color)'
                 size="md"
                 variant="outline"
                 onClick={closeModel}

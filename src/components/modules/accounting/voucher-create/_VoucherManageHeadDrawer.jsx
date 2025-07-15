@@ -142,7 +142,7 @@ function _VoucherManageHeadDrawer(props) {
             <ActionIcon
                 variant="transparent"
                 radius="xl"
-                color="black"
+                color="red"
                 size="lg"
                 onClick={closeDrawer}
             >
@@ -195,7 +195,7 @@ function _VoucherManageHeadDrawer(props) {
                     <ActionIcon
                         variant="transparent"
                         size="sm"
-                        color="black"
+                        color="red"
                         onClick={closeDrawer}
                         ml={4}
                     >
