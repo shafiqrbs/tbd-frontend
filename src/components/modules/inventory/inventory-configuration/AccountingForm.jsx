@@ -793,8 +793,6 @@ function AccountingForm(props) {
                         ()=>{AccountingDataProcess('accounting/account-voucher-reset')}
                     }>{t("Reset")}</Button>
                 </Group>
-
-
             </Box>
             <Box pl="sm">
           <Box mt={"xs"}>
