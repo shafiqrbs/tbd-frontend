@@ -10,6 +10,7 @@ import clsx from "clsx";
 import classes from "./NestedTablesExample.module.css";
 import {getHotkeyHandler} from "@mantine/hooks";
 import {storeEntityData} from "../../../../store/core/crudSlice.js";
+import tableCss from "../../../../assets/css/TableInner.module.css";
 
 function _InhouseTable(props) {
     const {setReloadBatchItemTable} = props
@@ -73,7 +74,6 @@ function _InhouseTable(props) {
                             ),
                         },
                         { accessor: 'uom', title: t('UOM') },
-                        { accessor: 'WorkorderInvoice', title: t('WorkorderInvoice') },
                         {
                             accessor: 'issue_quantity',
                             title: t('IssueQty'),
@@ -187,6 +187,12 @@ function _InhouseTable(props) {
                     loaderSize="xs"
                     loaderColor="grape"
                     height={height}
+                    classNames={{
+                        root: tableCss.root,
+                        table: tableCss.table,
+                        header: tableCss.header,
+                        footer: tableCss.footer
+                    }}
                     scrollAreaProps={{ type: 'never' }}
                     rowExpansion={{
                         allowMultiple: true,
@@ -198,7 +204,7 @@ function _InhouseTable(props) {
                                     display: 'flex',
                                     justifyContent: 'center',
                                 }}>
-                                    <div style={{width: '95%'}}>
+                                    <div style={{width: '100%'}}>
                                         <DataTable
                                             withTableBorder
                                             withColumnBorders
