@@ -81,6 +81,7 @@ import WarehouseListIndex from "./components/modules/core/warehouse-list/Warehou
 import HeadDomainIndex from "./components/modules/domain/head-group/HeadDomainIndex";
 import LedgerDomainIndex from "./components/modules/domain/ledger/LedgerDomainIndex";
 import WarehouseIssueIndex from "./components/modules/inventory/warehouse-issue/WarehouseIssueIndex.jsx";
+import InoutIndex from "./components/modules/procurement/in-out/InoutIndex.jsx";
 
 function AppRoute() {
 	return (
@@ -677,6 +678,11 @@ function AppRoute() {
 					<Route path="requisition-board" element={
 						<ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
 							<MatrixIndex />
+						</ProtectedRoute>
+					} />
+					<Route path="inout" element={
+						<ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
+							<InoutIndex />
 						</ProtectedRoute>
 					} />
 				</Route>
