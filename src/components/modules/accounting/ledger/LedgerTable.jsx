@@ -102,7 +102,7 @@ function LedgerTable(props) {
                                             e.preventDefault()
                                             setLedgerDetails(data)
                                         }}
-                                    >  {t('Details')}</Button>
+                                    >  {t('Ledger')}</Button>
 
                                     {data.is_private !== 1 &&(
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>

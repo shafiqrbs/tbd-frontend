@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import {Box,TextInput} from "@mantine/core";
-import { IconChevronRight, IconBuilding} from "@tabler/icons-react";
+import {ActionIcon, Box, Button, Group, Text, TextInput} from "@mantine/core";
+import {IconChevronRight, IconBuilding, IconX} from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,13 @@ import clsx from "clsx";
 import classes from "./NestedTablesExample.module.css";
 import {getHotkeyHandler} from "@mantine/hooks";
 import {storeEntityData} from "../../../../store/core/crudSlice.js";
-import tableCss from "../../../../assets/css/TableInner.module.css";
+import tableCss from "../../../../assets/css/Table.module.css";
+import innerTableCss from "../../../../assets/css/TableInner.module.css";
+import inputInlineCss from "../../../../assets/css/InlineInputField.module.css";
+import inputCss from "../../../../assets/css/InlineInputField.module.css";
+import {modals} from "@mantine/modals";
+import {deleteEntityData} from "../../../../store/core/crudSlice";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 
 function _InhouseTable(props) {
     const {setReloadBatchItemTable} = props
@@ -44,6 +50,35 @@ function _InhouseTable(props) {
         }
     }
 
+    const handleSubDomainDelete = async (id) => {
+        modals.openConfirmModal({
+            title: (
+                <Text size="md"> {t("FormConfirmationTitle")}</Text>
+            ),
+            children: (
+                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+            ),
+            labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'blue' },
+            onCancel: () => console.log('Cancel'),
+            onConfirm: async () => {
+
+                try {
+                    const action = await dispatch(deleteEntityData(`production/batch/item/destroy/`+id));
+                    const payload = action.payload;
+                    if (payload?.status === 200) {
+                        showNotificationComponent(t("Account head deleted successfully"), "green");
+                    } else {
+                        showNotificationComponent(t("Something went wrong"), "red");
+                    }
+                } catch (error) {
+                    showNotificationComponent(t("Request failed"), "red");
+                } finally {
+                    // optional cleanup or state update
+                }
+            },
+        });
+    };
+
     return (
         <>
 
@@ -63,20 +98,19 @@ function _InhouseTable(props) {
                             noWrap: true,
                             render: (batchItem) => (
                                 <>
-                                    <IconChevronRight
+                                   {/* <IconChevronRight
                                         className={clsx(classes.icon, classes.expandIcon, {
                                             [classes.expandIconRotated]: expandedCompanyIds.includes(batchItem.id),
                                         })}
                                     />
-                                    <IconBuilding className={classes.icon} />
+                                    <IconBuilding className={classes.icon} />*/}
                                     <span>{batchItem.name}</span>
                                 </>
                             ),
                         },
-                        { accessor: 'uom', title: t('UOM') },
                         {
                             accessor: 'issue_quantity',
-                            title: t('IssueQty'),
+                            title: t('Issue'),
                             textAlign: "center",
                             width: '100px',
                             render: (item) => {
@@ -94,6 +128,7 @@ function _InhouseTable(props) {
                                             type="number"
                                             label=""
                                             size="xs"
+                                            classNames={inputInlineCss}
                                             id={"inline-update-issue-quantity-"+item.id}
                                             value={issueQuantity}
                                             onBlur={handelIssueQuantityChange}
@@ -112,7 +147,7 @@ function _InhouseTable(props) {
                         },
                         {
                             accessor: 'receive_quantity',
-                            title: t('ReceiveQty'),
+                            title: t('Receive'),
                             textAlign: "center",
                             width: '110px',
                             render: (item) => {
@@ -131,6 +166,7 @@ function _InhouseTable(props) {
                                             type="number"
                                             label=""
                                             size="xs"
+                                            classNames={inputInlineCss}
                                             id={"inline-update-receive-quantity-"+item.id}
                                             value={receiveQuantity}
                                             onBlur={handelReceiveQuantityChange}
@@ -149,7 +185,7 @@ function _InhouseTable(props) {
                         },
                         {
                             accessor: 'damage_quantity',
-                            title: t('DamageQty'),
+                            title: t('Damage'),
                             textAlign: "center",
                             width: '110px',
                             render: (item) => {
@@ -167,6 +203,7 @@ function _InhouseTable(props) {
                                         <TextInput
                                             type="number"
                                             label=""
+                                            classNames={inputInlineCss}
                                             size="xs"
                                             id={"inline-update-damage-quantity-"+item.id}
                                             value={damageQuantity}
@@ -179,9 +216,31 @@ function _InhouseTable(props) {
                                 );
                             }
                         },
-                        { accessor: 'stock_qty', title: t('StockQty') },
+                        { accessor: 'stock_qty', title: t('Stock') },
+                        { accessor: 'uom', title: t('UOM') },
                         { accessor: 'status', title: t('Status') },
-                        { accessor: 'action', title: t('Action') }
+                        {
+                            accessor: "action",
+                            title: t("Action"),
+                            textAlign: "right",
+                            render: (item) => (
+                                <Group gap={4} justify="right" wrap="nowrap">
+                                    <ActionIcon
+                                        size="sm"
+                                        variant="outline"
+                                        radius="xl"
+                                        color='var(--theme-remove-color)'
+                                        onClick={() => handleSubDomainDelete(item.id)}
+                                        >
+                                        <IconX
+                                            size={16}
+                                            style={{width: "70%", height: "70%"}}
+                                            stroke={1.5}
+                                        />
+                                    </ActionIcon>
+                                </Group>
+                            ),
+                        },
                     ]}
                     records={editedData.batch_items}
                     loaderSize="xs"
@@ -209,14 +268,20 @@ function _InhouseTable(props) {
                                             withTableBorder
                                             withColumnBorders
                                             highlightOnHover
+                                            classNames={{
+                                                root: innerTableCss.root,
+                                                table: innerTableCss.table,
+                                                body: innerTableCss.body,
+                                                header: innerTableCss.header,
+                                                footer: innerTableCss.footer
+                                            }}
                                             columns={[
                                                 {accessor: 'name', title: t('Item')},
-                                                {accessor: 'uom', title: t('UOM')},
-                                                {accessor: 'quantity', title: t('Quantity')},
-                                                {accessor: 'needed_quantity', title: t('TotalQuantity')},
-                                                {accessor: 'stock_quantity', title: t('StockQuantity')},
-                                                {accessor: 'less_quantity', title: t('Less')},
-                                                {accessor: 'more_quantity', title: t('More')},
+                                                {accessor: 'quantity', title: t('Quantity'), width: '80px'},
+                                                {accessor: 'needed_quantity', title: t('Total'), width: '80px'},
+                                                {accessor: 'stock_quantity', title: t('Stock'), width: '80px'},
+                                                {accessor: 'less_quantity', title: t('Less'), width: '80px'},
+                                                {accessor: 'more_quantity', title: t('More'), width: '80px'},
                                             ]}
                                             records={batchItem.record.production_expenses}
                                         />

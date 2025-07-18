@@ -509,7 +509,7 @@ function _UpdatePurchaseInvoice(props) {
                                                 />
                                                 <Tooltip
                                                     multiline
-                                                    bg={"#905923"}
+                                                    bg='var( --theme-primary-color-8)'
                                                     position="top"
                                                     withArrow
                                                     ta={"center"}
@@ -647,7 +647,7 @@ function _UpdatePurchaseInvoice(props) {
                                                                                 ml={"8"}
                                                                                 color="white"
                                                                                 aria-label="Settings"
-                                                                                bg={"#905923"}
+                                                                                bg='var( --theme-primary-color-8)'
                                                                                 onClick={() => setProductDrawer(true)}
                                                                             >
                                                                                 <IconPlus stroke={1}/>

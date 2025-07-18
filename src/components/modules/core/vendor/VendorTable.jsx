@@ -3,10 +3,10 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon, Text, Menu, rem
+    ActionIcon, Text, Menu, rem, Button
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconCheck, IconDotsVertical, IconTrashX, IconAlertCircle } from "@tabler/icons-react";
+import { IconCheck, IconDotsVertical, IconTrashX, IconAlertCircle,IconFolder } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -22,6 +22,8 @@ import { deleteEntityData } from "../../../../store/core/crudSlice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import VendorViewDrawer from "./VendorViewDrawer.jsx";
 import { notifications } from "@mantine/notifications";
+import LedgerViewDrawer from "../../accounting/ledger/LedgerViewDrawer";
+import LedgerDetailsModel from "../../accounting/ledger/LedgerDetailsModel";
 function VendorTable() {
 
     const dispatch = useDispatch();
@@ -97,6 +99,8 @@ function VendorTable() {
         fetchData();
     }, [dispatch, searchKeyword, vendorFilterData, page,fetchingReload]);
 
+    const [ledgerViewDrawer, setLedgerViewDrawer] = useState(false)
+    const [ledgerDetails,setLedgerDetails] = useState(null)
     return (
         <>
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
@@ -123,12 +127,23 @@ function VendorTable() {
                         { accessor: 'name', title: t("Name") },
                         { accessor: 'company_name', title: t("CompanyName") },
                         { accessor: 'mobile', title: t("Mobile") },
+                        { accessor: 'outstanding', title: t("Outstanding") },
                         {
                             accessor: "action",
                             title: t("Action"),
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
+                                    <Button
+                                        size="compact-xs"
+                                        radius="xs"
+                                        variant="filled"
+                                        fw={'100'} fz={'12'}  color='var(--theme-primary-color-6)' mr={'4'}
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            setLedgerDetails(data)
+                                        }}
+                                    >  {t('Ledger')}</Button>
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                         <Menu.Target>
                                             <ActionIcon size="sm" variant="outline" color='var(--theme-primary-color-6)' radius="xl" aria-label="Settings">
@@ -239,7 +254,14 @@ function VendorTable() {
                     vendorObject={vendorObject}
                 />
             }
+            {ledgerViewDrawer &&
+            <LedgerViewDrawer ledgerViewDrawer={ledgerViewDrawer} setLedgerViewDrawer={setLedgerViewDrawer} />
+            }
+            {ledgerDetails &&
+            <LedgerDetailsModel ledgerDetails={ledgerDetails} setLedgerDetails={setLedgerDetails} />
+            }
         </>
+
     );
 }
 

@@ -27,10 +27,10 @@
 }
 
 .genericPrimaryBg{
-    background-color: #a5d8ff;
+    background-color: var(--theme-primary-color-8);
 }
 .genericPrimaryFontColor{
-    color: #1864ab;
+    color: var(--theme-primary-color-8);
 }
 
 ._cardTitle_sz11i_29::after {

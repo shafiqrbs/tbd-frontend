@@ -505,7 +505,7 @@ function _GenericPosForm({domainConfigData}) {
                         )}
                         <Tooltip
                             multiline
-                            bg={"#905923"}
+                            bg='var(--theme-secondary-color-6)'
                             position="top"
                             withArrow
                             ta={"center"}
@@ -570,7 +570,7 @@ function _GenericPosForm({domainConfigData}) {
                                   />
                                 </Box>
                             )}
-                            {domainConfigData?.inventory_config?.sku_warehouse == 1 && salesConfig?.search_by_warehouse === 1 && (       <Box mt={"4"}>
+                            {domainConfigData?.inventory_config?.sku_warehouse === 1 && salesConfig?.search_by_warehouse === 1 && (       <Box mt={"4"}>
                                   <SelectForm
                                       tooltip={t("Warehouse")}
                                       label=""
@@ -654,7 +654,7 @@ function _GenericPosForm({domainConfigData}) {
                                         ml={"8"}
                                         color="white"
                                         aria-label="Settings"
-                                        bg={"#905923"}
+                                        bg='var( --theme-primary-color-8)'
                                         onClick={() => setProductDrawer(true)}
                                     >
                                       <IconPlus stroke={1}/>
@@ -665,7 +665,7 @@ function _GenericPosForm({domainConfigData}) {
                             </Grid>
                           </Box>
                           <Box  p={"xs"} className={'boxBackground'}>
-                          {salesConfig?.is_multi_price == 1 && (
+                          {salesConfig?.is_multi_price === 1 && (
                               <Box>
                                 <Grid columns={24} gutter={{ base: 1 }}>
                                   <Grid.Col span={10} fz="sm" mt={8}>

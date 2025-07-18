@@ -5,41 +5,30 @@
 .table {
 th,
 td {
-    border-color: var(--theme-primary-color-6);
+    border-color: transparent;
+    font-size: 12px;
 }
 }
 
 .header {
 
 th {
-    border-bottom: 1px solid #f8eedf;
-    background-color:var(--theme-primary-color-6)!important;
-    font-size: 14px;
-    color: white;
+    border-bottom: 1px solid var(--mantine-color-gray-3)!important;
+    background-color:var(--mantine-color-gray-3)!important;
+    font-size: 12px;
+    font-weight: normal;
+    color: black;
 }
 }
 
-.footer {
+.body {
     color: #e9ecef;
-    font-size: 13px;
+    font-size: 12px;
 
-th ,td{
-    border-top: 1px solid rgba(211, 205, 205, 0.39);
-}
-}
-
-.pagination {
-    background: transparent;
-    border-top: 1px solid rgba(226, 194, 194, 0.39);
-
-button {
-    background: transparent;
-
-    &[data-active='true'] {
-         color: white;
-         border: transparent;
-         background-color: rgba(208, 191, 191, 0.17);
-     }
-}
+    th ,td{
+        border-top: 1px solid rgba(211, 205, 205, 0.39);
+        font-size: 12px;
+        font-weight: normal;
+    }
 }
 

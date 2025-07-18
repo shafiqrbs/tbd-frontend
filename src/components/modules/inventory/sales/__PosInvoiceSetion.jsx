@@ -465,7 +465,7 @@ export default function __PosInvoiceSection(props) {
                                         <Grid.Col span={2} bg='var(--theme-primary-color-4)' p={"18"} pl={"8"}>
                                             <Tooltip
                                                 multiline
-                                                bg={"#905923"}
+                                                bg='var( --theme-primary-color-8)'
                                                 position="top"
                                                 withArrow
                                                 ta={"center"}

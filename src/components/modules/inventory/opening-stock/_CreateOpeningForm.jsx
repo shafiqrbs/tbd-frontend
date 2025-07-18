@@ -407,7 +407,7 @@ function _CreateOpeningForm(props) {
                                                     />
                                                     <Tooltip
                                                         multiline
-                                                        bg={"#905923"}
+                                                        bg='var( --theme-primary-color-8)'
                                                         position="top"
                                                         withArrow
                                                         ta={"center"}

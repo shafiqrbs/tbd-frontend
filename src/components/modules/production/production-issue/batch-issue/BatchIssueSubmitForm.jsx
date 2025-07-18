@@ -337,7 +337,7 @@ export default function BatchIssueSubmitForm(props) {
                                             ml={"8"}
                                             color="white"
                                             aria-label="Settings"
-                                            bg={"#905923"}
+                                            bg='var( --theme-primary-color-8)'
                                             onClick={() => setBatchDrawer(true)}
                                         >
                                             <IconPlus stroke={1}/>
