@@ -55,7 +55,7 @@ function CustomerIndex() {
         }
         dispatch(coreSettingDropdown(value))
         dispatch(setDropdownLoad(false))
-    }, [dropdownData]);
+    }, []);
 
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef, useMemo} from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import {
     Group,
@@ -37,6 +37,7 @@ import {Carousel} from "@mantine/carousel";
 import "@mantine/carousel/styles.css";
 import Autoplay from "embla-carousel-autoplay";
 import __DrawerAddon from "./__DrawerAddon";
+import {data} from "../../accounting/balance-entry/BalanceBarChart.jsx";
 
 function ProductTable({categoryDropdown}) {
     const dispatch = useDispatch();
@@ -52,12 +53,11 @@ function ProductTable({categoryDropdown}) {
     const [allDataLoaded, setAllDataLoaded] = useState(false);
 
     const [indexData, setIndexData] = useState({data: [], total: 0});
+
     const [fetching, setFetching] = useState(false);
 
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
-    const productFilterData = useSelector(
-        (state) => state.inventoryCrudSlice.productFilterData
-    );
+    const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData);
     const fetchingReload = useSelector((state) => state.crudSlice.fetching);
 
     const [viewModal, setViewModal] = useState(false);
@@ -94,6 +94,8 @@ function ProductTable({categoryDropdown}) {
                 alternative_name: productFilterData.alternative_name,
                 sku: productFilterData.sku,
                 sales_price: productFilterData.sales_price,
+                product_type_id: productFilterData.product_type_id,
+                category_id: productFilterData.category_id,
                 page: loadPage,
                 offset: perPage,
                 type: "product",
@@ -163,37 +165,77 @@ function ProductTable({categoryDropdown}) {
         }
     };
 
+    const [sortStatus, setSortStatus] = useState({
+        columnAccessor: 'product_name',
+        direction: 'asc'
+    });
+
+    // Memoized Sorted Data
+    const sortedRecords = useMemo(() => {
+        if (!indexData?.data) return [];
+
+        return [...indexData.data].sort((a, b) => {
+            const aVal = a[sortStatus.columnAccessor];
+            const bVal = b[sortStatus.columnAccessor];
+
+            if (aVal == null) return 1;
+            if (bVal == null) return -1;
+
+            const valA = typeof aVal === 'string' ? aVal.toLowerCase() : aVal;
+            const valB = typeof bVal === 'string' ? bVal.toLowerCase() : bVal;
+
+            if (valA < valB) return sortStatus.direction === 'asc' ? -1 : 1;
+            if (valA > valB) return sortStatus.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }, [indexData?.data, sortStatus]);
+
+
     return (
         <>
             <Box pl="xs" pr={8} pt="6" pb="4" className="boxBackground borderRadiusAll border-bottom-none">
                 <_ProductSearch module="product" categoryDropdown={categoryDropdown}/>
             </Box>
+
             <Box className="borderRadiusAll border-top-none">
                 <DataTable
-                    classNames={tableCss}
-                    records={indexData.data}
+                    records={sortedRecords}
+                    classNames={{ thead: 'custom-header', tbody: 'custom-body' }} // replace with actual tableCss if needed
                     columns={[
                         {
-                            accessor: "index",
-                            title: t("S/N"),
-                            textAlignment: "right",
-                            render: (item) => indexData.data.indexOf(item) + 1,
+                            accessor: 'index',
+                            title: t('S/N'),
+                            textAlignment: 'right',
+                            render: (item) => (sortedRecords.indexOf(item) ?? -1) + 1
                         },
-                        {accessor: "product_type", title: t("NatureOfProduct")},
-                        {accessor: "category_name", title: t("Category")},
-                        {accessor: "product_name", title: t("Name")},
                         {
-                            accessor: "unit_name",
-                            title: t("Unit"),
+                            accessor: 'product_type',
+                            title: t('NatureOfProduct'),
+                            sortable: true
+                        },
+                        {
+                            accessor: 'category_name',
+                            title: t('Category'),
+                            sortable: true
+                        },
+                        {
+                            accessor: 'product_name',
+                            title: t('Name'),
+                            sortable: true
+                        },
+                        {
+                            accessor: 'unit_name',
+                            title: t('Unit'),
+                            sortable: true,
                             render: (item) => (
                                 <Button
                                     component="a"
                                     size="compact-xs"
                                     radius="xs"
-                                    color='var(--theme-primary-color-4)'
+                                    color="var(--theme-primary-color-4)"
                                     variant="filled"
-                                    fw={"100"}
-                                    fz={"12"}
+                                    fw="100"
+                                    fz="12"
                                     onClick={() => {
                                         setId(item.product_id);
                                         setMeasurementDrawer(true);
@@ -201,53 +243,56 @@ function ProductTable({categoryDropdown}) {
                                 >
                                     {item.unit_name}
                                 </Button>
-                            ),
+                            )
                         },
-                        {accessor: "quantity", title: t("Quantity"), textAlign: "center"},
                         {
-                            accessor: "feature_image",
-                            title: t("Image"),
-                            textAlign: "center",
-                            width: "100px",
+                            accessor: 'quantity',
+                            title: t('Quantity'),
+                            textAlign: 'center'
+                        },
+                        {
+                            accessor: 'feature_image',
+                            title: t('Image'),
+                            textAlign: 'center',
+                            width: '100px',
                             render: (item) => {
                                 const [opened, setOpened] = useState(false);
-                                const autoplay = useRef(Autoplay({delay: 2000}));
+                                const autoplay = useRef(Autoplay({ delay: 2000 }));
+
                                 const images = [
                                     item?.images?.feature_image,
                                     item?.images?.path_one,
                                     item?.images?.path_two,
                                     item?.images?.path_three,
-                                    item?.images?.path_four,
+                                    item?.images?.path_four
                                 ]
                                     .filter(Boolean)
-                                    .map((img) => `${img}`);
+                                    .map(img => `${img}`);
 
                                 return (
-                                    images && images[0] &&
-                                    <Image
-                                        mih={50}
-                                        mah={50}
-                                        fit="contain"
-                                        src={
-                                            import.meta.env.VITE_IMAGE_GATEWAY_URL + '/storage/' + images[0]
-                                        }
-                                        style={{cursor: "pointer"}}
-                                        onClick={() => setOpened(true)}
-                                    />
-
+                                    images?.[0] && (
+                                        <Image
+                                            mih={50}
+                                            mah={50}
+                                            fit="contain"
+                                            src={`${import.meta.env.VITE_IMAGE_GATEWAY_URL}/storage/${images[0]}`}
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => setOpened(true)}
+                                        />
+                                    )
                                 );
-                            },
+                            }
                         },
                         {
-                            accessor: "status",
-                            title: t("Status"),
-                            textAlign: "center",
+                            accessor: 'status',
+                            title: t('Status'),
+                            textAlign: 'center',
                             render: (item) => (
                                 <Flex justify="center" align="center">
                                     <Switch
                                         disabled={switchEnable[item.product_id] || item.parent_id}
                                         defaultChecked={item.status === 1}
-                                        color='var(--theme-primary-color-6)'
+                                        color="var(--theme-primary-color-6)"
                                         radius="xs"
                                         size="md"
                                         onLabel="Enable"
@@ -255,42 +300,55 @@ function ProductTable({categoryDropdown}) {
                                         onChange={(e) => handleSwitch(e, item)}
                                     />
                                 </Flex>
-                            ),
+                            )
                         },
                         {
-                            accessor: "action",
-                            title: t("Action"),
-                            textAlign: "right",
+                            accessor: 'action',
+                            title: t('Action'),
+                            textAlign: 'right',
                             render: (item) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    <Menu position="bottom-end" withArrow trigger="hover"  width={200}s openDelay={100}
-                                          closeDelay={400}>
+                                    <Menu
+                                        position="bottom-end"
+                                        withArrow
+                                        trigger="hover"
+                                        width={200}
+                                        openDelay={100}
+                                        closeDelay={400}
+                                    >
                                         <Menu.Target>
-                                            <ActionIcon size="sm" variant="outline" color='var(--theme-primary-color-6)' radius="xl">
-                                                <IconDotsVertical height={18} width={18} stroke={1.5}/>
+                                            <ActionIcon
+                                                size="sm"
+                                                variant="outline"
+                                                color="var(--theme-primary-color-6)"
+                                                radius="xl"
+                                            >
+                                                <IconDotsVertical height={18} width={18} stroke={1.5} />
                                             </ActionIcon>
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             {!item.parent_id &&
-                                            ["role_inventory_manager", "role_domain"].some(role => userRole.includes(role)) && (
-                                                <Menu.Item
-                                                    onClick={() => {
-                                                        dispatch(setInsertType("update"));
-                                                        dispatch(editEntityData(`inventory/product/${item.product_id}`));
-                                                        dispatch(setFormLoading(true));
-                                                        navigate(`/inventory/product/${item.product_id}`);
-                                                    }}
-                                                >
-                                                    {t("Edit")}
-                                                </Menu.Item>
-                                            )}
+                                                ['role_inventory_manager', 'role_domain'].some((role) =>
+                                                    userRole.includes(role)
+                                                ) && (
+                                                    <Menu.Item
+                                                        onClick={() => {
+                                                            dispatch(setInsertType('update'));
+                                                            dispatch(editEntityData(`inventory/product/${item.product_id}`));
+                                                            dispatch(setFormLoading(true));
+                                                            navigate(`/inventory/product/${item.product_id}`);
+                                                        }}
+                                                    >
+                                                        {t('Edit')}
+                                                    </Menu.Item>
+                                                )}
                                             <Menu.Item
                                                 onClick={() => {
                                                     setViewModal(true);
                                                     dispatch(showEntityData(`inventory/product/${item.product_id}`));
                                                 }}
                                             >
-                                                {t("Show")}
+                                                {t('Show')}
                                             </Menu.Item>
                                             <Menu.Item
                                                 onClick={() => {
@@ -298,37 +356,41 @@ function ProductTable({categoryDropdown}) {
                                                     setAddonDrawer(true);
                                                 }}
                                             >
-                                                {t("Addon")}
+                                                {t('Addon')}
                                             </Menu.Item>
                                             {!item.parent_id &&
-                                            ["role_inventory_manager", "role_domain"].some(role => userRole.includes(role)) && (
-                                                <Menu.Item
-                                                    bg="red.1"
-                                                    c='var(--theme-primary-color-6)'
-                                                    onClick={() =>
-                                                        modals.openConfirmModal({
-                                                            title: <Text
-                                                                size="md">{t("FormConfirmationTitle")}</Text>,
-                                                            children: <Text
-                                                                size="sm">{t("FormConfirmationMessage")}</Text>,
-                                                            labels: {confirm: "Confirm", cancel: "Cancel"},
-                                                            confirmProps: {color: "red.6"},
-                                                            onConfirm: () => productDeleteHandle(item.product_id),
-                                                        })
-                                                    }
-                                                    rightSection={<IconTrashX
-                                                        style={{width: rem(14), height: rem(14)}}/>}
-                                                >
-                                                    {t("Delete")}
-                                                </Menu.Item>
-                                            )}
+                                                ['role_inventory_manager', 'role_domain'].some((role) =>
+                                                    userRole.includes(role)
+                                                ) && (
+                                                    <Menu.Item
+                                                        bg="red.1"
+                                                        c="var(--theme-primary-color-6)"
+                                                        onClick={() =>
+                                                            modals.openConfirmModal({
+                                                                title: <Text size="md">{t('FormConfirmationTitle')}</Text>,
+                                                                children: (
+                                                                    <Text size="sm">{t('FormConfirmationMessage')}</Text>
+                                                                ),
+                                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                confirmProps: { color: 'red.6' },
+                                                                onConfirm: () => productDeleteHandle(item.product_id)
+                                                            })
+                                                        }
+                                                        rightSection={
+                                                            <IconTrashX style={{ width: rem(14), height: rem(14) }} />
+                                                        }
+                                                    >
+                                                        {t('Delete')}
+                                                    </Menu.Item>
+                                                )}
                                         </Menu.Dropdown>
                                     </Menu>
                                 </Group>
-                            ),
-                        },
+                            )
+                        }
                     ]}
-
+                    sortStatus={sortStatus}
+                    onSortStatusChange={setSortStatus}
                     fetching={fetching}
                     loaderSize="xs"
                     loaderColor="grape"
@@ -336,18 +398,27 @@ function ProductTable({categoryDropdown}) {
                     scrollViewportRef={scrollViewportRef}
                     onScrollToBottom={handleScrollToBottom}
                 />
+
+                {/* Footer */}
                 <Paper p="xs" mt="xs" withBorder>
                     <Group justify="space-between">
                         <Text size="sm">
-                            Showing <b>{indexData.data.length}</b> of <b>{indexData.total}</b> products
+                            Showing <b>{sortedRecords.length}</b> of{' '}
+                            <b>{indexData?.total || 0}</b> products
                         </Text>
-                        {!allDataLoaded && (
+                        {!fetching && sortedRecords.length === 0 && (
                             <Text size="xs" color="dimmed">
-                                {fetching && !allDataLoaded && (
-                                    <Text size="xs" color="dimmed">
-                                        {t("LoadingProducts")}...
-                                    </Text>
-                                )}
+                                {t('No products found')}
+                            </Text>
+                        )}
+                        {!fetching && sortedRecords.length !== 0 && !fetching && (
+                            <Text size="xs" color="dimmed">
+                                {t('Scroll to load more...')}
+                            </Text>
+                        )}
+                        {fetching && (
+                            <Text size="xs" color="dimmed">
+                                {t('LoadingProducts')}...
                             </Text>
                         )}
                     </Group>

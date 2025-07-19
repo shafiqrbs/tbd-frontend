@@ -189,7 +189,7 @@ const crudSlice = createSlice({
         insertType: 'create',
         entityDataDelete: null,
         openingInlineUpdateStatus: null,
-        productFilterData: { name: '', alternative_name: '', sku: '', sales_price: '' },
+        productFilterData : {name:'',alternative_name:'',sku:'',sales_price:'',product_type_id:'',category_id:''},
         categoryFilterData: { name: '', parent_name: '' },
         salesFilterData: { customer_id: '',start_date:'',end_date:'',searchKeyword:''},
         invoiceBatchFilterData: { customer_id: '',start_date:'',end_date:'',searchKeyword:''},
@@ -233,6 +233,8 @@ const crudSlice = createSlice({
             state.productFilterData.alternative_name = action.payload.alternative_name
             state.productFilterData.sku = action.payload.sku
             state.productFilterData.sales_price = action.payload.sales_price
+            state.productFilterData.product_type_id = action.payload.product_type_id
+            state.productFilterData.category_id = action.payload.category_id
         },
         setCategoryFilterData: (state, action) => {
             state.categoryFilterData.name = action.payload.name

@@ -46,7 +46,7 @@ function VendorIndex() {
         }
         dispatch(coreSettingDropdown(value))
         dispatch(setDropdownLoad(false))
-    }, [dropdownData]);
+    }, []);
   const progress = getLoadingProgress();
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   Group,
@@ -52,7 +52,7 @@ function StockTable(props) {
   const perPage = 50;
   const [page, setPage] = useState(1);
 
-  // const fetching = useSelector((state) => state.crudSlice.fetching);
+  const fetchingReload = useSelector((state) => state.crudSlice.fetching);
   const [fetching, setFetching] = useState(true);
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
   const [indexData, setIndexData] = useState([]);
@@ -100,6 +100,8 @@ function StockTable(props) {
           alternative_name: productFilterData.alternative_name,
           sku: productFilterData.sku,
           sales_price: productFilterData.sales_price,
+          product_type_id: productFilterData.product_type_id,
+          category_id: productFilterData.category_id,
           page: searchKeyword ? 1: page,
           offset: perPage,
           type: "stock",
@@ -191,7 +193,35 @@ function StockTable(props) {
       location_id: "",
     },
   });
-  const [locationMap, setLocationMap] = useState({});
+
+
+
+
+  const [sortStatus, setSortStatus] = useState({
+    columnAccessor: 'product_name',
+    direction: 'asc'
+  });
+
+  // Memoized Sorted Data
+  const sortedRecords = useMemo(() => {
+    if (!indexData?.data) return [];
+
+    return [...indexData.data].sort((a, b) => {
+      const aVal = a[sortStatus.columnAccessor];
+      const bVal = b[sortStatus.columnAccessor];
+
+      if (aVal == null) return 1;
+      if (bVal == null) return -1;
+
+      const valA = typeof aVal === 'string' ? aVal.toLowerCase() : aVal;
+      const valB = typeof bVal === 'string' ? bVal.toLowerCase() : bVal;
+
+      if (valA < valB) return sortStatus.direction === 'asc' ? -1 : 1;
+      if (valA > valB) return sortStatus.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [indexData?.data, sortStatus]);
+
 
   return (
     <>
@@ -218,19 +248,18 @@ function StockTable(props) {
             footer: tableCss.footer,
             pagination: tableCss.pagination,
           }}
-          records={indexData.data}
+          records={sortedRecords}
           columns={[
             {
               accessor: "index",
               title: t("S/N"),
               textAlignment: "right",
-             // render: (item) => indexData.data.indexOf(item) + 1,
               render: (_row, index) => index + 1 + (page - 1) * perPage,
             },
-            { accessor: "product_type", title: t("NatureOfProduct") },
-            { accessor: "category_name", title: t("Category") },
-            { accessor: "product_name", title: t("Name") },
-            { accessor: "barcode", title: t("Barcode") },
+            { accessor: "product_type", title: t("NatureOfProduct") ,sortable: true},
+            { accessor: "category_name", title: t("Category"),sortable: true },
+            { accessor: "product_name", title: t("Name"),sortable: true },
+            { accessor: "barcode", title: t("Barcode"),sortable: true },
             { accessor: "rem_quantity", title: t("Quantity"), textAlign: "center" },
             { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
             { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
@@ -400,8 +429,10 @@ function StockTable(props) {
               ),
             },
           ]}
-          fetching={fetching || downloadStockXLS}
+          fetching={fetching || downloadStockXLS || fetchingReload}
           totalRecords={indexData.total}
+          sortStatus={sortStatus}
+          onSortStatusChange={setSortStatus}
           recordsPerPage={perPage}
           page={page}
           onPageChange={(p) => {
