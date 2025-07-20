@@ -224,7 +224,7 @@ const Reports = () => {
           </Grid.Col>
 
           <Grid.Col span={30}>
-           aSASa
+            <ReportTable />
           </Grid.Col>
         </Grid>
       </Box>

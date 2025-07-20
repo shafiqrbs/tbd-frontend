@@ -1166,6 +1166,12 @@
   "AddLedgerHead": "Add Ledger Head",
   "AddLedger": "Add Ledger",
   "ApproveConformation": "Approve Conformation",
-  "xxxxxx": "xxxxxxx",
+  "ChooseReportType": "Choose Report Type",
+  "ReportFormat": "Report Format",
+  "InventoryReport": "Inventory Report",
+  "SalesReport": "Sales Report",
+  "PurchaseReport": "Purchase Report",
+  "AccountingReport": "Accounting Report",
+  "SelectReportType": "Select Report Type",
   "xxxxxx": "xxxxxxx"
 }
