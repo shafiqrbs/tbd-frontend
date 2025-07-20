@@ -96,16 +96,17 @@ function InhouseIndex(props) {
                     <ProductionNavigation module={"new-batch"} />
                   </Grid.Col>
                 )}
-                <Grid.Col span={props.batchId ? 15 : 14}>
+                {/*<Grid.Col span={props.batchId ? 15 : 14}>*/}
+                <Grid.Col span={props.batchId ? 24 : 23}>
                   <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                     <_InhouseTable
                       setReloadBatchItemTable={setReloadBatchItemTable}
                     />
                   </Box>
                 </Grid.Col>
-                <Grid.Col span={9}>
+                {/*<Grid.Col span={9}>
                   {<_InhouseForm batchData={batchData} />}
-                </Grid.Col>
+                </Grid.Col>*/}
               </Grid>
             </Box>
           </>

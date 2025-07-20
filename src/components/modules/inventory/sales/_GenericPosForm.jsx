@@ -1231,6 +1231,83 @@ function _GenericPosForm({domainConfigData}) {
                           <Grid.Col span={4}>
                             <Box pr={"xs"}>
                               <Button
+                                  onClick={() => {
+                                    const tempProducts = localStorage.getItem("temp-sales-products");
+                                    const storedProducts = tempProducts ? JSON.parse(tempProducts) : [];
+                                    const currentWarehouseId = form.values.warehouse_id
+                                        ? Number(form.values.warehouse_id)
+                                        : null;
+
+                                    let updatedProductQuantities = { ...productQuantities };
+                                    let updatedProducts = [...storedProducts];
+                                    let addedCount = 0;
+
+                                    products.forEach((product) => {
+                                      const quantityStr = productQuantities[product.id];
+                                      const quantityToAdd = Number(quantityStr);
+
+                                      if (quantityStr && !isNaN(quantityToAdd) && quantityToAdd > 0) {
+                                        const existingIndex = updatedProducts.findIndex(
+                                            (item) => item.product_id === product.id
+                                        );
+
+                                        if (existingIndex >= 0) {
+                                          // ✅ Update quantity & subtotal
+                                          const existingProduct = updatedProducts[existingIndex];
+                                          const newQuantity = existingProduct.quantity + quantityToAdd;
+                                          const newSubTotal = newQuantity * Number(product.sales_price);
+
+                                          updatedProducts[existingIndex] = {
+                                            ...existingProduct,
+                                            quantity: newQuantity,
+                                            sub_total: newSubTotal,
+                                          };
+                                        } else {
+                                          // ✅ Add new
+                                          const newProduct = {
+                                            product_id: product.id,
+                                            display_name: product.display_name,
+                                            sales_price: product.sales_price,
+                                            price: product.sales_price,
+                                            percent: "",
+                                            stock: product.quantity,
+                                            quantity: quantityToAdd,
+                                            unit_name: product.unit_name,
+                                            purchase_price: product.purchase_price,
+                                            sub_total: quantityToAdd * Number(product.sales_price),
+                                            unit_id: product.unit_id,
+                                            warehouse_id: currentWarehouseId,
+                                            warehouse_name: currentWarehouseId
+                                                ? warehouseDropdownData.find(
+                                                (w) => w.value === currentWarehouseId
+                                            )?.label || null
+                                                : null,
+                                            bonus_quantity: 0,
+                                          };
+                                          updatedProducts.push(newProduct);
+                                        }
+
+                                        // ✅ Clear input field for this product
+                                        updatedProductQuantities[product.id] = "";
+                                        addedCount++;
+                                      }
+                                    });
+
+                                    if (addedCount > 0) {
+                                      localStorage.setItem("temp-sales-products", JSON.stringify(updatedProducts));
+                                      setProductQuantities(updatedProductQuantities);
+                                      setLoadCardProducts(true);
+                                    } else {
+                                      notifications.show({
+                                        color: "red",
+                                        title: t("InvalidQuantity"),
+                                        message: t("PleaseEnterValidQuantity"),
+                                        autoClose: 1500,
+                                        withCloseButton: true,
+                                      });
+                                    }
+                                  }}
+
                                   size="sm"
                                   className={genericClass.invoiceAdd}
                                   type="submit"
