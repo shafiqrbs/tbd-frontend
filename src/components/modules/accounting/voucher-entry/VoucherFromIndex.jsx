@@ -401,7 +401,7 @@ function VoucherFormIndex({currencySymbol}) {
 
                                 {/* Reset icon */}
                                 {primaryLedgerHeadData && (
-                                    <ActionIcon  color='var( --theme-remove-color)'  color={'white'} onClick={() => handleDeleteVoucher(1, 'main-ledger')} variant="subtle"
+                                    <ActionIcon  color='var( --theme-remove-color)' onClick={() => handleDeleteVoucher(1, 'main-ledger')} variant="subtle"
                                                 size="sm" aria-label="Reset selection">
                                         <IconX size={16} opacity={0.6}/>
                                     </ActionIcon>)}

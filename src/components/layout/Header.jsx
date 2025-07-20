@@ -866,7 +866,6 @@ export default function Header({ isOnline, configData, mainAreaHeight }) {
 							>
 								<ActionIcon
 									mt={"6"}
-									onClick={toggle}
 									variant="subtle"
 									color={"white"}
 									onClick={(e) => {
