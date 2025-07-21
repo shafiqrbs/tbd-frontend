@@ -49,13 +49,8 @@ function __RecipeAddItem(props) {
                 if (!isNumberOrFractional) {
                     return true;
                 }
-            },
-            percent: (value) => {
-                const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
-                if (!isNumberOrFractional) {
-                    return true;
-                }
-            },
+            }
+
         }
     })
 
