@@ -1,6 +1,4 @@
-th,
-td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: center;
+.highlightedColumn {
+    background-color: var(--theme-primary-color-6);
+    color: white;
 }

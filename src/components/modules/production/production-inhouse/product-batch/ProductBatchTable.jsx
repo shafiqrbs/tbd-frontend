@@ -1,4 +1,5 @@
 import { Table } from "@mantine/core";
+import productBatchTableCss from "../../../../../assets/css/ProductBatchTable.module.css";
 
 const TABLE_ROW_OBJECT_DATA = [
   {
@@ -131,7 +132,7 @@ export default function ProductBatchTable() {
     <Table withTableBorder withColumnBorders striped highlightOnHover>
       <Table.Thead>
         {TABLE_HEADER_DATA.map((row, rowIdx) => (
-          <Table.Tr key={rowIdx}>
+          <Table.Tr key={rowIdx} className={rowIdx == TABLE_HEADER_DATA.length-1 ? productBatchTableCss.highlightedColumn : ''}> {/* last column is the highlighted column */}
             {row.map((cell, colIdx) => (
               <Table.Th
                 key={colIdx}
