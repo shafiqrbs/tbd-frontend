@@ -1,0 +1,49 @@
+.highlightedRow {
+    background-color: var(--theme-primary-color-6);
+    color: white;
+
+    &:hover {
+        background-color: var(--theme-primary-color-8);
+    }
+}
+
+.topRowBackground {
+    background-color: var(--mantine-color-violet-3);
+
+    &:hover {
+        background-color: var(--mantine-color-violet-4);
+    }
+}
+
+.highlightedCell {
+    background-color: var(--theme-primary-color-6);
+    color: white;
+}
+
+.successBackground {
+    background-color: var(--theme-secondary-color-2);
+}
+
+.warningBackground {
+    background-color: var(--mantine-color-yellow-3);
+}
+
+.warningDarkBackground {
+    background-color: var(--theme-warning-color);
+}
+
+.errorBackground {
+    background-color: var(--mantine-color-red-6);
+}
+
+td, th {
+    font-size: small;
+    text-align: center;
+}
+
+/* =============== this wrapper makes the table horizontally scrollable on small screens =============== */
+.responsiveTableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}

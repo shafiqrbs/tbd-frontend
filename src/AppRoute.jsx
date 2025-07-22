@@ -82,6 +82,7 @@ import HeadDomainIndex from "./components/modules/domain/head-group/HeadDomainIn
 import LedgerDomainIndex from "./components/modules/domain/ledger/LedgerDomainIndex";
 import WarehouseIssueIndex from "./components/modules/inventory/warehouse-issue/WarehouseIssueIndex.jsx";
 import InoutIndex from "./components/modules/procurement/in-out/InoutIndex.jsx";
+import ProductBatch from "./components/modules/production/production-inhouse/product-batch/ProductBatchIndex.jsx";
 
 function AppRoute() {
 	return (
@@ -436,6 +437,14 @@ function AppRoute() {
 						element={
 							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
 								<BarcodePrintIndex />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="product-batch"
+						element={
+							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+								<ProductBatch />
 							</ProtectedRoute>
 						}
 					/>
