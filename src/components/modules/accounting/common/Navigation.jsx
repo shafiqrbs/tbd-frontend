@@ -33,7 +33,7 @@ export default function Navigation(props) {
         <ScrollArea h={module === "voucher-entry" ? height - 38 : height} bg="white" type="never" className="border-radius">
           <Flex direction={`column`} align={"center"} gap={"16"}>
 
-              <Flex direction={`column`} align={"center"}>
+              <Flex direction={`column`} align={"center"} mt="xs">
                   <Tooltip
                       label={t("AccountLedger")}
                       px={16}
@@ -81,7 +81,7 @@ export default function Navigation(props) {
               </Flex>
 
 
-            <Flex direction={`column`} align={"center"} mt={"xs"} pt={5}>
+            <Flex direction={`column`} align={"center"}>
               <Tooltip
                   label={t("VoucherEntry")}
                   px={16}

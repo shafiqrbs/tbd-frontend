@@ -1,4 +1,20 @@
-.highlightedColumn {
+.highlightedRow {
     background-color: var(--theme-primary-color-6);
     color: white;
+
+    &:hover {
+        background-color: var(--theme-primary-color-8);
+    }
+}
+
+td, th {
+    font-size: small;
+    text-align: center;
+}
+
+/* =============== this wrapper makes the table horizontally scrollable on small screens =============== */
+.responsiveTableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }

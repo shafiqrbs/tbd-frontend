@@ -26,7 +26,7 @@ export default function ProductBatchIndex() {
 			) : (
 				<Box>
 					<AccountingHeaderNavbar
-						pageTitle={t("BalanceEntry")}
+						pageTitle={t("ProductBatch")}
 						roles={t("Roles")}
 						allowZeroPercentage=""
 						currencySymbol=""
