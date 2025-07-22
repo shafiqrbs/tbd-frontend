@@ -40,6 +40,53 @@ td, th {
     font-size: small;
     text-align: center;
 }
+/*   by raju */
+/*.table {
+    font-size: 13px;
+    border-collapse: collapse;
+}
+
+.successBackground {
+    background-color: #e6fffa;
+}
+
+.warningBackground {
+    background-color: #fff3cd;
+}
+
+.warningDarkBackground {
+    background-color: #ffeeba;
+}
+
+.errorBackground {
+    background-color: #f8d7da;
+}
+
+.highlightedRow {
+    background-color: #f1f3f5;
+    font-weight: 500;
+}
+
+.highlightedCell {
+    background-color: #dee2e6;
+    font-weight: bold;
+}
+
+.topRowBackground {
+    background-color: #f8f9fa;
+}
+
+.tableRow:hover {
+    background-color: #f1f5f9;
+    transition: background-color 0.2s ease;
+}
+
+.stickyHeader {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    z-index: 2;
+}*/
 
 /* =============== this wrapper makes the table horizontally scrollable on small screens =============== */
 .responsiveTableWrapper {

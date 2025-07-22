@@ -1,0 +1,40 @@
+[
+  {
+    "Group": "Inventory Report",
+    "field": [
+      {
+        "name": "sales report",
+        "filter": {
+            "name" : "",
+            "title" : ""
+        }
+      },
+      {
+        "name": "purchase report",
+        "filter": {
+          "name" : "",
+          "category" : ""
+        }
+      }
+    ]
+  },
+  {
+    "Group": "Production Report",
+    "field": [
+      {
+        "name": "issue report",
+        "filter": {
+          "batch" : "",
+          "title" : ""
+        }
+      },
+      {
+        "name": "Receive report",
+        "filter": {
+          "name" : "",
+          "category" : ""
+        }
+      }
+    ]
+  }
+]

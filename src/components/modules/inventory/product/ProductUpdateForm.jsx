@@ -113,6 +113,15 @@ function ProductUpdateForm(props) {
   const hasNext = end < indexData?.total;
   const hasPrev = page > 0;
 
+  const [productUpdateWithTab,setProductUpdateWithTab] = useState(false)
+  useEffect(() => {
+    if (productUpdateWithTab===true) {
+      dispatch(editEntityData(`inventory/product/${id}`))
+      setProductUpdateWithTab(false)
+    }
+  },[productUpdateWithTab])
+
+
   const renderForm = () => {
     switch (activeTab) {
       case "updateProduct":
@@ -163,7 +172,10 @@ function ProductUpdateForm(props) {
                           mih={40}
                           mt={"4"}
                           variant="default"
-                          onClick={() => setActiveTab(tab.id)}
+                          onClick={() => {
+                            setActiveTab(tab.id)
+                            setProductUpdateWithTab(true)
+                          }}
                           bg={activeTab === tab.id ? "#f8eedf" : "gray.1"}
                         >
                           <Text size={"sm"} pt={8} pl={8} fw={500} c={"black"}>

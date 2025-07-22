@@ -51,8 +51,6 @@ function _UpdateProduct(props) {
   const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
   const formLoading = useSelector((state) => state.crudSlice.formLoading);
 
-  console.log(entityEditData)
-
   const [categoryData, setCategoryData] = useState(null);
   const [productTypeData, setProductTypeData] = useState(null);
   const [productUnitData, setProductUnitData] = useState(null);
