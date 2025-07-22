@@ -6,7 +6,7 @@ export default function ProductBatchTable() {
 		<Table.ScrollContainer minWidth={500}>
 			<Table withTableBorder withColumnBorders striped highlightOnHover>
 				<Table.Thead>
-					<Table.Tr>
+					<Table.Tr className={batchTableCss.topRowBackground}>
 						<Table.Th rowSpan={3} colSpan={5}></Table.Th>
 						<Table.Th ta="center" colSpan={4}>
 							Issue Production Quantity
@@ -19,28 +19,28 @@ export default function ProductBatchTable() {
 						</Table.Th>
 					</Table.Tr>
 					<Table.Tr>
-						<Table.Th>Issue Quantity</Table.Th>
-						<Table.Th>Receive Quantity</Table.Th>
-						<Table.Th>Issue Quantity</Table.Th>
-						<Table.Th>Receive Quantity</Table.Th>
-						<Table.Th>Issue Quantity</Table.Th>
-						<Table.Th>Expense Quantity</Table.Th>
-						<Table.Th>Less</Table.Th>
-						<Table.Th>More</Table.Th>
-						<Table.Th>Stock In</Table.Th>
-						<Table.Th>Remaining Stock</Table.Th>
+						<Table.Th className={batchTableCss.successBackground}>Issue Quantity</Table.Th>
+						<Table.Th className={batchTableCss.warningBackground}>Receive Quantity</Table.Th>
+						<Table.Th className={batchTableCss.successBackground}>Issue Quantity</Table.Th>
+						<Table.Th className={batchTableCss.warningBackground}>Receive Quantity</Table.Th>
+						<Table.Th className={batchTableCss.highlightedCell}>Issue Quantity</Table.Th>
+						<Table.Th className={batchTableCss.highlightedCell}>Expense Quantity</Table.Th>
+						<Table.Th className={batchTableCss.highlightedCell}>Less</Table.Th>
+						<Table.Th className={batchTableCss.highlightedCell}>More</Table.Th>
+						<Table.Th className={batchTableCss.errorBackground}>Stock In</Table.Th>
+						<Table.Th className={batchTableCss.warningDarkBackground}>Remaining Stock</Table.Th>
 					</Table.Tr>
 					<Table.Tr>
-						<Table.Td>5</Table.Td>
-						<Table.Td>4</Table.Td>
-						<Table.Td>1000</Table.Td>
-						<Table.Td>800</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>5</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>4</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>1000</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>800</Table.Td>
 						<Table.Td></Table.Td>
 						<Table.Td></Table.Td>
 						<Table.Td></Table.Td>
 						<Table.Td></Table.Td>
-						<Table.Td></Table.Td>
-						<Table.Td></Table.Td>
+						<Table.Td className={batchTableCss.errorBackground}></Table.Td>
+						<Table.Td className={batchTableCss.warningDarkBackground}></Table.Td>
 					</Table.Tr>
 					<Table.Tr className={batchTableCss.highlightedRow}>
 						<Table.Th>Material Element Item</Table.Th>
@@ -69,16 +69,16 @@ export default function ProductBatchTable() {
 						<Table.Td>100</Table.Td>
 						<Table.Td>60</Table.Td>
 						<Table.Td>160</Table.Td>
-						<Table.Td>20</Table.Td>
-						<Table.Td>18</Table.Td>
-						<Table.Td>4000</Table.Td>
-						<Table.Td>3500</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>20</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>18</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>4000</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>3500</Table.Td>
 						<Table.Td>4020</Table.Td>
 						<Table.Td>3518</Table.Td>
 						<Table.Td>502</Table.Td>
 						<Table.Td></Table.Td>
-						<Table.Td>160</Table.Td>
-						<Table.Td>-3358</Table.Td>
+						<Table.Td className={batchTableCss.errorBackground}>160</Table.Td>
+						<Table.Td className={batchTableCss.warningDarkBackground}>-3358</Table.Td>
 					</Table.Tr>
 					<Table.Tr>
 						<Table.Td>Mota লবণ</Table.Td>
@@ -86,16 +86,16 @@ export default function ProductBatchTable() {
 						<Table.Td>100</Table.Td>
 						<Table.Td>60</Table.Td>
 						<Table.Td>160</Table.Td>
-						<Table.Td>0</Table.Td>
-						<Table.Td>0</Table.Td>
-						<Table.Td>0</Table.Td>
-						<Table.Td>0</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>0</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>0</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>0</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>0</Table.Td>
 						<Table.Td>0</Table.Td>
 						<Table.Td>0</Table.Td>
 						<Table.Td>0</Table.Td>
 						<Table.Td></Table.Td>
-						<Table.Td></Table.Td>
-						<Table.Td></Table.Td>
+						<Table.Td className={batchTableCss.errorBackground}></Table.Td>
+						<Table.Td className={batchTableCss.warningDarkBackground}></Table.Td>
 					</Table.Tr>
 					<Table.Tr>
 						<Table.Td>Liquid Milk</Table.Td>
@@ -103,16 +103,16 @@ export default function ProductBatchTable() {
 						<Table.Td>100</Table.Td>
 						<Table.Td>60</Table.Td>
 						<Table.Td>160</Table.Td>
-						<Table.Td>0</Table.Td>
-						<Table.Td>0</Table.Td>
-						<Table.Td>5</Table.Td>
-						<Table.Td>6</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>0</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>0</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>5</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>6</Table.Td>
 						<Table.Td>5</Table.Td>
 						<Table.Td>6</Table.Td>
 						<Table.Td></Table.Td>
 						<Table.Td>1</Table.Td>
-						<Table.Td></Table.Td>
-						<Table.Td></Table.Td>
+						<Table.Td className={batchTableCss.errorBackground}></Table.Td>
+						<Table.Td className={batchTableCss.warningDarkBackground}></Table.Td>
 					</Table.Tr>
 					<Table.Tr>
 						<Table.Td>Gourd</Table.Td>
@@ -120,16 +120,16 @@ export default function ProductBatchTable() {
 						<Table.Td>100</Table.Td>
 						<Table.Td>60</Table.Td>
 						<Table.Td>160</Table.Td>
-						<Table.Td>20</Table.Td>
-						<Table.Td>25</Table.Td>
-						<Table.Td>0</Table.Td>
-						<Table.Td>0</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>20</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>25</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>0</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>0</Table.Td>
 						<Table.Td>20</Table.Td>
 						<Table.Td>25</Table.Td>
 						<Table.Td></Table.Td>
 						<Table.Td>5</Table.Td>
-						<Table.Td></Table.Td>
-						<Table.Td></Table.Td>
+						<Table.Td className={batchTableCss.errorBackground}></Table.Td>
+						<Table.Td className={batchTableCss.warningDarkBackground}></Table.Td>
 					</Table.Tr>
 					<Table.Tr>
 						<Table.Td>Sugar Open</Table.Td>
@@ -137,16 +137,16 @@ export default function ProductBatchTable() {
 						<Table.Td>100</Table.Td>
 						<Table.Td>60</Table.Td>
 						<Table.Td>160</Table.Td>
-						<Table.Td>50</Table.Td>
-						<Table.Td>40</Table.Td>
-						<Table.Td>0</Table.Td>
-						<Table.Td>0</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>50</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>40</Table.Td>
+						<Table.Td className={batchTableCss.successBackground}>0</Table.Td>
+						<Table.Td className={batchTableCss.warningBackground}>0</Table.Td>
 						<Table.Td>50</Table.Td>
 						<Table.Td>40</Table.Td>
 						<Table.Td></Table.Td>
 						<Table.Td>10</Table.Td>
-						<Table.Td></Table.Td>
-						<Table.Td></Table.Td>
+						<Table.Td className={batchTableCss.errorBackground}></Table.Td>
+						<Table.Td className={batchTableCss.warningDarkBackground}></Table.Td>
 					</Table.Tr>
 				</Table.Tbody>
 			</Table>
