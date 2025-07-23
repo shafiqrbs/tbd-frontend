@@ -75,12 +75,22 @@ function TransactionModeTable(props) {
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         { accessor: 'name', title: t('Name') },
-                        { accessor: 'short_name', title: t('ShortName') },
                         { accessor: 'method_name', title: t('MethodName') },
-                        { accessor: 'authorized_name', title: t('Authorised') },
-                        { accessor: 'account_type_name', title: t('AccountType') },
-                        { accessor: 'service_charge', title: t('ServiceCharge') },
-                        { accessor: 'account_owner', title: t('AccountOwner') },
+                        {
+                            accessor: 'bank_name',
+                            title: t('BankName'),
+                            render: (item) => (
+                                <span dangerouslySetInnerHTML={{ __html: item.bank_name }} />
+                            )
+                        },
+                        {
+                            accessor: 'authorized_name',
+                            title: t('Authorised'),
+                            render: (item) => (
+                                <span dangerouslySetInnerHTML={{ __html: item.authorized_name }} />
+                            )
+                        },
+                        { accessor: 'service_charge', title: t('Charge(%)') },
                         {
                             accessor: 'path',
                             title: t('Image'),
