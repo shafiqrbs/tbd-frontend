@@ -83,6 +83,7 @@ import LedgerDomainIndex from "./components/modules/domain/ledger/LedgerDomainIn
 import WarehouseIssueIndex from "./components/modules/inventory/warehouse-issue/WarehouseIssueIndex.jsx";
 import InoutIndex from "./components/modules/procurement/in-out/InoutIndex.jsx";
 import ProductBatch from "./components/modules/production/production-inhouse/product-batch/ProductBatchIndex.jsx";
+import ProductionIssueReport from "./components/modules/report/production/ProductionIssueReport.jsx";
 
 function AppRoute() {
 	return (
@@ -745,6 +746,16 @@ function AppRoute() {
 							<SettingIndexB2B />
 						</ProtectedRoute>
 					} />
+				</Route>
+
+				<Route path="report" element={<ProtectedModule modules={["accounting", "sales-purchase", "inventory", "production"]} />}>
+					<Route path="production" element={<ProtectedModule modules={["production"]} />}>
+						<Route path="issue" element={
+							<ProtectedRoute roles={["role_production_admin"]}>
+								<ProductionIssueReport />
+							</ProtectedRoute>
+						} />
+					</Route>
 				</Route>
 			</Route>
 		</Routes>
