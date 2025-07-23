@@ -21,6 +21,8 @@ export default function __AccountingTable(props) {
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const { t } = useTranslation();
   const fetching = useSelector((state) => state.crudSlice.fetching);
+  const perPage = 5;
+  const [page, setPage] = useState(1);
   const [records, setRecords] = useState([
     {
       item_index: 0,
@@ -124,7 +126,7 @@ export default function __AccountingTable(props) {
   return (
     <>
       <Box p={"xs"} className={"borderRadiusAll"} bg={"white"}>
-        <Box className="borderRadiusAll" h={height - 6}>
+        <Box className="borderRadiusAll">
           {dataLimit ? (
             <Box>
               <Flex
@@ -190,22 +192,18 @@ export default function __AccountingTable(props) {
                 {
                   accessor: "mode",
                   title: t("Mode"),
-                  width: 100,
                 },
                 {
                   accessor: "ledger_name",
                   title: t("LedgerName"),
-                  width: 540,
                 },
                 {
                   accessor: "debit",
                   title: t("Debit"),
-                  width: 130,
                 },
                 {
                   accessor: "credit",
                   title: t("Credit"),
-                  width: 130,
                   resizable: true,
                 },
                 {
@@ -220,7 +218,7 @@ export default function __AccountingTable(props) {
               key={"item_index"}
               loaderSize="xs"
               loaderColor="grape"
-              height={height - 8}
+              height={height - 40}
               scrollAreaProps={{ type: "never" }}
             />
           )}

@@ -5,12 +5,14 @@ import {
   Box,
   Text,
   Stack,
-  Button,
-  Flex,
   Title,
   Center,
   Container,
-  Tooltip,
+  Tree,
+  useTree,
+  getTreeExpandedState,
+  Group,
+  ScrollArea,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -28,36 +30,8 @@ import __InventoryTable from "./__InventoryTable";
 import __PurchaseTable from "./__PurchaseTable";
 import __SalesTable from "./__SalesTable.jsx";
 import __AccountingTable from "./__AccountingTable.jsx";
-
-const REPORT_TYPES = {
-  INVENTORY: "inventory",
-  SALES: "sales",
-  PURCHASE: "purchase",
-  ACCOUNTING: "accounting",
-};
-
-const REPORT_BUTTONS = [
-  {
-    id: REPORT_TYPES.INVENTORY,
-    icon: IconBuildingWarehouse,
-    label: "InventoryReport",
-  },
-  {
-    id: REPORT_TYPES.SALES,
-    icon: IconReportMoney,
-    label: "SalesReport",
-  },
-  {
-    id: REPORT_TYPES.PURCHASE,
-    icon: IconShoppingCart,
-    label: "PurchaseReport",
-  },
-  {
-    id: REPORT_TYPES.ACCOUNTING,
-    icon: IconFileInvoice,
-    label: "AccountingReport",
-  },
-];
+import classes from "../../../../assets/css/FeaturesCards.module.css";
+import __ReportsSearch from "./__ReportsSearch.jsx";
 
 const Reports = () => {
   const { t } = useTranslation();
@@ -65,8 +39,7 @@ const Reports = () => {
   const { mainAreaHeight, isOnline } = useOutletContext();
   const height = mainAreaHeight - 98;
 
-  // Single state for active report type instead of multiple booleans
-  const [activeReport, setActiveReport] = useState(REPORT_TYPES.INVENTORY);
+  const [activeReport, setActiveReport] = useState("inventory-sales-report-1");
   const [enableTable, setEnableTable] = useState(false);
   const [dataLimit, setDataLimit] = useState(false);
 
@@ -88,86 +61,152 @@ const Reports = () => {
   useHotkeys([["alt+r", () => {}]], []);
 
   useHotkeys([["alt+s", () => {}]], []);
+  const treeData = [
+    {
+      value: "inventory",
+      label: t("InventoryReport"),
+      children: [
+        {
+          value: "inventory-sales",
+          label: t("SalesReport"),
+          children: [
+            { value: "inventory-sales-report-1", label: t("Report 1") },
+            { value: "inventory-sales-report-2", label: t("Report 2") },
+            { value: "inventory-sales-report-3", label: t("Report 3") },
+          ],
+        },
+        {
+          value: "inventory-purchase",
+          label: t("PurchaseReport"),
+          children: [
+            { value: "inventory-purchase-report-1", label: t("Report 1") },
+            { value: "inventory-purchase-report-2", label: t("Report 2") },
+            { value: "inventory-purchase-report-3", label: t("Report 3") },
+          ],
+        },
+        {
+          value: "inventory-stock",
+          label: t("StockReport"),
+          children: [
+            { value: "inventory-stock-report-1", label: t("Report 1") },
+            { value: "inventory-stock-report-2", label: t("Report 2") },
+            { value: "inventory-stock-report-3", label: t("Report 3") },
+          ],
+        },
+      ],
+    },
+    {
+      value: "accounting",
+      label: t("AccountingReport"),
+      children: [
+        {
+          value: "accounting-similar",
+          label: t("SalesReport"),
+          children: [
+            { value: "accounting-sales-report-1", label: t("Report 1") },
+            { value: "accounting-sales-report-2", label: t("Report 2") },
+            { value: "accounting-sales-report-3", label: t("Report 3") },
+          ],
+        },
+      ],
+    },
+  ];
 
-  // Reusable report button component
-  const ReportButton = ({ icon: Icon, label, id }) => (
-    <Center>
-      <Container fluid mb="8" mt={'xs'}>
-        <Flex justify="center" align="center" direction="column">
-          <Tooltip
-            label={t("AltTextNew")}
-            px={16}
-            py={2}
-            withArrow
-            position="left"
-            c="white"
-            bg="red.5"
-            transitionProps={{
-              transition: "pop-bottom-left",
-              duration: 500,
-            }}
+  const tree = useTree({
+    initialExpandedState: getTreeExpandedState(treeData, "*"),
+    multiple: false,
+  });
+
+  const handleTreeSelect = (value, node) => {
+    if (!node.children) {
+      setActiveReport(value);
+    }
+  };
+
+  const renderNode = ({ node, elementProps, level }) => {
+    const isLeaf = !node.children;
+    const isSelected = activeReport === node.value;
+
+    return (
+      <Box
+        {...elementProps}
+        style={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          className={isLeaf ? `${classes["pressable-card"]} border-radius` : ""}
+          mih={40}
+          mt={4}
+          variant="default"
+          onClick={
+            isLeaf ? () => handleTreeSelect(node.value, node) : undefined
+          }
+          bg={isSelected ? "#f8eedf" : isLeaf ? "gray.1" : "transparent"}
+          style={{
+            borderRadius: 4,
+            cursor: isLeaf ? "pointer" : "default",
+            display: "inline-block",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          <Text
+            size="sm"
+            pt={8}
+            pl={8}
+            pr={8}
+            fw={500}
+            c={isSelected ? "black" : "black"}
           >
-            <Button
-              size="md"
-              pl="12"
-              pr="12"
-              mb="xs"
-              bg={activeReport === id ? "red.5" : undefined}
-              variant={activeReport === id ? "filled" : "light"}
-              color="red.5"
-              radius="xl"
-              onClick={() => setActiveReport(id)}
-            >
-              <Flex direction="column" align="center">
-                <Icon size={16} />
-              </Flex>
-            </Button>
-          </Tooltip>
-          <Flex direction="column" align="center" fz="12" c="gray.5">
-            {t(label)}
-          </Flex>
-        </Flex>
-      </Container>
-    </Center>
-  );
-
-  // Component to render active report table
+            {node.label}
+          </Text>
+        </Box>
+      </Box>
+    );
+  };
   const ReportTable = () => {
-    switch (activeReport) {
-      case REPORT_TYPES.INVENTORY:
-        return (
-          <__InventoryTable
-            dataLimit={dataLimit}
-            enableTable={enableTable}
-            setDataLimit={setDataLimit}
-          />
-        );
-      case REPORT_TYPES.SALES:
-        return (
-          <__SalesTable
-            dataLimit={dataLimit}
-            enableTable={enableTable}
-            setDataLimit={setDataLimit}
-          />
-        );
-      case REPORT_TYPES.PURCHASE:
-        return (
-          <__PurchaseTable
-            dataLimit={dataLimit}
-            enableTable={enableTable}
-            setDataLimit={setDataLimit}
-          />
-        );
-      case REPORT_TYPES.ACCOUNTING:
-        return (
-          <__AccountingTable
-            dataLimit={dataLimit}
-            enableTable={enableTable}
-            setDataLimit={setDataLimit}
-          />
-        );
-      default:
-        return null;
+    if (activeReport.startsWith("inventory-sales-report-")) {
+      return (
+        <__SalesTable
+          dataLimit={dataLimit}
+          enableTable={enableTable}
+          setDataLimit={setDataLimit}
+        />
+      );
+    } else if (activeReport.startsWith("inventory-purchase-report-")) {
+      return (
+        <__PurchaseTable
+          dataLimit={dataLimit}
+          enableTable={enableTable}
+          setDataLimit={setDataLimit}
+        />
+      );
+    } else if (activeReport.startsWith("inventory-stock-report-")) {
+      return (
+        <__InventoryTable
+          dataLimit={dataLimit}
+          enableTable={enableTable}
+          setDataLimit={setDataLimit}
+        />
+      );
+    } else if (activeReport.startsWith("accounting-sales-report-")) {
+      return (
+        <__AccountingTable
+          dataLimit={dataLimit}
+          enableTable={enableTable}
+          setDataLimit={setDataLimit}
+        />
+      );
+    } else {
+      return (
+        <__SalesTable
+          dataLimit={dataLimit}
+          enableTable={enableTable}
+          setDataLimit={setDataLimit}
+        />
+      );
     }
   };
 
@@ -175,7 +214,7 @@ const Reports = () => {
     <Box>
       <Box>
         <Grid columns={48} gutter={{ base: 6 }}>
-          <Grid.Col span={4}>
+          <Grid.Col span={6}>
             <Box bg="white">
               <Box pb="xs" pl="xs" pr="xs" className="borderRadiusAll">
                 <Box
@@ -195,35 +234,38 @@ const Reports = () => {
                   className="borderRadiusAll"
                   h={height + 9}
                   bg="var(--mantine-color-body)"
-                  align="center"
+                  align="flex-start"
+                  justify="flex-start"
+                  w="100%"
+                  px="xs"
                 >
-                  {REPORT_BUTTONS.map((button) => (
-                    <ReportButton
-                      key={button.id}
-                      id={button.id}
-                      icon={button.icon}
-                      label={button.label}
+                  <ScrollArea
+                    h={height}
+                    scrollbarSize={2}
+                    scrollbars="y"
+                    type="never"
+                  >
+                    <Tree
+                      data={treeData}
+                      tree={tree}
+                      renderNode={renderNode}
+                      levelOffset={30}
                     />
-                  ))}
+                  </ScrollArea>
                 </Stack>
               </Box>
             </Box>
           </Grid.Col>
-
-          <Grid.Col span={14}>
-            <Box bg="white">
-              <_ReportBox
-                setDataLimit={setDataLimit}
-                inventoryReport={activeReport === REPORT_TYPES.INVENTORY}
-                salesReport={activeReport === REPORT_TYPES.SALES}
-                purchaseReport={activeReport === REPORT_TYPES.PURCHASE}
-                accountingReport={activeReport === REPORT_TYPES.ACCOUNTING}
-                setEnableTable={setEnableTable}
-              />
+          <Grid.Col span={42}>
+            <Box
+              className="borderRadiusAll"
+              bg="white"
+              pt="xs"
+              pl={"xs"}
+              pr="xs"
+            >
+              <__ReportsSearch activeReport={activeReport} />
             </Box>
-          </Grid.Col>
-
-          <Grid.Col span={30}>
             <ReportTable />
           </Grid.Col>
         </Grid>
