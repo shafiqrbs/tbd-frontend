@@ -124,7 +124,7 @@ import {
     return (
       <>
         <Box p={"xs"} className={"borderRadiusAll"} bg={"white"}>
-          <Box className="borderRadiusAll" h={height - 6}>
+          <Box className="borderRadiusAll" >
             {dataLimit ? (
               <Box>
                 <Flex
@@ -190,22 +190,18 @@ import {
                   {
                     accessor: "mode",
                     title: t("Mode"),
-                    width: 100,
                   },
                   {
                     accessor: "ledger_name",
                     title: t("LedgerName"),
-                    width: 540,
                   },
                   {
                     accessor: "debit",
                     title: t("Debit"),
-                    width: 130,
                   },
                   {
                     accessor: "credit",
                     title: t("Credit"),
-                    width: 130,
                     resizable: true,
                   },
                   {
@@ -220,7 +216,7 @@ import {
                 key={"item_index"}
                 loaderSize="xs"
                 loaderColor="grape"
-                height={height - 8}
+                height={height - 40}
                 scrollAreaProps={{ type: "never" }}
               />
             )}

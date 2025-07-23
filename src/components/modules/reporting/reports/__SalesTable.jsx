@@ -5,6 +5,7 @@ import {
   Button,
   ActionIcon,
   Text,
+  ScrollArea,
 } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import React, { useState } from "react";
@@ -21,102 +22,125 @@ export default function __SalesTable(props) {
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const { t } = useTranslation();
   const fetching = useSelector((state) => state.crudSlice.fetching);
+  const perPage = 5;
+  const [page, setPage] = useState(1);
   const [records, setRecords] = useState([
     {
-      item_index: 0,
+      item_index: 1,
       mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
+      ledger_name: "Office Rent & Utilities",
       debit: "2040",
       credit: "2100",
     },
     {
-      item_index: 1,
+      item_index: 2,
       mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
+      ledger_name: "Staff Salary & Benefits",
+      debit: "2040",
+      credit: "2100",
+    },
+    {
+      item_index: 3,
+      mode: "Dr",
+      ledger_name: "Marketing & Advertisement",
+      debit: "2040",
+      credit: "2100",
+    },
+    {
+      item_index: 4,
+      mode: "Dr",
+      ledger_name: "Equipment Purchase",
+      debit: "2040",
+      credit: "2100",
+    },
+    {
+      item_index: 5,
+      mode: "Dr",
+      ledger_name: "Travel & Accommodation",
+      debit: "2040",
+      credit: "2100",
+    },
+    {
+      item_index: 6,
+      mode: "Dr",
+      ledger_name: "Professional Services",
+      debit: "2040",
+      credit: "2100",
+    },
+    {
+      item_index: 7,
+      mode: "Dr",
+      ledger_name: "Insurance Premium",
+      debit: "2040",
+      credit: "2100",
+    },
+    {
+      item_index: 8,
+      mode: "Dr",
+      ledger_name: "Bank Charges & Fees",
+      debit: "2040",
+      credit: "2100",
+    },
+    {
+      item_index: 9,
+      mode: "Dr",
+      ledger_name: "Telephone & Internet",
       debit: "2040",
       credit: "900",
     },
     {
-      item_index: 1,
+      item_index: 10,
       mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
+      ledger_name: "Office Supplies",
       debit: "2040",
       credit: "900",
     },
     {
-      item_index: 1,
+      item_index: 11,
       mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
+      ledger_name: "Vehicle Maintenance",
       debit: "2040",
       credit: "900",
     },
     {
-      item_index: 1,
+      item_index: 12,
       mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
+      ledger_name: "Software Licenses",
       debit: "2040",
       credit: "900",
     },
     {
-      item_index: 1,
+      item_index: 13,
       mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
+      ledger_name: "Training & Development",
       debit: "2040",
       credit: "900",
     },
     {
-      item_index: 1,
+      item_index: 14,
       mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
+      ledger_name: "Legal & Compliance",
       debit: "2040",
       credit: "900",
     },
     {
-      item_index: 1,
+      item_index: 15,
       mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
+      ledger_name: "Customer Entertainment",
       debit: "2040",
       credit: "900",
     },
     {
-      item_index: 1,
+      item_index: 16,
       mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
+      ledger_name: "Repair & Maintenance",
       debit: "2040",
       credit: "900",
     },
     {
-      item_index: 1,
+      item_index: 17,
       mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
-      debit: "2040",
-      credit: "900",
-    },
-    {
-      item_index: 1,
-      mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
-      debit: "2040",
-      credit: "900",
-    },
-    {
-      item_index: 1,
-      mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
-      debit: "2040",
-      credit: "900",
-    },
-    {
-      item_index: 1,
-      mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
-      debit: "2040",
-      credit: "900",
-    },
-    {
-      item_index: 1,
-      mode: "Dr",
-      ledger_name: "Daily Expenses - Conveyance Exp.",
+      ledger_name: "Petrol & Fuel Expenses",
       debit: "2040",
       credit: "900",
     },
@@ -124,7 +148,7 @@ export default function __SalesTable(props) {
   return (
     <>
       <Box p={"xs"} className={"borderRadiusAll"} bg={"white"}>
-        <Box className="borderRadiusAll" h={height - 6}>
+        <Box className="borderRadiusAll">
           {dataLimit ? (
             <Box>
               <Flex
@@ -180,7 +204,6 @@ export default function __SalesTable(props) {
                 {
                   accessor: "item_index",
                   title: t("S/N"),
-                  width: 70,
                   render: (record) => (
                     <ActionIcon color="red.5" size={"sm"}>
                       <IconPlus height={18} width={18} stroke={1.5} />
@@ -190,22 +213,19 @@ export default function __SalesTable(props) {
                 {
                   accessor: "mode",
                   title: t("Mode"),
-                  width: 100,
+                  
                 },
                 {
                   accessor: "ledger_name",
                   title: t("LedgerName"),
-                  width: 540,
                 },
                 {
                   accessor: "debit",
                   title: t("Debit"),
-                  width: 130,
                 },
                 {
                   accessor: "credit",
                   title: t("Credit"),
-                  width: 130,
                   resizable: true,
                 },
                 {
@@ -216,11 +236,9 @@ export default function __SalesTable(props) {
               ]}
               fetching={fetching}
               totalRecords={records.length}
-              // useDataTableColumns
-              key={"item_index"}
               loaderSize="xs"
               loaderColor="grape"
-              height={height - 8}
+              height={height - 40}
               scrollAreaProps={{ type: "never" }}
             />
           )}
