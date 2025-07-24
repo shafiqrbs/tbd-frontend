@@ -104,9 +104,9 @@ function InhouseIndex(props) {
                     />
                   </Box>
                 </Grid.Col>
-                {/*<Grid.Col span={9}>
+                <Grid.Col span={9}>
                   {<_InhouseForm batchData={batchData} />}
-                </Grid.Col>*/}
+                </Grid.Col>
               </Grid>
             </Box>
           </>
