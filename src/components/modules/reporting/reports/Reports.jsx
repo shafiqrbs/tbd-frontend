@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
   Grid,
@@ -21,6 +21,7 @@ import {
   IconReportMoney,
   IconShoppingCart,
   IconFileInvoice,
+  IconChevronDown,
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -46,21 +47,21 @@ const Reports = () => {
   useEffect(() => {
     dispatch(setFetching(false));
   }, []);
+
   useHotkeys(
     [
       [
         "alt+n",
         () => {
-          document.getElementById("method_id").click();
+          document.getElementById("method_id")?.click();
         },
       ],
+      ["alt+r", () => {}],
+      ["alt+s", () => {}],
     ],
     []
   );
 
-  useHotkeys([["alt+r", () => {}]], []);
-
-  useHotkeys([["alt+s", () => {}]], []);
   const treeData = [
     {
       value: "inventory",
@@ -117,98 +118,74 @@ const Reports = () => {
     multiple: false,
   });
 
-  const handleTreeSelect = (value, node) => {
+  const handleTreeSelect = useCallback((value, node) => {
     if (!node.children) {
       setActiveReport(value);
     }
-  };
+  }, []);
 
-  const renderNode = ({ node, elementProps, level }) => {
-    const isLeaf = !node.children;
-    const isSelected = activeReport === node.value;
+  const renderNode = useCallback(
+    ({ node, elementProps, level, expanded }) => {
+      const isLeaf = !node.children;
+      const isSelected = activeReport === node.value;
+      const hasChildren = node.children && node.children.length > 0;
 
-    return (
-      <Box
-        {...elementProps}
-        style={{
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      return (
         <Box
-          className={isLeaf ? `${classes["pressable-card"]} border-radius` : ""}
-          mih={40}
-          mt={4}
-          variant="default"
-          onClick={
-            isLeaf ? () => handleTreeSelect(node.value, node) : undefined
-          }
-          bg={isSelected ? "#f8eedf" : isLeaf ? "gray.1" : "transparent"}
+          {...elementProps}
           style={{
-            borderRadius: 4,
-            cursor: isLeaf ? "pointer" : "default",
-            display: "inline-block",
-            width: "100%",
-            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
           }}
         >
-          <Text
-            size="sm"
-            pt={8}
-            pl={8}
-            pr={8}
-            fw={500}
-            c={isSelected ? "black" : "black"}
+          <Box
+            className={
+              isLeaf ? `${classes["pressable-card"]} border-radius` : ""
+            }
+            mih={40}
+            mt={4}
+            variant="default"
+            onClick={
+              isLeaf ? () => handleTreeSelect(node.value, node) : undefined
+            }
+            bg={isSelected ? "#f8eedf" : isLeaf ? "gray.1" : "transparent"}
+            style={{
+              borderRadius: 4,
+              cursor: isLeaf ? "pointer" : "default",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              textAlign: "center",
+            }}
           >
-            {node.label}
-          </Text>
+            <Text
+              size="sm"
+              pt={8}
+              pl={hasChildren ? 0 : 8}
+              pr={8}
+              pb={8}
+              fw={500}
+              c={isSelected ? "black" : "black"}
+            >
+              {node.label}
+            </Text>
+            {hasChildren && (
+              <IconChevronDown
+                size={14}
+                style={{
+                  transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+                  marginRight: 8,
+                  transition: "transform 0.2s ease",
+                }}
+              />
+            )}
+          </Box>
         </Box>
-      </Box>
-    );
-  };
-  const ReportTable = () => {
-    if (activeReport.startsWith("inventory-sales-report-")) {
-      return (
-        <__SalesTable
-          dataLimit={dataLimit}
-          enableTable={enableTable}
-          setDataLimit={setDataLimit}
-        />
       );
-    } else if (activeReport.startsWith("inventory-purchase-report-")) {
-      return (
-        <__PurchaseTable
-          dataLimit={dataLimit}
-          enableTable={enableTable}
-          setDataLimit={setDataLimit}
-        />
-      );
-    } else if (activeReport.startsWith("inventory-stock-report-")) {
-      return (
-        <__InventoryTable
-          dataLimit={dataLimit}
-          enableTable={enableTable}
-          setDataLimit={setDataLimit}
-        />
-      );
-    } else if (activeReport.startsWith("accounting-sales-report-")) {
-      return (
-        <__AccountingTable
-          dataLimit={dataLimit}
-          enableTable={enableTable}
-          setDataLimit={setDataLimit}
-        />
-      );
-    } else {
-      return (
-        <__SalesTable
-          dataLimit={dataLimit}
-          enableTable={enableTable}
-          setDataLimit={setDataLimit}
-        />
-      );
-    }
-  };
+    },
+    [activeReport]
+  );
 
   return (
     <Box>
@@ -266,7 +243,6 @@ const Reports = () => {
             >
               <__ReportsSearch activeReport={activeReport} />
             </Box>
-            <ReportTable />
           </Grid.Col>
         </Grid>
       </Box>
