@@ -1175,5 +1175,7 @@
   "SelectReportType": "Select Report Type",
   "ProductBatch": "Product Batch",
   "ProductionIssueReport": "Production issue report",
+  "GenerateExcel": "Generate Excel",
+  "GeneratePdf": "Generate PDF",
   "xxxxxx": "xxxxxxx"
 }
