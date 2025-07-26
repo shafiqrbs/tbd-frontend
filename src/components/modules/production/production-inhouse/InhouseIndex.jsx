@@ -84,12 +84,12 @@ function InhouseIndex(props) {
           <>
             {!props.batchId && (
               <ProductionHeaderNavbar
-                pageTitle={t("ProductionBatch")}
+                pageTitle={t("ProductionBatch - ")+batchData?.invoice}
                 roles={t("Roles")}
               />
             )}
 
-            <Box p={"8"}>
+            <Box p={"8"} bg={'white'}>
               <Grid columns={24} gutter={{ base: 8 }}>
                 {!props.batchId && (
                   <Grid.Col span={1}>
@@ -98,17 +98,18 @@ function InhouseIndex(props) {
                 )}
                 {/*<Grid.Col span={props.batchId ? 15 : 14}>*/}
                 <Grid.Col span={props.batchId ? 24 : 23}>
-                  <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+                  <Box  p={"xs"} className={"borderRadiusAll"}>
                     <_InhouseTable
                       setReloadBatchItemTable={setReloadBatchItemTable}
                     />
+                    <Box mt={'md'}>
+                      {<_InhouseForm batchData={batchData} />}
+                    </Box>
                   </Box>
-                </Grid.Col>
-                <Grid.Col span={9}>
-                  {<_InhouseForm batchData={batchData} />}
                 </Grid.Col>
               </Grid>
             </Box>
+
           </>
         </Box>
       )}

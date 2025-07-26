@@ -21,6 +21,9 @@ import { DateInput } from "@mantine/dates";
 import {modals} from "@mantine/modals";
 import {updateEntityData} from "../../../../store/core/crudSlice.js";
 import {notifications} from "@mantine/notifications";
+import TextAreaForm from "../../../form-builders/TextAreaForm";
+import TextAreaGenericForm from "../../../form-builders/TextAreaGenericForm";
+import inputCss from "../../../../assets/css/InputField.module.css";
 
 function _InhouseForm(Props) {
     const {batchData} = Props
@@ -124,285 +127,248 @@ function _InhouseForm(Props) {
                     },
                 });
             })}>
-                <Grid columns={9} gutter={{ base: 8 }}>
-                    <Grid.Col span={8} >
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                            <Box bg={"white"} >
-                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
-                                    <Grid>
-                                        <Grid.Col span={6} >
-                                            <Title order={6} pt={'6'}>{t('ManageProductionInhouseBatch')}</Title>
-                                        </Grid.Col>
-                                        <Grid.Col span={6}>
-                                            <Stack right align="flex-end">
-                                                <>
-                                                    {
-                                                        !saveCreateLoading && isOnline &&
-                                                        <Button
-                                                            size="xs"
-                                                            color={`green.8`}
-                                                            type="submit"
-                                                            id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16} />}
-                                                        >
-
-                                                            <Flex direction={`column`} gap={0}>
-                                                                <Text fz={14} fw={400}>
-                                                                    {t("Update")}
-                                                                </Text>
-                                                            </Flex>
-                                                        </Button>
-                                                    }
-                                                </></Stack>
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
-                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
-                                    <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
+                <Box px={'md'} className={'borderRadiusAll'} h={'100'}>
+                    <Grid columns={24} gutter={'xl'}>
+                        <Grid.Col span={8} className={'boxBackground'}>
+                            <Box>
+                                <Grid columns={24} gutter={1}>
+                                    <Grid.Col span={10}>
                                         <Box mt={'xs'}>
-                                            <Grid columns={24} gutter={1}>
-                                                <Grid.Col span={10}>
-                                                    <Box mt={'xs'}>
-                                                        <Flex
-                                                            justify="flex-start"
-                                                            align="center"
-                                                            direction="row"
-                                                        >
-                                                            <Text
-                                                                ta="center" fz="sm"
-                                                                fw={300}>
-                                                                {t('InvoiceNo')}
-                                                            </Text>
-                                                        </Flex>
-                                                    </Box>
-                                                </Grid.Col>
-                                                <Grid.Col span={2}>
-
-                                                </Grid.Col>
-                                                <Grid.Col span={12}>
-                                                    <Box >
-                                                        <InputForm
-                                                            tooltip={t('InvoiceNo')}
-                                                            placeholder={t('InvoiceNo')}
-                                                            required={false}
-                                                            nextField={'issue_date'}
-                                                            name={'invoice'}
-                                                            form={form}
-                                                            id={'invoice'}
-                                                        />
-
-                                                    </Box>
-                                                </Grid.Col>
-                                            </Grid>
+                                            <Flex
+                                                justify="flex-start"
+                                                align="center"
+                                                direction="row"
+                                            >
+                                                <Text
+                                                    ta="center" fz="sm"
+                                                    fw={300}>
+                                                    {t('InvoiceNo')}
+                                                </Text>
+                                            </Flex>
                                         </Box>
+                                    </Grid.Col>
+                                    <Grid.Col span={2}>
+
+                                    </Grid.Col>
+                                    <Grid.Col span={12}>
                                         <Box >
-                                            <Grid columns={24} gutter={1}>
-                                                <Grid.Col span={10}>
-                                                    <Box mt={'md'}>
-                                                        <Flex
-                                                            justify="flex-start"
-                                                            align="center"
-                                                            direction="row"
-                                                        >
-                                                            <Text
-                                                                ta="center" fz="sm" fw={300}>
-                                                                {t('IssueDate')}
-                                                            </Text>
-                                                        </Flex>
-                                                    </Box>
-                                                </Grid.Col>
-                                                <Grid.Col span={2}>
-
-                                                </Grid.Col>
-                                                <Grid.Col span={12}>
-                                                    <Box mt={'xs'}>
-                                                        <DateInput
-                                                            value={issueDate}
-                                                            valueFormat="DD-MM-YYYY"
-                                                            onChange={setIssueDate}
-                                                            id={'issue_date'}
-                                                            name={'issue_date'}
-                                                            placeholder={t('IssueDate')}
-                                                            onKeyDown={getHotkeyHandler([
-                                                                ['Enter', (e) => {
-                                                                        document.getElementById('receive_date').focus()
-                                                                }],
-                                                            ])}
-                                                            rightSection={
-                                                                <Tooltip
-                                                                    withArrow
-                                                                    ta="center"
-                                                                    color="rgba(233, 236, 239, 0.98)"
-                                                                    multiline
-                                                                    w={200}
-                                                                    offset={{ crossAxis: '-75', mainAxis: '10' }}
-                                                                    transitionProps={{
-                                                                        transition: 'POP-BOTTOM-LEFT', duration: 200
-                                                                    }}
-                                                                    label={t('IssueDate')}
-                                                                    style={{ color: 'black' }}
-                                                                >
-                                                                    <IconCalendar
-                                                                        style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                                </Tooltip>
-                                                            }
-                                                        />
-                                                    </Box>
-                                                </Grid.Col>
-                                            </Grid>
+                                            <InputForm
+                                                tooltip={t('InvoiceNo')}
+                                                placeholder={t('InvoiceNo')}
+                                                required={false}
+                                                nextField={'issue_date'}
+                                                name={'invoice'}
+                                                form={form}
+                                                id={'invoice'}
+                                            />
                                         </Box>
-                                        <Box >
-                                            <Grid columns={24} gutter={1}>
-                                                <Grid.Col span={10}>
-                                                    <Box mt={'md'}>
-                                                        <Flex
-                                                            justify="flex-start"
-                                                            align="center"
-                                                            direction="row"
-                                                        >
-                                                            <Text
-                                                                ta="center" fz="sm" fw={300}>
-                                                                {t('ReceiveDate')}
-                                                            </Text>
-                                                        </Flex>
-                                                    </Box>
-                                                </Grid.Col>
-                                                <Grid.Col span={2}>
-
-                                                </Grid.Col>
-                                                <Grid.Col span={12}>
-                                                    <Box mt={'xs'}>
-                                                        <DateInput
-                                                            value={receiveDate}
-                                                            valueFormat="DD-MM-YYYY "
-                                                            onChange={setReceiveDate}
-                                                            onKeyDown={getHotkeyHandler([
-                                                                ['Enter', (e) => {
-                                                                    document.getElementById('remark').focus()
-                                                                }],
-                                                            ])}
-                                                            placeholder={t('ReceiveDate')}
-                                                            id={'receive_date'}
-                                                            name={'receive_date'}
-                                                            rightSection={
-                                                                <Tooltip
-                                                                    withArrow
-                                                                    ta="center"
-                                                                    color="rgba(233, 236, 239, 0.98)"
-                                                                    multiline
-                                                                    w={200}
-                                                                    offset={{ crossAxis: '-75', mainAxis: '10' }}
-                                                                    transitionProps={{
-                                                                        transition: 'POP-BOTTOM-LEFT', duration: 200
-                                                                    }}
-                                                                    label={t('ReceiveDate')}
-                                                                    style={{ color: 'black' }}
-                                                                >
-                                                                    <IconCalendar
-                                                                        style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                                </Tooltip>
-                                                            }
-                                                        />
-                                                    </Box>
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Box>
-                                        <Box >
-                                            <Grid columns={24} gutter={1}>
-                                                <Grid.Col span={10}>
-                                                    <Box mt={'md'}>
-                                                        <Flex
-                                                            justify="flex-start"
-                                                            align="center"
-                                                            direction="row"
-                                                        >
-                                                            <Text
-                                                                ta="center" fz="sm" fw={300}>
-                                                                {t('Remarks')}
-                                                            </Text>
-                                                        </Flex>
-                                                    </Box>
-                                                </Grid.Col>
-                                                <Grid.Col span={2}>
-
-                                                </Grid.Col>
-                                                <Grid.Col span={12}>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
-                                                            tooltip={t('Remarks')}
-                                                            placeholder={t('Remarks')}
-                                                            required={true}
-                                                            nextField={'process'}
-                                                            form={form}
-                                                            mt={0}
-                                                            id={'remark'}
-                                                            name={'remark'}
-                                                        />
-                                                    </Box>
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Box>
-
-                                        <Box mt={'xs'}>
-                                            <Grid columns={24} gutter={1}>
-                                                <Grid.Col span={10}>
-                                                    <Box mt={6}>
-                                                        <Flex
-                                                            justify="flex-start"
-                                                            align="center"
-                                                            direction="row"
-                                                        >
-                                                            <Text
-                                                                ta="center" fz="sm"
-                                                                fw={300}>
-                                                                {t('Process')}
-                                                            </Text>
-                                                        </Flex>
-                                                    </Box>
-                                                </Grid.Col>
-                                                <Grid.Col span={2}>
-
-                                                </Grid.Col>
-                                                <Grid.Col span={12}>
-                                                    <Box >
-                                                        <SelectForm
-                                                            tooltip={t('Process')}
-                                                            placeholder={t('Process')}
-                                                            dropdownValue={[
-                                                                { value: 'Created', label: 'Created' },
-                                                                { value: 'Approved', label: 'Approved' },
-                                                            ]}
-                                                            data={[{ value: 'react', label: 'React library' }]}
-
-                                                            searchable={true}
-                                                            changeValue={setProcess}
-                                                            value={process}
-                                                            required={false}
-                                                            nextField={'EntityFormSubmit'}
-                                                            name={'process'}
-                                                            form={form}
-                                                            id={'process'}
-                                                        />
-                                                    </Box>
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Box>
-                                    </ScrollArea>
-                                </Box>
+                                    </Grid.Col>
+                                </Grid>
                             </Box>
-                        </Box>
-                    </Grid.Col >
-                    <Grid.Col span={1} >
-                        <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <Shortcut
-                                form={form}
-                                FormSubmit={'EntityFormSubmit'}
-                                Name={'name'}
-                                inputType="select"
-                            />
-                        </Box>
-                    </Grid.Col>
-                </Grid >
+                            <Box>
+                                <Grid columns={24} gutter={1}>
+                                    <Grid.Col span={10}>
+                                        <Box mt={'md'}>
+                                            <Flex
+                                                justify="flex-start"
+                                                align="center"
+                                                direction="row"
+                                            >
+                                                <Text
+                                                    ta="center" fz="sm" fw={300}>
+                                                    {t('IssueDate')}
+                                                </Text>
+                                            </Flex>
+                                        </Box>
+                                    </Grid.Col>
+                                    <Grid.Col span={2}>
+
+                                    </Grid.Col>
+                                    <Grid.Col span={12}>
+                                        <Box mt={'xs'}>
+                                            <DateInput
+                                                value={issueDate}
+                                                valueFormat="DD-MM-YYYY"
+                                                onChange={setIssueDate}
+                                                id={'issue_date'}
+                                                name={'issue_date'}
+                                                placeholder={t('IssueDate')}
+                                                onKeyDown={getHotkeyHandler([
+                                                    ['Enter', (e) => {
+                                                        document.getElementById('receive_date').focus()
+                                                    }],
+                                                ])}
+                                                rightSection={
+                                                    <Tooltip
+                                                        withArrow
+                                                        ta="center"
+                                                        color="rgba(233, 236, 239, 0.98)"
+                                                        multiline
+                                                        w={200}
+                                                        offset={{ crossAxis: '-75', mainAxis: '10' }}
+                                                        transitionProps={{
+                                                            transition: 'POP-BOTTOM-LEFT', duration: 200
+                                                        }}
+                                                        label={t('IssueDate')}
+                                                        style={{ color: 'black' }}
+                                                    >
+                                                        <IconCalendar
+                                                            style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                    </Tooltip>
+                                                }
+                                            />
+                                        </Box>
+                                    </Grid.Col>
+                                </Grid>
+                            </Box>
+                        </Grid.Col>
+                        <Grid.Col span={8} className={'bodyBackgroundLight'}>
+
+                            <Box >
+                                <Grid columns={24} gutter={1}>
+                                    <Grid.Col span={10}>
+                                        <Box mt={'xs'}>
+                                            <Flex
+                                                justify="flex-start"
+                                                align="center"
+                                                direction="row"
+                                            >
+                                                <Text
+                                                    ta="center" fz="sm" fw={300}>
+                                                    {t('ReceiveDate')}
+                                                </Text>
+                                            </Flex>
+                                        </Box>
+                                    </Grid.Col>
+                                    <Grid.Col span={2}>
+
+                                    </Grid.Col>
+                                    <Grid.Col span={12}>
+                                        <Box >
+                                            <DateInput
+                                                value={receiveDate}
+                                                valueFormat="DD-MM-YYYY "
+                                                onChange={setReceiveDate}
+                                                onKeyDown={getHotkeyHandler([
+                                                    ['Enter', (e) => {
+                                                        document.getElementById('remark').focus()
+                                                    }],
+                                                ])}
+                                                placeholder={t('ReceiveDate')}
+                                                id={'receive_date'}
+                                                name={'receive_date'}
+                                                rightSection={
+                                                    <Tooltip
+                                                        withArrow
+                                                        ta="center"
+                                                        color="rgba(233, 236, 239, 0.98)"
+                                                        multiline
+                                                        w={200}
+                                                        offset={{ crossAxis: '-75', mainAxis: '10' }}
+                                                        transitionProps={{
+                                                            transition: 'POP-BOTTOM-LEFT', duration: 200
+                                                        }}
+                                                        label={t('ReceiveDate')}
+                                                        style={{ color: 'black' }}
+                                                    >
+                                                        <IconCalendar
+                                                            style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                    </Tooltip>
+                                                }
+                                            />
+                                        </Box>
+                                    </Grid.Col>
+                                </Grid>
+                            </Box>
+
+                            <Box mt={'xs'}>
+                                <Grid columns={24} gutter={1}>
+                                    <Grid.Col span={10}>
+                                        <Box mt={6}>
+                                            <Flex
+                                                justify="flex-start"
+                                                align="center"
+                                                direction="row"
+                                            >
+                                                <Text
+                                                    ta="center" fz="sm"
+                                                    fw={300}>
+                                                    {t('Process')}
+                                                </Text>
+                                            </Flex>
+                                        </Box>
+                                    </Grid.Col>
+                                    <Grid.Col span={2}>
+
+                                    </Grid.Col>
+                                    <Grid.Col span={12}>
+                                        <Box >
+                                            <SelectForm
+                                                tooltip={t('Process')}
+                                                placeholder={t('Process')}
+                                                dropdownValue={[
+                                                    { value: 'Created', label: 'Created' },
+                                                    { value: 'Approved', label: 'Approved' },
+                                                ]}
+                                                data={[{ value: 'react', label: 'React library' }]}
+
+                                                searchable={true}
+                                                changeValue={setProcess}
+                                                value={process}
+                                                required={false}
+                                                nextField={'EntityFormSubmit'}
+                                                name={'process'}
+                                                form={form}
+                                                id={'process'}
+                                            />
+                                        </Box>
+                                    </Grid.Col>
+                                </Grid>
+                            </Box>
+                        </Grid.Col>
+                        <Grid.Col span={8} className={'boxBackground'}>
+                            <Box>
+                                <TextAreaForm
+                                    tooltip={t('Narration')}
+                                    label=""
+                                    placeholder={t('Narration')}
+                                    required={false}
+                                    nextField={'EntityFormSubmit'}
+                                    name={'remark'}
+                                    form={form}
+                                    id={'remark'}
+                                    classNames={inputCss}
+                                    autosize
+                                    minRows={3}
+                                    maxRows={24}
+                                />
+                            </Box>
+                        </Grid.Col>
+                    </Grid>
+                </Box>
+                <Box className={'boxBackground'} mt={2}>
+                    <Stack right align="flex-end">
+                        <>
+                            {
+                                !saveCreateLoading && isOnline &&
+                                <Button
+                                    size="xs"
+                                    color={`green.8`}
+                                    type="submit"
+                                    id="EntityFormSubmit"
+                                    leftSection={<IconDeviceFloppy size={16} />}
+                                >
+
+                                    <Flex direction={`column`} gap={0}>
+                                        <Text fz={14} fw={400}>
+                                            {t("Process")}
+                                        </Text>
+                                    </Flex>
+                                </Button>
+                            }
+                        </>
+                    </Stack>
+                </Box>
             </form >
         </Box >
 

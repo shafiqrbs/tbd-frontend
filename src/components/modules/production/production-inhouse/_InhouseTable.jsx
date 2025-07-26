@@ -17,9 +17,8 @@ function _InhouseTable(props) {
     const dispatch = useDispatch()
     const {t, i18n} = useTranslation()
     const {isOnline, mainAreaHeight} = useOutletContext()
-    const height = mainAreaHeight - 252 //TabList height 104
+    const height = mainAreaHeight - 260 //TabList height 104
     const editedData = useSelector((state) => state.productionCrudSlice.entityEditData)
-
     const handelInlineUpdateQuantityData = async (quantity, type, batchId, recipeItemId) => {
         const value = {
             url: "production/batch/item/inline-quantity-update",
@@ -152,26 +151,7 @@ function _InhouseTable(props) {
                 <__InhouseAddItem setReloadBatchItemTable={setReloadBatchItemTable}/>
             </Box>
             <Box className={"borderRadiusAll"}>
-                <Paper shadow="sm" p="md">
-                    <Group mb="md">
-                        <Title order={2}>Production Batch: {editedData.invoice}</Title>
-                        <Badge color="blue" variant="light">
-                            {editedData.process}
-                        </Badge>
-                        <Badge color="green" variant="light">
-                            {editedData.mode}
-                        </Badge>
-                    </Group>
-                    <Group>
-                        <Text size="sm" color="dimmed">
-                            Created: {editedData.created_date}
-                        </Text>
-                        <Text size="sm" color="dimmed">
-                            Issue Date: {editedData.issue_date}
-                        </Text>
-                    </Group>
-                </Paper>
-                <Paper shadow="sm" p="md">
+                <Paper shadow="sm">
                     <div
                         className={batchTableCss.responsiveTableWrapper}
                         style={{
@@ -345,6 +325,7 @@ const ProductionItemQuantityInput = ({item, type, handelInlineUpdateQuantityData
         <TextInput
             type="number"
             classNames={inputInlineCss}
+            size="xs"
             id={`inline-update-${type}-${item.id}`}
             value={quantity}
             onBlur={handleQuantityChange}
@@ -388,16 +369,19 @@ const ProductionRawItemQuantityInput = ({
     }
 
     return (
-        <TextInput
-            size="xs"
-            value={value}
-            onBlur={handleChange}
-            onChange={(e) => setValue(e.currentTarget.value)}
-            className="text-center"
-            classNames={{
-                input: "text-xs text-center px-1 py-1",
-            }}
-        />
+        <>
+            <TextInput
+                size="xs"
+                type="number"
+                value={value}
+                onBlur={handleChange}
+                onChange={(e) => setValue(e.currentTarget.value)}
+                className="text-center"
+                classNames={{
+                    input: "text-xs text-center px-1 py-1",
+                }}
+            />
+        </>
     )
 }
 export default _InhouseTable

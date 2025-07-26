@@ -58,7 +58,7 @@ function __InhouseAddItem(props) {
             <Box >
                 <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={24} >
-                        <Box bg={'white'}  >
+                        <Box>
                             <form onSubmit={form.onSubmit((values) => {
                                 values.batch_id = id
 
@@ -90,7 +90,7 @@ function __InhouseAddItem(props) {
                                     });
                                 }
                             })}>
-                                <Box pl={`xs`} pr={8} pt={'xs'} pb={'xs'} className={'boxBackground borderRadiusAll'}>
+                                <Box pl={`xs`} pr={8} pt={'xs'} pb={'xs'} className={'bodyBackgroundLight borderRadiusAll'}>
                                     <Grid columns={24} gutter={{ base: 6 }}>
                                         <Grid.Col span={12}>
                                             <SelectForm
