@@ -192,17 +192,17 @@ function _InhouseTable(props) {
                                                       ta="center">Receive</Table.Th>
                                         </React.Fragment>
                                     ))}
-                                    <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
+                                    <Table.Th className={batchTableCss.successBackground} rowSpan={3}
                                               ta="center">Issue</Table.Th>
-                                    <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
+                                    <Table.Th className={batchTableCss.warningBackground} rowSpan={3}
                                               ta="center">Expense</Table.Th>
-                                    <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
+                                    <Table.Th className={batchTableCss.lessBackground} rowSpan={3}
                                               ta="center">Less</Table.Th>
-                                    <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
+                                    <Table.Th className={batchTableCss.moreBackground} rowSpan={3}
                                               ta="center">More</Table.Th>
-                                    <Table.Th className={batchTableCss.errorBackground} rowSpan={3} ta="center">Stock
+                                    <Table.Th className={batchTableCss.stockBackground} rowSpan={3} ta="center">Stock
                                         In</Table.Th>
-                                    <Table.Th className={batchTableCss.warningDarkBackground} rowSpan={3} ta="center">Remaining
+                                    <Table.Th className={batchTableCss.remainingBackground} rowSpan={3} ta="center">Remaining
                                         Stock</Table.Th>
                                 </Table.Tr>
                                 <Table.Tr>
@@ -274,7 +274,13 @@ function _InhouseTable(props) {
                                                 return (
                                                     <React.Fragment key={`prod-${item.id}-${material.id}`}>
                                                         <Table.Td className={batchTableCss.successBackground}>
-                                                            {production?.raw_issue_quantity || 0}
+                                                            {
+                                                                production?.raw_issue_quantity
+                                                                    ? Number.isInteger(Number(production.raw_issue_quantity))
+                                                                    ? Number(production.raw_issue_quantity)
+                                                                    : Number(production.raw_issue_quantity).toFixed(2)
+                                                                    : '-'
+                                                            }
                                                         </Table.Td>
                                                         <Table.Td className={batchTableCss.warningBackground}>
                                                             {production ? (
@@ -290,15 +296,26 @@ function _InhouseTable(props) {
                                                 )
                                             })}
 
-                                            <Table.Td>{materialTotalIssue}</Table.Td>
-                                            <Table.Td>{materialTotalExpense}</Table.Td>
-                                            <Table.Td>{materialTotalLess}</Table.Td>
-                                            <Table.Td>{materialTotalMore}</Table.Td>
-                                            <Table.Td className={batchTableCss.errorBackground}>
-                                                {material.total_stock}
+                                            <Table.Td className={batchTableCss.successBackground}>
+                                                {Number.isInteger(Number(materialTotalIssue)) ? Number(materialTotalIssue) : Number(materialTotalIssue).toFixed(2)}
                                             </Table.Td>
-                                            <Table.Td className={batchTableCss.warningDarkBackground}>
-                                                {`${isNegative ? '-' : ''}${Math.abs(remainingStock)}`}
+
+                                            <Table.Td className={batchTableCss.warningBackground}>
+                                                {Number.isInteger(Number(materialTotalExpense)) ? Number(materialTotalExpense) : Number(materialTotalExpense).toFixed(2)}
+                                            </Table.Td>
+
+                                            <Table.Td className={batchTableCss.lessBackground}>
+                                                {Number.isInteger(Number(materialTotalLess)) ? Number(materialTotalLess) : Number(materialTotalLess).toFixed(2)}
+                                            </Table.Td>
+
+                                            <Table.Td className={batchTableCss.moreBackground}>
+                                                {Number.isInteger(Number(materialTotalMore)) ? Number(materialTotalMore) : Number(materialTotalMore).toFixed(2)}
+                                            </Table.Td>
+                                            <Table.Td className={batchTableCss.stockBackground}>
+                                                {Number.isInteger(Number(material.total_stock)) ? Number(material.total_stock) : Number(material.total_stock).toFixed(2)}
+                                            </Table.Td>
+                                            <Table.Td className={batchTableCss.remainingBackground}>
+                                                {`${Number.isInteger(Number(remainingStock)) ? Number(remainingStock) : Number(remainingStock).toFixed(2)}`}
                                             </Table.Td>
                                         </Table.Tr>
                                     )
@@ -355,7 +372,8 @@ const ProductionRawItemQuantityInput = ({
 
     // Sync state if parent changes
     useEffect(() => {
-        setValue(production?.needed_quantity || 0)
+        setValue(Number.isInteger(Number(production?.needed_quantity)) ? Number(production?.needed_quantity) : Number(production?.needed_quantity).toFixed(2) || 0)
+        // setValue(production?.needed_quantity || 0)
     }, [production?.needed_quantity])
 
     const handleChange = (event) => {

@@ -56,8 +56,8 @@ function VendorUpdateForm(props) {
             email: entityEditData.email ? entityEditData.email : '',
         },
         validate: {
-            company_name: hasLength({ min: 2, max: 20 }),
-            name: hasLength({ min: 2, max: 20 }),
+            company_name: hasLength({ min:2}),
+            name: hasLength({ min:2}),
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
                 return null;

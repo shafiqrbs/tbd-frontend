@@ -40,8 +40,8 @@ function VendorForm(props) {
             vendor_group_id: '',company_name: '', name: '', mobile: '', email: '', customer_id: '', address: ''
         },
         validate: {
-            company_name: hasLength({ min: 2, max: 20 }),
-            name: hasLength({ min: 2, max: 20 }),
+            company_name: hasLength({ min: 2 }),
+            name: hasLength({ min: 2}),
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
                 return null;

@@ -58,6 +58,22 @@ td, th {
     background-color: #ffeeba;
 }
 
+.lessBackground {
+    background-color: var(--mantine-color-red-1);
+}
+
+.moreBackground {
+    background-color:var(--mantine-color-green-1);
+}
+
+.stockBackground {
+    background-color: var(--mantine-color-blue-2);
+}
+
+.remainingBackground {
+    background-color: var(--mantine-color-teal-1);
+}
+
 .errorBackground {
     background-color: #f8d7da;
 }
