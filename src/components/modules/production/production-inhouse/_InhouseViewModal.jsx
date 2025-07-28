@@ -12,7 +12,7 @@ import __InhouseAddItem from "./__InhouseAddItem.jsx"
 import batchTableCss from "../../../../assets/css/ProductBatchTable.module.css";
 
 
-function _InhouseTable(props) {
+function _InhouseViewModel(props) {
     const {setReloadBatchItemTable} = props
     const dispatch = useDispatch()
     const {t, i18n} = useTranslation()
@@ -66,7 +66,6 @@ function _InhouseTable(props) {
                         material_name: expense.name,
                         unit: expense.uom || "KG",
                         opening_stock: expense.opening_quantity || 0,
-                        stock_quantity: expense.stock_quantity || 0,
                         narayangonj_stock: expense.narayangonj_stock || 0,
                         total_stock: (expense.opening_quantity || 0) + (expense.narayangonj_stock || 0),
                         productions: {},
@@ -162,6 +161,7 @@ function _InhouseTable(props) {
                             overflowX: "auto",
                         }}
                     >
+                        {/*<Table.ScrollContainer minWidth={500} maxHeight={100}>*/}
                         <Table
                             stickyHeader
                             withTableBorder
@@ -172,7 +172,7 @@ function _InhouseTable(props) {
                         >
                             <Table.Thead>
                                 <Table.Tr className={batchTableCss.topRowBackground}>
-                                    <Table.Th rowSpan={3} colSpan={3} ta="center"> {t('BasicInformation')}</Table.Th>
+                                    <Table.Th rowSpan={3} colSpan={5} ta="center"> {t('BasicInformation')}</Table.Th>
                                     <Table.Th ta="center" colSpan={productionItems?.length * 2 || 0}>
                                         {t('IssueProduction')}
                                     </Table.Th>
@@ -226,7 +226,9 @@ function _InhouseTable(props) {
                                 <Table.Tr className={batchTableCss.highlightedRow}>
                                     <Table.Th>{t('MaterialItem')}</Table.Th>
                                     <Table.Th>{t('Unit')}</Table.Th>
+                                    <Table.Th>{t('Opening')}</Table.Th>
                                     <Table.Th>Narayangonj</Table.Th>
+                                    <Table.Th>{t('TotalStock')}</Table.Th>
                                     {productionItems?.map((item) => (
                                         <Table.Th key={`header-${item.id}`} ta="center" colSpan={2} color={'red'}
                                                   style={{fontWeight: 1000}}>
@@ -253,15 +255,17 @@ function _InhouseTable(props) {
                                         }
                                     })
 
-                                    const remainingStock = material.stock_quantity - materialTotalExpense
+                                    const remainingStock = material.total_stock - materialTotalExpense
                                     const isNegative = remainingStock < 0
                                     const remainingStockText = isNegative ? `(${Math.abs(remainingStock)})` : remainingStock
 
                                     return (
                                         <Table.Tr key={material.id}>
-                                            <Table.Td  ta="left">{material.material_name}</Table.Td>
+                                            <Table.Td>{material.material_name}</Table.Td>
                                             <Table.Td>{material.unit}</Table.Td>
+                                            <Table.Td>{material.opening_stock}</Table.Td>
                                             <Table.Td>{material.narayangonj_stock}</Table.Td>
+                                            <Table.Td>{material.total_stock}</Table.Td>
 
                                             {productionItems?.map((item) => {
                                                 const production = material.productions[item.production_item_id]
@@ -306,7 +310,7 @@ function _InhouseTable(props) {
                                                 {Number.isInteger(Number(materialTotalMore)) ? Number(materialTotalMore) : Number(materialTotalMore).toFixed(2)}
                                             </Table.Td>
                                             <Table.Td className={batchTableCss.stockBackground}>
-                                                {Number.isInteger(Number(material.stock_quantity)) ? Number(material.stock_quantity) : Number(material.stock_quantity).toFixed(2)}
+                                                {Number.isInteger(Number(material.total_stock)) ? Number(material.total_stock) : Number(material.total_stock).toFixed(2)}
                                             </Table.Td>
                                             <Table.Td className={batchTableCss.remainingBackground}>
                                                 {`${Number.isInteger(Number(remainingStock)) ? Number(remainingStock) : Number(remainingStock).toFixed(2)}`}
@@ -316,6 +320,7 @@ function _InhouseTable(props) {
                                 })}
                             </Table.Tbody>
                         </Table>
+                        {/*</Table.ScrollContainer>*/}
                     </div>
                 </Paper>
             </Box>
@@ -395,7 +400,7 @@ const ProductionRawItemQuantityInput = ({
         </>
     )
 }
-export default _InhouseTable
+export default _InhouseViewModel
 
 
 

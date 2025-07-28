@@ -284,7 +284,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                         className={genericClass.genericSecondaryBg}
                     >
                         <Box className={genericClass.genericSecondaryBg}>
-                            <Box className={genericClass.genericSecondaryBg}>
+                            <Box>
                                 <Grid gutter={{base: 4}}>
                                     <Grid.Col span={4}>
                                         <Center fz={"md"} ta="center" fw={"800"}>
@@ -308,13 +308,13 @@ export default function __PosPurchaseInvoiceSection(props) {
                                 </Grid>
                                 <Grid gutter={{base: 4}}>
                                     <Grid.Col span={4}>
-                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'></Box>
+                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'>&nbsp;</Box>
                                     </Grid.Col>
                                     <Grid.Col span={4}>
-                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'></Box>
+                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'>&nbsp;</Box>
                                     </Grid.Col>
                                     <Grid.Col span={4}>
-                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'></Box>
+                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'>&nbsp;</Box>
                                     </Grid.Col>
                                 </Grid>
                                 <Grid gutter={{base: 4}}>
@@ -335,8 +335,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                                     </Grid.Col>
                                 </Grid>
                             </Box>
-                            {/* Due Section */}
-                            <Box ml={'-md'}>
+                            <Box ml={'-md'} mr={'-md'}>
                                 <Stack justify="space-between">
                                     <Box className={genericClass.genericHighlightedBox}>
                                         <Grid columns={18} gutter={{base: 2}}>
@@ -428,40 +427,36 @@ export default function __PosPurchaseInvoiceSection(props) {
                                     </Box>
                                 </Stack>
                             </Box>
-                            <Box ml={'-md'}>
-                                <Tooltip
-                                    label={t("MustBeNeedReceiveAmountWithoutCustomer")}
-                                    opened={isDisabled && form.errors.receive_amount}
-                                    position="top-center"
-                                    bg='var(--theme-primary-color-4)'
-                                    withArrow
-                                >
-                                    <Grid gutter={{base: 1}}>
-                                        <Grid.Col span={10} bg='var(--theme-primary-color-4)' p={"14"} pr={"0"}>
-                                            <InputNumberForm
-                                                type="number"
-                                                tooltip={t("ReceiveAmountValidateMessage")}
-                                                label=""
-                                                placeholder={t("Amount")}
-                                                required={isDefaultVendor}
-                                                nextField={"sales_by"}
-                                                form={form}
-                                                name={"receive_amount"}
-                                                id={"receive_amount"}
-                                                rightIcon={<IconCurrency size={16} opacity={0.5}/>}
-                                                leftSection={<IconPlusMinus size={16} opacity={0.5}/>}
-                                                closeIcon={true}
-                                                onChange={(value) => {
-                                                    // Force the component to re-render when amount changes
-                                                    form.setFieldValue("receive_amount", value);
-                                                }}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={2} bg='var(--theme-primary-color-4)' p={"14"}
-                                                  pl={"8"}></Grid.Col>
-                                    </Grid>
-                                </Tooltip>
-                            </Box>
+                        </Box>
+                        <Box ml={'-md'} mr={'-md'}  bg='var(--theme-primary-color-4)' p={"14"}>
+
+                            <Tooltip
+                                label={t("MustBeNeedReceiveAmountWithoutCustomer")}
+                                opened={isDisabled && form.errors.receive_amount}
+                                position="top-center"
+                                bg='var(--theme-primary-color-4)'
+                                withArrow
+                            >
+
+                                <InputNumberForm
+                                    type="number"
+                                    tooltip={t("ReceiveAmountValidateMessage")}
+                                    label=""
+                                    placeholder={t("Amount")}
+                                    required={isDefaultVendor}
+                                    nextField={"sales_by"}
+                                    form={form}
+                                    name={"receive_amount"}
+                                    id={"receive_amount"}
+                                    rightIcon={<IconCurrency size={16} opacity={0.5}/>}
+                                    leftSection={<IconPlusMinus size={16} opacity={0.5}/>}
+                                    closeIcon={true}
+                                    onChange={(value) => {
+                                        // Force the component to re-render when amount changes
+                                        form.setFieldValue("receive_amount", value);
+                                    }}
+                                />
+                            </Tooltip>
                         </Box>
                     </Card>
                 </SimpleGrid>

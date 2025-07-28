@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import KeywordSearch from "../common/KeywordSearch";
-import {Box, Switch, Flex, Group, Button, Menu, ActionIcon, rem, Text} from "@mantine/core";
+import {Box, Switch, Flex, Group, Button, Menu, ActionIcon, rem, Text, Badge} from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import tableCss from '../../../../assets/css/Table.module.css';
 import { modals } from "@mantine/modals";
@@ -11,6 +11,9 @@ import {IconDotsVertical, IconEye, IconFilePencil, IconTrashX} from '@tabler/ico
 import {storeEntityData , getIndexEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import { deleteEntityData } from "../../../../store/inventory/crudSlice.js";
+import {showEntityData} from "../../../../store/core/crudSlice";
+import OverviewModal from "../../inventory/product-overview/OverviewModal";
+import BatchModal from "../production-inhouse/production-overview/BatchModal";
 
 export default function BatchTable(props){
     const dispatch = useDispatch();
@@ -22,7 +25,8 @@ export default function BatchTable(props){
     const searchKeyword = useSelector((state) => state.productionCrudSlice.searchKeyword);
     const fetching = useSelector((state) => state.productionCrudSlice.fetching);
     const [reloadBatchData,setReloadBatchData] = useState(false)
-
+    const [viewModal, setViewModal] = useState(false);
+    const [batchId, setBatchId] = useState(null);
     const perPage = 20;
     const [page,setPage] = useState(1);
     const navigate = useNavigate()
@@ -70,7 +74,7 @@ export default function BatchTable(props){
             setSwitchEnable(prev => ({ ...prev, [item.id]: false }));
         }, 3000)
     }
-
+    const processColorMap = {Created: 'orange',Approved: 'blue',Received: 'green'};
     return (
         <>
             <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
@@ -96,28 +100,39 @@ export default function BatchTable(props){
                         { accessor: 'created_date', title: t('CreatedDate') },
                         { accessor: 'issue_date', title: t('IssueDate') },
                         { accessor: 'invoice', title: t('Invoice') },
-                        { accessor: 'process', title: t('Process') },
                         { accessor: 'created_by_name', title: t('CreatedBy') },
                         {
                             accessor: 'status',
                             title: t("Status"),
                             textAlign: 'center',
                             render: (item) => (
-                                <Flex justify="center" align="center">
-                                    <Switch
-                                        disabled={swtichEnable[item.id] || false}
-                                        defaultChecked={item.status == 1 ? true : false}
-                                        color='var(--theme-primary-color-6)'
-                                        radius="xs"
-                                        size="md"
-                                        onLabel="Enable"
-                                        offLabel="Disable"
-                                        onChange={(event) => {
-                                            handleSwtich(event, item);
-                                        }}
-                                    />
-                                </Flex>
-                            )
+                                    !["Approved", "Received"].some(p => item?.process?.includes(p)) && (
+                                        <Flex justify="center" align="center">
+                                        <Switch
+                                            disabled={swtichEnable[item.id] || false}
+                                            defaultChecked={item.status == 1 ? true : false}
+                                            color='var(--theme-primary-color-6)'
+                                            radius="xs"
+                                            size="md"
+                                            onLabel="Enable"
+                                            offLabel="Disable"
+                                            onChange={(event) => {
+                                                handleSwtich(event, item);
+                                            }}
+                                        />
+                                    </Flex>
+                                ))
+                        },
+                        { accessor: 'process',textAlign: 'center', title: t('Process') ,
+                            render: (item) => {
+                                const color = processColorMap[item.process] || 'red'; // fallback for unknown status
+                                return (
+                                    <Badge size="xs" radius="sm" color={color}>
+                                        {item.process?.toUpperCase()}
+                                    </Badge>
+                                );
+                            },
+                            cellsClassName: tableCss.statusBackground
                         },
                         {
                             accessor: "action",
@@ -125,6 +140,16 @@ export default function BatchTable(props){
                             textAlign: "right",
                             render: (item) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
+                                    <Group gap={4} justify="right" wrap="nowrap">
+                                        <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'}
+                                                color='var(--theme-secondary-color-8)'
+                                                mr={'4'}
+                                                onClick={() => {
+                                                    setViewModal(true);
+                                                    setBatchId(item.id);
+                                                }}>{t('View')}</Button>
+
+                                    </Group>
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                     <Menu.Target>
                                         <ActionIcon size="sm" variant="outline" color='var(--theme-primary-color-6)' radius="xl" aria-label="Settings">
@@ -231,25 +256,7 @@ export default function BatchTable(props){
                                                 {t('Edit')}
                                             </Menu.Item>
                                         }
-                                        {
-                                            item.process === 'Received' &&
-                                            <Menu.Item
-                                                target="_blank"
-                                                component="a"
-                                                w={'200'}
-                                                mt={'2'}
-                                                bg={'green.1'}
-                                                c={'green.6'}
-                                                onClick={() => {
-                                                    console.log("ok to show")
-                                                }}
-                                                rightSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
-                                            >
-                                                {t('Show')}
-                                            </Menu.Item>
-                                        }
-                                        
-
+                                        { !["Approved", "Received"].some(p => item?.process?.includes(p)) && (
                                         <Menu.Item
                                             target="_blank"
                                             component="a"
@@ -277,6 +284,7 @@ export default function BatchTable(props){
                                         >
                                             {t('Delete')}
                                         </Menu.Item>
+                                        )}
                                     </Menu.Dropdown>
                                 </Menu>
                                 </Group>
@@ -298,6 +306,9 @@ export default function BatchTable(props){
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
+            {viewModal && (
+                <BatchModal batchId={batchId} setViewModal={setViewModal} setBatchId={setBatchId}/>
+            )}
         </>
     );
 }

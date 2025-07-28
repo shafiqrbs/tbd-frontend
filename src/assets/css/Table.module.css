@@ -58,3 +58,7 @@ button {
         border-bottom-color: transparent;
     }
 }
+
+.statusBackground {
+    background-color: var(--mantine-color-indigo-0)!important;
+}

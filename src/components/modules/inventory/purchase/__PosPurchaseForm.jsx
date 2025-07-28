@@ -435,7 +435,7 @@ export default function __PosPurchaseForm(props) {
                             recordsPerPage={10}
                             loaderSize="xs"
                             loaderColor="grape"
-                            height={height - 312}
+                            height={height - 310}
                             scrollAreaProps={{type: "never"}}
                         />
                         <Group

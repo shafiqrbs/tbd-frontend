@@ -14,7 +14,7 @@ import axios from "axios";
 
 const navItems = [
   {
-    labelKey: "UserWarehouse",
+    labelKey: "Warehouse",
     icon: <IconDashboard size={16} color="white"/>,
     color: "#E53935",
     path: "/production/user-warehouse",
@@ -22,7 +22,7 @@ const navItems = [
     route:''
   },
 
-  {
+ /* {
     labelKey: "GeneralIssue",
     icon: <IconDashboard size={16} color="white"/>,
     color: "#4CAF50",
@@ -54,7 +54,7 @@ const navItems = [
     path: "/production/issue-production-batch",
     create: true,
     route:'production/issue'
-  },
+  },*/
   {
     labelKey: "NewBatch",
     icon: <IconCategory size={16} color="white"/>,

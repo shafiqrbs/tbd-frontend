@@ -1156,7 +1156,6 @@ function _GenericInvoiceForm(props) {
                                         </Box>
                                         <Box mt="2" className="" pt={'4'} pb={'6'}>
                                             <Grid
-                                                className={genericClass.genericBackground}
                                                 columns={12}
                                                 justify="space-between"
                                                 align="center"
