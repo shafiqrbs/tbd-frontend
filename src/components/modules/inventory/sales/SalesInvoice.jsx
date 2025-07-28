@@ -1,11 +1,13 @@
 import React from 'react';
-import { Box, Progress } from '@mantine/core';
+import {Box, Grid, Progress} from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getLoadingProgress } from '../../../global-hook/loading-progress/getLoadingProgress.js';
 import _WholeSaleGenericInvoiceForm from './whole-sale/_GenericInvoiceForm.jsx';
 import _SalesPurchaseHeaderNavbar from '../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx';
 import _GenericPosForm from './_GenericPosForm';
+import Navigation from "../common/Navigation";
+import _GenericInvoiceForm from "../purchase/_GenericInvoiceForm";
 
 function SalesInvoice() {
     const { t } = useTranslation();
@@ -53,9 +55,14 @@ function SalesInvoice() {
                         allowZeroPercentage={allowZeroStock}
                         currencySymbol={currencySymbol}
                     />
-                    <Box p="8">
-                        <_GenericPosForm domainConfigData={domainConfigData} />
-                        {isCreateMode && isDistributionModel && (
+                    <Box p={"8"}>
+                    <Grid columns={24} gutter={{ base: 8 }}>
+                        <Grid.Col span={1} >
+                            <Navigation module={"purchase-invoice"}/>
+                        </Grid.Col>
+                        <Grid.Col span={23} >
+                            <_GenericPosForm domainConfigData={domainConfigData} />
+                            {/*{isCreateMode && isDistributionModel && (
                             <_WholeSaleGenericInvoiceForm
                                 allowZeroPercentage={allowZeroStock}
                                 currencySymbol={currencySymbol}
@@ -63,7 +70,18 @@ function SalesInvoice() {
                                 isSMSActive={isSMSActive}
                                 isZeroReceiveAllow={isZeroReceiveAllow}
                             />
-                        )}
+                        )}*/}
+                        </Grid.Col>
+                    </Grid>
+                    </Box>
+
+
+
+                    <Box p="8">
+
+
+
+
                     </Box>
                 </Box>
             )}

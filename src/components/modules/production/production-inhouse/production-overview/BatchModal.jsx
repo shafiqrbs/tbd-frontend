@@ -2,7 +2,6 @@ import { useDisclosure } from '@mantine/hooks';
 import {Modal, Button, Progress, Tabs, Box, Table, LoadingOverlay} from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
-import BatchViewDetails from "./BatchViewDetails";
 import {getLoadingProgress} from "../../../../global-hook/loading-progress/getLoadingProgress";
 import {editEntityData} from "../../../../../store/production/crudSlice";
 import {useDispatch, useSelector} from "react-redux";
@@ -185,9 +184,6 @@ export default function BatchModal(props) {
                                             <Table.Th ta="center" colSpan={4}>
                                                 {t('ExpenseMaterial')}
                                             </Table.Th>
-                                            <Table.Th ta="center" colSpan={2}>
-                                                {t('CurrentStock')}
-                                            </Table.Th>
                                         </Table.Tr>
                                         <Table.Tr>
                                             {productionItems?.map((item) => (
@@ -206,8 +202,6 @@ export default function BatchModal(props) {
                                                       ta="center">{t('Less')}</Table.Th>
                                             <Table.Th className={batchTableCss.moreBackground} rowSpan={3}
                                                       ta="center">{t('More')}</Table.Th>
-                                            <Table.Th className={batchTableCss.stockBackground} rowSpan={3} ta="center">{t('StockIn')}</Table.Th>
-                                            <Table.Th className={batchTableCss.remainingBackground} rowSpan={3} ta="center">{t('Remaining')}</Table.Th>
                                         </Table.Tr>
                                         <Table.Tr>
                                             {productionItems?.map((item) => (
@@ -299,12 +293,6 @@ export default function BatchModal(props) {
 
                                                     <Table.Td className={batchTableCss.moreBackground}>
                                                         {Number.isInteger(Number(materialTotalMore)) ? Number(materialTotalMore) : Number(materialTotalMore).toFixed(2)}
-                                                    </Table.Td>
-                                                    <Table.Td className={batchTableCss.stockBackground}>
-                                                        {Number.isInteger(Number(material.stock_quantity)) ? Number(material.stock_quantity) : Number(material.stock_quantity).toFixed(2)}
-                                                    </Table.Td>
-                                                    <Table.Td className={batchTableCss.remainingBackground}>
-                                                        {`${Number.isInteger(Number(remainingStock)) ? Number(remainingStock) : Number(remainingStock).toFixed(2)}`}
                                                     </Table.Td>
                                                 </Table.Tr>
                                             )

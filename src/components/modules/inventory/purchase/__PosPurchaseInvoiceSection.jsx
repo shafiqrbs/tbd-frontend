@@ -125,9 +125,9 @@ export default function __PosPurchaseInvoiceSection(props) {
         <>
             <Box>
                 <SimpleGrid cols={{base: 1, md: 3}} mt={"8"} spacing="xs">
-                    <Card shadow="md" radius="4" className={"borderRadiusAll"}>
+                    <Card shadow="md" radius="4"  h={'200'} className={"borderRadiusAll"}>
                         <Box>
-                            <ScrollArea scrollbarSize={2} type="never" bg={"gray.1"}>
+                            <ScrollArea scrollbarSize={2} h={'200'}>
                                 <Box bg={"white"}>
                                     <Grid columns={"16"} gutter="6">
                                         {transactionModeData &&
@@ -222,7 +222,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                                         closeIcon={true}
                                     />
                                 </Box>
-                                {domainConfigData?.inventory_config?.sku_warehouse == 1 && domainConfigData?.inventory_config?.config_purchase?.is_warehouse == 1 && (
+                                {domainConfigData?.inventory_config?.sku_warehouse === 1 && domainConfigData?.inventory_config?.config_purchase?.is_warehouse === 1 && (
                                     <Box mt={"4"}>
                                         <SelectForm
                                             tooltip={t("Warehouse")}
@@ -278,11 +278,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                             </Box>
                         </Box>
                     </Card>
-                    <Card
-                        shadow="md"
-                        radius="4"
-                        className={genericClass.genericSecondaryBg}
-                    >
+                    <Card pb={'0'} mb={0} radius="4" className={genericClass.genericSecondaryBg} >
                         <Box className={genericClass.genericSecondaryBg}>
                             <Box>
                                 <Grid gutter={{base: 4}}>
@@ -337,7 +333,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                             </Box>
                             <Box ml={'-md'} mr={'-md'}>
                                 <Stack justify="space-between">
-                                    <Box className={genericClass.genericHighlightedBox}>
+                                    <Box className={genericClass.genericHighlightedBox} pt={'xs'} pb={'xs'} >
                                         <Grid columns={18} gutter={{base: 2}}>
                                             <Grid.Col span={7} mt={"4"} pl={"md"}>
                                                 <Tooltip

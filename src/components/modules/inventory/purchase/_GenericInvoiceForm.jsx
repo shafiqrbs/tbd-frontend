@@ -458,7 +458,7 @@ function _GenericInvoiceForm(props) {
     return (
         <Box>
             <Grid columns={24} gutter={{base: 8}}>
-                <Grid.Col span={8}>
+                <Grid.Col span={7}>
                     <form
                         onSubmit={form.onSubmit((values) => {
                             if (!values.barcode && !values.product_id) {
@@ -1298,7 +1298,7 @@ function _GenericInvoiceForm(props) {
                         </Box>
                     </form>
                 </Grid.Col>
-                <Grid.Col span={16}>
+                <Grid.Col span={17}>
                     <__PosPurchaseForm
                         currencySymbol={currencySymbol}
                         domainId={domainId}

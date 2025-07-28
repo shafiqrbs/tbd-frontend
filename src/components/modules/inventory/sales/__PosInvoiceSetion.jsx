@@ -29,7 +29,7 @@ import {
     IconDeviceFloppy,
     IconPercentage,
 } from "@tabler/icons-react";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
@@ -142,9 +142,9 @@ export default function __PosInvoiceSection(props) {
         <>
             <Box>
                 <SimpleGrid cols={{base: 1, md: 3}} mt={"8"} spacing="xs">
-                    <Card shadow="md" radius="4" className={"borderRadiusAll"}>
+                    <Card shadow="md" radius="4" h={'200'} className={"borderRadiusAll"}>
                         <Box>
-                            <ScrollArea scrollbarSize={2} type="never">
+                            <ScrollArea scrollbarSize={2} h={'200'}>
                                 <Box bg={"white"}>
                                     <Grid columns={"16"} gutter="6">
                                         {transactionModeData &&
@@ -171,7 +171,7 @@ export default function __PosInvoiceSection(props) {
                                                                 }}
                                                                 defaultChecked={
                                                                     entityEditData?.transaction_mode_id
-                                                                        ? entityEditData?.transaction_mode_id ==
+                                                                        ? entityEditData?.transaction_mode_id ===
                                                                         mode.id
                                                                         : mode.is_selected
                                                                             ? true
@@ -213,6 +213,7 @@ export default function __PosInvoiceSection(props) {
                                                     </Grid.Col>
                                                 );
                                             })}
+
                                     </Grid>
                                 </Box>
                             </ScrollArea>
@@ -258,7 +259,6 @@ export default function __PosInvoiceSection(props) {
                             </Box>
                             {salesConfig?.is_sales_auto_approved !== 1 && (
                                 <Box pt={4}>
-
                                     <SelectForm
                                         tooltip={t("ChooseOrderProcess")}
                                         label=""
@@ -296,12 +296,14 @@ export default function __PosInvoiceSection(props) {
                         </Box>
                     </Card>
                     <Card
+                        pb={'0'}
+                        mb={0}
                         shadow="md"
                         radius="4"
                         className={genericClass.genericSecondaryBg}
                     >
                         <Box className={genericClass.genericSecondaryBg}>
-                            <Box pb={"xs"} className={genericClass.genericSecondaryBg}>
+                            <Box pt={'xs'} pb={'xs'}>
                                 <Grid gutter={{base: 4}}>
                                     <Grid.Col span={4}>
                                         <Center fz={"md"} ta="center" fw={"800"}>
@@ -325,13 +327,13 @@ export default function __PosInvoiceSection(props) {
                                 </Grid>
                                 <Grid gutter={{base: 4}}>
                                     <Grid.Col span={4}>
-                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'></Box>
+                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'>&nbsp;</Box>
                                     </Grid.Col>
                                     <Grid.Col span={4}>
-                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'></Box>
+                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'>&nbsp;</Box>
                                     </Grid.Col>
                                     <Grid.Col span={4}>
-                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'></Box>
+                                        <Box h={1} ml={"xl"} mr={"xl"} bg='var(--theme-primary-color-4)'>&nbsp;</Box>
                                     </Grid.Col>
                                 </Grid>
                                 <Grid gutter={{base: 4}}>

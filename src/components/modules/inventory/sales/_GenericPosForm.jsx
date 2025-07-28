@@ -445,11 +445,9 @@ function _GenericPosForm({domainConfigData}) {
   }, [form, handleAddProductByBarcode, handleAddProductByProductId, salesConfig?.zero_stock, t]);
 
   return (
+
       <Box>
         <Grid columns={24} gutter={{base: 8}}>
-          <Grid.Col span={1}>
-            <Navigation/>
-          </Grid.Col>
           <Grid.Col span={7}>
             <form onSubmit={form.onSubmit(handleSubmit)}>
               <Box bg={"white"} p={"md"} pb="0" className={"borderRadiusAll"}>
@@ -1114,7 +1112,6 @@ function _GenericPosForm({domainConfigData}) {
                       </Box>
                         <Box mt="2"   pt={'4'} pb={'6'}>
                     <Grid
-                        className={genericClass.genericBackground}
                         columns={12}
                         justify="space-between"
                         align="center"
@@ -1332,7 +1329,7 @@ function _GenericPosForm({domainConfigData}) {
               </Box>
             </form>
           </Grid.Col>
-          <Grid.Col span={16}>
+          <Grid.Col span={17}>
             <__PosSalesForm
                 currencySymbol={currencySymbol}
                 domainId={domainId}

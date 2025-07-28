@@ -44,12 +44,13 @@ function PurchaseInvoice() {
               />
               <Box p={"8"}>
                 <Grid columns={24} gutter={{ base: 8 }}>
-                  <Grid.Col span={1} ><Navigation module={"purchase-invoice"}/></Grid.Col>
+                  <Grid.Col span={1} >
+                    <Navigation module={"purchase-invoice"}/>
+                  </Grid.Col>
                   <Grid.Col span={23} >
                     <_GenericInvoiceForm domainConfigData={domainConfigData} />
                   </Grid.Col>
                 </Grid>
-
               </Box>
             </>
           )}
