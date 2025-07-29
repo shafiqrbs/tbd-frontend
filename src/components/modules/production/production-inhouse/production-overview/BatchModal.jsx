@@ -66,7 +66,7 @@ export default function BatchModal(props) {
                         unit: expense.uom || "KG",
                         opening_stock: expense.opening_quantity || 0,
                         stock_quantity: expense.stock_quantity || 0,
-                        narayangonj_stock: expense.narayangonj_stock || 0,
+                        // narayangonj_stock: expense.narayangonj_stock || 0,
                         total_stock: (expense.opening_quantity || 0) + (expense.narayangonj_stock || 0),
                         productions: {},
                     })
@@ -94,7 +94,7 @@ export default function BatchModal(props) {
     const calculateTotals = () => {
         const totals = {
             opening_stock: 0,
-            narayangonj_stock: 0,
+            // narayangonj_stock: 0,
             total_stock: 0,
             issue_quantities: {},
             receive_quantities: {},
@@ -107,7 +107,7 @@ export default function BatchModal(props) {
 
         tableData.forEach(material => {
             totals.opening_stock += material.opening_stock
-            totals.narayangonj_stock += material.narayangonj_stock
+            // totals.narayangonj_stock += material.narayangonj_stock
             totals.total_stock += material.total_stock
 
             let materialTotalIssue = 0
@@ -177,12 +177,16 @@ export default function BatchModal(props) {
                                 >
                                     <Table.Thead>
                                         <Table.Tr className={batchTableCss.topRowBackground}>
-                                            <Table.Th rowSpan={3} colSpan={3} ta="center"> {t('BasicInformation')}</Table.Th>
+                                            <Table.Th rowSpan={3} colSpan={2} ta="center"> {t('BasicInformation')}</Table.Th>
                                             <Table.Th ta="center" colSpan={productionItems?.length * 2 || 0}>
                                                 {t('IssueProduction')}
                                             </Table.Th>
                                             <Table.Th ta="center" colSpan={4}>
                                                 {t('ExpenseMaterial')}
+                                            </Table.Th>
+
+                                            <Table.Th ta="center" colSpan={2}>
+                                                {t('CurrentStock')} {editedData?.warehouse_name ? `(${editedData.warehouse_name})` : ''}
                                             </Table.Th>
                                         </Table.Tr>
                                         <Table.Tr>
@@ -202,6 +206,9 @@ export default function BatchModal(props) {
                                                       ta="center">{t('Less')}</Table.Th>
                                             <Table.Th className={batchTableCss.moreBackground} rowSpan={3}
                                                       ta="center">{t('More')}</Table.Th>
+
+                                            <Table.Th className={batchTableCss.stockBackground} rowSpan={3} ta="center">{t('StockIn')}</Table.Th>
+                                            <Table.Th className={batchTableCss.remainingBackground} rowSpan={3} ta="center">{t('Remaining')}</Table.Th>
                                         </Table.Tr>
                                         <Table.Tr>
                                             {productionItems?.map((item) => (
@@ -218,7 +225,6 @@ export default function BatchModal(props) {
                                         <Table.Tr className={batchTableCss.highlightedRow}>
                                             <Table.Th>{t('MaterialItem')}</Table.Th>
                                             <Table.Th>{t('Unit')}</Table.Th>
-                                            <Table.Th>Narayangonj</Table.Th>
                                             {productionItems?.map((item) => (
                                                 <Table.Th key={`header-${item.id}`} ta="center" colSpan={2} color={'red'}
                                                           style={{fontWeight: 1000}}>
@@ -253,7 +259,6 @@ export default function BatchModal(props) {
                                                 <Table.Tr key={material.id}>
                                                     <Table.Td  ta="left">{material.material_name}</Table.Td>
                                                     <Table.Td>{material.unit}</Table.Td>
-                                                    <Table.Td>{material.narayangonj_stock}</Table.Td>
                                                     {productionItems?.map((item) => {
                                                         const production = material.productions[item.production_item_id]
                                                         return (
@@ -293,6 +298,12 @@ export default function BatchModal(props) {
 
                                                     <Table.Td className={batchTableCss.moreBackground}>
                                                         {Number.isInteger(Number(materialTotalMore)) ? Number(materialTotalMore) : Number(materialTotalMore).toFixed(2)}
+                                                    </Table.Td>
+                                                    <Table.Td className={batchTableCss.stockBackground}>
+                                                        {Number.isInteger(Number(material.stock_quantity)) ? Number(material.stock_quantity) : Number(material.stock_quantity).toFixed(2)}
+                                                    </Table.Td>
+                                                    <Table.Td className={batchTableCss.remainingBackground}>
+                                                        {`${Number.isInteger(Number(remainingStock)) ? Number(remainingStock) : Number(remainingStock).toFixed(2)}`}
                                                     </Table.Td>
                                                 </Table.Tr>
                                             )

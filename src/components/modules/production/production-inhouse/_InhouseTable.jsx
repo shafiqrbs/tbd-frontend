@@ -67,7 +67,6 @@ function _InhouseTable(props) {
                         unit: expense.uom || "KG",
                         opening_stock: expense.opening_quantity || 0,
                         stock_quantity: expense.stock_quantity || 0,
-                        narayangonj_stock: expense.narayangonj_stock || 0,
                         total_stock: (expense.opening_quantity || 0) + (expense.narayangonj_stock || 0),
                         productions: {},
                     })
@@ -172,7 +171,7 @@ function _InhouseTable(props) {
                         >
                             <Table.Thead>
                                 <Table.Tr className={batchTableCss.topRowBackground}>
-                                    <Table.Th rowSpan={3} colSpan={3} ta="center"> {t('BasicInformation')}</Table.Th>
+                                    <Table.Th rowSpan={3} colSpan={2} ta="center"> {t('BasicInformation')}</Table.Th>
                                     <Table.Th ta="center" colSpan={productionItems?.length * 2 || 0}>
                                         {t('IssueProduction')}
                                     </Table.Th>
@@ -180,7 +179,7 @@ function _InhouseTable(props) {
                                         {t('ExpenseMaterial')}
                                     </Table.Th>
                                     <Table.Th ta="center" colSpan={2}>
-                                        {t('CurrentStock')}
+                                        {t('CurrentStock')} {editedData?.warehouse_name ? `(${editedData.warehouse_name})` : ''}
                                     </Table.Th>
                                 </Table.Tr>
                                 <Table.Tr>
@@ -226,7 +225,7 @@ function _InhouseTable(props) {
                                 <Table.Tr className={batchTableCss.highlightedRow}>
                                     <Table.Th>{t('MaterialItem')}</Table.Th>
                                     <Table.Th>{t('Unit')}</Table.Th>
-                                    <Table.Th>Narayangonj</Table.Th>
+                                    {/*<Table.Th>Narayangonj</Table.Th>*/}
                                     {productionItems?.map((item) => (
                                         <Table.Th key={`header-${item.id}`} ta="center" colSpan={2} color={'red'}
                                                   style={{fontWeight: 1000}}>
@@ -261,7 +260,6 @@ function _InhouseTable(props) {
                                         <Table.Tr key={material.id}>
                                             <Table.Td  ta="left">{material.material_name}</Table.Td>
                                             <Table.Td>{material.unit}</Table.Td>
-                                            <Table.Td>{material.narayangonj_stock}</Table.Td>
 
                                             {productionItems?.map((item) => {
                                                 const production = material.productions[item.production_item_id]

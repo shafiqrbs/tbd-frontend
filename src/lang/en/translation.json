@@ -1177,5 +1177,10 @@
   "ProductionIssueReport": "Production issue report",
   "GenerateExcel": "Generate Excel",
   "GeneratePdf": "Generate PDF",
-  "xxxxxx": "xxxxxxx"
+  "ChooseProductionWarehouse": "Choose production warehouse",
+  "xxxxxx": "xxxxxxx",
+  "CurrentStock": "Current Stock",
+  "ExpenseMaterial": "Expense Material",
+  "MaterialItem": "Material Items",
+  "": ""
 }

@@ -84,8 +84,9 @@ export default function ProductionIssueReport() {
                             material_name: expense.name,
                             unit: expense.uom || "KG",
                             opening_stock: expense.opening_quantity || 0,
-                            narayangonj_stock: expense.narayangonj_stock || 0,
-                            total_stock: (expense.opening_quantity || 0) + (expense.narayangonj_stock || 0),
+                            // narayangonj_stock: expense.narayangonj_stock || 0,
+                            // total_stock: (expense.opening_quantity || 0) + (expense.narayangonj_stock || 0),
+                            total_stock: (expense.stock_quantity || 0) ,
                             productions: {},
                         });
                     }
@@ -242,7 +243,7 @@ export default function ProductionIssueReport() {
                                             >
                                                 <Table.Thead>
                                                     <Table.Tr className={batchTableCss.topRowBackground}>
-                                                        <Table.Th rowSpan={3} colSpan={5} ta="center">Basic
+                                                        <Table.Th rowSpan={3} colSpan={2} ta="center">Basic
                                                             Information</Table.Th>
                                                         <Table.Th ta="center"
                                                                   colSpan={productionItems?.length * 2 || 0}>
@@ -252,7 +253,7 @@ export default function ProductionIssueReport() {
                                                             Total Expense Material
                                                         </Table.Th>
                                                         <Table.Th ta="center" colSpan={2}>
-                                                            Current Stock Status
+                                                            {t('CurrentStock')} {indexData?.warehouse_name ? `(${indexData.warehouse_name})` : ''}
                                                         </Table.Th>
                                                     </Table.Tr>
                                                     <Table.Tr>
@@ -292,9 +293,6 @@ export default function ProductionIssueReport() {
                                                     <Table.Tr className={batchTableCss.highlightedRow}>
                                                         <Table.Th>Material Item</Table.Th>
                                                         <Table.Th>Unit</Table.Th>
-                                                        <Table.Th>Opening</Table.Th>
-                                                        <Table.Th>Narayangonj</Table.Th>
-                                                        <Table.Th>Total Stock</Table.Th>
                                                         {productionItems?.map((item) => (
                                                             <Table.Th key={`header-${item.id}`} ta="center" colSpan={2}
                                                                       color={'red'} style={{fontWeight: 1000}}>
@@ -329,9 +327,6 @@ export default function ProductionIssueReport() {
                                                             <Table.Tr key={material.id}>
                                                                 <Table.Td>{material.material_name}</Table.Td>
                                                                 <Table.Td>{material.unit}</Table.Td>
-                                                                <Table.Td>{material.opening_stock}</Table.Td>
-                                                                <Table.Td>{material.narayangonj_stock}</Table.Td>
-                                                                <Table.Td>{material.total_stock}</Table.Td>
 
                                                                 {productionItems?.map((item) => {
                                                                     const production = material.productions[item.production_item_id]
@@ -368,6 +363,8 @@ export default function ProductionIssueReport() {
                                                                 <Table.Td>{materialTotalMore ? (Number.isInteger(materialTotalMore) ? Number(materialTotalMore) : Number(materialTotalMore).toFixed(2)) : '-'}</Table.Td>
                                                                 <Table.Td className={batchTableCss.errorBackground}>
                                                                     {material.total_stock ? (Number.isInteger(material.total_stock) ? Number(material.total_stock) : Number(material.total_stock).toFixed(2)) : 0}
+                                                                    {/*{Number.isInteger(Number(material.stock_quantity)) ? Number(material.stock_quantity) : Number(material.stock_quantity).toFixed(2)}*/}
+
                                                                 </Table.Td>
                                                                 <Table.Td
                                                                     className={batchTableCss.warningDarkBackground}>

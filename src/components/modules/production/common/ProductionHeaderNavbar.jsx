@@ -1,15 +1,19 @@
 import React, {useState} from "react";
-import { Group, Menu, rem, ActionIcon, Text } from "@mantine/core";
+import {Group, Menu, rem, ActionIcon, Text, Modal, Select, Flex, Button, TextInput,FocusTrap} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
 import classes from '../../../../assets/css/HeaderSearch.module.css';
-import {IconInfoCircle, IconSettings, IconRestore} from "@tabler/icons-react";
+import {IconInfoCircle, IconSettings, IconRestore, IconPlus} from "@tabler/icons-react";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import FileUploadModel from "../../../core-component/FileUploadModel.jsx";
 import {showEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
+import {isNotEmpty, useForm} from "@mantine/form";
+import genericClass from "../../../../assets/css/Generic.module.css";
 
 function ProductionHeaderNavbar(props) {
     let {id} = useParams();
@@ -22,9 +26,14 @@ function ProductionHeaderNavbar(props) {
 
     const stockItem = useSelector((state) => state.productionCrudSlice.measurementInputData.stock_item)
     const [uploadFinishGoodsModel, setUploadFinishGoodsModel] = useState(false)
+    const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
+    const issueWithWarehouse = domainConfigData?.production_config?.issue_with_warehouse || 0
 
-    const CallProductionBatchCreateApi = (event) => {
-        event.preventDefault();
+
+    const CallProductionBatchCreateApi = (event,data) => {
+        if (event && typeof event.preventDefault === 'function') {
+            event.preventDefault();
+        }
         axios({
             method: 'POST',
             url: `${import.meta.env.VITE_API_GATEWAY_URL + 'production/batch'}`,
@@ -35,9 +44,7 @@ function ProductionHeaderNavbar(props) {
                 "X-Api-Key": import.meta.env.VITE_API_KEY,
                 "X-Api-User": JSON.parse(localStorage.getItem('user')).id
             },
-            data: {
-                mode: 'in-house'
-            }
+            data: data
         })
             .then(res => {
                 if (res.data.status === 200) {
@@ -50,13 +57,40 @@ function ProductionHeaderNavbar(props) {
             })
     }
 
+    const [opened, { open, close }] = useDisclosure(false);
+    let warehouseDropdownData = getCoreWarehouseDropdownData();
+    const [warehouseData, setWarehouseData] = useState(null);
+    const ProductionBatchCreateWithWarehouse = (e) => {
+        e.preventDefault()
+        open()
+    }
+    const form = useForm({
+        initialValues: {
+            warehouse_id: ""
+        },
+        validate: {
+            warehouse_id: isNotEmpty()
+        },
+    });
+
+    const handleFormSubmit = (values) => {
+        let data = {
+            warehouse_id : values.warehouse_id,
+            mode: 'in-house'
+        }
+        CallProductionBatchCreateApi(data,data)
+    }
+
+
     const links = [
         {link: '/report/production/issue', label: t('ProductionIssueReport'), show: true},
         {
             link: '/production/batch/new',
             label: t('NewBatch'),
             show: currentRoute !== '/production/batch/' + id,
-            onClick: CallProductionBatchCreateApi
+            onClick: issueWithWarehouse
+                ? ProductionBatchCreateWithWarehouse
+                : (e) => CallProductionBatchCreateApi(e, { mode: 'in-house' })
         },
         {link: '/production/batch', label: t('ProductionBatch'), show: currentRoute !== '/production/batch'},
         {link: '/production/items', label: t('ProductionItems'), show: true},
@@ -103,6 +137,56 @@ function ProductionHeaderNavbar(props) {
 
     return (
         <>
+            <Modal
+                opened={opened}
+                onClose={close}
+                title={
+                    <h2 className="text-lg font-medium text-gray-800">
+                        {t("ChooseProductionWarehouse")}
+                    </h2>
+                }
+                overlayProps={{
+                    backgroundOpacity: 0.55,
+                    blur: 3,
+                }}
+            >
+                <FocusTrap.InitialFocus />
+
+                <form
+                    onSubmit={form.onSubmit(handleFormSubmit)}
+                    className="flex flex-col items-center gap-6 mt-2"
+                >
+                    <div className="w-full">
+                        <SelectForm
+                            tooltip={t("Warehouse")}
+                            label=""
+                            placeholder={t("Warehouse")}
+                            required={false}
+                            nextField="purchase_price"
+                            name="warehouse_id"
+                            form={form}
+                            dropdownValue={warehouseDropdownData}
+                            id="warehouse_id"
+                            searchable
+                            value={warehouseData}
+                            changeValue={setWarehouseData}
+                        />
+                    </div>
+
+                    <Button
+                        size="sm"
+                        type="submit"
+                        id="EntityFormSubmit"
+                        className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center gap-2"
+                        leftSection={<IconPlus size={16} />}
+                    >
+                        <span className="text-sm font-medium">{t("Process")}</span>
+                    </Button>
+                </form>
+            </Modal>
+
+
+
             <header className={classes.header}>
                 <div className={classes.inner}>
                     <Group ml={10}>
