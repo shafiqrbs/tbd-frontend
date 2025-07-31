@@ -1182,5 +1182,7 @@
   "CurrentStock": "Current Stock",
   "ExpenseMaterial": "Expense Material",
   "MaterialItem": "Material Items",
+  "ProductionIssue": "Production Issue",
+  "ProductionMatrix": "Production Matrix",
   "": ""
 }

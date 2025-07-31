@@ -33,7 +33,7 @@ import {
 	IconCategory2,
 	IconShoppingCart,
 	IconShoppingBag,
-	IconList,
+	IconList, IconReport,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import classes from "../../../assets/css/FeaturesCards.module.css";
@@ -1791,6 +1791,67 @@ function MainDashboard(props) {
 									</Box>
 								</Card>
 							)}
+						{/*{domainConfig?.modules?.includes("production") &&*/}
+						{/*	["role_production", "role_domain"].some((value) => userRole.includes(value)) && (*/}
+								<Card shadow="md" radius="md" className={classes.card} padding="lg">
+									<Grid gutter={{ base: 2 }}>
+										<Grid.Col span={2}>
+											<IconReport
+												style={{ width: rem(42), height: rem(42) }}
+												stroke={2}
+												color={theme.colors.red[6]}
+											/>
+										</Grid.Col>
+										<Grid.Col span={10}>
+											<Text fz="md" fw={500} className={classes.cardTitle}>
+												{t("Reporting")}
+											</Text>
+										</Grid.Col>
+									</Grid>
+									<Box fz="sm" c="dimmed" mt="sm">
+										<List spacing="ms" size="sm" center>
+
+											<List.Item
+												pl={"xs"}
+												icon={
+													<ThemeIcon color="red.6" size={20} radius="xl" variant="outline">
+														<IconShoppingBag />
+													</ThemeIcon>
+												}
+											>
+												<NavLink
+													pl={"md"}
+													href="/report/production/issue"
+													label={t("ProductionIssue")}
+													component="button"
+													onClick={(e) => {
+														navigate("/report/production/issue");
+													}}
+												/>
+											</List.Item>
+
+											<List.Item
+												pl={"xs"}
+												icon={
+													<ThemeIcon color="red.6" size={20} radius="xl" variant="outline">
+														<IconShoppingBag />
+													</ThemeIcon>
+												}
+											>
+												<NavLink
+													pl={"md"}
+													href="/report/production/matrix"
+													label={t("ProductionMatrix")}
+													component="button"
+													onClick={(e) => {
+														navigate("/report/production/matrix");
+													}}
+												/>
+											</List.Item>
+										</List>
+									</Box>
+								</Card>
+							{/*)}*/}
 					</SimpleGrid>
 				</ScrollArea>
 			</Container>

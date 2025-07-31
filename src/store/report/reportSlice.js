@@ -31,12 +31,13 @@ export const showEntityData = createAsyncThunk("show", async (value) => {
 const reportSlice = createSlice({
     name: "report",
     initialState: {
-        productionIssueFilterData: { start_date:new Date(),end_date:new Date()},
+        productionIssueFilterData: { start_date:new Date(),end_date:new Date(),warehouse_id:''},
     },
     reducers: {
         setProductionIssueFilterData: (state, action) => {
             state.productionIssueFilterData.start_date = action.payload.start_date
             state.productionIssueFilterData.end_date = action.payload.end_date
+            state.productionIssueFilterData.warehouse_id = action.payload.warehouse_id
         }
 
     },
