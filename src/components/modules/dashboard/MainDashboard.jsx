@@ -1840,11 +1840,30 @@ function MainDashboard(props) {
 											>
 												<NavLink
 													pl={"md"}
-													href="/report/production/matrix"
-													label={t("ProductionMatrix")}
+													href="/report/production/daily"
+													label={t("DailyExpenseReport")}
 													component="button"
 													onClick={(e) => {
-														navigate("/report/production/matrix");
+														navigate("/report/production/daily");
+													}}
+												/>
+											</List.Item>
+
+											<List.Item
+												pl={"xs"}
+												icon={
+													<ThemeIcon color="red.6" size={20} radius="xl" variant="outline">
+														<IconShoppingBag />
+													</ThemeIcon>
+												}
+											>
+												<NavLink
+													pl={"md"}
+													href="/report/production/daily-warehouse"
+													label={t("DailyExpenseWarehouseReport")}
+													component="button"
+													onClick={(e) => {
+														navigate("/report/production/daily-warehouse");
 													}}
 												/>
 											</List.Item>

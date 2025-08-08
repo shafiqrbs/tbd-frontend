@@ -1178,11 +1178,13 @@
   "GenerateExcel": "Generate Excel",
   "GeneratePdf": "Generate PDF",
   "ChooseProductionWarehouse": "Choose production warehouse",
-  "xxxxxx": "xxxxxxx",
   "CurrentStock": "Current Stock",
   "ExpenseMaterial": "Expense Material",
   "MaterialItem": "Material Items",
   "ProductionIssue": "Production Issue",
-  "ProductionMatrix": "Production Matrix",
+  "DailyExpenseReport": "Daily expense",
+  "DailyExpenseWarehouseReport": "Daily expense warehouse",
+  "ChooseMonth": "Choose Month",
+  "xxxxxx": "xxxxxxx",
   "": ""
 }

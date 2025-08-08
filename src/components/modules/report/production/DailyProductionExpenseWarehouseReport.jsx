@@ -1,61 +1,66 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
-import { useTranslation } from "react-i18next"
-import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress"
+import React, {useEffect, useState} from "react"
+import {useTranslation} from "react-i18next"
+import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress"
 import {
     Progress,
     Box,
     Grid,
     Table,
     Title,
-    Tabs,
+    Tabs, LoadingOverlay,
 } from "@mantine/core"
 import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar"
 import ProductionNavigation from "../common/ProductionNavigation"
-import { getIndexEntityData } from "../../../../store/report/reportSlice.js"
-import { useDispatch, useSelector } from "react-redux"
-import { useOutletContext } from "react-router-dom"
+import {
+    getIndexEntityData,
+    setProductionIssueFilterData,
+    setProductionIssueWarehouseFilterData
+} from "../../../../store/report/reportSlice.js"
+import {useDispatch, useSelector} from "react-redux"
+import {useOutletContext} from "react-router-dom"
 import batchTableCss from "../../../../assets/css/ProductBatchTable.module.css"
 import _ProductionReportSearch from "./_ProductionReportSearch.jsx"
-import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx"
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx"
 
-export default function ProductionMatrixReport() {
+export default function DailyProductionExpenseWarehouseReport() {
     const progress = getLoadingProgress()
     const dispatch = useDispatch()
-    const { t, i18n } = useTranslation()
-    const { isOnline, mainAreaHeight } = useOutletContext()
+    const {t, i18n} = useTranslation()
+    const {isOnline, mainAreaHeight} = useOutletContext()
     const height = mainAreaHeight - 120
     const [batchReloadWithUpload, setBatchReloadWithUpload] = useState(false)
     const [indexData, setIndexData] = useState(null) // Initialize as null to handle loading state
     const [searchValue, setSearchValue] = useState(false)
     const fetching = useSelector((state) => state.productionCrudSlice.fetching)
     const [reloadBatchData, setReloadBatchData] = useState(false)
-    const searchKeyword = useSelector((state) => state.productionCrudSlice.searchKeyword)
-    const productionIssueFilterData = useSelector((state) => state.reportSlice.productionIssueFilterData)
+    const productionIssueWarehouseFilterData = useSelector((state) => state.reportSlice.productionIssueWarehouseFilterData)
     const perPage = 20
     const [page, setPage] = useState(1)
-    const options = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-    }
+
+    useEffect(() => {
+        setProductionIssueWarehouseFilterData({
+            ...productionIssueWarehouseFilterData,
+            warehouse_id: '',year: '', month: ''
+        })
+    }, [progress]);
+
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!productionIssueFilterData.warehouse_id){
+            if (!productionIssueWarehouseFilterData.warehouse_id) {
+                return
+            }
+            if (!productionIssueWarehouseFilterData.month && !productionIssueWarehouseFilterData.year) {
                 return
             }
             const value = {
                 url: "production/report/matrix/warehouse",
                 param: {
-                    start_date:
-                        productionIssueFilterData.start_date &&
-                        new Date(productionIssueFilterData.start_date).toLocaleDateString("en-CA", options),
-                    end_date:
-                        productionIssueFilterData.end_date &&
-                        new Date(productionIssueFilterData.end_date).toLocaleDateString("en-CA", options),
-                    warehouse_id: productionIssueFilterData.warehouse_id,
+                    warehouse_id: productionIssueWarehouseFilterData.warehouse_id,
+                    month: productionIssueWarehouseFilterData.month,
+                    year: productionIssueWarehouseFilterData.year,
                     page: page,
                     offset: perPage,
                 },
@@ -77,7 +82,7 @@ export default function ProductionMatrixReport() {
             }
         }
         fetchData()
-    }, [dispatch, fetching, reloadBatchData, searchValue, productionIssueFilterData, page])
+    }, [dispatch, fetching, reloadBatchData, searchValue, page])
 
     const [downloadFile, setDownloadFile] = useState(false)
     const [downloadType, setDownloadType] = useState("xlsx")
@@ -85,7 +90,7 @@ export default function ProductionMatrixReport() {
     useEffect(() => {
         if (downloadFile) {
             const fetchData = async () => {
-                if (!productionIssueFilterData.warehouse_id){
+                if (!productionIssueWarehouseFilterData.warehouse_id) {
                     return
                 }
                 let route = ""
@@ -97,9 +102,9 @@ export default function ProductionMatrixReport() {
                 const value = {
                     url: route,
                     param: {
-                        start_date: productionIssueFilterData.start_date && new Date(productionIssueFilterData.start_date).toLocaleDateString("en-CA", options),
-                        end_date: productionIssueFilterData.end_date && new Date(productionIssueFilterData.end_date).toLocaleDateString("en-CA", options),
-                        warehouse_id:productionIssueFilterData.warehouse_id,
+                        month: productionIssueWarehouseFilterData.month,
+                        year: productionIssueWarehouseFilterData.year,
+                        warehouse_id: productionIssueWarehouseFilterData.warehouse_id,
                     }
                 }
                 try {
@@ -224,16 +229,22 @@ export default function ProductionMatrixReport() {
                         setBatchReloadWithUpload={setBatchReloadWithUpload}
                     />
                     <Box p={8}>
-                        <Grid columns={24} gutter={{ base: 8 }}>
+                        <Grid columns={24} gutter={{base: 8}}>
                             <Grid.Col span={1}>
-                                <ProductionNavigation module={"batch"} />
+                                <ProductionNavigation module={"batch"}/>
                             </Grid.Col>
+
+                            <LoadingOverlay visible={searchValue || downloadFile} zIndex={1000}
+                                            overlayProps={{radius: "sm", blur: 2}}/>
+
                             <Grid.Col span={23}>
                                 <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                                    <Title order={4}>{t("ProductionMatrix")}</Title>
-                                    <Box pl={`xs`} pb={"xs"} pr={8} pt={"xs"} mb={"xs"} className={"boxBackground borderRadiusAll"}>
+                                    <Title order={4}>{t("DailyExpenseWarehouseReport")}</Title>
+                                    <Box pl={`xs`} pb={"xs"} pr={8} pt={"xs"} mb={"xs"}
+                                         className={"boxBackground borderRadiusAll"}>
                                         <_ProductionReportSearch
                                             module={"production-matrix"}
+                                            isWarehouse={1}
                                             setSearchValue={setSearchValue}
                                             setDownloadFile={setDownloadFile}
                                             setDownloadType={setDownloadType}
@@ -242,8 +253,8 @@ export default function ProductionMatrixReport() {
                                     <Box className="borderRadiusAll">
                                         {indexData && dates.length > 0 ? (
                                             <Tabs value={activeTab} onChange={setActiveTab} variant="pills" radius="xl">
-                                            {/*<Tabs defaultValue={defaultTabValue} variant="pills" radius="xl">*/}
-                                                <Tabs.List style={{ overflowX: "auto", flexWrap: "nowrap" }}>
+                                                {/*<Tabs defaultValue={defaultTabValue} variant="pills" radius="xl">*/}
+                                                <Tabs.List style={{overflowX: "auto", flexWrap: "nowrap"}}>
                                                     {dates.map((dateKey) => {
                                                         const dateData = indexData.date_wise_data[dateKey]
                                                         return (
@@ -285,49 +296,87 @@ export default function ProductionMatrixReport() {
                                                                     style={tableStyles.table}
                                                                 >
                                                                     <Table.Thead>
-                                                                         {/*1st header row*/}
+                                                                        {/*1st header row*/}
                                                                         <Table.Tr style={tableStyles.topRowBackground}>
-                                                                            <Table.Th rowSpan={2}>S.L</Table.Th>
-                                                                             {/*Date column removed as it's handled by tabs*/}
-                                                                            <Table.Th rowSpan={2}>Product Name (English)</Table.Th>
-                                                                            <Table.Th rowSpan={2}>Unit</Table.Th>
-                                                                            <Table.Th rowSpan={2}>Present Day Rate</Table.Th>
-                                                                            <Table.Th rowSpan={2}>Opening Stock</Table.Th>
-                                                                            <Table.Th rowSpan={2}>In {warehouseName}</Table.Th>
-                                                                            <Table.Th rowSpan={2}>Total In</Table.Th>
-                                                                            <Table.Th rowSpan={2}>IN Amount (TK)</Table.Th>
-                                                                             {/*Dynamic production usage columns*/}
+                                                                            <Table.Th rowSpan={3}>S.L</Table.Th>
+                                                                            {/*Date column removed as it's handled by tabs*/}
+                                                                            <Table.Th rowSpan={3}>Product Name
+                                                                                (English)</Table.Th>
+                                                                            <Table.Th rowSpan={3}>Unit</Table.Th>
+                                                                            <Table.Th rowSpan={3}>Present Day
+                                                                                Rate</Table.Th>
+                                                                            <Table.Th rowSpan={3}>Opening
+                                                                                Stock</Table.Th>
+                                                                            <Table.Th
+                                                                                rowSpan={3}>In {warehouseName}</Table.Th>
+                                                                            <Table.Th rowSpan={3}>Total In</Table.Th>
+                                                                            <Table.Th rowSpan={3}>IN Amount
+                                                                                (TK)</Table.Th>
+                                                                            {/*Dynamic production usage columns*/}
                                                                             <Table.Th
                                                                                 colSpan={dynamicColumnsCount > 0 ? dynamicColumnsCount : 2}
-                                                                                style={{ textAlign: "center", ...tableStyles.successBackground }}
+                                                                                style={{textAlign: "center", ...tableStyles.warningDarkBackground}}
                                                                             >
                                                                                 Production Usage
                                                                             </Table.Th>
-                                                                             {/*Remaining fixed columns*/}
-                                                                            <Table.Th rowSpan={2}>Out</Table.Th>
-                                                                            <Table.Th rowSpan={2}>Out Amount</Table.Th>
-                                                                            <Table.Th rowSpan={2}>Closing Stock</Table.Th>
-                                                                            <Table.Th rowSpan={2}>Closing Amount</Table.Th>
+                                                                            {/*Remaining fixed columns*/}
+                                                                            <Table.Th rowSpan={3}>Out</Table.Th>
+                                                                            <Table.Th rowSpan={3}>Out Amount</Table.Th>
+                                                                            <Table.Th rowSpan={3}>Closing
+                                                                                Stock</Table.Th>
+                                                                            <Table.Th rowSpan={3}>Closing
+                                                                                Amount</Table.Th>
                                                                         </Table.Tr>
-                                                                         {/*2nd header row for production items*/}
+                                                                        {/*2nd header row for production items*/}
                                                                         <Table.Tr>
                                                                             {productionItemsForThisDate.length > 0 ? (
                                                                                 productionItemsForThisDate.map((item) => (
-                                                                                    <React.Fragment key={`header-${item.production_item_id}`}>
-                                                                                        <Table.Th style={{ textAlign: "center", ...tableStyles.successBackground }}>
-                                                                                            {safeText(item.item_name)} Qty
-                                                                                        </Table.Th>
-                                                                                        <Table.Th style={{ textAlign: "center", ...tableStyles.warningBackground }}>
-                                                                                            {safeText(item.item_name)} Amount
+                                                                                    <React.Fragment
+                                                                                        key={`header-${item.production_item_id}`}>
+                                                                                        <Table.Th
+                                                                                            style={{textAlign: "center", ...tableStyles.errorBackground}}
+                                                                                            colSpan={2}>
+                                                                                            {safeText(item.item_name)}
                                                                                         </Table.Th>
                                                                                     </React.Fragment>
                                                                                 ))
                                                                             ) : (
                                                                                 <>
-                                                                                    <Table.Th style={{ textAlign: "center", ...tableStyles.successBackground }}>
+                                                                                    <Table.Th
+                                                                                        style={{textAlign: "center", ...tableStyles.successBackground}}>
                                                                                         Production Qty
                                                                                     </Table.Th>
-                                                                                    <Table.Th style={{ textAlign: "center", ...tableStyles.warningBackground }}>
+                                                                                    <Table.Th
+                                                                                        style={{textAlign: "center", ...tableStyles.warningBackground}}>
+                                                                                        Production Amount
+                                                                                    </Table.Th>
+                                                                                </>
+                                                                            )}
+                                                                        </Table.Tr>
+
+                                                                        <Table.Tr>
+                                                                            {productionItemsForThisDate.length > 0 ? (
+                                                                                productionItemsForThisDate.map((item) => (
+                                                                                    <React.Fragment
+                                                                                        key={`header-${item.production_item_id}`}>
+                                                                                        <Table.Th
+                                                                                            style={{textAlign: "center", ...tableStyles.successBackground}}>
+                                                                                            Qty
+                                                                                        </Table.Th>
+                                                                                        <Table.Th
+                                                                                            style={{textAlign: "center", ...tableStyles.warningBackground}}>
+                                                                                            Amount
+                                                                                        </Table.Th>
+                                                                                    </React.Fragment>
+                                                                                ))
+                                                                            ) : (
+                                                                                <>
+                                                                                    <Table.Th
+                                                                                        style={{textAlign: "center", ...tableStyles.successBackground}}>
+                                                                                        Production Qty
+                                                                                    </Table.Th>
+                                                                                    <Table.Th
+                                                                                        style={{textAlign: "center", ...tableStyles.warningBackground}}>
                                                                                         Production Amount
                                                                                     </Table.Th>
                                                                                 </>
@@ -346,7 +395,8 @@ export default function ProductionMatrixReport() {
                                                                                         padding: "20px",
                                                                                     }}
                                                                                 >
-                                                                                    No material data available for this date.
+                                                                                    No material data available for this
+                                                                                    date.
                                                                                 </Table.Td>
                                                                             </Table.Tr>
                                                                         ) : (
@@ -354,9 +404,11 @@ export default function ProductionMatrixReport() {
                                                                                 const isNegativeStock = Number(material.closing_stock || 0) < 0
                                                                                 const isNegativeAmount = Number(material.closing_stock_amount || 0) < 0
                                                                                 return (
-                                                                                    <Table.Tr key={`${dateKey}-${material.material_id || index}`}>
+                                                                                    <Table.Tr
+                                                                                        key={`${dateKey}-${material.material_id || index}`}>
                                                                                         <Table.Td>{safeNumber(material.sl || index + 1, 0)}</Table.Td>
-                                                                                        <Table.Td style={{ textAlign: "left" }}>
+                                                                                        <Table.Td
+                                                                                            style={{textAlign: "left"}}>
                                                                                             {safeText(material.product_name_english)}
                                                                                         </Table.Td>
                                                                                         <Table.Td>{safeText(material.unit)}</Table.Td>
@@ -371,10 +423,12 @@ export default function ProductionMatrixReport() {
                                                                                                 <React.Fragment
                                                                                                     key={`usage-${item.production_item_id}-${material.material_id}`}
                                                                                                 >
-                                                                                                    <Table.Td style={tableStyles.successBackground}>
+                                                                                                    <Table.Td
+                                                                                                        style={tableStyles.successBackground}>
                                                                                                         {usage ? safeNumber(usage.quantity) : "-"}
                                                                                                     </Table.Td>
-                                                                                                    <Table.Td style={tableStyles.warningBackground}>
+                                                                                                    <Table.Td
+                                                                                                        style={tableStyles.warningBackground}>
                                                                                                         {usage ? safeNumber(usage.amount) : "-"}
                                                                                                     </Table.Td>
                                                                                                 </React.Fragment>

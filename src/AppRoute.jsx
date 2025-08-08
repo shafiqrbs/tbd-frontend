@@ -84,7 +84,9 @@ import WarehouseIssueIndex from "./components/modules/inventory/warehouse-issue/
 import InoutIndex from "./components/modules/procurement/in-out/InoutIndex.jsx";
 import ProductBatch from "./components/modules/production/production-inhouse/product-batch/ProductBatchIndex.jsx";
 import ProductionIssueReport from "./components/modules/report/production/ProductionIssueReport.jsx";
-import ProductionMatrixReport from "./components/modules/report/production/ProductionMatrixReport.jsx";
+import DailyProductionExpenseReport from "./components/modules/report/production/DailyProductionExpenseReport.jsx";
+import DailyProductionExpenseWarehouseReport
+    from "./components/modules/report/production/DailyProductionExpenseWarehouseReport.jsx";
 
 function AppRoute() {
 	return (
@@ -756,9 +758,14 @@ function AppRoute() {
 								<ProductionIssueReport />
 							</ProtectedRoute>
 						} />
-						<Route path="matrix" element={
+						<Route path="daily" element={
 							<ProtectedRoute roles={["role_production_admin"]}>
-								<ProductionMatrixReport />
+								<DailyProductionExpenseReport />
+							</ProtectedRoute>
+						} />
+						<Route path="daily-warehouse" element={
+							<ProtectedRoute roles={["role_production_admin"]}>
+								<DailyProductionExpenseWarehouseReport />
 							</ProtectedRoute>
 						} />
 					</Route>
