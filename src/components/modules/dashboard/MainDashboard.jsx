@@ -272,7 +272,7 @@ function MainDashboard(props) {
 									<Grid gutter={{ base: 2 }}>
 										<Grid.Col span={6}>
 											<Tooltip
-												label={t("CreateNewVoucherEntry")}
+												label={t("AccountingDashboard")}
 												withArrow
 												position="top-center"
 												bg={"#3d83d8"}
@@ -290,7 +290,7 @@ function MainDashboard(props) {
 													fit="cover"
 													w="100%"
 													onClick={() => {
-														navigate("/accounting/voucher-entry");
+														navigate("/accounting/dashboard");
 													}}
 													style={{ cursor: "pointer" }}
 												/>
@@ -298,7 +298,7 @@ function MainDashboard(props) {
 										</Grid.Col>
 										<Grid.Col span={"6"}>
 											<Title order={4} align="center" mt={0} mb={0}>
-												{t("VoucherEntry")}
+												{t("Accounting")}
 											</Title>
 											<Divider my={5} />
 											<Grid columns={18}>

@@ -3,7 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
     Grid, Box, ScrollArea, Tooltip, Group, Text, Drawer,
-    Flex, Modal, Menu, Table
+    Flex, Modal, Menu, Table, Card, TextInput, Title
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +11,16 @@ import {
     IconDeviceFloppy,
     IconPrinter,
     IconCheck,
-    IconX, IconDotsVertical, IconTrashX,
+    IconX,
+    IconDotsVertical,
+    IconTrashX,
+    IconSearch,
+    IconInfoCircle,
+    IconCalendar,
+    IconFilter,
+    IconRestore,
+    IconPdf,
+    IconFileTypeXls,
 
 } from "@tabler/icons-react";
 import {useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
@@ -32,6 +41,18 @@ import LedgerForm from "./LedgerForm.jsx";
 import LedgerUpdateFrom from "./LedgerUpdateFrom.jsx";
 import {showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import classes from "../../../../assets/css/FeaturesCards.module.css";
+import SelectForm from "../../../form-builders-filter/SelectForm";
+import DatePickerForm from "../../../form-builders/DatePicker";
+import {
+    setCategoryGroupFilterData,
+    setCustomerFilterData, setFileUploadFilterData,
+    setSearchKeyword,
+    setUserFilterData,
+    setVendorFilterData, setWarehouseFilterData
+} from "../../../../store/core/crudSlice";
+import {setCategoryFilterData, setProductFilterData} from "../../../../store/inventory/crudSlice";
+import {setProductionSettingFilterData} from "../../../../store/production/crudSlice";
 
 function LedgerDetailsModel(props) {
     const configData = localStorage.getItem('config-data');
@@ -46,12 +67,19 @@ function LedgerDetailsModel(props) {
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-
+    const [searchValue, setSearchValue] = useState("");
     const { ledgerDetails,setLedgerDetails } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
-    const height = mainAreaHeight-180; //TabList height 104
+    const height = mainAreaHeight-72; //TabList height 104
     const [journalItems,setJournalItems] = useState([])
+    const form = useForm({
+        initialValues: {
+            financial_year: "",
+            financial_start_date: "",
+            financial_end_date: "",
+        },
+    });
 
     useEffect(() => {
         const value = {
@@ -90,7 +118,7 @@ function LedgerDetailsModel(props) {
             fetchData();
         }
     }, [ledgerDetails, dispatch]);
-
+    console.log(journalItems?.ledgerItems);
 
     /*const rows = journalItems?.ledgerDetails?.flatMap((element) => [
         <Table.Tr key={element.id} bg="red.6">
@@ -109,8 +137,12 @@ function LedgerDetailsModel(props) {
         )),
     ]);*/
 
-    const rows2 = journalItems?.ledgerItems?.map((element) => (
+    const rows2 = journalItems?.ledgerItems?.map((element,index) => (
         <Table.Tr key={element.id} bg="blue.6">
+            <Table.Td>{index + 1}.</Table.Td>
+            <Table.Td>{element.created_date}</Table.Td>
+            <Table.Td>{element.invoice_no}</Table.Td>
+            <Table.Td>{element.voucher_name}</Table.Td>
             <Table.Td>{element.ledger_name}</Table.Td>
             {/*<Table.Td>{element.mode === 'debit' ? 'Debit' : 'Credit'}</Table.Td>*/}
             <Table.Td>{element.opening_amount}</Table.Td>
@@ -118,7 +150,7 @@ function LedgerDetailsModel(props) {
             <Table.Td>{element.mode === 'credit' && element.amount}</Table.Td>
             <Table.Td>{element.closing_amount
             }</Table.Td>
-            <Table.Td>{element.created_date}</Table.Td>
+
         </Table.Tr>
     ));
 
@@ -142,83 +174,409 @@ function LedgerDetailsModel(props) {
                     backgroundOpacity: 0.55,
                     blur: 3,
                 }}
-                size={"100%"}
+                fullScreen
+                transitionProps={{ transition: 'fade', duration: 200 }}
             >
                 <Box p={'8'}>
                     <Grid columns={24} gutter={{ base: 8 }}>
-                        <Grid.Col span={8} >
-                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                ledger Table
-                                <DataTable
-                                    classNames={{
-                                        root: tableCss.root,
-                                        table: tableCss.table,
-                                        header: tableCss.header,
-                                        footer: tableCss.footer,
-                                        pagination: tableCss.pagination,
-                                    }}
-                                    records={indexData.data}
-                                    columns={[
-                                        { accessor: 'parent_name', title: t('ParentHead') },
-                                        {
-                                            accessor: 'name',
-                                            title: t("Name"),
-                                            render: (item) => (
-                                                <Text
-                                                    component="a"
-                                                    size="sm"
-                                                    variant="subtle"
-                                                    c="red.6"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        setLedgerDetails(item)
-                                                    }}
-                                                    style={{ cursor: "pointer" }}
-                                                >
-                                                    {item.name}
-                                                </Text>
+                        <Grid.Col span={6} >
+                            <Box bg={'white'}>
+                                <Card shadow="md" radius="md" mb={'xs'}  className={classes.card} padding="xs">
+                                    <Box>
+                                        <Tooltip
+                                            label={t("EnterSearchAnyKeyword")}
+                                            px={16}
+                                            py={2}
+                                            position="top-end"
+                                            color='var(--theme-primary-color-6)'
+                                            withArrow
+                                            offset={2}
+                                            zIndex={100}
+                                            transitionProps={{
+                                                transition: "pop-bottom-left",
+                                                duration: 1000,
+                                            }}
+                                        >
+                                            <TextInput
+                                                leftSection={
+                                                    <IconSearch size={16} opacity={0.5} />
+                                                }
+                                                size="sm"
+                                                placeholder={t("ChooseProduct")}
+                                                onChange={(e) => {
+                                                    setSearchValue(e.target.value);
+                                                }}
+                                                value={searchValue}
+                                                id={"SearchKeyword"}
+                                                rightSection={
+                                                    searchValue ? (
+                                                        <Tooltip
+                                                            label={t("Close")}
+                                                            withArrow
+                                                            bg={`red.5`}
+                                                        >
+                                                            <IconX
+                                                                color='var( --theme-remove-color)'
+                                                                size={16}
+                                                                opacity={0.5}
+                                                                onClick={() => {
+                                                                    setSearchValue("");
+                                                                }}
+                                                            />
+                                                        </Tooltip>
+                                                    ) : (
+                                                        <Tooltip
+                                                            label={t("FieldIsRequired")}
+                                                            withArrow
+                                                            position={"bottom"}
+                                                            c={"red"}
+                                                            bg={`red.1`}
+                                                        >
+                                                            <IconInfoCircle size={16} opacity={0.5} />
+                                                        </Tooltip>
+                                                    )
+                                                }
+                                            />
+                                        </Tooltip>
+                                    </Box>
+                                    <Box fz="sm" c="dimmed" mt="sm">
+                                        <DataTable
+                                            classNames={{
+                                                root: tableCss.root,
+                                                table: tableCss.table,
+                                                header: tableCss.header,
+                                                footer: tableCss.footer,
+                                                pagination: tableCss.pagination,
+                                            }}
+                                            records={indexData.data}
+                                            columns={[
+                                                { accessor: 'parent_name', title: t('ParentHead') },
+                                                {
+                                                    accessor: 'name',
+                                                    title: t("Name"),
+                                                    render: (item) => (
+                                                        <Text
+                                                            component="a"
+                                                            size="sm"
+                                                            variant="subtle"
+                                                            c="var(--theme-primary-color-9)"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                setLedgerDetails(item)
+                                                            }}
+                                                            style={{ cursor: "pointer" }}
+                                                        >
+                                                            {item.name}
+                                                        </Text>
 
-                                            )
-                                        },
-                                        // { accessor: 'amount', title: t('Amount') },
-                                    ]
-                                    }
-                                    fetching={fetching}
-                                    totalRecords={indexData.total}
-                                    recordsPerPage={perPage}
-                                    page={page}
-                                    onPageChange={(p) => {
-                                        setPage(p)
-                                        dispatch(setFetching(true))
-                                    }}
-                                    loaderSize="xs"
-                                    loaderColor="grape"
-                                    height={height}
-                                    scrollAreaProps={{ type: 'never' }}
-                                    rowBackgroundColor={(item) => {
-                                        if (item.id === ledgerDetails.id) return '#e2c2c263';
-                                    }}
-                                />
+                                                    )
+                                                },
+                                                // { accessor: 'amount', title: t('Amount') },
+                                            ]
+                                            }
+                                            fetching={fetching}
+                                            totalRecords={indexData.total}
+                                            onPageChange={(p) => {
+                                                setPage(p)
+                                                dispatch(setFetching(true))
+                                            }}
+                                            loaderSize="xs"
+                                            loaderColor="grape"
+                                            height={height}
+                                            scrollAreaProps={{ type: 'never' }}
+                                            rowBackgroundColor={(item) => {
+                                                if (item.id === ledgerDetails.id) return 'var(--theme-primary-color-1)';
+                                            }}
+                                        />
+                                    </Box>
+                                </Card>
                             </Box>
                         </Grid.Col>
-                        <Grid.Col span={16}>
-                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                            ledger details
-                            <Table striped highlightOnHover withTableBorder withColumnBorders maxHeight={height}>
-                                <Table.Thead>
-                                    <Table.Tr>
-                                        <Table.Th>Ledger Name</Table.Th>
-                                        <Table.Th >Opening</Table.Th>
-                                        <Table.Th>Debit</Table.Th>
-                                        <Table.Th>Credit</Table.Th>
-                                        <Table.Th>Closing</Table.Th>
-                                        <Table.Th>Date</Table.Th>
-                                    </Table.Tr>
-                                </Table.Thead>
-                                {/*<Table.Tbody>{rows}</Table.Tbody>*/}
-                                {/*<hr/>*/}
-                                <Table.Tbody>{rows2}</Table.Tbody>
-                            </Table>
+                        <Grid.Col span={18}>
+                            <Box bg={"white"} p={"xs"}  className={"borderRadiusAll"} mb={"8"}>
+                                <Box bg={"white"}>
+                                    <Box
+                                        pl={`xs`}
+                                        pr={8}
+                                        pt={"4"}
+                                        pb={"4"}
+                                        mb={"4"}
+                                        className={"boxBackground"}
+                                    >
+                                        <Box>
+                                            <Grid columns={24} gutter={{ base: 8 }} justify="space-between" align="stretch" gutter={{ base: 2 }} grow>
+                                                <Grid.Col span="3">
+                                                    <Box>{t("LedgerName")}</Box>
+                                                </Grid.Col>
+                                                <Grid.Col span="6">
+                                                    <Box>01710105758-Sandra Foods Ltd.</Box>
+                                                </Grid.Col>
+                                                <Grid.Col span="3">
+                                                    <Box>{t("AccountHead")}</Box>
+                                                </Grid.Col>
+                                                <Grid.Col span="6">
+                                                    <Box>AccountReceivable</Box>
+                                                </Grid.Col>
+                                                <Grid.Col span="6">
+                                                    <Box>Balance:234234</Box>
+                                                </Grid.Col>
+                                            </Grid>
+
+                                        </Box>
+                                        <Box>
+                                            <Grid justify="space-between" align="stretch" gutter={{ base: 2 }} grow>
+                                                <Grid.Col span="4">
+                                                    <Box>
+                                                        <DatePickerForm
+                                                            tooltip={t("FinancialStartDateTooltip")}
+                                                            label=""
+                                                            placeholder={t("FinancialStartDate")}
+                                                            required={false}
+                                                            nextField={"financial_end_date"}
+                                                            form={form}
+                                                            name={"financial_start_date"}
+                                                            id={"financial_start_date"}
+                                                            leftSection={
+                                                                <IconCalendar size={16} opacity={0.5} />
+                                                            }
+                                                            rightSectionWidth={30}
+                                                            closeIcon={true}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span="4">
+                                                    <Box>
+                                                        <DatePickerForm
+                                                            tooltip={t("FinancialEndDateTooltip")}
+                                                            label=""
+                                                            placeholder={t("FinancialEndDate")}
+                                                            required={false}
+                                                            nextField={"capital_investment_id"}
+                                                            form={form}
+                                                            name={"financial_end_date"}
+                                                            id={"financial_end_date"}
+                                                            leftSection={
+                                                                <IconCalendar size={16} opacity={0.5} />
+                                                            }
+                                                            rightSectionWidth={30}
+                                                            closeIcon={true}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span="auto">
+                                                    <ActionIcon.Group mt={'1'} justify="center">
+                                                        <ActionIcon variant="default"
+                                                                    c={'red.4'}
+                                                                    size="lg" aria-label="Filter"
+                                                                    onClick={() => {
+                                                                        searchKeyword.length > 0 ?
+                                                                            (dispatch(setFetching(true)),
+                                                                                setSearchKeywordTooltip(false))
+                                                                            :
+                                                                            (setSearchKeywordTooltip(true),
+                                                                                setTimeout(() => {
+                                                                                    setSearchKeywordTooltip(false)
+                                                                                }, 1500))
+                                                                    }}
+                                                        >
+                                                            <Tooltip
+                                                                label={t('SearchButton')}
+                                                                px={16}
+                                                                py={2}
+                                                                withArrow
+                                                                position={"bottom"}
+                                                                c={'red'}
+                                                                bg={`red.1`}
+                                                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                                            >
+                                                                <IconSearch style={{ width: rem(18) }} stroke={1.5} />
+                                                            </Tooltip>
+                                                        </ActionIcon>
+                                                        {props.module !== 'category' && props.module !== 'category-group' && props.module !== 'particular' &&(
+                                                            <ActionIcon
+                                                                variant="default"
+                                                                size="lg"
+                                                                c={'gray.6'}
+                                                                aria-label="Settings"
+                                                                onClick={(e) => {
+                                                                    setFilterModel(true)
+                                                                }}
+                                                            >
+                                                                <Tooltip
+                                                                    label={t("FilterButton")}
+                                                                    px={16}
+                                                                    py={2}
+                                                                    withArrow
+                                                                    position={"bottom"}
+                                                                    c={'red'}
+                                                                    bg={`red.1`}
+                                                                    transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                                                >
+                                                                    <IconFilter style={{ width: rem(18) }} stroke={1.0} />
+                                                                </Tooltip>
+                                                            </ActionIcon>
+                                                        )}
+                                                        <ActionIcon variant="default" c={'gray.6'}
+                                                                    size="lg" aria-label="Settings">
+                                                            <Tooltip
+                                                                label={t("ResetButton")}
+                                                                px={16}
+                                                                py={2}
+                                                                withArrow
+                                                                position={"bottom"}
+                                                                c={'red'}
+                                                                bg={`red.1`}
+                                                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                                            >
+                                                                <IconRestore style={{ width: rem(18) }} stroke={1.5} onClick={() => {
+                                                                    dispatch(setSearchKeyword(''))
+                                                                    dispatch(setFetching(true))
+
+                                                                    if (props.module === 'customer') {
+                                                                        dispatch(setCustomerFilterData({
+                                                                            ...customerFilterData,
+                                                                            name: '',
+                                                                            mobile: ''
+                                                                        }));
+                                                                    } else if (props.module === 'vendor') {
+                                                                        dispatch(setVendorFilterData({
+                                                                            ...vendorFilterData,
+                                                                            name: '',
+                                                                            mobile: '',
+                                                                            company_name: ''
+                                                                        }));
+                                                                    } else if (props.module === 'user') {
+                                                                        dispatch(setUserFilterData({
+                                                                            ...userFilterData,
+                                                                            name: '',
+                                                                            mobile: '',
+                                                                            email: ''
+                                                                        }));
+                                                                    } else if (props.module === 'product') {
+                                                                        dispatch(setProductFilterData({
+                                                                            ...productFilterData,
+                                                                            name: '',
+                                                                            alternative_name: '',
+                                                                            sales_price: '',
+                                                                            sku: ''
+                                                                        }));
+                                                                    } else if (props.module === 'category-group') {
+                                                                        dispatch(setCategoryGroupFilterData({
+                                                                            ...categoryGroupFilterData,
+                                                                            name: ''
+                                                                        }));
+                                                                    } else if (props.module === 'production-setting') {
+                                                                        dispatch(setProductionSettingFilterData({
+                                                                            ...productionSettingFilterData,
+                                                                            name: '',
+                                                                            setting_type_id: ''
+                                                                        }));
+                                                                    }else if (props.module === 'category') {
+                                                                        dispatch(setCategoryFilterData({
+                                                                            ...categoryFilterData,
+                                                                            name: '',
+                                                                            parent_name : ''
+                                                                        }));
+                                                                    }else if (props.module === 'warehouse') {
+                                                                        dispatch(setWarehouseFilterData({
+                                                                            ...warehouseFilterData,
+                                                                            name: '',
+                                                                            email : '',
+                                                                            location : '',
+                                                                            mobile : '',
+                                                                        }));
+                                                                    }else if (props.module === 'file-upload') {
+                                                                        dispatch(setFileUploadFilterData({
+                                                                            ...fileUploadFilterData,
+                                                                            file_type: '',
+                                                                            original_name : '',
+                                                                            created: '',
+                                                                        }));
+                                                                    }
+                                                                }} />
+                                                            </Tooltip>
+                                                        </ActionIcon>
+                                                        <ActionIcon variant="default"
+                                                                    c={'green.8'}
+                                                                    size="lg" aria-label="Filter"
+                                                                    onClick={() => {
+                                                                        searchKeyword.length > 0 ?
+                                                                            (dispatch(setFetching(true)),
+                                                                                setSearchKeywordTooltip(false))
+                                                                            :
+                                                                            (setSearchKeywordTooltip(true),
+                                                                                setTimeout(() => {
+                                                                                    setSearchKeywordTooltip(false)
+                                                                                }, 1500))
+                                                                    }}
+                                                        >
+                                                            <Tooltip
+                                                                label={t('DownloadPdfFile')}
+                                                                px={16}
+                                                                py={2}
+                                                                withArrow
+                                                                position={"bottom"}
+                                                                c={'red'}
+                                                                bg={`red.1`}
+                                                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                                            >
+                                                                <IconPdf style={{ width: rem(18) }} stroke={1.5} />
+                                                            </Tooltip>
+                                                        </ActionIcon>
+
+                                                        <ActionIcon variant="default"
+                                                                    c={'green.8'}
+                                                                    size="lg" aria-label="Filter"
+                                                                    onClick={() => {
+                                                                        if (props.module === 'stock') {
+                                                                            props.setDownloadStockXls(true)
+                                                                        }
+                                                                    }}
+                                                        >
+                                                            <Tooltip
+                                                                label={t('DownloadExcelFile')}
+                                                                px={16}
+                                                                py={2}
+                                                                withArrow
+                                                                position={"bottom"}
+                                                                c={'red'}
+                                                                bg={`red.1`}
+                                                                transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                                            >
+                                                                <IconFileTypeXls style={{width: rem(18)}} stroke={1.5}/>
+                                                            </Tooltip>
+                                                        </ActionIcon>
+                                                        {props.module === 'ledger' &&(
+                                                            <ActionIcon.GroupSection onClick={handleSyncAllLedgerMasterdata} variant="default" c={'white'} size="lg" bg='var(--theme-primary-color-6)' miw={60}>
+                                                                {t('Sync')}
+                                                            </ActionIcon.GroupSection>
+                                                        )}
+                                                    </ActionIcon.Group>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+
+                                    </Box>
+                                    <Table.ScrollContainer height={height-24} type="native">
+                                        <Table>
+                                        <Table.Thead >
+                                            <Table.Tr>
+                                                <Table.Th>{t("S/N")}</Table.Th>
+                                                <Table.Th>{t("Date")}</Table.Th>
+                                                <Table.Th>{t("JVNo")}</Table.Th>
+                                                <Table.Th>{t("VoucherType")}</Table.Th>
+                                                <Table.Th>{t("Ledger Name")}</Table.Th>
+                                                <Table.Th >{t("Opening")}</Table.Th>
+                                                <Table.Th>{t("Debit")}</Table.Th>
+                                                <Table.Th>{t("Credit")}</Table.Th>
+                                                <Table.Th>{t("Closing")}</Table.Th>
+
+                                            </Table.Tr>
+                                        </Table.Thead>
+                                        <Table.Tbody >{rows2}</Table.Tbody>
+                                    </Table>
+                                    </Table.ScrollContainer>
+                                </Box>
                             </Box>
                         </Grid.Col>
                     </Grid>
