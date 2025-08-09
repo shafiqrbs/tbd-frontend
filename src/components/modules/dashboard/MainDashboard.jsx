@@ -1867,6 +1867,25 @@ function MainDashboard(props) {
 													}}
 												/>
 											</List.Item>
+
+											<List.Item
+												pl={"xs"}
+												icon={
+													<ThemeIcon color="red.6" size={20} radius="xl" variant="outline">
+														<IconShoppingBag />
+													</ThemeIcon>
+												}
+											>
+												<NavLink
+													pl={"md"}
+													href="/report/production/daily-warehouse"
+													label={t("DailySalesWarehouseReport")}
+													component="button"
+													onClick={(e) => {
+														navigate("/report/inventory/daily/sales-warehouse");
+													}}
+												/>
+											</List.Item>
 										</List>
 									</Box>
 								</Card>

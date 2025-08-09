@@ -33,8 +33,19 @@ const reportSlice = createSlice({
     initialState: {
         productionIssueFilterData: { month:'',year:''},
         productionIssueWarehouseFilterData: { warehouse_id:'',month:'',year:''},
+        inventorySalesFilterData: { month:'',year:''},
+        inventorySalesWarehouseFilterData: { warehouse_id:'',month:'',year:''},
     },
     reducers: {
+        setInventorySalesFilterData: (state, action) => {
+            state.inventorySalesFilterData.month = action.payload.month
+            state.inventorySalesFilterData.year = action.payload.year
+        },
+        setInventorySalesWarehouseFilterData: (state, action) => {
+            state.inventorySalesWarehouseFilterData.month = action.payload.month
+            state.inventorySalesWarehouseFilterData.year = action.payload.year
+            state.inventorySalesWarehouseFilterData.warehouse_id = action.payload.warehouse_id
+        },
         setProductionIssueFilterData: (state, action) => {
             state.productionIssueFilterData.month = action.payload.month
             state.productionIssueFilterData.year = action.payload.year
@@ -63,6 +74,6 @@ const reportSlice = createSlice({
     }
 })
 
-export const { setProductionIssueFilterData,setProductionIssueWarehouseFilterData} = reportSlice.actions
+export const { setProductionIssueFilterData,setProductionIssueWarehouseFilterData,setInventorySalesWarehouseFilterData,setInventorySalesFilterData} = reportSlice.actions
 
 export default reportSlice.reducer;

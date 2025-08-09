@@ -87,6 +87,7 @@ import ProductionIssueReport from "./components/modules/report/production/Produc
 import DailyProductionExpenseReport from "./components/modules/report/production/DailyProductionExpenseReport.jsx";
 import DailyProductionExpenseWarehouseReport
     from "./components/modules/report/production/DailyProductionExpenseWarehouseReport.jsx";
+import DailySalesWarehouseReport from "./components/modules/report/inventory/DailySalesWarehouseReport.jsx";
 
 function AppRoute() {
 	return (
@@ -766,6 +767,14 @@ function AppRoute() {
 						<Route path="daily-warehouse" element={
 							<ProtectedRoute roles={["role_production_admin"]}>
 								<DailyProductionExpenseWarehouseReport />
+							</ProtectedRoute>
+						} />
+					</Route>
+
+                    <Route path="inventory" element={<ProtectedModule modules={["inventory"]} />}>
+						<Route path="daily/sales-warehouse" element={
+                            <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+								<DailySalesWarehouseReport />
 							</ProtectedRoute>
 						} />
 					</Route>
