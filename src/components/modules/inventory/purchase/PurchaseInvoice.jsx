@@ -7,6 +7,7 @@ import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchase
 import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
 import Navigation from "../common/Navigation";
 import _SalesTable from "../sales/_SalesTable";
+import _GenericInvoiceForm2 from "./_GenericInvoiceForm2.jsx";
 
 function PurchaseInvoice() {
   const { t, i18n } = useTranslation();
@@ -48,7 +49,8 @@ function PurchaseInvoice() {
                     <Navigation module={"purchase-invoice"}/>
                   </Grid.Col>
                   <Grid.Col span={23} >
-                    <_GenericInvoiceForm domainConfigData={domainConfigData} />
+                    <_GenericInvoiceForm />
+                    {/*<_GenericInvoiceForm2 />*/}
                   </Grid.Col>
                 </Grid>
               </Box>
