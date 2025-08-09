@@ -84,10 +84,14 @@ import WarehouseIssueIndex from "./components/modules/inventory/warehouse-issue/
 import InoutIndex from "./components/modules/procurement/in-out/InoutIndex.jsx";
 import ProductBatch from "./components/modules/production/production-inhouse/product-batch/ProductBatchIndex.jsx";
 import ProductionIssueReport from "./components/modules/report/production/ProductionIssueReport.jsx";
+
 import DailyProductionExpenseReport from "./components/modules/report/production/DailyProductionExpenseReport.jsx";
 import DailyProductionExpenseWarehouseReport
     from "./components/modules/report/production/DailyProductionExpenseWarehouseReport.jsx";
 import DailySalesWarehouseReport from "./components/modules/report/inventory/DailySalesWarehouseReport.jsx";
+
+import AccountingDashboard from "./components/modules/accounting/dashboard/AccountingDashboard";
+
 
 function AppRoute() {
 	return (
@@ -587,6 +591,11 @@ function AppRoute() {
 
 				</Route>
 				<Route path="/accounting" element={<ProtectedModule modules={["accounting"]} />}>
+					<Route path="dashboard" element={
+						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+							<AccountingDashboard type={'index'}/>
+						</ProtectedRoute>
+					} />
 					<Route path="entry" element={
 						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
 							<VoucherIndex type={'index'}/>

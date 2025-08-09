@@ -37,6 +37,18 @@
  }
 }
 
+.cardSubTitle {
+&::after {
+     content: '';
+     display: block;
+     background-color:var(--theme-primary-color-4);
+     width: rem(56px);
+     height: rem(1px);
+     margin-top: var(--mantine-spacing-sm);
+ }
+}
+
+
 .btnPrimaryBg {
     background-color: var(--theme-primary-color-6);
 }
