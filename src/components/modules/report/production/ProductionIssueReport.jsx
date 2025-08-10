@@ -5,7 +5,7 @@ import {
     Progress,
     Box,
     Grid,
-    Table,
+    Table, Text, ScrollArea, Accordion, NavLink, LoadingOverlay
 } from "@mantine/core";
 import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar";
 import ProductionNavigation from "../common/ProductionNavigation";
@@ -15,14 +15,17 @@ import {useNavigate, useOutletContext} from "react-router-dom";
 import batchTableCss from "../../../../assets/css/ProductBatchTable.module.css";
 import _ProductionReportSearch from "./_ProductionReportSearch.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import classes from "../../../../assets/css/FeaturesCards.module.css";
+import {IconChevronRight, IconGauge, IconHome2} from "@tabler/icons-react";
+import RequisitionNavigation from "../../procurement/common/RequisitionNavigation";
+import ReportNavigation from "../ReportNavigation";
 
 export default function ProductionIssueReport() {
     const progress = getLoadingProgress();
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 120;
-
+    const height = mainAreaHeight - 66;
     const [batchReloadWithUpload, setBatchReloadWithUpload] = useState(false);
 
     const [indexData, setIndexData] = useState([])
@@ -70,8 +73,6 @@ export default function ProductionIssueReport() {
         };
         fetchData();
     }, [dispatch, fetching, reloadBatchData, searchValue]);
-
-
     const createTableData = (batches) => {
         const allMaterials = new Map();
 
@@ -110,10 +111,7 @@ export default function ProductionIssueReport() {
 
         return Array.from(allMaterials.values());
     };
-
     const tableData = createTableData(indexData?.data || []);
-
-
     const getUniqueProductionItemsWithTotals = (batches) => {
         const productionMap = new Map();
 
@@ -138,9 +136,8 @@ export default function ProductionIssueReport() {
 
         return Array.from(productionMap.values());
     };
-
     const productionItems = getUniqueProductionItemsWithTotals(indexData?.data);
-
+    const [activeTab, setActiveTab] = useState("Accounting");
     const [downloadFile, setDownloadFile] = useState(false)
     const [downloadType, setDownloadType] = useState('xlsx')
 
@@ -201,185 +198,185 @@ export default function ProductionIssueReport() {
             )}
             {progress === 100 && (
                 <Box>
-                    <ProductionHeaderNavbar
-                        pageTitle={t("ProductionBatch")}
-                        roles={t("Roles")}
-                        setBatchReloadWithUpload={setBatchReloadWithUpload}
-                    />
-                    <Box p={8}>
+                    <LoadingOverlay visible={searchValue || downloadFile} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+                    <Box p={'xs'}>
                         <Grid columns={24} gutter={{base: 8}}>
-                            <Grid.Col span={1}>
-                                <ProductionNavigation module={"batch"}/>
-                            </Grid.Col>
-                            <Grid.Col span={23}>
-                                <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                                    <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'}
-                                         className={'boxBackground borderRadiusAll'}>
+                        <Grid.Col span={4}>
+                            <ReportNavigation height={height} />
+                        </Grid.Col>
+                        <Grid.Col span={20}>
+                            <Box className={"boxBackground borderRadiusAll"}>
+                                <Grid columns={24} gutter={{base:8}}>
+                                    <Grid.Col span={8}>
+                                        <Text pt={'xs'} pl={'md'} pb={'xs'}>{t("ManageReports")}</Text>
+                                    </Grid.Col>
+                                    <Grid.Col span={16} mt={'4'}>
                                         <_ProductionReportSearch
                                             module={'production-issue'}
                                             setSearchValue={setSearchValue}
                                             setDownloadFile={setDownloadFile}
                                             setDownloadType={setDownloadType}
                                         />
-                                    </Box>
-
-                                    <Box className="borderRadiusAll">
-                                        <div
-                                            className={batchTableCss.responsiveTableWrapper}
-                                            style={{
-                                                height: height,
-                                                minHeight: "300px",
-                                                overflowY: "auto",
-                                                overflowX: "auto",
-                                            }}
+                                </Grid.Col>
+                                </Grid>
+                            </Box>
+                            <Box bg={'white'} className="borderRadiusAll" p={'8'}>
+                                    <div
+                                        className={batchTableCss.responsiveTableWrapper}
+                                        style={{
+                                            height: height,
+                                            minHeight: "300px",
+                                            overflowY: "auto",
+                                            overflowX: "auto",
+                                        }}
+                                    >
+                                        <Table
+                                            stickyHeader
+                                            withTableBorder
+                                            withColumnBorders
+                                            striped
+                                            highlightOnHover
+                                            className={batchTableCss.table}
                                         >
-                                            <Table
-                                                stickyHeader
-                                                withTableBorder
-                                                withColumnBorders
-                                                striped
-                                                highlightOnHover
-                                                className={batchTableCss.table}
-                                            >
-                                                <Table.Thead>
-                                                    <Table.Tr className={batchTableCss.topRowBackground}>
-                                                        <Table.Th rowSpan={3} colSpan={2} ta="center">Basic
-                                                            Information</Table.Th>
-                                                        <Table.Th ta="center"
-                                                                  colSpan={productionItems?.length * 2 || 0}>
-                                                            Issue Production Quantity
+                                            <Table.Thead>
+                                                <Table.Tr className={batchTableCss.topRowBackground}>
+                                                    <Table.Th rowSpan={3} colSpan={2} ta="center">Basic
+                                                        Information</Table.Th>
+                                                    <Table.Th ta="center"
+                                                              colSpan={productionItems?.length * 2 || 0}>
+                                                        Issue Production Quantity
+                                                    </Table.Th>
+                                                    <Table.Th ta="center" colSpan={4}>
+                                                        Total Expense Material
+                                                    </Table.Th>
+                                                    <Table.Th ta="center" colSpan={2}>
+                                                        {t('CurrentStock')} {indexData?.warehouse_name ? `(${indexData.warehouse_name})` : ''}
+                                                    </Table.Th>
+                                                </Table.Tr>
+                                                <Table.Tr>
+                                                    {productionItems?.map((item) => (
+                                                        <React.Fragment key={`issue-${item.id}`}>
+                                                            <Table.Th className={batchTableCss.successBackground}
+                                                                      ta="center">Issue</Table.Th>
+                                                            <Table.Th className={batchTableCss.warningBackground}
+                                                                      ta="center">Receive</Table.Th>
+                                                        </React.Fragment>
+                                                    ))}
+                                                    <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
+                                                              ta="center">Issue</Table.Th>
+                                                    <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
+                                                              ta="center">Expense</Table.Th>
+                                                    <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
+                                                              ta="center">Less</Table.Th>
+                                                    <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
+                                                              ta="center">More</Table.Th>
+                                                    <Table.Th className={batchTableCss.errorBackground} rowSpan={3}
+                                                              ta="center">Stock</Table.Th>
+                                                    <Table.Th className={batchTableCss.warningDarkBackground}
+                                                              rowSpan={3} ta="center">Remaining</Table.Th>
+                                                </Table.Tr>
+                                                <Table.Tr>
+                                                    {productionItems?.map((item) => (
+                                                        <React.Fragment key={`values-${item.id}`}>
+                                                            <Table.Td className={batchTableCss.successBackground}>
+                                                                {Number.isInteger(Number(item.issue_quantity)) ? Number(item.issue_quantity) : Number(item.issue_quantity).toFixed(2)}
+                                                            </Table.Td>
+                                                            <Table.Td className={batchTableCss.warningBackground}>
+                                                                {Number.isInteger(Number(item.receive_quantity)) ? Number(item.receive_quantity) : Number(item.receive_quantity).toFixed(2)}
+                                                            </Table.Td>
+                                                        </React.Fragment>
+                                                    ))}
+                                                </Table.Tr>
+                                                <Table.Tr className={batchTableCss.highlightedRow}>
+                                                    <Table.Th>Material Item</Table.Th>
+                                                    <Table.Th>Unit</Table.Th>
+                                                    {productionItems?.map((item) => (
+                                                        <Table.Th key={`header-${item.id}`} ta="center" colSpan={2}
+                                                                  color={'red'} style={{fontWeight: 1000}}>
+                                                            {item.name}
                                                         </Table.Th>
-                                                        <Table.Th ta="center" colSpan={4}>
-                                                            Total Expense Material
-                                                        </Table.Th>
-                                                        <Table.Th ta="center" colSpan={2}>
-                                                            {t('CurrentStock')} {indexData?.warehouse_name ? `(${indexData.warehouse_name})` : ''}
-                                                        </Table.Th>
-                                                    </Table.Tr>
-                                                    <Table.Tr>
-                                                        {productionItems?.map((item) => (
-                                                            <React.Fragment key={`issue-${item.id}`}>
-                                                                <Table.Th className={batchTableCss.successBackground}
-                                                                          ta="center">Issue</Table.Th>
-                                                                <Table.Th className={batchTableCss.warningBackground}
-                                                                          ta="center">Receive</Table.Th>
-                                                            </React.Fragment>
-                                                        ))}
-                                                        <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
-                                                                  ta="center">Issue</Table.Th>
-                                                        <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
-                                                                  ta="center">Expense</Table.Th>
-                                                        <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
-                                                                  ta="center">Less</Table.Th>
-                                                        <Table.Th className={batchTableCss.highlightedCell} rowSpan={3}
-                                                                  ta="center">More</Table.Th>
-                                                        <Table.Th className={batchTableCss.errorBackground} rowSpan={3}
-                                                                  ta="center">Stock</Table.Th>
-                                                        <Table.Th className={batchTableCss.warningDarkBackground}
-                                                                  rowSpan={3} ta="center">Remaining</Table.Th>
-                                                    </Table.Tr>
-                                                    <Table.Tr>
-                                                        {productionItems?.map((item) => (
-                                                            <React.Fragment key={`values-${item.id}`}>
-                                                                <Table.Td className={batchTableCss.successBackground}>
-                                                                    {Number.isInteger(Number(item.issue_quantity)) ? Number(item.issue_quantity) : Number(item.issue_quantity).toFixed(2)}
-                                                                </Table.Td>
-                                                                <Table.Td className={batchTableCss.warningBackground}>
-                                                                    {Number.isInteger(Number(item.receive_quantity)) ? Number(item.receive_quantity) : Number(item.receive_quantity).toFixed(2)}
-                                                                </Table.Td>
-                                                            </React.Fragment>
-                                                        ))}
-                                                    </Table.Tr>
-                                                    <Table.Tr className={batchTableCss.highlightedRow}>
-                                                        <Table.Th>Material Item</Table.Th>
-                                                        <Table.Th>Unit</Table.Th>
-                                                        {productionItems?.map((item) => (
-                                                            <Table.Th key={`header-${item.id}`} ta="center" colSpan={2}
-                                                                      color={'red'} style={{fontWeight: 1000}}>
-                                                                {item.name}
-                                                            </Table.Th>
-                                                        ))}
-                                                    </Table.Tr>
-                                                </Table.Thead>
-                                                <Table.Tbody>
-                                                    {tableData.map((material) => {
-                                                        let materialTotalIssue = 0
-                                                        let materialTotalExpense = 0
-                                                        let materialTotalLess = 0
-                                                        let materialTotalMore = 0
+                                                    ))}
+                                                </Table.Tr>
+                                            </Table.Thead>
+                                            <Table.Tbody>
+                                                {tableData.map((material) => {
+                                                    let materialTotalIssue = 0
+                                                    let materialTotalExpense = 0
+                                                    let materialTotalLess = 0
+                                                    let materialTotalMore = 0
 
-                                                        Object.values(material.productions).forEach(production => {
-                                                            materialTotalIssue += production.raw_issue_quantity || 0
-                                                            materialTotalExpense += production.needed_quantity || 0
+                                                    Object.values(material.productions).forEach(production => {
+                                                        materialTotalIssue += production.raw_issue_quantity || 0
+                                                        materialTotalExpense += production.needed_quantity || 0
 
-                                                            if (production.raw_issue_quantity > production.needed_quantity) {
-                                                                materialTotalLess += production.raw_issue_quantity - production.needed_quantity
-                                                            } else {
-                                                                materialTotalMore += production.needed_quantity - production.raw_issue_quantity
-                                                            }
-                                                        })
+                                                        if (production.raw_issue_quantity > production.needed_quantity) {
+                                                            materialTotalLess += production.raw_issue_quantity - production.needed_quantity
+                                                        } else {
+                                                            materialTotalMore += production.needed_quantity - production.raw_issue_quantity
+                                                        }
+                                                    })
 
-                                                        const remainingStock = material.total_stock - materialTotalExpense
-                                                        const isNegative = remainingStock < 0
-                                                        const remainingStockText = isNegative ? `(${Math.abs(remainingStock)})` : remainingStock
+                                                    const remainingStock = material.total_stock - materialTotalExpense
+                                                    const isNegative = remainingStock < 0
+                                                    const remainingStockText = isNegative ? `(${Math.abs(remainingStock)})` : remainingStock
 
-                                                        return (
-                                                            <Table.Tr key={material.id}>
-                                                                <Table.Td>{material.material_name}</Table.Td>
-                                                                <Table.Td>{material.unit}</Table.Td>
+                                                    return (
+                                                        <Table.Tr key={material.id}>
+                                                            <Table.Td>{material.material_name}</Table.Td>
+                                                            <Table.Td>{material.unit}</Table.Td>
 
-                                                                {productionItems?.map((item) => {
-                                                                    const production = material.productions[item.production_item_id]
-                                                                    return (
-                                                                        <React.Fragment
-                                                                            key={`prod-${item.id}-${material.id}`}>
-                                                                            <Table.Td
-                                                                                className={batchTableCss.successBackground}>
-                                                                                {
-                                                                                    production?.raw_issue_quantity
-                                                                                        ? Number.isInteger(Number(production.raw_issue_quantity))
-                                                                                            ? Number(production.raw_issue_quantity)
-                                                                                            : Number(production.raw_issue_quantity).toFixed(2)
-                                                                                        : '-'
-                                                                                }
-                                                                            </Table.Td>
-                                                                            <Table.Td
-                                                                                className={batchTableCss.warningBackground}>
-                                                                                {
-                                                                                    production?.needed_quantity
-                                                                                        ? Number.isInteger(Number(production.needed_quantity))
-                                                                                            ? Number(production.needed_quantity)
-                                                                                            : Number(production.needed_quantity).toFixed(2)
-                                                                                        : '-'
-                                                                                }
-                                                                            </Table.Td>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                })}
+                                                            {productionItems?.map((item) => {
+                                                                const production = material.productions[item.production_item_id]
+                                                                return (
+                                                                    <React.Fragment
+                                                                        key={`prod-${item.id}-${material.id}`}>
+                                                                        <Table.Td
+                                                                            className={batchTableCss.successBackground}>
+                                                                            {
+                                                                                production?.raw_issue_quantity
+                                                                                    ? Number.isInteger(Number(production.raw_issue_quantity))
+                                                                                    ? Number(production.raw_issue_quantity)
+                                                                                    : Number(production.raw_issue_quantity).toFixed(2)
+                                                                                    : '-'
+                                                                            }
+                                                                        </Table.Td>
+                                                                        <Table.Td
+                                                                            className={batchTableCss.warningBackground}>
+                                                                            {
+                                                                                production?.needed_quantity
+                                                                                    ? Number.isInteger(Number(production.needed_quantity))
+                                                                                    ? Number(production.needed_quantity)
+                                                                                    : Number(production.needed_quantity).toFixed(2)
+                                                                                    : '-'
+                                                                            }
+                                                                        </Table.Td>
+                                                                    </React.Fragment>
+                                                                )
+                                                            })}
 
-                                                                <Table.Td>{materialTotalIssue ? (Number.isInteger(materialTotalIssue) ? Number(materialTotalIssue) : Number(materialTotalIssue).toFixed(2)) : '-'}</Table.Td>
-                                                                <Table.Td>{materialTotalExpense ? (Number.isInteger(materialTotalExpense) ? Number(materialTotalExpense) : Number(materialTotalExpense).toFixed(2)) : '-'}</Table.Td>
-                                                                <Table.Td>{materialTotalLess ? (Number.isInteger(materialTotalLess) ? Number(materialTotalLess) : Number(materialTotalLess).toFixed(2)) : '-'}</Table.Td>
-                                                                <Table.Td>{materialTotalMore ? (Number.isInteger(materialTotalMore) ? Number(materialTotalMore) : Number(materialTotalMore).toFixed(2)) : '-'}</Table.Td>
-                                                                <Table.Td className={batchTableCss.errorBackground}>
-                                                                    {material.total_stock ? (Number.isInteger(material.total_stock) ? Number(material.total_stock) : Number(material.total_stock).toFixed(2)) : 0}
-                                                                    {/*{Number.isInteger(Number(material.stock_quantity)) ? Number(material.stock_quantity) : Number(material.stock_quantity).toFixed(2)}*/}
+                                                            <Table.Td>{materialTotalIssue ? (Number.isInteger(materialTotalIssue) ? Number(materialTotalIssue) : Number(materialTotalIssue).toFixed(2)) : '-'}</Table.Td>
+                                                            <Table.Td>{materialTotalExpense ? (Number.isInteger(materialTotalExpense) ? Number(materialTotalExpense) : Number(materialTotalExpense).toFixed(2)) : '-'}</Table.Td>
+                                                            <Table.Td>{materialTotalLess ? (Number.isInteger(materialTotalLess) ? Number(materialTotalLess) : Number(materialTotalLess).toFixed(2)) : '-'}</Table.Td>
+                                                            <Table.Td>{materialTotalMore ? (Number.isInteger(materialTotalMore) ? Number(materialTotalMore) : Number(materialTotalMore).toFixed(2)) : '-'}</Table.Td>
+                                                            <Table.Td className={batchTableCss.errorBackground}>
+                                                                {material.total_stock ? (Number.isInteger(material.total_stock) ? Number(material.total_stock) : Number(material.total_stock).toFixed(2)) : 0}
+                                                                {/*{Number.isInteger(Number(material.stock_quantity)) ? Number(material.stock_quantity) : Number(material.stock_quantity).toFixed(2)}*/}
 
-                                                                </Table.Td>
-                                                                <Table.Td
-                                                                    className={batchTableCss.warningDarkBackground}>
-                                                                    {`${isNegative ? '-' : ''}${Math.abs(remainingStock)}`}
-                                                                </Table.Td>
-                                                            </Table.Tr>
-                                                        )
-                                                    })}
-                                                </Table.Tbody>
-                                            </Table>
-                                        </div>
-                                    </Box>
+                                                            </Table.Td>
+                                                            <Table.Td
+                                                                className={batchTableCss.warningDarkBackground}>
+                                                                {`${isNegative ? '-' : ''}${Math.abs(remainingStock)}`}
+                                                            </Table.Td>
+                                                        </Table.Tr>
+                                                    )
+                                                })}
+                                            </Table.Tbody>
+                                        </Table>
+                                    </div>
                                 </Box>
-                            </Grid.Col>
-                        </Grid>
+
+                        </Grid.Col>
+                    </Grid>
                     </Box>
                 </Box>
             )}

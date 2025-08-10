@@ -9,7 +9,7 @@ import {
     Grid,
     Table,
     Title,
-    Tabs, LoadingOverlay,
+    Tabs, LoadingOverlay, Text,
 } from "@mantine/core"
 import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar"
 import ProductionNavigation from "../common/ProductionNavigation"
@@ -23,13 +23,15 @@ import {useOutletContext} from "react-router-dom"
 import batchTableCss from "../../../../assets/css/ProductBatchTable.module.css"
 import _ProductionReportSearch from "./_ProductionReportSearch.jsx"
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx"
+import RequisitionNavigation from "../../procurement/common/RequisitionNavigation";
+import ReportNavigation from "../ReportNavigation";
 
 export default function DailyProductionExpenseWarehouseReport() {
     const progress = getLoadingProgress()
     const dispatch = useDispatch()
     const {t, i18n} = useTranslation()
     const {isOnline, mainAreaHeight} = useOutletContext()
-    const height = mainAreaHeight - 120
+    const height = mainAreaHeight - 72
     const [batchReloadWithUpload, setBatchReloadWithUpload] = useState(false)
     const [indexData, setIndexData] = useState(null) // Initialize as null to handle loading state
     const [searchValue, setSearchValue] = useState(false)
@@ -223,33 +225,31 @@ export default function DailyProductionExpenseWarehouseReport() {
             )}
             {progress === 100 && (
                 <Box>
-                    <ProductionHeaderNavbar
-                        pageTitle={t("ProductionBatch")}
-                        roles={t("Roles")}
-                        setBatchReloadWithUpload={setBatchReloadWithUpload}
-                    />
-                    <Box p={8}>
+                    <LoadingOverlay visible={searchValue || downloadFile} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+
+                    <Box p={'xs'}>
                         <Grid columns={24} gutter={{base: 8}}>
-                            <Grid.Col span={1}>
-                                <ProductionNavigation module={"batch"}/>
+                            <Grid.Col span={4}>
+                                <ReportNavigation/>
                             </Grid.Col>
-
-                            <LoadingOverlay visible={searchValue || downloadFile} zIndex={1000}
-                                            overlayProps={{radius: "sm", blur: 2}}/>
-
-                            <Grid.Col span={23}>
+                            <Grid.Col span={20}>
+                                <Box className={"boxBackground borderRadiusAll"}>
+                                    <Grid columns={24} gutter={{base:8}}>
+                                        <Grid.Col span={8}>
+                                            <Text pt={'xs'} pl={'md'} pb={'xs'}>{t("ManageReports")}</Text>
+                                        </Grid.Col>
+                                        <Grid.Col span={16} mt={'4'}>
+                                            <_ProductionReportSearch
+                                                module={"production-matrix"}
+                                                isWarehouse={0}
+                                                setSearchValue={setSearchValue}
+                                                setDownloadFile={setDownloadFile}
+                                                setDownloadType={setDownloadType}
+                                            />
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
                                 <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                                    <Title order={4}>{t("DailyExpenseWarehouseReport")}</Title>
-                                    <Box pl={`xs`} pb={"xs"} pr={8} pt={"xs"} mb={"xs"}
-                                         className={"boxBackground borderRadiusAll"}>
-                                        <_ProductionReportSearch
-                                            module={"production-matrix"}
-                                            isWarehouse={1}
-                                            setSearchValue={setSearchValue}
-                                            setDownloadFile={setDownloadFile}
-                                            setDownloadType={setDownloadType}
-                                        />
-                                    </Box>
                                     <Box className="borderRadiusAll">
                                         {indexData && dates.length > 0 ? (
                                             <Tabs value={activeTab} onChange={setActiveTab} variant="pills" radius="xl">
