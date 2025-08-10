@@ -1,4 +1,3 @@
-"use client"
 import React, { useEffect, useState } from "react";
 import {
     Box,
@@ -6,11 +5,7 @@ import {
     Grid,
     Progress,
     Title,
-    Group,
-    Burger,
-    Menu,
     rem,
-    ActionIcon,
     Card,
     Text,
     List,
@@ -20,23 +15,21 @@ import {
     useMantineTheme, Tooltip, Image, Divider, Table, ScrollArea
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from "react-redux";
-import { setSearchKeyword } from "../../../../store/core/crudSlice";
-import { setInsertType } from "../../../../store/generic/crudSlice";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import { useDispatch } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import HeadGroupForm from "./AccountSummary";
-import HeadGroupTable from "./LedgerTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
-import AccountSummary from "./AccountSummary";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import classesScroll from "../../../../assets/css/Scrollbar.module.css";
-import {IconArrowRight, IconBasket, IconCheck, IconCurrencyMonero, IconMoneybag} from "@tabler/icons-react";
+import {
+    IconArrowRight,
+    IconBasket,
+    IconCurrencyMonero,
+    IconMoneybag, IconShoppingBagPlus,
+    IconShoppingBagSearch
+} from "@tabler/icons-react";
 import {modals} from "@mantine/modals";
-import {getIndexEntityData, setFetching, storeEntityDataWithFile} from "../../../../store/accounting/crudSlice";
+import {getIndexEntityData} from "../../../../store/accounting/crudSlice";
 import {notifications} from "@mantine/notifications";
-import axios from "axios";
-import Navigation from "../common/Navigation.jsx";
 import pos from "../../../../assets/images/pos/pos.png";
 import invoice from "../../../../assets/images/pos/invoice.png";
 import voucher from "../../../../assets/images/pos/voucher.png";
@@ -60,14 +53,31 @@ function AccountingDashboard(props) {
     const navigate = useNavigate();
     const [ledgerDetails,setLedgerDetails] = useState(null)
 
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    useEffect(() => {
-        const value = {
-            url: 'accounting/report/dashboard'
-        }
-        dispatch(getIndexEntityData(value))
-    }, []);
+    // const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const [indexData,setIndexData] = useState([])
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const value = {
+                url: 'accounting/report/dashboard',
+                param: {},
+            };
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error("Error:", resultAction);
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setIndexData(resultAction.payload);
+                }
+            } catch (error) {
+                console.error("Unexpected error in fetchData:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <>
@@ -585,13 +595,13 @@ function AccountingDashboard(props) {
                                                         </List.Item>
                                                     )}
 
-                                                    {/*
+
                                 <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
                                     <NavLink pl={'md'} href="accounting/sales-invoice" label={t('NewSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
                                 </List.Item>
                                 <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagPlus/></ThemeIcon>}>
                                     <NavLink pl={'md'} href="accounting/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
-                                </List.Item>*/}
+                                </List.Item>
                                                     <List.Item
                                                         pl={"xs"}
                                                         icon={
@@ -688,14 +698,14 @@ function AccountingDashboard(props) {
                                                             }}
                                                         />
                                                     </List.Item>
-                                                    {/* <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
+                                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
                                         <NavLink pl={'md'} href="accounting/voucher-entry" label={t('SampleModal')} component="button" onClick={(e) => { navigate('/accounting/modalIndex') }} onAuxClick={(e) => {
                                             // Handle middle mouse button click for browsers that support it
                                             if (e.button === 1) {
                                                 window.open('/accounting/voucher-entry', '_blank');
                                             }
                                         }} />
-                                    </List.Item> */}
+                                    </List.Item>
                                                     <List.Item
                                                         pl={"xs"}
                                                         icon={
@@ -797,13 +807,13 @@ function AccountingDashboard(props) {
                                                         </List.Item>
                                                     )}
 
-                                                    {/*
+
                                 <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
                                     <NavLink pl={'md'} href="accounting/sales-invoice" label={t('NewSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
                                 </List.Item>
                                 <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagPlus/></ThemeIcon>}>
                                     <NavLink pl={'md'} href="accounting/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
-                                </List.Item>*/}
+                                </List.Item>
                                                     <List.Item
                                                         pl={"xs"}
                                                         icon={
@@ -900,14 +910,14 @@ function AccountingDashboard(props) {
                                                             }}
                                                         />
                                                     </List.Item>
-                                                    {/* <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
+                                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
                                         <NavLink pl={'md'} href="accounting/voucher-entry" label={t('SampleModal')} component="button" onClick={(e) => { navigate('/accounting/modalIndex') }} onAuxClick={(e) => {
                                             // Handle middle mouse button click for browsers that support it
                                             if (e.button === 1) {
                                                 window.open('/accounting/voucher-entry', '_blank');
                                             }
                                         }} />
-                                    </List.Item> */}
+                                    </List.Item>
                                                     <List.Item
                                                         pl={"xs"}
                                                         icon={
