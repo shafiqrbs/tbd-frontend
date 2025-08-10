@@ -3,7 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
     Grid, Box, ScrollArea, Tooltip, Group, Text, Drawer,
-    Flex, Modal, Menu, Table, Card, TextInput, Title
+    Flex, Modal, Menu, Table, Card, TextInput, Title, Accordion, NavLink
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 
@@ -118,8 +118,23 @@ function LedgerDetailsModel(props) {
             fetchData();
         }
     }, [ledgerDetails, dispatch]);
-    console.log(journalItems?.ledgerItems);
 
+    const groupByParentName = (items) => {
+        return (Array.isArray(items) ? items : []).reduce((grouped, item) => {
+            if (!item.parent_name) return grouped;
+
+            if (!grouped[item.parent_name]) {
+                grouped[item.parent_name] = [];
+            }
+
+            grouped[item.parent_name].push(item);
+            return grouped;
+        }, {});
+    };
+
+// Example usage (assuming data is in a variable called ⁠ data ⁠)
+    const grouped = groupByParentName(indexData?.data || []);
+    const entries = Object.entries(grouped);
     /*const rows = journalItems?.ledgerDetails?.flatMap((element) => [
         <Table.Tr key={element.id} bg="red.6">
             <Table.Td>{element.ledger_name}</Table.Td>
@@ -240,54 +255,49 @@ function LedgerDetailsModel(props) {
                                         </Tooltip>
                                     </Box>
                                     <Box fz="sm" c="dimmed" mt="sm">
-                                        <DataTable
-                                            classNames={{
-                                                root: tableCss.root,
-                                                table: tableCss.table,
-                                                header: tableCss.header,
-                                                footer: tableCss.footer,
-                                                pagination: tableCss.pagination,
-                                            }}
-                                            records={indexData.data}
-                                            columns={[
-                                                { accessor: 'parent_name', title: t('ParentHead') },
-                                                {
-                                                    accessor: 'name',
-                                                    title: t("Name"),
-                                                    render: (item) => (
-                                                        <Text
-                                                            component="a"
-                                                            size="sm"
-                                                            variant="subtle"
-                                                            c="var(--theme-primary-color-9)"
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                setLedgerDetails(item)
-                                                            }}
-                                                            style={{ cursor: "pointer" }}
-                                                        >
-                                                            {item.name}
-                                                        </Text>
+                                        <Box className={"boxBackground borderRadiusAll"}>
+                                            <Text pt={'xs'} pl={'md'} pb={'xs'}>{t("ManageReports")}</Text>
+                                        </Box>
+                                        <ScrollArea h={height}
+                                                    scrollbarSize={2}
+                                                    scrollbars="y"
+                                                    type="never"
+                                                    bg={'white'}>
+                                            <Box ml={'4'} mr={'4'} mt={'4'}>
+                                                <Accordion
+                                                    chevronIconSize={20}
+                                                    variant="default"
+                                                    defaultValue="item-0"
+                                                    transitionDuration={1000}
+                                                >
+                                                    {entries.map(([groupName, children], index) => {
+                                                        // const Icon = getGroupIcon(groupName);
 
-                                                    )
-                                                },
-                                                // { accessor: 'amount', title: t('Amount') },
-                                            ]
-                                            }
-                                            fetching={fetching}
-                                            totalRecords={indexData.total}
-                                            onPageChange={(p) => {
-                                                setPage(p)
-                                                dispatch(setFetching(true))
-                                            }}
-                                            loaderSize="xs"
-                                            loaderColor="grape"
-                                            height={height}
-                                            scrollAreaProps={{ type: 'never' }}
-                                            rowBackgroundColor={(item) => {
-                                                if (item.id === ledgerDetails.id) return 'var(--theme-primary-color-1)';
-                                            }}
-                                        />
+                                                        return (
+                                                            <Accordion.Item key={groupName} value={`item-${index}`}>
+                                                                <Accordion.Control
+
+                                                                >
+                                                                    {t(groupName)}
+                                                                </Accordion.Control>
+                                                                <Accordion.Panel>
+                                                                    {children.map((item) => (
+                                                                        <NavLink
+                                                                            key={item.id}
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                setLedgerDetails(item)
+                                                                            }}
+                                                                            label={item.name}/>
+                                                                    ))}
+                                                                </Accordion.Panel>
+                                                            </Accordion.Item>
+                                                        );
+                                                    })}
+                                                </Accordion>
+
+                                            </Box>
+                                        </ScrollArea>
                                     </Box>
                                 </Card>
                             </Box>
@@ -309,7 +319,7 @@ function LedgerDetailsModel(props) {
                                                     <Box>{t("LedgerName")}</Box>
                                                 </Grid.Col>
                                                 <Grid.Col span="6">
-                                                    <Box>01710105758-Sandra Foods Ltd.</Box>
+                                                    <Box>{ledgerDetails?.name || 'Ledger Details'}</Box>
                                                 </Grid.Col>
                                                 <Grid.Col span="3">
                                                     <Box>{t("AccountHead")}</Box>

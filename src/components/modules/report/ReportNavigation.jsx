@@ -14,6 +14,7 @@ import {IconChevronRight, IconGauge, IconHome2, IconShoppingBagDiscount,IconScal
 export default function ReportNavigation() {
     const progress = getLoadingProgress();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight-48;
@@ -33,21 +34,28 @@ export default function ReportNavigation() {
                             <Accordion.Control icon={<IconBuildingFactory size={18} stroke={1.5} color="var(--mantine-color-green-8)" />} >{t("Production")}</Accordion.Control>
                             <Accordion.Panel>
                                 <NavLink
-                                    href="/report/production/issue"
+                                    onClick ={(e)=>{
+                                        navigate('/report/production/issue')
+                                    }}
                                     label={t("Issue")}
                                     rightSection={
                                         <IconChevronRight size={12} stroke={1} className="mantine-rotate-rtl" />
                                     }
                                 />
                                 <NavLink
-                                    href="/report/production/daily"
+                                    onClick ={(e)=>{
+                                        navigate('/report/production/daily')
+                                    }}
                                     label={t("DailyExpense")}
                                     rightSection={
                                         <IconChevronRight size={12} stroke={1} className="mantine-rotate-rtl" />
                                     }
                                 />
                                 <NavLink
-                                    href="/report/production/daily-warehouse"
+                                    href=""
+                                    onClick ={(e)=>{
+                                        navigate('/report/production/daily-warehouse')
+                                    }}
                                     label={t("DailyWarehouseExpense")}
                                     rightSection={
                                         <IconChevronRight size={12} stroke={1} className="mantine-rotate-rtl" />
