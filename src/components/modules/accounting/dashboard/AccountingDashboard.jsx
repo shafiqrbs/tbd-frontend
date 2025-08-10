@@ -55,6 +55,7 @@ function AccountingDashboard(props) {
 
     // const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const [indexData,setIndexData] = useState([])
+    console.log(indexData)
 
     useEffect(() => {
         const fetchData = async () => {

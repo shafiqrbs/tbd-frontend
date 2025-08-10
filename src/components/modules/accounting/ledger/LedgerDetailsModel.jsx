@@ -267,14 +267,15 @@ function LedgerDetailsModel(props) {
                                                 <Accordion
                                                     chevronIconSize={20}
                                                     variant="default"
-                                                    defaultValue="item-0"
+                                                    // defaultValue="item-0"
+                                                    defaultValue={ledgerDetails.parent_name}
                                                     transitionDuration={1000}
                                                 >
                                                     {entries.map(([groupName, children], index) => {
                                                         // const Icon = getGroupIcon(groupName);
 
                                                         return (
-                                                            <Accordion.Item key={groupName} value={`item-${index}`}>
+                                                            <Accordion.Item key={groupName} value={groupName}>
                                                                 <Accordion.Control
 
                                                                 >
