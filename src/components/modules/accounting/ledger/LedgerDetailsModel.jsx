@@ -153,7 +153,7 @@ function LedgerDetailsModel(props) {
     ]);*/
 
     const rows2 = journalItems?.ledgerItems2?.map((element,index) => (
-        <Table.Tr key={element.id} bg="blue.6">
+        <Table.Tr key={element.id}>
             {/*<Table.Td>{index + 1}.</Table.Td>*/}
             <Table.Td>{element.id}.</Table.Td>
             <Table.Td>{element.created_date}</Table.Td>
@@ -163,8 +163,8 @@ function LedgerDetailsModel(props) {
             <Table.Td>{element.ledger_name}</Table.Td>
             {/*<Table.Td>{element.mode === 'debit' ? 'Debit' : 'Credit'}</Table.Td>*/}
             <Table.Td>{element.opening_amount}</Table.Td>
-            <Table.Td>{element.mode == 'Debit' && element.amount}</Table.Td>
-            <Table.Td>{element.mode == 'Credit' && element.amount}</Table.Td>
+            <Table.Td>{element.mode === 'Debit' && element.amount}</Table.Td>
+            <Table.Td>{element.mode === 'Credit' && element.amount}</Table.Td>
             <Table.Td>{element.closing_amount}</Table.Td>
 
         </Table.Tr>
@@ -186,14 +186,6 @@ function LedgerDetailsModel(props) {
 
         </Table.Tr>
     ));
-
-    /*<Table.Th>Ledger Name</Table.Th>
-    <Table.Th >Opening</Table.Th>
-    <Table.Th>Debit</Table.Th>
-    <Table.Th>Credit</Table.Th>
-    <Table.Th>Closing</Table.Th>
-    <Table.Th>Date</Table.Th>*/
-
     return (
         <>
             <Modal
@@ -215,72 +207,14 @@ function LedgerDetailsModel(props) {
                         <Grid.Col span={6} >
                             <Box bg={'white'}>
                                 <Card shadow="md" radius="md" mb={'xs'}  className={classes.card} padding="xs">
-                                    <Box>
-                                        <Tooltip
-                                            label={t("EnterSearchAnyKeyword")}
-                                            px={16}
-                                            py={2}
-                                            position="top-end"
-                                            color='var(--theme-primary-color-6)'
-                                            withArrow
-                                            offset={2}
-                                            zIndex={100}
-                                            transitionProps={{
-                                                transition: "pop-bottom-left",
-                                                duration: 1000,
-                                            }}
-                                        >
-                                            <TextInput
-                                                leftSection={
-                                                    <IconSearch size={16} opacity={0.5} />
-                                                }
-                                                size="sm"
-                                                placeholder={t("ChooseProduct")}
-                                                onChange={(e) => {
-                                                    setSearchValue(e.target.value);
-                                                }}
-                                                value={searchValue}
-                                                id={"SearchKeyword"}
-                                                rightSection={
-                                                    searchValue ? (
-                                                        <Tooltip
-                                                            label={t("Close")}
-                                                            withArrow
-                                                            bg={`red.5`}
-                                                        >
-                                                            <IconX
-                                                                color='var( --theme-remove-color)'
-                                                                size={16}
-                                                                opacity={0.5}
-                                                                onClick={() => {
-                                                                    setSearchValue("");
-                                                                }}
-                                                            />
-                                                        </Tooltip>
-                                                    ) : (
-                                                        <Tooltip
-                                                            label={t("FieldIsRequired")}
-                                                            withArrow
-                                                            position={"bottom"}
-                                                            c={"red"}
-                                                            bg={`red.1`}
-                                                        >
-                                                            <IconInfoCircle size={16} opacity={0.5} />
-                                                        </Tooltip>
-                                                    )
-                                                }
-                                            />
-                                        </Tooltip>
-                                    </Box>
                                     <Box fz="sm" c="dimmed" mt="sm">
                                         <Box className={"boxBackground borderRadiusAll"}>
-                                            <Text pt={'xs'} pl={'md'} pb={'xs'}>{t("ManageReports")}</Text>
+                                            <Text pt={'xs'} pl={'md'} pb={'xs'}>{t("ManageLedger")}</Text>
                                         </Box>
-                                        <ScrollArea h={height}
+                                        <ScrollArea h={height-12}
                                                     scrollbarSize={2}
                                                     scrollbars="y"
-                                                    type="never"
-                                                    bg={'white'}>
+                                                    bg={'gray.2'}>
                                             <Box ml={'4'} mr={'4'} mt={'4'}>
                                                 <Accordion
                                                     chevronIconSize={20}
@@ -290,8 +224,6 @@ function LedgerDetailsModel(props) {
                                                     transitionDuration={1000}
                                                 >
                                                     {entries.map(([groupName, children], index) => {
-                                                        // const Icon = getGroupIcon(groupName);
-
                                                         return (
                                                             <Accordion.Item key={groupName} value={groupName}>
                                                                 <Accordion.Control
@@ -299,7 +231,7 @@ function LedgerDetailsModel(props) {
                                                                 >
                                                                     {t(groupName)}
                                                                 </Accordion.Control>
-                                                                <Accordion.Panel>
+                                                                <Accordion.Panel bg={'white'}>
                                                                     {children.map((item) => (
                                                                         <NavLink
                                                                             key={item.id}
@@ -307,14 +239,13 @@ function LedgerDetailsModel(props) {
                                                                                 e.preventDefault();
                                                                                 setLedgerDetails(item)
                                                                             }}
-                                                                            label={item.name}/>
+                                                                            label={item.name} />
                                                                     ))}
                                                                 </Accordion.Panel>
                                                             </Accordion.Item>
                                                         );
                                                     })}
                                                 </Accordion>
-
                                             </Box>
                                         </ScrollArea>
                                     </Box>
@@ -464,62 +395,8 @@ function LedgerDetailsModel(props) {
                                                                     if (props.module === 'customer') {
                                                                         dispatch(setCustomerFilterData({
                                                                             ...customerFilterData,
-                                                                            name: '',
-                                                                            mobile: ''
-                                                                        }));
-                                                                    } else if (props.module === 'vendor') {
-                                                                        dispatch(setVendorFilterData({
-                                                                            ...vendorFilterData,
-                                                                            name: '',
-                                                                            mobile: '',
-                                                                            company_name: ''
-                                                                        }));
-                                                                    } else if (props.module === 'user') {
-                                                                        dispatch(setUserFilterData({
-                                                                            ...userFilterData,
-                                                                            name: '',
-                                                                            mobile: '',
-                                                                            email: ''
-                                                                        }));
-                                                                    } else if (props.module === 'product') {
-                                                                        dispatch(setProductFilterData({
-                                                                            ...productFilterData,
-                                                                            name: '',
-                                                                            alternative_name: '',
-                                                                            sales_price: '',
-                                                                            sku: ''
-                                                                        }));
-                                                                    } else if (props.module === 'category-group') {
-                                                                        dispatch(setCategoryGroupFilterData({
-                                                                            ...categoryGroupFilterData,
-                                                                            name: ''
-                                                                        }));
-                                                                    } else if (props.module === 'production-setting') {
-                                                                        dispatch(setProductionSettingFilterData({
-                                                                            ...productionSettingFilterData,
-                                                                            name: '',
-                                                                            setting_type_id: ''
-                                                                        }));
-                                                                    }else if (props.module === 'category') {
-                                                                        dispatch(setCategoryFilterData({
-                                                                            ...categoryFilterData,
-                                                                            name: '',
-                                                                            parent_name : ''
-                                                                        }));
-                                                                    }else if (props.module === 'warehouse') {
-                                                                        dispatch(setWarehouseFilterData({
-                                                                            ...warehouseFilterData,
-                                                                            name: '',
-                                                                            email : '',
-                                                                            location : '',
-                                                                            mobile : '',
-                                                                        }));
-                                                                    }else if (props.module === 'file-upload') {
-                                                                        dispatch(setFileUploadFilterData({
-                                                                            ...fileUploadFilterData,
-                                                                            file_type: '',
-                                                                            original_name : '',
-                                                                            created: '',
+                                                                            financial_start_date: '',
+                                                                            financial_end_date: ''
                                                                         }));
                                                                     }
                                                                 }} />
@@ -589,7 +466,7 @@ function LedgerDetailsModel(props) {
                                     <Table.ScrollContainer height={height-24} type="native">
                                         <Table>
                                         <Table.Thead >
-                                            <Table.Tr>
+                                            <Table.Tr c={'white'} bg="var(--theme-primary-color-5)">
                                                 <Table.Th>{t("S/N")}</Table.Th>
                                                 <Table.Th>{t("Date")}</Table.Th>
                                                 <Table.Th>{t("JVNo")}</Table.Th>
@@ -599,7 +476,6 @@ function LedgerDetailsModel(props) {
                                                 <Table.Th>{t("Debit")}</Table.Th>
                                                 <Table.Th>{t("Credit")}</Table.Th>
                                                 <Table.Th>{t("Closing")}</Table.Th>
-
                                             </Table.Tr>
                                         </Table.Thead>
                                         <Table.Tbody >{rows2}</Table.Tbody>
