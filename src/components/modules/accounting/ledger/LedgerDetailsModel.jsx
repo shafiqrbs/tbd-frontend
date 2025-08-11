@@ -152,7 +152,25 @@ function LedgerDetailsModel(props) {
         )),
     ]);*/
 
-    const rows2 = journalItems?.ledgerItems?.map((element,index) => (
+    const rows2 = journalItems?.ledgerItems2?.map((element,index) => (
+        <Table.Tr key={element.id} bg="blue.6">
+            {/*<Table.Td>{index + 1}.</Table.Td>*/}
+            <Table.Td>{element.id}.</Table.Td>
+            <Table.Td>{element.created_date}</Table.Td>
+            {/*<Table.Td>{element.invoice_no}</Table.Td>*/}
+            <Table.Td>........</Table.Td>
+            <Table.Td>{element.voucher_name}</Table.Td>
+            <Table.Td>{element.ledger_name}</Table.Td>
+            {/*<Table.Td>{element.mode === 'debit' ? 'Debit' : 'Credit'}</Table.Td>*/}
+            <Table.Td>{element.opening_amount}</Table.Td>
+            <Table.Td>{element.mode == 'Debit' && element.amount}</Table.Td>
+            <Table.Td>{element.mode == 'Credit' && element.amount}</Table.Td>
+            <Table.Td>{element.closing_amount}</Table.Td>
+
+        </Table.Tr>
+    ));
+
+    const rows22 = journalItems?.ledgerItems?.map((element,index) => (
         <Table.Tr key={element.id} bg="blue.6">
             <Table.Td>{index + 1}.</Table.Td>
             <Table.Td>{element.created_date}</Table.Td>
