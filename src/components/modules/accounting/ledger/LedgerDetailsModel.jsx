@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import {
-    Button, rem, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, Drawer,
-    Flex, Modal, Menu, Table, Card, TextInput, Title, Accordion, NavLink
+import { rem, ActionIcon,
+    Grid, Box, ScrollArea, Tooltip, Text, Modal, Table, Card, Accordion, NavLink, LoadingOverlay
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 
 import {
-    IconDeviceFloppy,
-    IconPrinter,
-    IconCheck,
-    IconX,
-    IconDotsVertical,
-    IconTrashX,
     IconSearch,
-    IconInfoCircle,
     IconCalendar,
     IconFilter,
     IconRestore,
@@ -23,56 +14,36 @@ import {
     IconFileTypeXls,
 
 } from "@tabler/icons-react";
-import {useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
+import {useDisclosure} from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { isNotEmpty, useForm } from "@mantine/form";
-import {DataTable} from "mantine-datatable";
-import tableCss from "../../../../assets/css/Table.module.css";
-import {
-    deleteEntityData,
-    editEntityData, getIndexEntityData, setFetching,
-    setFormLoading,
-    setInsertType
-} from "../../../../store/accounting/crudSlice.js";
+import { useForm } from "@mantine/form";
+import { getIndexEntityData } from "../../../../store/accounting/crudSlice.js";
+import { getIndexEntityData as downloadSlice } from "../../../../store/report/reportSlice.js";
 import {modals} from "@mantine/modals";
-import Navigation from "../common/Navigation.jsx";
-import LedgerTable from "./LedgerTable.jsx";
-import LedgerForm from "./LedgerForm.jsx";
-import LedgerUpdateFrom from "./LedgerUpdateFrom.jsx";
 import {showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
-import SelectForm from "../../../form-builders-filter/SelectForm";
 import DatePickerForm from "../../../form-builders/DatePicker";
-import {
-    setCategoryGroupFilterData,
-    setCustomerFilterData, setFileUploadFilterData,
-    setSearchKeyword,
-    setUserFilterData,
-    setVendorFilterData, setWarehouseFilterData
-} from "../../../../store/core/crudSlice";
-import {setCategoryFilterData, setProductFilterData} from "../../../../store/inventory/crudSlice";
-import {setProductionSettingFilterData} from "../../../../store/production/crudSlice";
 
 function LedgerDetailsModel(props) {
-    const configData = localStorage.getItem('config-data');
     const dispatch = useDispatch()
 
-    const adjustment = -28;
     const [opened, { open, close }] = useDisclosure(true);
 
     const perPage = 50;
     const [page, setPage] = useState(1);
-    const entityEditData = useSelector((state => state.crudSlice.entityEditData))
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const [searchValue, setSearchValue] = useState("");
     const { ledgerDetails,setLedgerDetails } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
     const height = mainAreaHeight-72; //TabList height 104
     const [journalItems,setJournalItems] = useState([])
+
+    const [downloadFile, setDownloadFile] = useState(false)
+    const [downloadType, setDownloadType] = useState("xlsx")
+
     const form = useForm({
         initialValues: {
             financial_year: "",
@@ -135,33 +106,56 @@ function LedgerDetailsModel(props) {
 // Example usage (assuming data is in a variable called ⁠ data ⁠)
     const grouped = groupByParentName(indexData?.data || []);
     const entries = Object.entries(grouped);
-    /*const rows = journalItems?.ledgerDetails?.flatMap((element) => [
-        <Table.Tr key={element.id} bg="red.6">
-            <Table.Td>{element.ledger_name}</Table.Td>
-            <Table.Td>{element.mode === 'debit' ? 'Debit' : 'Credit'}</Table.Td>
-            <Table.Td>{element.amount}</Table.Td>
-            <Table.Td>{element.created_date}</Table.Td>
-        </Table.Tr>,
-        ...(element.childItems || []).map((c) => (
-            <Table.Tr key={c.id} bg="red.4">
-                <Table.Td>{c.ledger_name}</Table.Td>
-                <Table.Td>{c.mode === 'debit' ? 'Debit' : 'Credit'}</Table.Td>
-                <Table.Td>{c.amount}</Table.Td>
-                <Table.Td>{c.created_date}</Table.Td>
-            </Table.Tr>
-        )),
-    ]);*/
 
-    const rows2 = journalItems?.ledgerItems2?.map((element,index) => (
+
+    useEffect(() => {
+        if (downloadFile) {
+            const fetchData = async () => {
+                let route = ""
+                if (downloadType === "pdf") {
+                    route = "accounting/account-ledger-wise/journal/generate/pdf/"+ledgerDetails.id
+                } else if (downloadType === "xlsx") {
+                    route = "accounting/account-ledger-wise/journal/generate/xlsx/"+ledgerDetails.id
+                }
+                const value = {
+                    url: route,
+                    param: {}
+                }
+                try {
+                    const resultAction = await dispatch(downloadSlice(value))
+                    if (downloadSlice.rejected.match(resultAction)) {
+                        console.error("Error:", resultAction)
+                    } else if (downloadSlice.fulfilled.match(resultAction)) {
+                        if (resultAction.payload.status === 200) {
+                            const href = resultAction.payload.file_url
+                            // const href = `${import.meta.env.VITE_API_GATEWAY_URL + "account-ledger-wise/journal/ledger/file/download/"}${downloadType}`
+                            const anchorElement = document.createElement("a")
+                            anchorElement.href = href
+                            document.body.appendChild(anchorElement)
+                            anchorElement.click()
+                            document.body.removeChild(anchorElement)
+                        } else {
+                            showNotificationComponent(resultAction.payload.error, "red")
+                        }
+                    }
+                } catch (err) {
+                    console.error("Unexpected error:", err)
+                } finally {
+                    setDownloadFile(false)
+                }
+            }
+            fetchData()
+        }
+    }, [downloadFile, dispatch, downloadType])
+
+    console.log(journalItems?.ledgerItems)
+    const ledgerRecords = journalItems?.ledgerItems?.map((element,index) => (
         <Table.Tr key={element.id}>
-            {/*<Table.Td>{index + 1}.</Table.Td>*/}
-            <Table.Td>{element.id}.</Table.Td>
+            <Table.Td>{index + 1}.</Table.Td>
             <Table.Td>{element.created_date}</Table.Td>
-            {/*<Table.Td>{element.invoice_no}</Table.Td>*/}
-            <Table.Td>........</Table.Td>
+            <Table.Td>{element.invoice_no}</Table.Td>
             <Table.Td>{element.voucher_name}</Table.Td>
             <Table.Td>{element.ledger_name}</Table.Td>
-            {/*<Table.Td>{element.mode === 'debit' ? 'Debit' : 'Credit'}</Table.Td>*/}
             <Table.Td>{element.opening_amount}</Table.Td>
             <Table.Td>{element.mode === 'Debit' && element.amount}</Table.Td>
             <Table.Td>{element.mode === 'Credit' && element.amount}</Table.Td>
@@ -170,22 +164,6 @@ function LedgerDetailsModel(props) {
         </Table.Tr>
     ));
 
-    const rows22 = journalItems?.ledgerItems?.map((element,index) => (
-        <Table.Tr key={element.id} bg="blue.6">
-            <Table.Td>{index + 1}.</Table.Td>
-            <Table.Td>{element.created_date}</Table.Td>
-            <Table.Td>{element.invoice_no}</Table.Td>
-            <Table.Td>{element.voucher_name}</Table.Td>
-            <Table.Td>{element.ledger_name}</Table.Td>
-            {/*<Table.Td>{element.mode === 'debit' ? 'Debit' : 'Credit'}</Table.Td>*/}
-            <Table.Td>{element.opening_amount}</Table.Td>
-            <Table.Td>{element.mode === 'debit' && element.amount}</Table.Td>
-            <Table.Td>{element.mode === 'credit' && element.amount}</Table.Td>
-            <Table.Td>{element.closing_amount
-            }</Table.Td>
-
-        </Table.Tr>
-    ));
     return (
         <>
             <Modal
@@ -202,6 +180,8 @@ function LedgerDetailsModel(props) {
                 fullScreen
                 transitionProps={{ transition: 'fade', duration: 200 }}
             >
+                <LoadingOverlay visible={downloadFile} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+
                 <Box p={'8'}>
                     <Grid columns={24} gutter={{ base: 8 }}>
                         <Grid.Col span={6} >
@@ -219,7 +199,6 @@ function LedgerDetailsModel(props) {
                                                 <Accordion
                                                     chevronIconSize={20}
                                                     variant="default"
-                                                    // defaultValue="item-0"
                                                     defaultValue={ledgerDetails.parent_name}
                                                     transitionDuration={1000}
                                                 >
@@ -329,14 +308,7 @@ function LedgerDetailsModel(props) {
                                                                     c={'red.4'}
                                                                     size="lg" aria-label="Filter"
                                                                     onClick={() => {
-                                                                        searchKeyword.length > 0 ?
-                                                                            (dispatch(setFetching(true)),
-                                                                                setSearchKeywordTooltip(false))
-                                                                            :
-                                                                            (setSearchKeywordTooltip(true),
-                                                                                setTimeout(() => {
-                                                                                    setSearchKeywordTooltip(false)
-                                                                                }, 1500))
+
                                                                     }}
                                                         >
                                                             <Tooltip
@@ -389,7 +361,7 @@ function LedgerDetailsModel(props) {
                                                                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                                                             >
                                                                 <IconRestore style={{ width: rem(18) }} stroke={1.5} onClick={() => {
-                                                                    dispatch(setSearchKeyword(''))
+                                                                    /*dispatch(setSearchKeyword(''))
                                                                     dispatch(setFetching(true))
 
                                                                     if (props.module === 'customer') {
@@ -398,22 +370,17 @@ function LedgerDetailsModel(props) {
                                                                             financial_start_date: '',
                                                                             financial_end_date: ''
                                                                         }));
-                                                                    }
+                                                                    }*/
                                                                 }} />
                                                             </Tooltip>
                                                         </ActionIcon>
                                                         <ActionIcon variant="default"
                                                                     c={'green.8'}
                                                                     size="lg" aria-label="Filter"
-                                                                    onClick={() => {
-                                                                        searchKeyword.length > 0 ?
-                                                                            (dispatch(setFetching(true)),
-                                                                                setSearchKeywordTooltip(false))
-                                                                            :
-                                                                            (setSearchKeywordTooltip(true),
-                                                                                setTimeout(() => {
-                                                                                    setSearchKeywordTooltip(false)
-                                                                                }, 1500))
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault()
+                                                                        setDownloadType('pdf')
+                                                                        setDownloadFile(true)
                                                                     }}
                                                         >
                                                             <Tooltip
@@ -433,10 +400,10 @@ function LedgerDetailsModel(props) {
                                                         <ActionIcon variant="default"
                                                                     c={'green.8'}
                                                                     size="lg" aria-label="Filter"
-                                                                    onClick={() => {
-                                                                        if (props.module === 'stock') {
-                                                                            props.setDownloadStockXls(true)
-                                                                        }
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault()
+                                                                        setDownloadType('xlsx')
+                                                                        setDownloadFile(true)
                                                                     }}
                                                         >
                                                             <Tooltip
@@ -478,7 +445,7 @@ function LedgerDetailsModel(props) {
                                                 <Table.Th>{t("Closing")}</Table.Th>
                                             </Table.Tr>
                                         </Table.Thead>
-                                        <Table.Tbody >{rows2}</Table.Tbody>
+                                        <Table.Tbody >{ledgerRecords}</Table.Tbody>
                                     </Table>
                                     </Table.ScrollContainer>
                                 </Box>
@@ -486,7 +453,6 @@ function LedgerDetailsModel(props) {
                         </Grid.Col>
                     </Grid>
                 </Box>
-
             </Modal>
         </>
 
