@@ -117,16 +117,16 @@ function AccountingDashboard(props) {
                                                 fit="cover"
                                                 w="100%"
                                                 onClick={() => {
-                                                    domainConfig.inventory_config.is_pos === 1
-                                                        ? navigate("/pos/bakery")
-                                                        : navigate("/inventory/sales-invoice");
+                                                    navigate("/accounting/voucher-entry");
                                                 }}
                                                 style={{ cursor: "pointer" }}
                                             />
                                         </Tooltip>
                                     </Grid.Col>
                                     <Grid.Col span={"6"}>
-                                        <Title order={4} align="center" mt={0} mb={0}>
+                                        <Title order={4} align="center" mt={0} mb={0} onClick={() => {
+                                            navigate("/accounting/voucher-entry");
+                                        }}>
                                             {t("CustomerVoucher")}
                                         </Title>
                                         <Divider my={5} />
@@ -175,14 +175,16 @@ function AccountingDashboard(props) {
                                                     fit="cover"
                                                     w="100%"
                                                     onClick={() => {
-                                                        navigate("/accounting/dashboard");
+                                                        navigate("/accounting/voucher-entry");
                                                     }}
                                                     style={{ cursor: "pointer" }}
                                                 />
                                             </Tooltip>
                                         </Grid.Col>
                                         <Grid.Col span={"6"}>
-                                            <Title order={4} align="center" mt={0} mb={0}>
+                                            <Title order={4} align="center" mt={0} mb={0} onClick={() => {
+                                                navigate("/accounting/voucher-entry");
+                                            }}>
                                                 {t("VendorVoucher")}
                                             </Title>
                                             <Divider my={5} />
@@ -235,14 +237,16 @@ function AccountingDashboard(props) {
                                                     fit="cover"
                                                     w="100%"
                                                     onClick={() => {
-                                                        navigate("/procurement/new-requisition");
+                                                        navigate("/accounting/voucher-entry");
                                                     }}
                                                     style={{ cursor: "pointer" }}
                                                 />
                                             </Tooltip>
                                         </Grid.Col>
                                         <Grid.Col span={"6"}>
-                                            <Title order={4} align="center" mt={0} mb={0}>
+                                            <Title order={4} align="center" mt={0} mb={0} onClick={() => {
+                                                navigate("/accounting/voucher-entry");
+                                            }}>
                                                 {t("ExpenseVoucher")}
                                             </Title>
                                             <Divider my={5} />
@@ -294,14 +298,15 @@ function AccountingDashboard(props) {
                                                     fit="cover"
                                                     w="100%"
                                                     onClick={() => {
-                                                        navigate("/production/batch");
+                                                        navigate("/accounting/voucher-entry");
                                                     }}
                                                     style={{ cursor: "pointer" }}
                                                 />
                                             </Tooltip>
                                         </Grid.Col>
                                         <Grid.Col span={"6"}>
-                                            <Title order={4} align="center" mt={0} mb={0}>
+                                            <Title order={4} align="center" mt={0} mb={0}
+                                                   onClick={() => { navigate("/accounting/voucher-entry")} }>
                                                 {t("ContraVoucher")}
                                             </Title>
                                             <Divider my={5} />
