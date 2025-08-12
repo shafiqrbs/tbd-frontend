@@ -267,7 +267,7 @@ function VoucherFormIndex({currencySymbol}) {
         initialValues: {
             ref_no: "", issue_date: "", description: "",
         }, validate: {
-            ref_no: isNotEmpty(), issue_date: isNotEmpty(),
+            // ref_no: isNotEmpty(), issue_date: isNotEmpty(),
         },
     });
 
@@ -661,7 +661,7 @@ function VoucherFormIndex({currencySymbol}) {
                                                                 tooltip={t("VoucherRefNo")}
                                                                 label={t("VoucherRefNo")}
                                                                 placeholder={t("VoucherRefNo")}
-                                                                required={true}
+                                                                required={false}
                                                                 nextField={"issue_date"}
                                                                 name={"ref_no"}
                                                                 form={form}
@@ -674,7 +674,7 @@ function VoucherFormIndex({currencySymbol}) {
                                                                 tooltip={t("InvoiceDateValidateMessage")}
                                                                 label={t("IssueDate")}
                                                                 placeholder={t("IssueDate")}
-                                                                required={true}
+                                                                required={false}
                                                                 nextField={"discount"}
                                                                 form={form}
                                                                 name={"issue_date"}

@@ -38,11 +38,12 @@ function LedgerTable(props) {
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    // const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const [indexData,setIndexData] = useState([])
 
     const [ledgerDetails,setLedgerDetails] = useState(null)
 
-    useEffect(() => {
+    /*useEffect(() => {
         const value = {
             url: 'accounting/account-head',
             param: {
@@ -53,7 +54,36 @@ function LedgerTable(props) {
             }
         }
         dispatch(getIndexEntityData(value))
+    }, [fetching]);*/
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const value = {
+                url: 'accounting/account-head',
+                param: {
+                    group: 'ledger',
+                    term: searchKeyword,
+                    page: page,
+                    offset: perPage
+                }
+            };
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error("Error:", resultAction);
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setIndexData(resultAction.payload);
+                }
+            } catch (error) {
+                console.error("Unexpected error in fetchData:", error);
+            }
+        };
+
+        fetchData();
     }, [fetching]);
+
 
     const navigate = useNavigate()
     const [ledgerViewDrawer, setLedgerViewDrawer] = useState(false)
