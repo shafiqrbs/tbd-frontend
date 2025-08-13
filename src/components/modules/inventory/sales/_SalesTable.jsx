@@ -333,8 +333,8 @@ function _SalesTable(props) {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
-                                                            {/*{
-                                                                (data.customer_group=='Domain' && !data.is_domain_sales_completed) &&
+                                                            {
+                                                                (data.customer_group === 'Domain' && !data.approved_by_id && !data.is_domain_sales_completed) &&
                                                                 <Menu.Item
                                                                     onClick={()=>{
                                                                         modals.openConfirmModal({
@@ -361,10 +361,10 @@ function _SalesTable(props) {
                                                                 >
                                                                     {t("Approve")}
                                                                 </Menu.Item>
-                                                            }*/}
+                                                            }
 
                                                             {
-                                                                (data.customer_group!='Domain' && !data.approved_by_id) &&
+                                                                (data.customer_group !=='Domain' && !data.approved_by_id) &&
                                                                 <Menu.Item
                                                                     onClick={()=>{
                                                                         modals.openConfirmModal({
