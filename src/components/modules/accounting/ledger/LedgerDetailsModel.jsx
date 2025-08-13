@@ -12,7 +12,6 @@ import {
     LoadingOverlay,
     ActionIcon,
     Tooltip,
-    rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
@@ -30,15 +29,9 @@ import {
     IconFilter,
 } from "@tabler/icons-react";
 
-import {
-    getIndexEntityData,
-} from "../../../../store/accounting/crudSlice.js";
-import {
-    getIndexEntityData as downloadSlice,
-} from "../../../../store/report/reportSlice.js";
-import {
-    showInstantEntityData,
-} from "../../../../store/inventory/crudSlice.js";
+import { getIndexEntityData } from "../../../../store/accounting/crudSlice.js";
+import { getIndexEntityData as downloadSlice } from "../../../../store/report/reportSlice.js";
+import { showInstantEntityData } from "../../../../store/inventory/crudSlice.js";
 
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
 import DatePickerForm from "../../../form-builders/DatePicker";
@@ -60,6 +53,8 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
     const [indexData, setIndexData] = useState([]);
     const [downloadFile, setDownloadFile] = useState(false);
     const [downloadType, setDownloadType] = useState("xlsx");
+    const [isLoadingTable, setIsLoadingTable] = useState(false);
+    const [activeParent, setActiveParent] = useState(ledgerDetails?.parent_name || "");
 
     const getInitialDateRange = () => {
         const start = dayjs().startOf("month").format("YYYY-MM-DD");
@@ -104,12 +99,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
         const fetchLedgerAccounts = async () => {
             const value = {
                 url: "accounting/account-head",
-                param: {
-                    group: "ledger",
-                    term: searchKeyword,
-                    page,
-                    offset: perPage,
-                },
+                param: { group: "ledger", term: searchKeyword, page, offset: perPage },
             };
             try {
                 const result = await dispatch(getIndexEntityData(value));
@@ -127,7 +117,10 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
     useEffect(() => {
         const fetchJournal = async () => {
             if (!ledgerDetails?.id) return;
+
             const url = `accounting/account-ledger-wise/journal/${ledgerDetails.id}?start_date=${dateRange.startDate}&end_date=${dateRange.endDate}`;
+
+            setIsLoadingTable(true);
             try {
                 const result = await dispatch(showInstantEntityData(url));
                 if (
@@ -140,6 +133,8 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                 }
             } catch (e) {
                 console.error("Fetch journal error:", e);
+            } finally {
+                setIsLoadingTable(false);
             }
         };
 
@@ -156,14 +151,8 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
 
             try {
                 const result = await dispatch(downloadSlice({ url, param: {} }));
-                if (
-                    downloadSlice.fulfilled.match(result) &&
-                    result.payload.status === 200
-                ) {
-                    const href =
-                        import.meta.env.VITE_API_GATEWAY_URL +
-                        "ledger-report/download/" +
-                        result.payload.filename;
+                if (downloadSlice.fulfilled.match(result) && result.payload.status === 200) {
+                    const href = import.meta.env.VITE_API_GATEWAY_URL + "ledger-report/download/" + result.payload.filename;
                     const a = document.createElement("a");
                     a.href = href;
                     document.body.appendChild(a);
@@ -193,19 +182,69 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
     const grouped = groupByParentName(indexData?.data || []);
     const entries = Object.entries(grouped);
 
-    const records = journalItems?.ledgerItems?.map((row, idx) => (
+    const formatCumulativeRows = (items) => {
+        if (!items || items.length === 0) return [];
+
+        const result = [];
+        for (let i = 0; i < items.length; i++) {
+            const row = { ...items[i] };
+
+            if (i === 0) {
+                // First row: use its own opening_amount
+                const open = parseFloat(row.opening_amount) || 0;
+                const amount = parseFloat(row.amount) || 0;
+                const close = row.mode === 'Debit' ? open + amount : open - amount;
+                row.opening_amount = open;
+                row.closing_amount = close;
+            } else {
+                const prev = result[i - 1];
+                const open = prev.closing_amount;
+                const amount = parseFloat(row.amount) || 0;
+                const close = row.mode === 'Debit' ? open + amount : open - amount;
+                row.opening_amount = open;
+                row.closing_amount = close;
+            }
+
+            result.push(row);
+        }
+
+        return result;
+    };
+
+    const cumulativeRows = formatCumulativeRows(journalItems?.ledgerItems);
+
+    const { totalDebit, totalCredit } = cumulativeRows.reduce(
+        (acc, row) => {
+            const amount = parseFloat(row.amount) || 0;
+            if (row.mode === "Debit") acc.totalDebit += amount;
+            else acc.totalCredit += amount;
+            return acc;
+        },
+        { totalDebit: 0, totalCredit: 0 }
+    );
+
+    const records = cumulativeRows.map((row, idx) => (
         <Table.Tr key={row.id}>
             <Table.Td>{idx + 1}</Table.Td>
             <Table.Td>{row.created_date}</Table.Td>
             <Table.Td>{row.invoice_no}</Table.Td>
             <Table.Td>{row.voucher_name}</Table.Td>
             <Table.Td>{row.ledger_name}</Table.Td>
-            <Table.Td>{row.opening_amount}</Table.Td>
-            <Table.Td>{row.mode === "Debit" && row.amount}</Table.Td>
-            <Table.Td>{row.mode === "Credit" && row.amount}</Table.Td>
-            <Table.Td>{row.closing_amount}</Table.Td>
+            <Table.Td style={{ textAlign: "right" }}>{row.opening_amount}</Table.Td>
+            <Table.Td style={{ textAlign: "right" }}>{row.mode === "Debit" ? row.amount.toFixed(2) : ""}</Table.Td>
+            <Table.Td style={{ textAlign: "right" }}>{row.mode === "Credit" ? row.amount.toFixed(2) : ""}</Table.Td>
+            <Table.Td style={{ textAlign: "right" }}>{row.closing_amount.toFixed(2)}</Table.Td>
         </Table.Tr>
     ));
+
+    const summaryRow = (
+        <Table.Tr>
+            <Table.Td colSpan={6}><strong>Total</strong></Table.Td>
+            <Table.Td style={{ textAlign: "right" }}><strong>{totalDebit.toFixed(2)}</strong></Table.Td>
+            <Table.Td style={{ textAlign: "right" }}><strong>{totalCredit.toFixed(2)}</strong></Table.Td>
+            <Table.Td />
+        </Table.Tr>
+    );
 
     return (
         <Modal
@@ -218,27 +257,37 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
             overlayProps={{ opacity: 0.55, blur: 4 }}
             fullScreen
         >
-            <LoadingOverlay visible={downloadFile} overlayBlur={1} />
+            <LoadingOverlay
+                visible={downloadFile}
+                overlayColor="#f0f0f0"
+                overlayOpacity={0.8}
+                overlayBlur={1}
+                loaderProps={{ size: 20, color: '#8a0e0e', type: 'oval' }}
+            />
 
             <Box p="8">
                 <Grid columns={24} gutter={8}>
-                    {/* LEFT LEDGER TREE */}
+                    {/* LEFT PANEL */}
                     <Grid.Col span={6}>
                         <Card className={classes.card} shadow="sm" padding="xs">
                             <Box className="boxBackground borderRadiusAll">
                                 <Text pt="xs" px="md" pb="xs">{t("ManageLedger")}</Text>
                             </Box>
                             <ScrollArea h={height - 12}>
-                                <Accordion defaultValue={ledgerDetails?.parent_name} mt="sm" mx="sm">
+                                <Accordion value={activeParent} onChange={setActiveParent} mt="sm" mx="sm">
                                     {entries.map(([parent, children]) => (
                                         <Accordion.Item key={parent} value={parent}>
                                             <Accordion.Control>{t(parent)}</Accordion.Control>
-                                            <Accordion.Panel bg="white">
-                                                {children.map((entry) => (
+                                            <Accordion.Panel>
+                                                {children.map(entry => (
                                                     <NavLink
                                                         key={entry.id}
                                                         label={entry.name}
-                                                        onClick={() => setLedgerDetails(entry)}
+                                                        active={ledgerDetails?.id === entry.id}
+                                                        onClick={() => {
+                                                            setLedgerDetails(entry);
+                                                            setActiveParent(entry.parent_name);
+                                                        }}
                                                     />
                                                 ))}
                                             </Accordion.Panel>
@@ -249,26 +298,25 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                         </Card>
                     </Grid.Col>
 
-                    {/* RIGHT LEDGER DETAILS */}
+                    {/* RIGHT PANEL */}
                     <Grid.Col span={18}>
                         <Box className="borderRadiusAll" bg="white" p="xs">
                             {/* Ledger Info */}
-                            <Box bg="white" mb="xs" p="xs" className="boxBackground borderRadiusAll">
+                            <Box mb="xs" p="xs" className="boxBackground borderRadiusAll">
                                 <Grid columns={24} gutter={8} grow>
                                     <Grid.Col span={3}><Box>{t("LedgerName")}</Box></Grid.Col>
-                                    <Grid.Col span={6}><Box>{ledgerDetails?.name || 'Ledger Details'}</Box></Grid.Col>
+                                    <Grid.Col span={6}><Box>{ledgerDetails?.name || "Ledger Details"}</Box></Grid.Col>
                                     <Grid.Col span={3}><Box>{t("AccountHead")}</Box></Grid.Col>
                                     <Grid.Col span={6}><Box>{ledgerDetails?.parent_name}</Box></Grid.Col>
                                     <Grid.Col span={3}><Box>{t("Balance")}</Box></Grid.Col>
-                                    <Grid.Col span={3}><Box>{ledgerDetails?.amount}</Box></Grid.Col>
+                                    <Grid.Col span={3}><Box>{journalItems?.ledger_amount || 0}</Box></Grid.Col>
                                 </Grid>
                             </Box>
 
-                            {/* Filters + Actions */}
+                            {/* Filters */}
                             <Grid columns={24} grow gutter={8} align="center" mb="md">
                                 <Grid.Col span={4}>
                                     <DatePickerForm
-                                        label=""
                                         placeholder="Start Date"
                                         name="financial_start_date"
                                         id="financial_start_date"
@@ -279,7 +327,6 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                                 </Grid.Col>
                                 <Grid.Col span={4}>
                                     <DatePickerForm
-                                        label=""
                                         placeholder="End Date"
                                         name="financial_end_date"
                                         id="financial_end_date"
@@ -291,61 +338,60 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                                 <Grid.Col span="auto">
                                     <ActionIcon.Group mt="1">
                                         <ActionIcon variant="default" size="lg" c="red.4" onClick={handleSearch}>
-                                            <Tooltip label="Search" withArrow>
-                                                <IconSearch size={18} />
-                                            </Tooltip>
+                                            <Tooltip label="Search" withArrow><IconSearch size={18} /></Tooltip>
                                         </ActionIcon>
                                         <ActionIcon variant="default" size="lg" c="gray.6" onClick={handleReset}>
-                                            <Tooltip label={t("ResetButton")} withArrow>
-                                                <IconRestore size={18} />
-                                            </Tooltip>
+                                            <Tooltip label={t("ResetButton")} withArrow><IconRestore size={18} /></Tooltip>
                                         </ActionIcon>
-                                        <ActionIcon variant="default" size="lg" c="gray.6" onClick={() => {
-                                            console.log("Filter Clicked"); // placeholder
-                                        }}>
-                                            <Tooltip label={t("FilterButton")} withArrow>
-                                                <IconFilter size={18} />
-                                            </Tooltip>
+                                        <ActionIcon variant="default" size="lg" c="gray.6">
+                                            <Tooltip label={t("FilterButton")} withArrow><IconFilter size={18} /></Tooltip>
                                         </ActionIcon>
                                         <ActionIcon variant="default" size="lg" c="green.8" onClick={() => {
                                             setDownloadType("pdf");
                                             setDownloadFile(true);
                                         }}>
-                                            <Tooltip label="PDF" withArrow>
-                                                <IconPdf size={18} />
-                                            </Tooltip>
+                                            <Tooltip label="PDF" withArrow><IconPdf size={18} /></Tooltip>
                                         </ActionIcon>
                                         <ActionIcon variant="default" size="lg" c="green.8" onClick={() => {
                                             setDownloadType("xlsx");
                                             setDownloadFile(true);
                                         }}>
-                                            <Tooltip label="Excel" withArrow>
-                                                <IconFileTypeXls size={18} />
-                                            </Tooltip>
+                                            <Tooltip label="Excel" withArrow><IconFileTypeXls size={18} /></Tooltip>
                                         </ActionIcon>
                                     </ActionIcon.Group>
                                 </Grid.Col>
                             </Grid>
 
-                            {/* Table */}
-                            <Table.ScrollContainer height={height - 190}>
-                                <Table>
-                                    <Table.Thead>
-                                        <Table.Tr bg="var(--theme-primary-color-5)" c="white">
-                                            <Table.Th>{t("S/N")}</Table.Th>
-                                            <Table.Th>{t("Date")}</Table.Th>
-                                            <Table.Th>{t("JVNo")}</Table.Th>
-                                            <Table.Th>{t("VoucherType")}</Table.Th>
-                                            <Table.Th>{t("Ledger Name")}</Table.Th>
-                                            <Table.Th>{t("Opening")}</Table.Th>
-                                            <Table.Th>{t("Debit")}</Table.Th>
-                                            <Table.Th>{t("Credit")}</Table.Th>
-                                            <Table.Th>{t("Closing")}</Table.Th>
-                                        </Table.Tr>
-                                    </Table.Thead>
-                                    <Table.Tbody>{records}</Table.Tbody>
-                                </Table>
-                            </Table.ScrollContainer>
+                            <Box pos="relative">
+                                <LoadingOverlay
+                                    visible={isLoadingTable}
+                                    overlayColor="#f0f0f0"
+                                    overlayOpacity={0.8}
+                                    loaderProps={{ size: 20, color: '#8a0e0e', type: 'oval' }}
+                                />
+
+                                <Table.ScrollContainer height={height - 190}>
+                                    <Table>
+                                        <Table.Thead>
+                                            <Table.Tr bg="var(--theme-primary-color-5)" c="white">
+                                                <Table.Th>{t("S/N")}</Table.Th>
+                                                <Table.Th>{t("Date")}</Table.Th>
+                                                <Table.Th>{t("JVNo")}</Table.Th>
+                                                <Table.Th>{t("VoucherType")}</Table.Th>
+                                                <Table.Th>{t("Ledger Name")}</Table.Th>
+                                                <Table.Th style={{ textAlign: "right" }}>{t("Opening")}</Table.Th>
+                                                <Table.Th style={{ textAlign: "right" }}>{t("Debit")}</Table.Th>
+                                                <Table.Th style={{ textAlign: "right" }}>{t("Credit")}</Table.Th>
+                                                <Table.Th style={{ textAlign: "right" }}>{t("Closing")}</Table.Th>
+                                            </Table.Tr>
+                                        </Table.Thead>
+                                        <Table.Tbody>
+                                            {records}
+                                            {summaryRow}
+                                        </Table.Tbody>
+                                    </Table>
+                                </Table.ScrollContainer>
+                            </Box>
                         </Box>
                     </Grid.Col>
                 </Grid>

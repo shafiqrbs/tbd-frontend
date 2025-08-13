@@ -25,7 +25,6 @@ import {useDisclosure} from "@mantine/hooks";
 import LedgerDetailsModel from "./LedgerDetailsModel.jsx";
 import ledgerDetailsModel from "./LedgerDetailsModel.jsx";
 
-
 function LedgerTable(props) {
 
     const dispatch = useDispatch();
@@ -38,23 +37,8 @@ function LedgerTable(props) {
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    // const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const [indexData,setIndexData] = useState([])
-
     const [ledgerDetails,setLedgerDetails] = useState(null)
-
-    /*useEffect(() => {
-        const value = {
-            url: 'accounting/account-head',
-            param: {
-                group: 'ledger',
-                term: searchKeyword,
-                page: page,
-                offset: perPage
-            }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);*/
 
     useEffect(() => {
         const fetchData = async () => {

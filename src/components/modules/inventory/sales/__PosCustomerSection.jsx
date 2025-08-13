@@ -7,6 +7,9 @@ import PhoneNumber from "../../../form-builders/PhoneNumberInput";
 import { useTranslation } from "react-i18next";
 import SelectForm from "../../../form-builders/SelectForm";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage";
+import {showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import {useDispatch} from "react-redux";
 
 export default function __PosCustomerSection(props) {
   //common hooks
@@ -25,8 +28,10 @@ export default function __PosCustomerSection(props) {
   } = props;
   const { t } = useTranslation();
   const [openAddCustomer, setOpenAddCustomer] = useState(false);
+    const dispatch = useDispatch();
 
-  //fetching customer dropdownData
+
+    //fetching customer dropdownData
   useEffect(() => {
     const fetchCustomers = async () => {
       await customerDataStoreIntoLocalStorage();
@@ -69,7 +74,34 @@ export default function __PosCustomerSection(props) {
     }
   }, [customerData]);
 
-  return (
+  const [customerLiveData,setCustomerLiveData] = useState({})
+
+    useEffect(() => {
+        const fetchJournal = async () => {
+            if (!form.values.customer_id) return;
+
+            const url = `accounting/account-head-outstanding?type=customer&customer_id=${form.values.customer_id}`;
+            try {
+                const result = await dispatch(showInstantEntityData(url));
+                if (
+                    showInstantEntityData.fulfilled.match(result) &&
+                    result.payload.data?.status === 200
+                ) {
+                    setCustomerLiveData(result.payload.data.data);
+                } else {
+                    showNotificationComponent("Failed to fetch journal", "red");
+                }
+            } catch (e) {
+                console.error("Fetch journal error:", e);
+            } finally {
+                // setIsLoadingTable(false);
+            }
+        };
+
+        fetchJournal();
+    }, [form.values.customer_id]);
+
+    return (
 		<>
 			<Box
 				pl={`4`}
@@ -231,11 +263,7 @@ export default function __PosCustomerSection(props) {
 									<Grid.Col span={6}>
 										<Text fz={"sm"} order={1} fw={"800"}>
 											{currencySymbol + " "}
-											{customerData &&
-											customerObject &&
-											customerData != defaultCustomerId
-												? Number(customerObject.balance).toFixed(2)
-												: "0.00"}
+											{customerLiveData.outstanding_amount ? Number(customerLiveData?.outstanding_amount).toFixed(2):0.00}
 										</Text>
 									</Grid.Col>
 									<Grid.Col span={3}>

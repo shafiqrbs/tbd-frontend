@@ -263,12 +263,12 @@ function VoucherFormIndex({currencySymbol}) {
             />);
     };
 
+    const options = {year: "numeric", month: "2-digit", day: "2-digit"};
+
     const form = useForm({
         initialValues: {
-            ref_no: "", issue_date: "", description: "",
-        }, validate: {
-            // ref_no: isNotEmpty(), issue_date: isNotEmpty(),
-        },
+            ref_no: "", issue_date: new Date(), description: "",
+        }, validate: {},
     });
 
     const totals = myItems.reduce((acc, item) => {
@@ -286,8 +286,6 @@ function VoucherFormIndex({currencySymbol}) {
             labels: {confirm: "Confirm", cancel: "Cancel"},
             confirmProps: {color: "red"},
             onConfirm: async () => {
-                const options = {year: "numeric", month: "2-digit", day: "2-digit"};
-
                 const formValue = {
                     ...form.values,
                     issue_date: values.issue_date ? new Date(values.issue_date).toLocaleDateString("en-CA", options) : new Date().toLocaleDateString("en-CA"),

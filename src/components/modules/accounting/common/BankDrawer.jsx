@@ -141,10 +141,10 @@ function BankDrawer(props) {
     );
 
     return (
-        <Drawer.Root opened={bankDrawer} position="right" onClose={closeDrawer} size={"30%"}>
+        <Drawer.Root opened={bankDrawer} position="right" onClose={closeDrawer} size={"30%"} offset={8} radius="md">
             <Drawer.Overlay/>
             <Drawer.Content>
-                <ScrollArea h={height + 190} scrollbarSize={2} type="never">
+                <ScrollArea h={height + 170} scrollbarSize={1} type="never">
                     {/* Drawer Header */}
                     <Flex justify="flex-end" align="center" p="sm">
                         <ActionIcon
@@ -189,7 +189,6 @@ function BankDrawer(props) {
                             <Box px="xs" className="borderRadiusAll">
                                 <ScrollArea h={height + 71} scrollbarSize={2} scrollbars="y" type="never">
                                     <form onSubmit={bankForm.onSubmit(handleSalesFormSubmit)}>
-                                        <Text>{entryType === "debit" ? "Debit" : "Credit"}</Text>
 
                                         {renderCommonFields()}
 
