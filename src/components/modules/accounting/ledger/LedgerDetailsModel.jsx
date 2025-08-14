@@ -181,16 +181,17 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
 
     const grouped = groupByParentName(indexData?.data || []);
     const entries = Object.entries(grouped);
+    const [previousOpening,setPreviousOpening] = useState(0)
 
     const formatCumulativeRows = (items) => {
         if (!items || items.length === 0) return [];
 
         const result = [];
+
         for (let i = 0; i < items.length; i++) {
             const row = { ...items[i] };
 
             if (i === 0) {
-                // First row: use its own opening_amount
                 const open = parseFloat(row.opening_amount) || 0;
                 const amount = parseFloat(row.amount) || 0;
                 const close = row.mode === 'Debit' ? open + amount : open - amount;
@@ -211,6 +212,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
         return result;
     };
 
+
     const cumulativeRows = formatCumulativeRows(journalItems?.ledgerItems);
 
     const { totalDebit, totalCredit } = cumulativeRows.reduce(
@@ -223,6 +225,29 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
         { totalDebit: 0, totalCredit: 0 }
     );
 
+    useEffect(() => {
+        if (cumulativeRows.length > 0) {
+            setPreviousOpening(cumulativeRows[0].opening_amount || 0);
+        }
+    }, [cumulativeRows]);
+
+
+    const PreviousOpeningBalanceRow = () => {
+        return (
+            <Table.Tr key="previous-opening-balance-row" style={{ background: "#fff67a" }}>
+                <Table.Td colSpan={7}>
+                    <span id="previous-opening-label"> <strong>{t('previousOpeningBalance')}</strong></span>
+                </Table.Td>
+                <Table.Td
+                    style={{ textAlign: "right" }}
+                >
+                    <strong>{previousOpening.toFixed(2)}</strong>
+                </Table.Td>
+            </Table.Tr>
+        );
+    };
+
+
     const records = cumulativeRows.map((row, idx) => (
         <Table.Tr key={row.id}>
             <Table.Td>{idx + 1}</Table.Td>
@@ -230,7 +255,6 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
             <Table.Td>{row.invoice_no}</Table.Td>
             <Table.Td>{row.voucher_name}</Table.Td>
             <Table.Td>{row.ledger_name}</Table.Td>
-            <Table.Td style={{ textAlign: "right" }}>{row.opening_amount}</Table.Td>
             <Table.Td style={{ textAlign: "right" }}>{row.mode === "Debit" ? row.amount.toFixed(2) : ""}</Table.Td>
             <Table.Td style={{ textAlign: "right" }}>{row.mode === "Credit" ? row.amount.toFixed(2) : ""}</Table.Td>
             <Table.Td style={{ textAlign: "right" }}>{row.closing_amount.toFixed(2)}</Table.Td>
@@ -239,7 +263,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
 
     const summaryRow = (
         <Table.Tr>
-            <Table.Td colSpan={6}><strong>Total</strong></Table.Td>
+            <Table.Td colSpan={5}><strong>Total</strong></Table.Td>
             <Table.Td style={{ textAlign: "right" }}><strong>{totalDebit.toFixed(2)}</strong></Table.Td>
             <Table.Td style={{ textAlign: "right" }}><strong>{totalCredit.toFixed(2)}</strong></Table.Td>
             <Table.Td />
@@ -379,13 +403,13 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                                                 <Table.Th>{t("JVNo")}</Table.Th>
                                                 <Table.Th>{t("VoucherType")}</Table.Th>
                                                 <Table.Th>{t("Ledger Name")}</Table.Th>
-                                                <Table.Th style={{ textAlign: "right" }}>{t("Opening")}</Table.Th>
                                                 <Table.Th style={{ textAlign: "right" }}>{t("Debit")}</Table.Th>
                                                 <Table.Th style={{ textAlign: "right" }}>{t("Credit")}</Table.Th>
                                                 <Table.Th style={{ textAlign: "right" }}>{t("Closing")}</Table.Th>
                                             </Table.Tr>
                                         </Table.Thead>
                                         <Table.Tbody>
+                                            <PreviousOpeningBalanceRow />
                                             {records}
                                             {summaryRow}
                                         </Table.Tbody>

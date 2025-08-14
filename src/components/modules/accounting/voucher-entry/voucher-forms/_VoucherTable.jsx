@@ -197,25 +197,26 @@ function _VoucherTable(props) {
                                                             size="compact-xs"
                                                             radius="xs"
                                                             variant="filled"
-                                                            fw={'100'} fz={'12'}  color='var(--theme-primary-color-6)' mr={'4'}
-                                                                onClick={(e) => {
-                                                                   e.preventDefault()
-                                                                    modals.openConfirmModal({
-                                                                        title: (<Text
-                                                                            size="md"> {t("ApproveConformation")}</Text>),
-                                                                        children: (
-                                                                            <Text
-                                                                                size="sm"> {t("FormConfirmationMessage")}</Text>),
-                                                                        labels: {
-                                                                            confirm: 'Confirm',
-                                                                            cancel: 'Cancel'
-                                                                        },
-                                                                        onCancel: () => console.log('Cancel'),
-                                                                        onConfirm: () => {
-                                                                            handleVoucherApprove(data.id)
-                                                                        },
-                                                                    });
-                                                                }}
+                                                            fw={'100'} fz={'12'} color='var(--theme-primary-color-6)'
+                                                            mr={'4'}
+                                                            onClick={(e) => {
+                                                                e.preventDefault()
+                                                                modals.openConfirmModal({
+                                                                    title: (<Text
+                                                                        size="md"> {t("ApproveConformation")}</Text>),
+                                                                    children: (
+                                                                        <Text
+                                                                            size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                    labels: {
+                                                                        confirm: 'Confirm',
+                                                                        cancel: 'Cancel'
+                                                                    },
+                                                                    onCancel: () => console.log('Cancel'),
+                                                                    onConfirm: () => {
+                                                                        handleVoucherApprove(data.id)
+                                                                    },
+                                                                });
+                                                            }}
                                                         >  {t('Approve')}</Button>
                                                     }
 
@@ -235,7 +236,7 @@ function _VoucherTable(props) {
                                     }}
                                     loaderSize="xs"
                                     loaderColor="grape"
-                                    height={tableHeight-32}
+                                    height={tableHeight - 32}
                                     scrollAreaProps={{type: 'never'}}
                                     rowBackgroundColor={(item) => {
                                         if (item.invoice_no === selectedRow) return '#e2c2c263';
