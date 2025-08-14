@@ -41,6 +41,7 @@ import getConfigData from "../../global-hook/config-data/getConfigData.js";
 import pos from "../../../assets/images/pos/pos.png";
 import invoice from "../../../assets/images/pos/invoice.png";
 import voucher from "../../../assets/images/pos/voucher.png";
+import accounting from "../../../assets/images/pos/accounting.png";
 import requisition from "../../../assets/images/pos/requisition.png";
 import production from "../../../assets/images/pos/production.png";
 import getDomainConfig from "../../global-hook/config-data/getDomainConfig.js";
@@ -286,7 +287,7 @@ function MainDashboard(props) {
 													bg={"#3d83d8"}
 													h={60}
 													radius="sm"
-													src={voucher}
+													src={accounting}
 													fit="cover"
 													w="100%"
 													onClick={() => {
@@ -1310,7 +1311,7 @@ function MainDashboard(props) {
 													}}
 												/>
 											</List.Item>
-											
+
 										</List>
 									</Box>
 								</Card>
