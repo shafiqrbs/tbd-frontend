@@ -241,7 +241,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                 <Table.Td
                     style={{ textAlign: "right" }}
                 >
-                    <strong>{previousOpening.toFixed(2)}</strong>
+                    <strong>{Math.abs(previousOpening).toFixed(2)}</strong>
                 </Table.Td>
             </Table.Tr>
         );
@@ -255,18 +255,21 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
             <Table.Td>{row.invoice_no}</Table.Td>
             <Table.Td>{row.voucher_name}</Table.Td>
             <Table.Td>{row.ledger_name}</Table.Td>
-            <Table.Td style={{ textAlign: "right" }}>{row.mode === "Debit" ? row.amount.toFixed(2) : ""}</Table.Td>
-            <Table.Td style={{ textAlign: "right" }}>{row.mode === "Credit" ? row.amount.toFixed(2) : ""}</Table.Td>
-            <Table.Td style={{ textAlign: "right" }}>{row.closing_amount.toFixed(2)}</Table.Td>
+            <Table.Td style={{ textAlign: "right" }}>{row.mode === "Debit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
+            <Table.Td style={{ textAlign: "right" }}>{row.mode === "Credit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
+            <Table.Td style={{ textAlign: "right" }}>{Math.abs(row.closing_amount).toFixed(2)}</Table.Td>
         </Table.Tr>
     ));
 
     const summaryRow = (
         <Table.Tr>
             <Table.Td colSpan={5}><strong>Total</strong></Table.Td>
-            <Table.Td style={{ textAlign: "right" }}><strong>{totalDebit.toFixed(2)}</strong></Table.Td>
-            <Table.Td style={{ textAlign: "right" }}><strong>{totalCredit.toFixed(2)}</strong></Table.Td>
-            <Table.Td />
+            <Table.Td style={{ textAlign: "right" }}><strong>{Math.abs(totalDebit).toFixed(2)}</strong></Table.Td>
+            <Table.Td style={{ textAlign: "right" }}><strong>{Math.abs(totalCredit).toFixed(2)}</strong></Table.Td>
+            <Table.Td style={{ textAlign: "right" }}>
+                <strong>{Math.abs(totalDebit - totalCredit).toFixed(2)}</strong>
+            </Table.Td>
+
         </Table.Tr>
     );
 
@@ -329,11 +332,11 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                             <Box mb="xs" p="xs" className="boxBackground borderRadiusAll">
                                 <Grid columns={24} gutter={8} grow>
                                     <Grid.Col span={3}><Box>{t("LedgerName")}</Box></Grid.Col>
-                                    <Grid.Col span={6}><Box>{ledgerDetails?.name || "Ledger Details"}</Box></Grid.Col>
-                                    <Grid.Col span={3}><Box>{t("AccountHead")}</Box></Grid.Col>
-                                    <Grid.Col span={6}><Box>{ledgerDetails?.parent_name}</Box></Grid.Col>
+                                    <Grid.Col span={6}><Box><strong>{ledgerDetails?.name || "Ledger Details"}</strong></Box></Grid.Col>
+                                    <Grid.Col span={3}><Box>{t("AccountHead")} : <strong> {journalItems.mode}</strong></Box></Grid.Col>
+                                    <Grid.Col span={6}><Box><strong>{ledgerDetails?.parent_name}</strong></Box></Grid.Col>
                                     <Grid.Col span={3}><Box>{t("Balance")}</Box></Grid.Col>
-                                    <Grid.Col span={3}><Box>{journalItems?.ledger_amount || 0}</Box></Grid.Col>
+                                    <Grid.Col span={3}><Box><strong>{Math.abs(journalItems?.ledger_amount).toFixed(2) || 0}</strong></Box></Grid.Col>
                                 </Grid>
                             </Box>
 

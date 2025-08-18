@@ -25,7 +25,7 @@ import {
     IconPencil,
     IconEyeEdit,
     IconTrashX,
-    IconCheck, IconChevronsRight, IconX,
+    IconCheck, IconChevronsRight, IconX, IconCopy,
 } from "@tabler/icons-react";
 import {DataTable} from "mantine-datatable";
 import {useDispatch, useSelector} from "react-redux";
@@ -239,6 +239,26 @@ function _PurchaseTable() {
         }
     };
 
+    const handlePurchaseCopy = async (id) => {
+        try {
+            let resultAction = await dispatch(showInstantEntityData('inventory/purchase/copy/' + id));
+            if (showInstantEntityData.fulfilled.match(resultAction)) {
+                if (resultAction.payload.data.status === 200) {
+                    showNotificationComponent(t("CopyPurchaseSuccessfully"), 'teal', null, false, 1000, true)
+                }else{
+                    showNotificationComponent('Failed to process', 'red', null, false, 1000, true)
+                }
+            }
+        } catch (error) {
+            console.error("Error updating entity:", error);
+            showNotificationComponent('Failed to process', 'red', null, false, 1000, true)
+        }finally {
+            fetchData();
+        }
+
+    };
+
+
     return (
         <>
             <Box>
@@ -333,6 +353,36 @@ function _PurchaseTable() {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
+
+                                                            {
+                                                                <Menu.Item
+                                                                    onClick={()=>{
+                                                                        modals.openConfirmModal({
+                                                                            title: (<Text size="md"> {t("CopyPurchase")}</Text>),
+                                                                            children: (
+                                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                            onCancel: () => console.log('Cancel'),
+                                                                            onConfirm: () => {
+                                                                                handlePurchaseCopy(data.id)
+                                                                            },
+                                                                        });
+                                                                    }}
+                                                                    component="a"
+                                                                    color="green"
+                                                                    leftSection={
+                                                                        <IconCopy
+                                                                            style={{
+                                                                                width: rem(14),
+                                                                                height: rem(14)
+                                                                            }}/>
+                                                                    }
+                                                                    w={'200'}
+                                                                >
+                                                                    {t("Copy")}
+                                                                </Menu.Item>
+                                                            }
+
                                                             {
                                                                 !data.approved_by_id &&
                                                                 <>

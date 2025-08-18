@@ -22,7 +22,7 @@ import {
     IconEdit,
     IconPrinter,
     IconReceipt, IconDotsVertical, IconTrashX,
-    IconCheck, IconChevronsRight, IconEyeEdit,IconPencil
+    IconCheck, IconChevronsRight, IconEyeEdit, IconPencil, IconCopy
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
@@ -203,6 +203,25 @@ function _SalesTable(props) {
 
     };
 
+    const handleSalesCopy = async (id) => {
+        try {
+            let resultAction = await dispatch(showInstantEntityData('inventory/sales/copy/' + id));
+            if (showInstantEntityData.fulfilled.match(resultAction)) {
+                if (resultAction.payload.data.status === 200) {
+                    showNotificationComponent(t("CopySalesSuccessfully"), 'teal', null, false, 1000, true)
+                }else{
+                    showNotificationComponent('Failed to process', 'red', null, false, 1000, true)
+                }
+            }
+        } catch (error) {
+            console.error("Error updating entity:", error);
+            showNotificationComponent('Failed to process', 'red', null, false, 1000, true)
+        }finally {
+            fetchData();
+        }
+
+    };
+
 
     return (
         <>
@@ -333,6 +352,37 @@ function _SalesTable(props) {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
+
+                                                            {
+                                                                <Menu.Item
+                                                                    onClick={()=>{
+                                                                        modals.openConfirmModal({
+                                                                            title: (<Text size="md"> {t("CopySales")}</Text>),
+                                                                            children: (
+                                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                            onCancel: () => console.log('Cancel'),
+                                                                            onConfirm: () => {
+                                                                                // console.log(data.id)
+                                                                                handleSalesCopy(data.id)
+                                                                            },
+                                                                        });
+                                                                    }}
+                                                                    component="a"
+                                                                    color="green"
+                                                                    leftSection={
+                                                                        <IconCopy
+                                                                            style={{
+                                                                                width: rem(14),
+                                                                                height: rem(14)
+                                                                            }}/>
+                                                                    }
+                                                                    w={'200'}
+                                                                >
+                                                                    {t("Copy")}
+                                                                </Menu.Item>
+                                                            }
+
                                                             {
                                                                 (data.customer_group === 'Domain' && !data.approved_by_id && !data.is_domain_sales_completed) &&
                                                                 <Menu.Item

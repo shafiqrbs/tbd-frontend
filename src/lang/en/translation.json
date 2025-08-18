@@ -1187,6 +1187,10 @@
   "ChooseMonth": "Choose Month",
   "DailySalesWarehouseReport": "Daily sales warehouse",
   "previousOpeningBalance": "Previous Opening Balance",
+  "CopySales": "Copy Sales",
+  "CopySalesSuccessfully": "Copy Sales Successfully",
+  "CopyPurchaseSuccessfully": "Copy Purchase Successfully",
+  "CopyPurchase": "Copy Purchase",
   "xxxxxx": "xxxxxxx",
   "": ""
 }
