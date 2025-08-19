@@ -1191,6 +1191,14 @@
   "CopySalesSuccessfully": "Copy Sales Successfully",
   "CopyPurchaseSuccessfully": "Copy Purchase Successfully",
   "CopyPurchase": "Copy Purchase",
+  "IsBarcode": "Is Barcode",
+  "ProductPurchaseNature": "Product Purchase Nature",
+  "PurchaseSettings": "Purchase Settings",
+  "SearchAndFiltering": "Searching & Filtering",
+  "InventoryAndStorage": "Inventory & Storage",
+  "PurchaseMode": "Purchase Mode",
+  "ChoosePurchaseMode": "Choose Purchase Mode",
+  "SplitAmount": "Split Amount",
   "xxxxxx": "xxxxxxx",
   "": ""
 }

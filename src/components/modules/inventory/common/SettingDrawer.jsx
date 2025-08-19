@@ -82,7 +82,6 @@ function SettingDrawer(props) {
     dispatch(coreSettingDropdown(value));
     dispatch(setDropdownLoad(false));
   }, [dropdownLoad]);
-  // console.log(groupVendorDropdownData)
   const renderForm = () => {
     switch (module) {
       case "Sales":
@@ -100,7 +99,6 @@ function SettingDrawer(props) {
         return (
           <PurchaseForm
             height={height+60}
-            domainConfigData={domainConfigData}
             id={id}
             vendorGroupDropdownData={groupVendorDropdownData}
             closeDrawer={closeDrawer}
