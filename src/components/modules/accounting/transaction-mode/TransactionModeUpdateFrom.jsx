@@ -104,6 +104,10 @@ function TransactionModeUpdateFrom(props) {
             account_mode_id: entityEditData?.account_mode_id ? entityEditData.account_mode_id : '',
             service_charge: entityEditData?.service_charge ? entityEditData.service_charge : '',
             account_owner: entityEditData?.account_owner ? entityEditData.account_owner : '',
+            account_number: entityEditData?.account_number ? entityEditData.account_number : '',
+            routing_number: entityEditData?.routing_number ? entityEditData.routing_number : '',
+            branch_name: entityEditData?.branch_name ? entityEditData.branch_name : '',
+            bank_id: entityEditData?.bank_id ? entityEditData.bank_id : '',
             path: entityEditData?.path ? entityEditData.path : '',
             is_selected: entityEditData?.is_selected ? entityEditData.is_selected : '',
         })

@@ -74,7 +74,7 @@ function TransactionModeForm(props) {
 
     const form = useForm({
         initialValues: {
-            method_id: '', name: '', short_name: '', mobile: '',authorised_mode_id: '',account_mode_id: '',bank_id: '',account_number: '', account_type_mode_id: '', service_charge: '', account_owner: '', path: '',is_selected:0
+            method_id: '', name: '', short_name: '', mobile: '',authorised_mode_id: '',account_mode_id: '',bank_id: '',account_number: '',branch_name: '',routing_number: '', account_type_mode_id: '', service_charge: '', account_owner: '', path: '',is_selected:0
         },
         validate: {
             method_id : isNotEmpty(),
@@ -263,7 +263,7 @@ function TransactionModeForm(props) {
                                                                         form={form}
                                                                         dropdownValue={banksDropdownData}
                                                                         id="bank_id"
-                                                                        searchable={false}
+                                                                        searchable={true}
                                                                         value={bankData}
                                                                         changeValue={(value) => {
                                                                         setBankData(value);
@@ -311,11 +311,37 @@ function TransactionModeForm(props) {
                                                                         label={t('AccountNumber')}
                                                                         placeholder={t('AccountNumber')}
                                                                         required={false}
-                                                                        nextField={'service_charge'}
+                                                                        nextField={'branch_name'}
                                                                         name={'account_number'}
                                                                         form={form}
                                                                         mt={'md'}
                                                                         id={'account_number'}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <InputForm
+                                                                        tooltip={t('BranchNameValidationMessage')}
+                                                                        label={t('BranchName')}
+                                                                        placeholder={t('BranchName')}
+                                                                        required={false}
+                                                                        nextField={'routing_number'}
+                                                                        name={'branch_name'}
+                                                                        form={form}
+                                                                        mt={'md'}
+                                                                        id={'branch_name'}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <InputForm
+                                                                        tooltip={t('RoutingNumberValidationMessage')}
+                                                                        label={t('RoutingNumber')}
+                                                                        placeholder={t('RoutingNumber')}
+                                                                        required={false}
+                                                                        nextField={'service_charge'}
+                                                                        name={'routing_number'}
+                                                                        form={form}
+                                                                        mt={'md'}
+                                                                        id={'routing_number'}
                                                                     />
                                                                 </Box>
                                                                 <Box mt={'xs'}>
@@ -339,6 +365,23 @@ function TransactionModeForm(props) {
                                                         }
                                                         {activeTab === '22' &&
                                                             <>
+                                                                <Box mt={'xs'}>
+                                                                    <SelectForm
+                                                                        tooltip={t('ChooseBankMode')}
+                                                                        label={t('BankMode')}
+                                                                        placeholder={t('BankMode')}
+                                                                        required={false}
+                                                                        nextField={'account_type_mode_id'}
+                                                                        name={'account_mode_id'}
+                                                                        form={form}
+                                                                        dropdownValue={accountModeDropdown}
+                                                                        mt={8}
+                                                                        id={'account_mode_id'}
+                                                                        searchable={false}
+                                                                        value={accountModeData}
+                                                                        changeValue={setAccountModeData}
+                                                                    />
+                                                                </Box>
                                                                 <Box mt={'xs'}>
                                                                     <InputForm
                                                                         tooltip={t('AccountOwnerValidateMessage')}
