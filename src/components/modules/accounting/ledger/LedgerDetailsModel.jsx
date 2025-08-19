@@ -267,9 +267,12 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
             <Table.Td style={{ textAlign: "right" }}><strong>{Math.abs(totalDebit).toFixed(2)}</strong></Table.Td>
             <Table.Td style={{ textAlign: "right" }}><strong>{Math.abs(totalCredit).toFixed(2)}</strong></Table.Td>
             <Table.Td style={{ textAlign: "right" }}>
-                <strong>{Math.abs(totalDebit - totalCredit).toFixed(2)}</strong>
+                <strong>
+                    {totalDebit - totalCredit < 0
+                        ? `(${Math.abs(totalDebit - totalCredit).toFixed(2)})`
+                        : Math.abs(totalDebit - totalCredit).toFixed(2)}
+                </strong>
             </Table.Td>
-
         </Table.Tr>
     );
 
