@@ -83,6 +83,27 @@ function ProductTable({categoryDropdown}) {
         }
     });
 
+    const handleSwitch = (event, item) => {
+        setSwitchEnable((prev) => ({...prev, [item.product_id]: true}));
+        dispatch(getStatusInlineUpdateData({
+            url: "inventory/product/status/inline-update/" + item.product_id,
+        }));
+        setTimeout(() => {
+            setSwitchEnable((prev) => ({...prev, [item.product_id]: false}));
+        }, 3000);
+    };
+
+    const productDeleteHandle = async (id) => {
+        const resultAction = await dispatch(deleteEntityData(`inventory/product/${id}`));
+        const status = resultAction?.payload?.data?.status;
+        if (status === 200) {
+            showNotificationComponent(t("DeleteSuccessfully"), "red");
+            fetchData(1, true);
+        } else {
+            showNotificationComponent("Something went wrong", "red");
+        }
+    };
+
     const fetchData = async (loadPage = 1, reset = false) => {
         setFetching(true);
 
@@ -141,27 +162,6 @@ function ProductTable({categoryDropdown}) {
     const handleScrollToBottom = () => {
         if (!fetching && !allDataLoaded) {
             fetchData(page + 1);
-        }
-    };
-
-    const handleSwitch = (event, item) => {
-        setSwitchEnable((prev) => ({...prev, [item.product_id]: true}));
-        dispatch(getStatusInlineUpdateData({
-            url: "inventory/product/status/inline-update/" + item.product_id,
-        }));
-        setTimeout(() => {
-            setSwitchEnable((prev) => ({...prev, [item.product_id]: false}));
-        }, 3000);
-    };
-
-    const productDeleteHandle = async (id) => {
-        const resultAction = await dispatch(deleteEntityData(`inventory/product/${id}`));
-        const status = resultAction?.payload?.data?.status;
-        if (status === 200) {
-            showNotificationComponent(t("DeleteSuccessfully"), "red");
-            fetchData(1, true);
-        } else {
-            showNotificationComponent("Something went wrong", "red");
         }
     };
 
