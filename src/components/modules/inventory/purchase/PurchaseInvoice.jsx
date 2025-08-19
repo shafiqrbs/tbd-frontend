@@ -49,8 +49,8 @@ function PurchaseInvoice() {
                     <Navigation module={"purchase-invoice"}/>
                   </Grid.Col>
                   <Grid.Col span={23} >
-                    {/*<_GenericInvoiceForm />*/}
-                    <_GenericInvoiceForm2 />
+                    <_GenericInvoiceForm />
+                    {/*<_GenericInvoiceForm2 />*/}
                   </Grid.Col>
                 </Grid>
               </Box>
