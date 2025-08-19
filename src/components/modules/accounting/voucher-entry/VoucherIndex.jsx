@@ -51,78 +51,18 @@ function VoucherIndex(props) {
             />
             <Box>
               <Box className="" bg={"#f0f1f9"}>
-                <Tabs
-                  height={50}
-                  p={4}
-                  bg={"#f0f1f9"}
-                  defaultValue="VoucherEntry"
-                  color="red.6"
-                  variant="pills"
-                  radius="sm"
-                  onChange={(value) => setActiveTab(value)}
-                >
-                  <Tabs.List pos={"relative"}>
-                    <Tabs.Tab m={2} value="New">
-                      {t("New")}
-                    </Tabs.Tab>
-                    <Tabs.Tab m={2} value="InProgress">
-                      {t("InProgress")}
-                    </Tabs.Tab>
-                    <Tabs.Tab m={2} value="Approve">
-                      {t("Approve")}
-                    </Tabs.Tab>
-                    <Tabs.Tab m={2} value="Archive">
-                      {t("Archive")}
-                    </Tabs.Tab>
-                    {activeTab !== "VoucherEntry" && activeTab !== "" && (
-                      <Tabs.Tab
-                        m={2}
-                        bg={"red.5"}
-                        value="VoucherEntry"
-                        ml="auto"
-                      >
-                        {t("VoucherEntry")}
-                      </Tabs.Tab>
-                    )}
-                  </Tabs.List>
-
-                  <Tabs.Panel value="New">
-                    <Box>
-                      <VoucherTableNew />
-                    </Box>
-                  </Tabs.Panel>
-                  <Tabs.Panel value="InProgress">
-                    <Box>
-                      <VoucherTableInProgress />
-                    </Box>
-                  </Tabs.Panel>
-                  <Tabs.Panel value="Approve">
-                    <Box>
-                      <VoucherTableApprove />
-                    </Box>
-                  </Tabs.Panel>
-                  <Tabs.Panel value="Archive">
-                    <Box>
-                      <VoucherTableArchive />
-                    </Box>
-                  </Tabs.Panel>
-                  <Tabs.Panel value="VoucherEntry">
-                    <Box bg={"white"}>
-                      {props.type === 'index' && (
-                          <_VoucherTable
-                              currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
-                          />
-                      )}
-
-                      {props.type === 'create' && (
-                          <VoucherFormIndex
-                              currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
-                          />
-                      )}
-
-                    </Box>
-                  </Tabs.Panel>
-                </Tabs>
+                <Box bg={"white"}>
+                  {props.type === 'index' && (
+                      <_VoucherTable
+                          currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
+                      />
+                  )}
+                  {props.type === 'create' && (
+                      <VoucherFormIndex
+                          currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
+                      />
+                  )}
+                </Box>
               </Box>
             </Box>
           </Box>

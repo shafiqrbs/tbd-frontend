@@ -306,7 +306,7 @@ function _PurchaseTable() {
                                                     component="a"
                                                     size="sm"
                                                     variant="subtle"
-                                                    color="red.6"
+                                                    color="var(--theme-secondary-color-8)"
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setLoading(true);
@@ -319,10 +319,13 @@ function _PurchaseTable() {
                                                 </Text>
                                             ),
                                         },
-                                        {accessor: "customerName", title: t("Vendor")},
-                                        {accessor: "sub_total", title: t("SubTotal")},
-                                        {accessor: "discount", title: t("Discount")},
+                                        {accessor: "vendor_name", title: t("Vendor")},
                                         {accessor: "total", title: t("Total")},
+                                        {accessor: "payment", title: t("Payment")},
+                                        {accessor: "due", title: t("Payable"),
+                                            render: (item) => item.total - item.payment,
+                                        },
+
                                         {
                                             accessor: "action",
                                             title: "Action",
@@ -516,10 +519,10 @@ function _PurchaseTable() {
                                     height={tableHeight}
                                     scrollAreaProps={{type: "never"}}
                                     rowBackgroundColor={(item) => {
-                                        if (item.invoice === selectedRow) return "#e2c2c263";
+                                        if (item.invoice === selectedRow) return "var(--theme-primary-color-1)";
                                     }}
                                     rowColor={(item) => {
-                                        if (item.invoice === selectedRow) return "red.6";
+                                        if (item.invoice === selectedRow) return "var(--mantine-color-black-9)";
                                     }}
                                 />
                             </Box>
@@ -555,8 +558,8 @@ function _PurchaseTable() {
                                                 <Grid.Col span={9}>
                                                     <Text fz="sm" lh="xs">
                                                         {purchaseViewData &&
-                                                            purchaseViewData.customerName &&
-                                                            purchaseViewData.customerName}
+                                                            purchaseViewData.vendor_name &&
+                                                            purchaseViewData.vendor_name}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -569,39 +572,12 @@ function _PurchaseTable() {
                                                 <Grid.Col span={9}>
                                                     <Text fz="sm" lh="xs">
                                                         {purchaseViewData &&
-                                                            purchaseViewData.customerMobile &&
-                                                            purchaseViewData.customerMobile}
+                                                            purchaseViewData.vendor_mobile &&
+                                                            purchaseViewData.vendor_mobile}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {t("Address")}
-                                                    </Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {purchaseViewData &&
-                                                            purchaseViewData.customer_address &&
-                                                            purchaseViewData.customer_address}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {t("Balance")}
-                                                    </Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {purchaseViewData && purchaseViewData.balance
-                                                            ? Number(purchaseViewData.balance).toFixed(2)
-                                                            : 0.0}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
+
                                         </Grid.Col>
                                         <Grid.Col span={"6"}>
                                             <Grid columns={15} gutter={{base: 4}}>

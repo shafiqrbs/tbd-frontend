@@ -38,7 +38,7 @@ function _VoucherTable(props) {
     const perPage = 50;
     const [page, setPage] = useState(1);
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const tableHeight = mainAreaHeight - 106; //TabList height 104
+    const tableHeight = mainAreaHeight - 70; //TabList height 104
     const height = mainAreaHeight - 304; //TabList height 104
     const [loading, setLoading] = useState(true);
     const [selectedRow, setSelectedRow] = useState('');
@@ -182,8 +182,7 @@ function _VoucherTable(props) {
                                         },
                                         {accessor: 'voucher_name', title: t('VoucherName')},
                                         {accessor: 'process', title: t('Process')},
-                                        {accessor: 'debit', title: t('Debit')},
-                                        {accessor: 'credit', title: t('Credit')},
+                                        {accessor: 'debit', title: t('Amount')},
                                         {accessor: 'issue_date', title: t('IssueDate')},
                                         {
                                             accessor: "action",
@@ -346,7 +345,7 @@ function _VoucherTable(props) {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <ScrollArea h={height + 36} scrollbarSize={2} type="never">
+                                <ScrollArea h={height + 72} scrollbarSize={2} type="never">
                                     <Box>
                                         <Table stickyHeader>
                                             <Table.Thead>
@@ -361,8 +360,11 @@ function _VoucherTable(props) {
                                             <Table.Tbody>{rows}</Table.Tbody>
                                             <Table.Tfoot>
                                                 <Table.Tr>
+                                                    <Table.Th colSpan={'4'} ta="right" fz="xs" w={'100'}></Table.Th>
+                                                </Table.Tr>
+                                                <Table.Tr>
                                                     <Table.Th colSpan={'4'} ta="right" fz="xs" w={'100'}>
-                                                        {salesViewData && salesViewData.credit && Number(salesViewData.credit).toFixed(2)}
+                                                        {salesViewData && salesViewData.debit && Number(salesViewData.debit).toFixed(2)}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.debit && Number(salesViewData.debit).toFixed(2)}
@@ -371,7 +373,7 @@ function _VoucherTable(props) {
                                             </Table.Tfoot>
                                         </Table>
                                     </Box>
-                                    <Box>
+                                    <Box mt={'xs'} pl={'xs'}>
                                         <Grid gutter={{base: 4}}>
                                             <Grid.Col span={'12'}>
                                                 <Text fz="sm" lh="xs">
@@ -394,18 +396,6 @@ function _VoucherTable(props) {
                                 >
                                     {t('Print')}
                                 </Button>
-                                <Button
-                                    fullWidth={true}
-                                    variant="filled"
-                                    leftSection={<IconReceipt size={14}/>}
-                                    color="red.5"
-                                    onClick={() => {
-                                        setPrintPos(true);
-                                    }}
-                                >
-                                    {t('Pos')}
-                                </Button>
-
                             </Button.Group>
                         </Box>
                     </Grid.Col>

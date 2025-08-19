@@ -30,9 +30,54 @@ export default function Navigation(props) {
   const navigate = useNavigate();
   return (
       <>
-        <ScrollArea h={module === "voucher-entry" ? height - 38 : height} bg="white" type="never" className="border-radius">
+        <ScrollArea h={module === "voucher-entry" ? height-4 : height} bg="white" type="never" className="border-radius">
           <Flex direction={`column`} align={"center"} gap={"16"}>
-
+            <Flex direction={`column`} align={"center"} mt="xs">
+                  <Tooltip
+                      label={t("AccountLedger")}
+                      px={16}
+                      py={2}
+                      withArrow
+                      position={"left"}
+                      c={"white"}
+                      bg={"#65a8ec"}
+                      transitionProps={{
+                          transition: "pop-bottom-left",
+                          duration: 500,
+                      }}
+                  >
+                      <Button
+                          bg={"#65a8ec"}
+                          size="md"
+                          pl={"12"}
+                          pr={"12"}
+                          variant={"light"}
+                          color={`black`}
+                          radius="xl"
+                          onClick={(e) => {
+                              navigate("/accounting/dashboard");
+                          }}
+                      >
+                          <Flex direction={`column`} align={"center"}>
+                              <IconCategory size={16} color={"white"} />
+                          </Flex>
+                      </Button>
+                  </Tooltip>
+                  <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+                      <Text
+                          size="xs"
+                          c="black"
+                          ta="center"
+                          w={58}
+                          style={{
+                              wordBreak: "break-word",
+                              hyphens: "auto",
+                          }}
+                      >
+                          {t("Dasboard")}
+                      </Text>
+                  </Flex>
+              </Flex>
               <Flex direction={`column`} align={"center"} mt="xs">
                   <Tooltip
                       label={t("AccountLedger")}
@@ -79,8 +124,6 @@ export default function Navigation(props) {
                       </Text>
                   </Flex>
               </Flex>
-
-
             <Flex direction={`column`} align={"center"}>
               <Tooltip
                   label={t("VoucherEntry")}
