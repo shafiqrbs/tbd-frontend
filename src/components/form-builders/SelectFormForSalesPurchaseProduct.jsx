@@ -5,7 +5,7 @@ import { storeEntityData } from "../../store/core/crudSlice.js";
 import { showNotificationComponent } from "../core-component/showNotificationComponent.jsx";
 import inputCss from "../../assets/css/InputField.module.css";
 
-const SelectForm = forwardRef((props, ref) => {
+const SelectFormForSalesPurchaseProduct = forwardRef((props, ref) => {
     const {
         position,
         color,
@@ -17,7 +17,6 @@ const SelectForm = forwardRef((props, ref) => {
         form,
         tooltip,
         mt,
-        pt,
         id,
         dropdownValue,
         searchable,
@@ -28,6 +27,7 @@ const SelectForm = forwardRef((props, ref) => {
         inlineUpdate = false,
         updateDetails = null,
         size,
+        pt,
         disabled = false,
         comboboxProps
     } = props;
@@ -58,12 +58,7 @@ const SelectForm = forwardRef((props, ref) => {
             try {
                 const resultAction = await dispatch(storeEntityData(updateDetails));
                 if (resultAction.payload?.status !== 200) {
-                    showNotificationComponent(
-                        resultAction.payload?.message || "Error updating",
-                        "red",
-                        "",
-                        true
-                    );
+                    showNotificationComponent(resultAction.payload?.message || "Error updating", "red", "", true);
                 }
             } catch (error) {
                 showNotificationComponent("Request failed. Please try again.", "red", "", true);
@@ -101,9 +96,7 @@ const SelectForm = forwardRef((props, ref) => {
                         autoComplete="off"
                         clearable={clearable}
                         searchable={searchable}
-                        value={
-                            typeof value === "object" ? value?.value : value
-                        }
+                        value={value?.value || null} // Important: Select wants the string value
                         onChange={handleChange}
                         withAsterisk={required}
                         comboboxProps={comboboxProps || { withinPortal: false }}
@@ -116,4 +109,4 @@ const SelectForm = forwardRef((props, ref) => {
     );
 });
 
-export default SelectForm;
+export default SelectFormForSalesPurchaseProduct;
