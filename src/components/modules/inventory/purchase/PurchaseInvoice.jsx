@@ -2,12 +2,9 @@ import React from "react";
 import {Box, Grid, Progress} from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
 import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
 import Navigation from "../common/Navigation";
-import _SalesTable from "../sales/_SalesTable";
-import _GenericInvoiceForm2 from "./_GenericInvoiceForm2.jsx";
 
 function PurchaseInvoice() {
   const { t, i18n } = useTranslation();
@@ -50,7 +47,6 @@ function PurchaseInvoice() {
                   </Grid.Col>
                   <Grid.Col span={23} >
                     <_GenericInvoiceForm />
-                    {/*<_GenericInvoiceForm2 />*/}
                   </Grid.Col>
                 </Grid>
               </Box>

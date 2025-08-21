@@ -1,12 +1,35 @@
-import {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
+import {
+    Box,
+    Grid,
+    Tooltip,
+    ActionIcon,
+    Group,
+    Text,
+    Overlay,
+} from "@mantine/core";
+import {
+    IconMessage,
+    IconEyeEdit,
+    IconUserCircle,
+    IconUserPlus,
+} from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
+
 import genericClass from "../../../../assets/css/Generic.module.css";
-import {Box, Grid, Tooltip, ActionIcon, Group, Text, Overlay} from "@mantine/core";
-import {IconMessage, IconEyeEdit, IconUserCircle, IconUserPlus} from "@tabler/icons-react";
 import InputForm from "../../../form-builders/InputForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput";
-import {useTranslation} from "react-i18next";
 import SelectForm from "../../../form-builders/SelectForm";
+
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
+import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
+import _SmsPurchaseModel from "../sales/modal/_SmsPurchaseModel.jsx";
+import VendorViewDrawer from "../../core/vendor/VendorViewDrawer.jsx";
+import SelectFormForSalesPurchaseProduct from "../../../form-builders/SelectFormForSalesPurchaseProduct.jsx";
+
+// Utility function for vendor list retrieval
+const getLocalVendors = () =>
+    JSON.parse(localStorage.getItem("core-vendors") || "[]");
 
 export default function __PosVendorSection(props) {
     const {
@@ -22,172 +45,182 @@ export default function __PosVendorSection(props) {
         defaultVendorId,
         setDefaultVendorId,
     } = props;
-    const {t, i18n} = useTranslation();
+
+    const { t } = useTranslation();
+
     const [openAddVendorGroup, setOpenAddVendorGroup] = useState(false);
-    //fetching customer dropdownData
+    const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false);
+    const [viewDrawer, setViewDrawer] = useState(false);
+
+    // Fetch and set vendors dropdown + default vendor
     useEffect(() => {
         const fetchVendors = async () => {
-            await vendorDataStoreIntoLocalStorage();
-            let coreVendors = localStorage.getItem("core-vendors");
-            coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
-            let defaultId = defaultVendorId;
-            if (coreVendors && coreVendors.length > 0) {
-                const transformedData = coreVendors.map((type) => {
-                    if (type.name === "Default") {
-                        defaultId = type.id;
-                    }
-                    return {
-                        label: type.mobile + " -- " + type.name,
-                        value: String(type.id),
-                    };
-                });
+            try {
+                await vendorDataStoreIntoLocalStorage();
+                const coreVendors = getLocalVendors();
 
-                setVendorsDropdownData(transformedData);
-                setDefaultVendorId(defaultId);
+                let determinedDefaultId = defaultVendorId;
+
+                if (coreVendors.length > 0) {
+                    const transformedData = coreVendors.map((vendor) => {
+                        if (vendor.name === "Default") {
+                            determinedDefaultId = vendor.id;
+                        }
+
+                        return {
+                            label: `${vendor.mobile} -- ${vendor.name}`,
+                            value: String(vendor.id),
+                        };
+                    });
+
+                    setVendorsDropdownData(transformedData);
+                    setDefaultVendorId(determinedDefaultId);
+                }
+            } catch (error) {
+                console.error("Failed to fetch vendors from storage", error);
             }
         };
 
         fetchVendors();
-    }, []);
+    }, [defaultVendorId]);
 
-    //setting vendorObject based on vendorData
+    // Sync vendorObject state with selected vendorData
     useEffect(() => {
         if (vendorData) {
-            const coreVendors = JSON.parse(
-                localStorage.getItem("core-vendors") || "[]"
+            const coreVendors = getLocalVendors();
+            const foundVendor = coreVendors.find(
+                (vendor) => String(vendor.id) === String(vendorData.value)
             );
-            const foundVendors = coreVendors.find((type) => type.id == vendorData);
 
-            if (foundVendors) {
-                setVendorObject(foundVendors);
+            if (foundVendor) {
+                setVendorObject(foundVendor);
                 setOpenAddVendorGroup(false);
             }
         }
     }, [vendorData]);
 
+    const handleSendSMS = () => {
+        if (isSMSActive) {
+            showNotificationComponent(
+                t("smsSendSuccessfully"),
+                "teal",
+                t("smsSendSuccessfully"),
+                true,
+                1000,
+                true,
+                "green"
+            );
+        } else {
+            setIsShowSMSPackageModel(true);
+        }
+    };
+
+    const shouldDisableVendorActions =
+        !vendorData || vendorData?.value === defaultVendorId;
+
     return (
         <>
-            <Box pl={`4`} pr={4} mb={"xs"} className={genericClass.bodyBackground}>
-                <Grid columns={24} gutter={{base: 6}}>
+            <Box pl={4} pr={4} mb="xs" className={genericClass.bodyBackground}>
+                <Grid columns={24} gutter={{ base: 6 }}>
+                    {/* Vendor Dropdown & Action Buttons */}
                     <Grid.Col span={16} className={genericClass.genericSecondaryBg}>
-                        <Box pl={"4"} pr={"4"}>
-                            <Box style={{borderRadius: 4}} className={genericClass.genericHighlightedBox}>
-                                <Grid gutter={{base: 6}} mt={8}>
-                                    <Grid.Col span={9} pl={"8"}>
-                                        <SelectForm
+                        <Box pl={4} pr={4}>
+                            <Box
+                                style={{ borderRadius: 4 }}
+                                className={genericClass.genericHighlightedBox}
+                            >
+                                <Grid gutter={{ base: 6 }} mt={8}>
+                                    <Grid.Col span={9} pl={8}>
+                                        <SelectFormForSalesPurchaseProduct
                                             tooltip={t("VendorValidateMessage")}
-                                            label=""
                                             placeholder={t("SearchVendorSupplier")}
                                             required={false}
-                                            nextField={""}
-                                            name={"vendor_id"}
+                                            name="vendor_id"
                                             form={form}
                                             dropdownValue={vendorsDropdownData}
-                                            id={"vendor_id"}
-                                            searchable={true}
+                                            id="vendor_id"
+                                            searchable
                                             value={vendorData}
                                             changeValue={setVendorData}
                                         />
                                     </Grid.Col>
+
                                     <Grid.Col span={3}>
                                         <Box
-                                            mr={"12"}
-                                            mt={"4"}
-                                            style={{textAlign: "right", float: "right"}}
+                                            mr={12}
+                                            mt={4}
+                                            style={{ textAlign: "right", float: "right" }}
                                         >
-                                            <Group gap="8">
+                                            <Group gap={8}>
+                                                {/* SMS Button */}
                                                 <Tooltip
                                                     multiline
-                                                    bg={"orange.8"}
+                                                    bg="orange.8"
                                                     position="top"
-                                                    ta={"center"}
                                                     withArrow
-                                                    transitionProps={{duration: 200}}
+                                                    transitionProps={{ duration: 200 }}
                                                     label={
-                                                        vendorData && vendorData != defaultVendorId
-                                                            ? isSMSActive
+                                                        shouldDisableVendorActions
+                                                            ? t("ChooseVendor")
+                                                            : isSMSActive
                                                                 ? t("SendSms")
                                                                 : t("PleasePurchaseAsmsPackage")
-                                                            : t("ChooseVendor")
                                                     }
                                                 >
                                                     <ActionIcon
-                                                        bg={"white"}
+                                                        bg="white"
                                                         variant="outline"
-                                                        color={"red"}
-                                                        disabled={
-                                                            !vendorData || vendorData == defaultVendorId
-                                                        }
-                                                        onClick={(e) => {
-                                                            if (isSMSActive) {
-                                                                notifications.show({
-                                                                    withCloseButton: true,
-                                                                    autoClose: 1000,
-                                                                    title: t("smsSendSuccessfully"),
-                                                                    message: t("smsSendSuccessfully"),
-                                                                    icon: <IconTallymark1/>,
-                                                                    className: "my-notification-class",
-                                                                    style: {},
-                                                                    loading: true,
-                                                                });
-                                                            } else {
-                                                                setIsShowSMSPackageModel(true);
-                                                            }
-                                                        }}
+                                                        color="red"
+                                                        disabled={shouldDisableVendorActions}
+                                                        onClick={handleSendSMS}
                                                     >
-                                                        <IconMessage size={18} stroke={1.5}/>
+                                                        <IconMessage size={18} stroke={1.5} />
                                                     </ActionIcon>
                                                 </Tooltip>
+
+                                                {/* View Vendor Details Button */}
                                                 <Tooltip
                                                     multiline
-                                                    bg={"orange.8"}
+                                                    bg="orange.8"
                                                     position="top"
                                                     withArrow
-                                                    offset={{crossAxis: "-45", mainAxis: "5"}}
-                                                    ta={"center"}
-                                                    transitionProps={{duration: 200}}
+                                                    offset={{ crossAxis: -45, mainAxis: 5 }}
+                                                    ta="center"
+                                                    transitionProps={{ duration: 200 }}
                                                     label={
-                                                        vendorData && vendorData != defaultVendorId
-                                                            ? t("VendorDetails")
-                                                            : t("ChooseVendor")
+                                                        shouldDisableVendorActions
+                                                            ? t("ChooseVendor")
+                                                            : t("VendorDetails")
                                                     }
                                                 >
                                                     <ActionIcon
                                                         variant="filled"
-                                                        color={"red"}
-                                                        disabled={
-                                                            !vendorData || vendorData == defaultVendorId
-                                                        }
-                                                        onClick={() => {
-                                                            setViewDrawer(true);
-                                                        }}
+                                                        color="red"
+                                                        disabled={shouldDisableVendorActions}
+                                                        onClick={() => setViewDrawer(true)}
                                                     >
-                                                        <IconEyeEdit size={18} stroke={1.5}/>
+                                                        <IconEyeEdit size={18} stroke={1.5} />
                                                     </ActionIcon>
                                                 </Tooltip>
+
+                                                {/* Add Vendor Group Button */}
                                                 <Tooltip
                                                     multiline
-                                                    bg={"orange.8"}
+                                                    bg="orange.8"
                                                     position="top"
                                                     withArrow
-                                                    offset={{crossAxis: "-45", mainAxis: "5"}}
-                                                    ta={"center"}
-                                                    transitionProps={{duration: 200}}
+                                                    offset={{ crossAxis: -45, mainAxis: 5 }}
+                                                    ta="center"
+                                                    transitionProps={{ duration: 200 }}
                                                     label={t("Select Vendor Group")}
                                                 >
                                                     <ActionIcon
                                                         variant="filled"
-                                                        style={{backgroundColor: "white"}}
-                                                        onClick={() => {
-                                                            setOpenAddVendorGroup(true);
-                                                        }}
-                                                        disabled={vendorData}
+                                                        style={{ backgroundColor: "white" }}
+                                                        onClick={() => setOpenAddVendorGroup(true)}
+                                                        disabled={!!vendorData?.value}
                                                     >
-                                                        <IconUserPlus
-                                                            size={18}
-                                                            stroke={1.5}
-                                                            color="gray"
-                                                        />
+                                                        <IconUserPlus size={18} stroke={1.5} color="gray" />
                                                     </ActionIcon>
                                                 </Tooltip>
                                             </Group>
@@ -195,89 +228,77 @@ export default function __PosVendorSection(props) {
                                     </Grid.Col>
                                 </Grid>
                             </Box>
-                            <Box
-                                pl={"4"}
-                                pr={"4"}
-                                mt={"4"}
-                                pt={"8"}
-                                style={{borderRadius: 4}}
-                            >
-                                <Grid columns={18} gutter={{base: 2}}>
+
+                            {/* Vendor Info */}
+                            <Box pl={4} pr={4} mt={4} pt={8} style={{ borderRadius: 4 }}>
+                                <Grid columns={18} gutter={{ base: 2 }}>
                                     <Grid.Col span={3}>
-                                        <Text
-                                            pl={"md"}
-                                            className={genericClass.genericPrimaryFontColor}
-                                            fz={"xs"}
-                                        >
+                                        <Text pl="md" className={genericClass.genericPrimaryFontColor} fz="xs">
                                             {t("Outstanding")}
                                         </Text>
                                     </Grid.Col>
                                     <Grid.Col span={6}>
-                                        <Text fz={"sm"} order={1} fw={"800"}>
-                                            {" " + currencySymbol + " "}
-                                            {vendorData &&
-                                            vendorObject &&
-                                            vendorData != defaultVendorId
+                                        <Text fz="sm" order={1} fw={800}>
+                                            {currencySymbol}
+                                            {vendorData && vendorObject &&
+                                            vendorData?.value !== defaultVendorId
                                                 ? Number(vendorObject?.closing_balance).toFixed(2)
                                                 : "0.00"}
                                         </Text>
                                     </Grid.Col>
                                     <Grid.Col span={3}>
-                                        <Text ta="left" size="xs" pl={"md"}>
+                                        <Text ta="left" size="xs" pl="md">
                                             {t("Purchase")}
                                         </Text>
                                     </Grid.Col>
                                     <Grid.Col span={6}>
                                         <Text ta="left" size="sm">
-                                            {" "}
                                             {currencySymbol} {vendorObject?.purchase}
                                         </Text>
                                     </Grid.Col>
                                 </Grid>
-                                <Grid columns={18} gutter={{base: 2}}>
+
+                                <Grid columns={18} gutter={{ base: 2 }}>
                                     <Grid.Col span={3}>
-                                        <Text ta="left" size="xs" pl={"md"}>
+                                        <Text ta="left" size="xs" pl="md">
                                             {t("Discount")}
                                         </Text>
                                     </Grid.Col>
                                     <Grid.Col span={6}>
                                         <Text ta="left" size="sm">
-                                            {" "}
                                             {currencySymbol} {vendorObject?.discount}
                                         </Text>
                                     </Grid.Col>
                                     <Grid.Col span={3}>
-                                        <Text ta="left" size="xs" pl={"md"}>
+                                        <Text ta="left" size="xs" pl="md">
                                             {t("Payment")}
                                         </Text>
                                     </Grid.Col>
                                     <Grid.Col span={6}>
                                         <Text ta="left" size="sm">
-                                            {" "}
                                             {currencySymbol} {vendorObject?.receive}
                                         </Text>
                                     </Grid.Col>
                                 </Grid>
-                                <Grid columns={18} gutter={{base: 2}}>
+
+                                <Grid columns={18} gutter={{ base: 2 }}>
                                     <Grid.Col span={3}>
-                                        <Text ta="left" size="xs" pl={"md"}>
+                                        <Text ta="left" size="xs" pl="md">
                                             {t("CreditLimit")}
                                         </Text>
                                     </Grid.Col>
                                     <Grid.Col span={6}>
                                         <Text ta="left" size="sm">
-                                            {" "}
                                             {currencySymbol} {vendorObject?.credit_limit}
                                         </Text>
                                     </Grid.Col>
                                     <Grid.Col span={3}>
-                                        <Text ta="left" size="xs" pl={"md"}>
+                                        <Text ta="left" size="xs" pl="md">
                                             {t("EarnPoint")}
                                         </Text>
                                     </Grid.Col>
                                     <Grid.Col span={6}>
                                         <Text ta="left" size="sm">
-                                            {" "}
                                             {currencySymbol} {vendorObject?.earn_point}
                                         </Text>
                                     </Grid.Col>
@@ -285,8 +306,10 @@ export default function __PosVendorSection(props) {
                             </Box>
                         </Box>
                     </Grid.Col>
-                    <Grid.Col span={8} style={{borderRadius: 4}} className={genericClass.genericSecondaryBg}>
-                        <Box pl={"4"} pr={"4"} pos="relative">
+
+                    {/* Add New Vendor Form */}
+                    <Grid.Col span={8} className={genericClass.genericSecondaryBg}>
+                        <Box pl={4} pr={4} pos="relative">
                             <Overlay
                                 hidden={openAddVendorGroup}
                                 opacity={0.8}
@@ -297,53 +320,64 @@ export default function __PosVendorSection(props) {
                                 blur={1.2}
                                 radius="sm"
                             />
-                            <Box mt={"4"}>
+
+                            <Box mt={4}>
                                 <InputForm
                                     tooltip={t("NameValidateMessage")}
-                                    label={t("")}
                                     placeholder={t("VendorName")}
-                                    required={true}
-                                    nextField={"mobile"}
+                                    required
+                                    nextField="mobile"
                                     form={form}
-                                    name={"name"}
-                                    id={"name"}
-                                    leftSection={<IconUserCircle size={16} opacity={0.5}/>}
-                                    rightIcon={""}
+                                    name="name"
+                                    id="name"
+                                    leftSection={<IconUserCircle size={16} opacity={0.5} />}
                                 />
                             </Box>
-                            <Box mt={"4"}>
+                            <Box mt={4}>
                                 <PhoneNumber
                                     tooltip={
                                         form.errors.mobile
                                             ? form.errors.mobile
                                             : t("MobileValidateMessage")
                                     }
-                                    label={t("")}
                                     placeholder={t("Mobile")}
-                                    required={true}
-                                    nextField={"email"}
+                                    required
+                                    nextField="email"
                                     form={form}
-                                    name={"mobile"}
-                                    id={"mobile"}
-                                    rightIcon={""}
+                                    name="mobile"
+                                    id="mobile"
                                 />
                             </Box>
-                            <Box mt={"4"} mb={4}>
+                            <Box mt={4} mb={4}>
                                 <InputForm
                                     tooltip={t("InvalidEmail")}
-                                    label={t("")}
                                     placeholder={t("Email")}
                                     required={false}
-                                    nextField={""}
-                                    name={"email"}
                                     form={form}
-                                    id={"email"}
+                                    name="email"
+                                    id="email"
                                 />
                             </Box>
                         </Box>
                     </Grid.Col>
                 </Grid>
             </Box>
+
+            {/* Modals */}
+            {isShowSMSPackageModel && (
+                <_SmsPurchaseModel
+                    isShowSMSPackageModel={isShowSMSPackageModel}
+                    setIsShowSMSPackageModel={setIsShowSMSPackageModel}
+                />
+            )}
+
+            {viewDrawer && (
+                <VendorViewDrawer
+                    viewDrawer={viewDrawer}
+                    setViewDrawer={setViewDrawer}
+                    vendorObject={vendorObject}
+                />
+            )}
         </>
     );
 }

@@ -34,6 +34,7 @@ import classes from "../../../../assets/css/FeaturesCards.module.css";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData";
+import SelectFormForSalesPurchaseProduct from "../../../form-builders/SelectFormForSalesPurchaseProduct.jsx";
 
 export default function __PosPurchaseInvoiceSection(props) {
     const {
@@ -224,7 +225,7 @@ export default function __PosPurchaseInvoiceSection(props) {
                                 </Box>
                                 {domainConfigData?.inventory_config?.sku_warehouse === 1 && domainConfigData?.inventory_config?.config_purchase?.is_warehouse === 1 && (
                                     <Box mt={"4"}>
-                                        <SelectForm
+                                        <SelectFormForSalesPurchaseProduct
                                             tooltip={t("Warehouse")}
                                             label=""
                                             placeholder={t("Warehouse")}
@@ -370,18 +371,6 @@ export default function __PosPurchaseInvoiceSection(props) {
                                                                 form.setFieldValue("discount", newValue);
                                                             }
                                                         }}
-                                                        /*value={purchaseDiscountAmount}
-                                                        size={"sm"}
-                                                        classNames={{ input: classes.input }}
-                                                        onChange={(event) => {
-                                                          form.setFieldValue(
-                                                            "discount",
-                                                            event.target.value
-                                                          );
-                                                          const newValue = event.target.value;
-                                                          setPurchaseDiscountAmount(newValue);
-                                                          form.setFieldValue("discount", newValue);
-                                                        }}*/
                                                         rightSection={
                                                             <ActionIcon
                                                                 size={32}
