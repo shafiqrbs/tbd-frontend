@@ -123,10 +123,10 @@ function _GenericRequisitionForm(props) {
 
         // Filter products by vendor and purchase price
         let filteredProducts = localProducts.filter(product =>
-            String(product.vendor_id) === vendorData.value &&
+            String(product.vendor_id) === vendorData?.value &&
             product.purchase_price > 0
         );
-        
+
         // Apply search filter
         filteredProducts = filterProductsBySearch(filteredProducts, searchValue);
 
@@ -140,7 +140,7 @@ function _GenericRequisitionForm(props) {
         setProducts(filteredProducts)
 
         // Set vendor object
-        const foundVendor = coreVendors.find((vendor) => String(vendor.id) === vendorData);
+        const foundVendor = coreVendors.find((vendor) => String(vendor.id) === vendorData.value);
         setVendorObject(foundVendor || null);
         setFetchingProductsTable(false)
 

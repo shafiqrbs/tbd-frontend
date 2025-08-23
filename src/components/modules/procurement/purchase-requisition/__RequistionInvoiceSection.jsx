@@ -32,7 +32,7 @@ export default function __RequistionInvoiceSection(props) {
     } = props;
     const {t} = useTranslation();
     useEffect(() => {
-        form.setFieldValue("vendor_id", vendorData);
+        form.setFieldValue("vendor_id", vendorData?.value);
     }, [vendorData])
     return (
         <>
@@ -55,7 +55,7 @@ export default function __RequistionInvoiceSection(props) {
                                         id="vendor_id"
                                         mt={1}
                                         searchable={true}
-                                        value={vendorData}
+                                        value={vendorData?.value}
                                         changeValue={setVendorData}
                                         disabled={true}
                                     />
