@@ -449,7 +449,8 @@ function AccountingDashboard(props) {
                                                 <Table.Tbody>
                                                     <Table.Tr>
                                                         <Table.Th w={160}>Account Name</Table.Th>
-                                                        <Table.Td>7.x migration</Table.Td>
+                                                        <Table.Td>Details</Table.Td>
+                                                        <Table.Td align="right">Amount</Table.Td>
                                                     </Table.Tr>
                                                     {indexData.data?.cashAccounts?.map((item) => (
                                                         <>
@@ -486,6 +487,8 @@ function AccountingDashboard(props) {
                                                 <Table.Tbody>
                                                     <Table.Tr>
                                                         <Table.Th w={160}>Account Name</Table.Th>
+                                                        <Table.Td>Details</Table.Td>
+                                                        <Table.Td align="right">Amount</Table.Td>
                                                     </Table.Tr>
                                                     {indexData.data?.mobileAccounts?.map((item) => (
                                                         <>
@@ -562,51 +565,70 @@ function AccountingDashboard(props) {
                                                 </Grid.Col>
                                                 <Grid.Col span={10}>
                                                     <Text fz="md" fw={500} className={classes.cardTitle}>
-                                                        {t("ListOfVendorLedger")}
+                                                        {t("ListOfAccountMenu")}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
                                             <Box fz="sm" c="dimmed" mt="sm">
                                                 <List spacing="ms" size="sm" center>
-                                                    {["role_accounting"].some((value) => userRole.includes(value)) && (
-                                                        <List.Item
-                                                            pl={"xs"}
-                                                            icon={
-                                                                <ThemeIcon
-                                                                    color="blue.6"
-                                                                    size={20}
-                                                                    radius="xl"
-                                                                    variant="outline"
-                                                                >
-                                                                    <IconBasket />
-                                                                </ThemeIcon>
-                                                            }
-                                                        >
-                                                            <NavLink
-                                                                pl={"md"}
-                                                                href="accounting/voucher-entry"
-                                                                label={t("VoucherEntry")}
-                                                                component="button"
-                                                                onClick={(e) => {
-                                                                    navigate("/accounting/voucher-entry");
-                                                                }}
-                                                                onAuxClick={(e) => {
-                                                                    // Handle middle mouse button click for browsers that support it
-                                                                    if (e.button === 1) {
-                                                                        window.open("/accounting/voucher-entry", "_blank");
-                                                                    }
-                                                                }}
-                                                            />
-                                                        </List.Item>
-                                                    )}
-
-
-                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
-                                    <NavLink pl={'md'} href="accounting/sales-invoice" label={t('NewSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
-                                </List.Item>
-                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagPlus/></ThemeIcon>}>
-                                    <NavLink pl={'md'} href="accounting/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
-                                </List.Item>
+                                                    <List.Item
+                                                        pl={"xs"}
+                                                        icon={
+                                                            <ThemeIcon
+                                                                color="blue.6"
+                                                                size={20}
+                                                                radius="xl"
+                                                                variant="outline"
+                                                            >
+                                                                <IconBasket />
+                                                            </ThemeIcon>
+                                                        }
+                                                    >
+                                                        <NavLink
+                                                            pl={"md"}
+                                                            href="accounting/voucher-entry"
+                                                            label={t("VoucherEntry")}
+                                                            component="button"
+                                                            onClick={(e) => {
+                                                                navigate("/accounting/voucher-entry");
+                                                            }}
+                                                            onAuxClick={(e) => {
+                                                                // Handle middle mouse button click for browsers that support it
+                                                                if (e.button === 1) {
+                                                                    window.open("/accounting/voucher-entry", "_blank");
+                                                                }
+                                                            }}
+                                                        />
+                                                    </List.Item>
+                                                    <List.Item
+                                                        pl={"xs"}
+                                                        icon={
+                                                            <ThemeIcon
+                                                                color="blue.6"
+                                                                size={20}
+                                                                radius="xl"
+                                                                variant="outline"
+                                                            >
+                                                                <IconBasket />
+                                                            </ThemeIcon>
+                                                        }
+                                                    >
+                                                        <NavLink
+                                                            pl={"md"}
+                                                            href="accounting/entry"
+                                                            label={t("JoiurnalVoucher")}
+                                                            component="button"
+                                                            onClick={(e) => {
+                                                                navigate("/accounting/entry");
+                                                            }}
+                                                            onAuxClick={(e) => {
+                                                                // Handle middle mouse button click for browsers that support it
+                                                                if (e.button === 1) {
+                                                                    window.open("/accounting/entry", "_blank");
+                                                                }
+                                                            }}
+                                                        />
+                                                    </List.Item>
                                                     <List.Item
                                                         pl={"xs"}
                                                         icon={
@@ -703,60 +725,8 @@ function AccountingDashboard(props) {
                                                             }}
                                                         />
                                                     </List.Item>
-                                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="accounting/voucher-entry" label={t('SampleModal')} component="button" onClick={(e) => { navigate('/accounting/modalIndex') }} onAuxClick={(e) => {
-                                            // Handle middle mouse button click for browsers that support it
-                                            if (e.button === 1) {
-                                                window.open('/accounting/voucher-entry', '_blank');
-                                            }
-                                        }} />
-                                    </List.Item>
-                                                    <List.Item
-                                                        pl={"xs"}
-                                                        icon={
-                                                            <ThemeIcon color="blue.6" size={20} radius="xl" variant="outline">
-                                                                <IconBasket />
-                                                            </ThemeIcon>
-                                                        }
-                                                    >
-                                                        <NavLink
-                                                            pl={"md"}
-                                                            href="accounting/balance-sheet"
-                                                            label={t("BalanceSheet")}
-                                                            component="button"
-                                                            onClick={(e) => {
-                                                                navigate("/accounting/balance-sheet");
-                                                            }}
-                                                            onAuxClick={(e) => {
-                                                                if (e.button === 1) {
-                                                                    window.open("/accounting/balance-sheet", "_blank");
-                                                                }
-                                                            }}
-                                                        />
-                                                    </List.Item>
-                                                    <List.Item
-                                                        pl={"xs"}
-                                                        icon={
-                                                            <ThemeIcon color="blue.6" size={20} radius="xl" variant="outline">
-                                                                <IconBasket />
-                                                            </ThemeIcon>
-                                                        }
-                                                    >
-                                                        <NavLink
-                                                            pl={"md"}
-                                                            href="accounting/balance-entry"
-                                                            label={t("BalanceEntry")}
-                                                            component="button"
-                                                            onClick={(e) => {
-                                                                navigate("/accounting/balance-entry");
-                                                            }}
-                                                            onAuxClick={(e) => {
-                                                                if (e.button === 1) {
-                                                                    window.open("/accounting/balance-entry", "_blank");
-                                                                }
-                                                            }}
-                                                        />
-                                                    </List.Item>
+
+
                                                 </List>
                                             </Box>
                                         </Card>
@@ -780,172 +750,7 @@ function AccountingDashboard(props) {
                                             </Grid>
                                             <Box fz="sm" c="dimmed" mt="sm">
                                                 <List spacing="ms" size="sm" center>
-                                                    {["role_accounting"].some((value) => userRole.includes(value)) && (
-                                                        <List.Item
-                                                            pl={"xs"}
-                                                            icon={
-                                                                <ThemeIcon
-                                                                    color="blue.6"
-                                                                    size={20}
-                                                                    radius="xl"
-                                                                    variant="outline"
-                                                                >
-                                                                    <IconBasket />
-                                                                </ThemeIcon>
-                                                            }
-                                                        >
-                                                            <NavLink
-                                                                pl={"md"}
-                                                                href="accounting/voucher-entry"
-                                                                label={t("VoucherEntry")}
-                                                                component="button"
-                                                                onClick={(e) => {
-                                                                    navigate("/accounting/voucher-entry");
-                                                                }}
-                                                                onAuxClick={(e) => {
-                                                                    // Handle middle mouse button click for browsers that support it
-                                                                    if (e.button === 1) {
-                                                                        window.open("/accounting/voucher-entry", "_blank");
-                                                                    }
-                                                                }}
-                                                            />
-                                                        </List.Item>
-                                                    )}
 
-
-                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
-                                    <NavLink pl={'md'} href="accounting/sales-invoice" label={t('NewSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
-                                </List.Item>
-                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagPlus/></ThemeIcon>}>
-                                    <NavLink pl={'md'} href="accounting/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
-                                </List.Item>
-                                                    <List.Item
-                                                        pl={"xs"}
-                                                        icon={
-                                                            <ThemeIcon color="blue.6" size={20} radius="xl" variant="outline">
-                                                                <IconCurrencyMonero />
-                                                            </ThemeIcon>
-                                                        }
-                                                    >
-                                                        <NavLink
-                                                            pl={"md"}
-                                                            href="/accounting/transaction-mode"
-                                                            label={t("TransactionMode")}
-                                                            component="button"
-                                                            onClick={(e) => {
-                                                                navigate("accounting/transaction-mode");
-                                                            }}
-                                                            onAuxClick={(e) => {
-                                                                // Handle middle mouse button click for browsers that support it
-                                                                if (e.button === 1) {
-                                                                    window.open("/accounting/transaction-mode", "_blank");
-                                                                }
-                                                            }}
-                                                        />
-                                                    </List.Item>
-                                                    <List.Item
-                                                        pl={"xs"}
-                                                        icon={
-                                                            <ThemeIcon color="blue.6" size={20} radius="xl" variant="outline">
-                                                                <IconBasket />
-                                                            </ThemeIcon>
-                                                        }
-                                                    >
-                                                        <NavLink
-                                                            pl={"md"}
-                                                            href="accounting/ledger"
-                                                            label={t("Ledger")}
-                                                            component="button"
-                                                            onClick={(e) => {
-                                                                navigate("/accounting/ledger");
-                                                            }}
-                                                            onAuxClick={(e) => {
-                                                                // Handle middle mouse button click for browsers that support it
-                                                                if (e.button === 1) {
-                                                                    window.open("/accounting/ledger", "_blank");
-                                                                }
-                                                            }}
-                                                        />
-                                                    </List.Item>
-                                                    <List.Item
-                                                        pl={"xs"}
-                                                        icon={
-                                                            <ThemeIcon color="blue.6" size={20} radius="xl" variant="outline">
-                                                                <IconBasket />
-                                                            </ThemeIcon>
-                                                        }
-                                                    >
-                                                        <NavLink
-                                                            pl={"md"}
-                                                            href="accounting/head-group"
-                                                            label={t("HeadGroup")}
-                                                            component="button"
-                                                            onClick={(e) => {
-                                                                navigate("/accounting/head-group");
-                                                            }}
-                                                            onAuxClick={(e) => {
-                                                                // Handle middle mouse button click for browsers that support it
-                                                                if (e.button === 1) {
-                                                                    window.open("/accounting/head-group", "_blank");
-                                                                }
-                                                            }}
-                                                        />
-                                                    </List.Item>
-                                                    <List.Item
-                                                        pl={"xs"}
-                                                        icon={
-                                                            <ThemeIcon color="blue.6" size={20} radius="xl" variant="outline">
-                                                                <IconBasket />
-                                                            </ThemeIcon>
-                                                        }
-                                                    >
-                                                        <NavLink
-                                                            pl={"md"}
-                                                            href="accounting/head-subgroup"
-                                                            label={t("HeadSubGroup")}
-                                                            component="button"
-                                                            onClick={(e) => {
-                                                                navigate("/accounting/head-subgroup");
-                                                            }}
-                                                            onAuxClick={(e) => {
-                                                                // Handle middle mouse button click for browsers that support it
-                                                                if (e.button === 1) {
-                                                                    window.open("/accounting/head-subgroup", "_blank");
-                                                                }
-                                                            }}
-                                                        />
-                                                    </List.Item>
-                                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="accounting/voucher-entry" label={t('SampleModal')} component="button" onClick={(e) => { navigate('/accounting/modalIndex') }} onAuxClick={(e) => {
-                                            // Handle middle mouse button click for browsers that support it
-                                            if (e.button === 1) {
-                                                window.open('/accounting/voucher-entry', '_blank');
-                                            }
-                                        }} />
-                                    </List.Item>
-                                                    <List.Item
-                                                        pl={"xs"}
-                                                        icon={
-                                                            <ThemeIcon color="blue.6" size={20} radius="xl" variant="outline">
-                                                                <IconBasket />
-                                                            </ThemeIcon>
-                                                        }
-                                                    >
-                                                        <NavLink
-                                                            pl={"md"}
-                                                            href="accounting/balance-sheet"
-                                                            label={t("BalanceSheet")}
-                                                            component="button"
-                                                            onClick={(e) => {
-                                                                navigate("/accounting/balance-sheet");
-                                                            }}
-                                                            onAuxClick={(e) => {
-                                                                if (e.button === 1) {
-                                                                    window.open("/accounting/balance-sheet", "_blank");
-                                                                }
-                                                            }}
-                                                        />
-                                                    </List.Item>
                                                     <List.Item
                                                         pl={"xs"}
                                                         icon={
