@@ -129,10 +129,10 @@ function _GenericInvoiceForm() {
         });
 
         if (categoryData) {
-            filteredProducts = filteredProducts.filter(product => product.category_id == categoryData.value)
+            filteredProducts = filteredProducts.filter(product => product.category_id == categoryData)
         }
         if (vendorData) {
-            filteredProducts = filteredProducts.filter(product => product.vendor_id == vendorData.value)
+            filteredProducts = filteredProducts.filter(product => product.vendor_id == vendorData)
         }
 
         setProducts(filteredProducts);

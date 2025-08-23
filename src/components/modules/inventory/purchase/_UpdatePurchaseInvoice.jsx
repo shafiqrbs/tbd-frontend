@@ -370,12 +370,12 @@ function _UpdatePurchaseInvoice(props) {
 
         if (categoryData) {
             filteredProducts = filteredProducts.filter(
-                (product) => product.category_id === Number(categoryData.value)
+                (product) => product.category_id === Number(categoryData)
             );
         }
         if (vendorData) {
             filteredProducts = filteredProducts.filter(
-                (product) => product.vendor_id === Number(vendorData.value)
+                (product) => product.vendor_id === Number(vendorData)
             );
         }
 

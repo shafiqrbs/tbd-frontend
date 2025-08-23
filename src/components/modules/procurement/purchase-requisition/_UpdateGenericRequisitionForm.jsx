@@ -87,20 +87,11 @@ function _UpdateGenericRequisitionForm(props) {
     }, []);
 
     useEffect(() => {
-        if (editedData?.vendor_id && vendorsDropdownData.length > 0) {
-            const foundVendor = vendorsDropdownData.find(
-                (v) => v.value === String(editedData.vendor_id)
-            );
-            if (foundVendor) {
-                setVendorData(foundVendor);
-            }
-        }
-        setTempCardProducts(editedData?.requisition_items || []);
-        setLoadCardProducts(false);
-    }, [loadCardProducts, vendorsDropdownData]);
+        setVendorData(String(editedData?.vendor_id))
+        setTempCardProducts(editedData?.requisition_items ? editedData.requisition_items : [])
+        setLoadCardProducts(false)
+    }, [loadCardProducts])
 
-
-    // console.log(tempCardProducts)
 
     //vendor dropdown data
     useEffect(() => {
@@ -140,7 +131,7 @@ function _UpdateGenericRequisitionForm(props) {
 
         // Filter products by vendor and purchase price
         let filteredProducts = localProducts.filter(product =>
-            String(product.vendor_id) === vendorData?.value &&
+            String(product.vendor_id) === vendorData &&
             product.purchase_price > 0
         );
 
@@ -157,7 +148,7 @@ function _UpdateGenericRequisitionForm(props) {
         setProducts(filteredProducts)
 
         // Set vendor object
-        const foundVendor = coreVendors.find((vendor) => String(vendor.id) === vendorData?.value);
+        const foundVendor = coreVendors.find((vendor) => String(vendor.id) === vendorData);
         setVendorObject(foundVendor || null);
         setFetchingProductsTable(false)
 
@@ -478,7 +469,7 @@ function _UpdateGenericRequisitionForm(props) {
                                                         dropdownValue={vendorsDropdownData}
                                                         id={"vendor_id"}
                                                         searchable={true}
-                                                        value={vendorData?.value}
+                                                        value={vendorData}
                                                         changeValue={(val) => {
                                                             setVendorData(val);
                                                         }}

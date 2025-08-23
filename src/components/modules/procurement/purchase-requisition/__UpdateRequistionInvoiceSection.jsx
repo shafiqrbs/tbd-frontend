@@ -32,7 +32,7 @@ export default function __UpdateRequistionInvoiceSection(props) {
     } = props;
     const {t} = useTranslation();
     useEffect(() => {
-        form.setFieldValue("vendor_id", vendorData?.value);
+        form.setFieldValue("vendor_id", vendorData);
     }, [vendorData])
     return (
         <>
