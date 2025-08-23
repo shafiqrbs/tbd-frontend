@@ -123,10 +123,10 @@ function _GenericRequisitionForm(props) {
 
         // Filter products by vendor and purchase price
         let filteredProducts = localProducts.filter(product =>
-            String(product.vendor_id) === vendorData &&
+            String(product.vendor_id) === vendorData.value &&
             product.purchase_price > 0
         );
-
+        
         // Apply search filter
         filteredProducts = filterProductsBySearch(filteredProducts, searchValue);
 
