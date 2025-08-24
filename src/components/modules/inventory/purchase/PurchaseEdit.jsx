@@ -16,9 +16,6 @@ function PurchaseEdit() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const progress = getLoadingProgress();
-  /*const configData = localStorage.getItem("config-data")
-    ? JSON.parse(localStorage.getItem("config-data"))
-    : [];*/
   // Safe parsing of config data from localStorage
   const domainConfigData = useMemo(() => {
     try {
@@ -27,8 +24,6 @@ function PurchaseEdit() {
       return {};
     }
   }, []);
-
-  // const configData = domainConfigData?.inventory_config;
 
   const dataStatus = useSelector(
     (state) => state.inventoryCrudSlice.dataStatus

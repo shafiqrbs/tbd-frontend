@@ -353,7 +353,6 @@ function _GenericInvoiceForm() {
         return updatedProducts;
     }
 
-
 // Add product by product ID (from dropdown)
     function handleAddProductByProductId(values, myCardProducts, localProducts) {
         const productIdToAdd = Number(values.product_id);

@@ -14,7 +14,7 @@ import {
     Loader,
     Menu,
     rem,
-    LoadingOverlay,
+    LoadingOverlay, Badge,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
@@ -210,32 +210,13 @@ function _PurchaseTable() {
 
             if (showInstantEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
-                    // Show success notification
-                    notifications.show({
-                        color: "teal",
-                        title: t("ApprovedSuccessfully"),
-                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                        loading: false,
-                        autoClose: 700,
-                        style: {backgroundColor: "lightgray"},
-                    });
+                    showNotificationComponent(t("ApprovedSuccessfully"),"teal",'',true,1000,true,"lightgray")
                 }
             }
         } catch (error) {
-            console.error("Error updating entity:", error);
-
-            // Error notification
-            notifications.show({
-                color: "red",
-                title: t("UpdateFailed"),
-                icon: <IconX style={{width: rem(18), height: rem(18)}}/>,
-                loading: false,
-                autoClose: 700,
-                style: {backgroundColor: "lightgray"},
-            });
+            showNotificationComponent(t("UpdateFailed"),"red",'',true,1000,true,"lightgray")
         } finally {
             fetchData();
-            // navigate(0)
         }
     };
 
@@ -325,7 +306,20 @@ function _PurchaseTable() {
                                         {accessor: "due", title: t("Payable"),
                                             render: (item) => item.total - item.payment,
                                         },
+                                        {
+                                            accessor: "process",
+                                            title: t("Status"),
+                                            render: (item) => {
+                                                const colorMap = {
+                                                    Created: "blue",
+                                                    Approved: "red",
+                                                };
 
+                                                const badgeColor = colorMap[item.process] || "gray"; // fallback color
+
+                                                return item.process && <Badge color={badgeColor}>{item.process}</Badge>;
+                                            }
+                                        },
                                         {
                                             accessor: "action",
                                             title: "Action",
@@ -392,7 +386,6 @@ function _PurchaseTable() {
                                                                     <Menu.Item
                                                                         onClick={(e) => {
                                                                             e.preventDefault();
-                                                                            // console.log(data.id)
                                                                             handlePurchaseApprove(data.id)
                                                                         }}
                                                                         color="green"
@@ -431,7 +424,6 @@ function _PurchaseTable() {
                                                                     </Menu.Item>
                                                                 </>
                                                             }
-
 
                                                             <Menu.Item
                                                                 onClick={(e) => {

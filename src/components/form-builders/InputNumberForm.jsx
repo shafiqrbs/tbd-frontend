@@ -44,9 +44,17 @@ function InputNumberForm(props) {
                         {...form.getInputProps(name)}
                         onKeyDown={getHotkeyHandler([
                             ['Enter', (e) => {
-                                nextField === 'EntityFormSubmit'? document.getElementById(nextField).click() : document.getElementById(nextField).focus()
+                                const el = document.getElementById(nextField);
+                                if (!el) return;
+
+                                if (nextField === 'EntityFormSubmit') {
+                                    el.click();
+                                } else {
+                                    el.focus();
+                                }
                             }],
                         ])}
+
                         leftSection={props.leftSection}
                         rightSection={
                             form.values[name] && closeIcon ?

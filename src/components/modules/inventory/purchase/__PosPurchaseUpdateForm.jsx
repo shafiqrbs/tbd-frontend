@@ -1,29 +1,22 @@
-import { isNotEmpty, useForm } from "@mantine/form";
-import { useEffect, useMemo, useState } from "react";
+import {isNotEmpty, useForm} from "@mantine/form";
+import {useEffect, useMemo, useState} from "react";
 import __PosVendorSection from "./__PosVendorSection.jsx";
-import {
-    Box,
-    Text,
-    ActionIcon,
-    Group,
-    TextInput,
-    Select,
-} from "@mantine/core";
-import { DataTable } from "mantine-datatable";
+import {Box, ActionIcon, TextInput, Select} from "@mantine/core";
+import {DataTable} from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
-import { useTranslation } from "react-i18next";
-import { IconX } from "@tabler/icons-react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { getHotkeyHandler, useToggle } from "@mantine/hooks";
+import {useTranslation} from "react-i18next";
+import {IconX} from "@tabler/icons-react";
+import {useNavigate, useOutletContext, useParams} from "react-router-dom";
+import {useToggle} from "@mantine/hooks";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData";
 import __PosPurchaseInvoiceSection from "./__PosPurchaseInvoiceSection.jsx";
-import { updateEntityData } from "../../../../store/inventory/crudSlice.js";
-import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
+import {updateEntityData} from "../../../../store/inventory/crudSlice.js";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 export default function __PosPurchaseUpdateForm(props) {
-    const { id } = useParams();
+    const {id} = useParams();
     const {
         isSMSActive,
         currencySymbol,
@@ -37,8 +30,8 @@ export default function __PosPurchaseUpdateForm(props) {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { t } = useTranslation();
-    const { mainAreaHeight } = useOutletContext();
+    const {t} = useTranslation();
+    const {mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 170;
 
     const warehouseDropdown = getCoreWarehouseDropdownData();
@@ -51,9 +44,7 @@ export default function __PosPurchaseUpdateForm(props) {
     const [defaultVendorId, setDefaultVendorId] = useState(null);
     const [vendorObject, setVendorObject] = useState({});
     const [orderProcess, setOrderProcess] = useState(editedData?.order_process || "");
-    const [warehouseData, setWarehouseData] = useState(
-        String(editedData?.warehouse_id) || null
-    );
+    const [warehouseData, setWarehouseData] = useState(String(editedData?.warehouse_id) || null);
 
     const [purchaseDiscountAmount, setPurchaseDiscountAmount] = useState(0);
     const [purchaseVatAmount, setPurchaseVatAmount] = useState(0);
@@ -62,8 +53,6 @@ export default function __PosPurchaseUpdateForm(props) {
     const [returnOrDueText, setReturnOrDueText] = useState("Due");
 
     const [lastClicked, setLastClicked] = useState(null);
-    const [quantities, setQuantities] = useState({});
-    const [prices, setPrices] = useState({});
 
     const toNumber = (val) => (isNaN(Number(val)) ? 0 : Number(val));
 
@@ -201,12 +190,13 @@ export default function __PosPurchaseUpdateForm(props) {
             items: transformedArray,
         };
 
-        const result = await dispatch(updateEntityData({ url: `inventory/purchase/${id}`, data: payload }));
+        const result = await dispatch(updateEntityData({url: `inventory/purchase/${id}`, data: payload}));
 
         if (updateEntityData.rejected.match(result)) {
             showNotificationComponent("Fail to update", "red");
         } else if (updateEntityData.fulfilled.match(result)) {
             showNotificationComponent(t("UpdatedSuccessfully"), "teal");
+            localStorage.removeItem("temp-purchase-products");
             if (lastClicked === "save") {
                 navigate("/inventory/purchase");
             }
@@ -216,7 +206,7 @@ export default function __PosPurchaseUpdateForm(props) {
     const handleQuantityChange = (id, value) => {
         const updated = tempCardProducts.map((p) =>
             p.id === id
-                ? { ...p, quantity: Number(value), sub_total: Number(p.purchase_price) * value }
+                ? {...p, quantity: Number(value), sub_total: Number(p.purchase_price) * value}
                 : p
         );
         setTempCardProducts(updated);
@@ -225,7 +215,7 @@ export default function __PosPurchaseUpdateForm(props) {
     const handlePriceChange = (id, value) => {
         const updated = tempCardProducts.map((p) =>
             p.id === id
-                ? { ...p, purchase_price: Number(value), sub_total: Number(p.quantity) * value }
+                ? {...p, purchase_price: Number(value), sub_total: Number(p.quantity) * value}
                 : p
         );
         setTempCardProducts(updated);
@@ -252,7 +242,7 @@ export default function __PosPurchaseUpdateForm(props) {
                     classNames={tableCss}
                     records={tempCardProducts}
                     fetching={fetching}
-                    scrollAreaProps={{ type: "never" }}
+                    scrollAreaProps={{type: "never"}}
                     height={height - 264}
                     columns={[
                         {
@@ -269,6 +259,7 @@ export default function __PosPurchaseUpdateForm(props) {
                             title: t("Warehouse"),
                             render: (item) => (
                                 <Select
+                                    key={item.id}
                                     size="xs"
                                     value={String(item.warehouse_id || "")}
                                     data={warehouseDropdown}
@@ -329,7 +320,7 @@ export default function __PosPurchaseUpdateForm(props) {
                                         setTempCardProducts(filtered);
                                     }}
                                 >
-                                    <IconX size={16} />
+                                    <IconX size={16}/>
                                 </ActionIcon>
                             ),
                         },

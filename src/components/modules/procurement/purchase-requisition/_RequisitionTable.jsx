@@ -14,7 +14,7 @@ import {
     Stack,
     Text,
     ScrollArea,
-    Table,
+    Table, Badge,
 } from "@mantine/core";
 import _RequisitionSearch from "./_RequisitionSearch";
 import {DataTable} from "mantine-datatable";
@@ -22,17 +22,18 @@ import {
     IconDotsVertical,
     IconPrinter,
     IconEdit,
-    IconReceipt, IconTrashX,
+    IconReceipt, IconTrashX, IconChevronsRight, IconPencil, IconCheck, IconX,
 } from "@tabler/icons-react";
 import {useDispatch, useSelector} from "react-redux";
 import _ShortcutTable from "../../shortcut/_ShortcutTable";
 import {useHotkeys} from "@mantine/hooks";
 import {InvoiceBatchPrintPos} from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintPos";
-import {deleteEntityData, getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
+import {deleteEntityData, getIndexEntityData, showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
 import {PrintNormal} from "../requisition-print/PrintNormal.jsx";
 import {modals} from "@mantine/modals";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import RequisitionNavigation from "../common/RequisitionNavigation";
+import {notifications} from "@mantine/notifications";
 
 export default function _RequisitionTable(props) {
     const printRef = useRef();
@@ -141,6 +142,39 @@ export default function _RequisitionTable(props) {
         []
     );
 
+    const handleRequisitionApprove = (id) => {
+        // Open confirmation modal
+        modals.openConfirmModal({
+            title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
+            children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
+            labels: {confirm: t("Submit"), cancel: t("Cancel")},
+            confirmProps: {color: "red"},
+            onCancel: () => {
+                console.log("Cancel");
+            },
+            onConfirm: () => {
+                handleConfirmRequisitionApprove(id)
+            }, // Separate function for "onConfirm"
+        });
+    };
+
+    const handleConfirmRequisitionApprove = async (id) => {
+        try {
+            const resultAction = await dispatch(showInstantEntityData('inventory/requisition/approve/' + id));
+
+            if (showInstantEntityData.fulfilled.match(resultAction)) {
+                if (resultAction.payload.data.status === 200) {
+                    showNotificationComponent(t("ApprovedSuccessfully"),"teal",'',true,1000,true,"lightgray")
+                }
+            }
+        } catch (error) {
+            showNotificationComponent(t("UpdateFailed"),"red",'',true,1000,true,"lightgray")
+        } finally {
+            fetchData();
+        }
+    };
+
+
     return (
         <>
             <Box>
@@ -203,6 +237,7 @@ export default function _RequisitionTable(props) {
                                             textAlign: "center",
                                             render: (item) => (
                                                 <Text
+                                                    key={item.id}
                                                     component="a"
                                                     size="sm"
                                                     variant="subtle"
@@ -233,21 +268,16 @@ export default function _RequisitionTable(props) {
                                         {
                                             accessor: "process",
                                             title: t("Status"),
-                                            textAlign: "center",
-                                            render: (data) => (
-                                                <Button
-                                                    size="compact-xs"
-                                                    radius="xs"
-                                                    variant="filled"
-                                                    fw={"100"}
-                                                    fz={"12"}
-                                                     color='var(--theme-primary-color-6)'
-                                                    mr={"4"}
-                                                    w={60}
-                                                >
-                                                    {data.process}
-                                                </Button>
-                                            ),
+                                            render: (item) => {
+                                                const colorMap = {
+                                                    Created: "blue",
+                                                    Approved: "red",
+                                                };
+
+                                                const badgeColor = colorMap[item.process] || "gray"; // fallback color
+
+                                                return item.process && <Badge color={badgeColor}>{item.process}</Badge>;
+                                            }
                                         },
                                         {
                                             accessor: "action",
@@ -290,6 +320,29 @@ export default function _RequisitionTable(props) {
                                                                 >
                                                                     {t('Edit')}
                                                                 </Menu.Item>
+                                                            }
+                                                            {
+                                                                !data.approved_by_id &&
+                                                                <>
+                                                                    <Menu.Item
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            handleRequisitionApprove(data.id)
+                                                                        }}
+                                                                        color="green"
+                                                                        component="a"
+                                                                        w={"200"}
+                                                                        leftSection={
+                                                                            <IconChevronsRight
+                                                                                style={{
+                                                                                    width: rem(14),
+                                                                                    height: rem(14)
+                                                                                }}/>
+                                                                        }
+                                                                    >
+                                                                        {t("Approve")}
+                                                                    </Menu.Item>
+                                                                </>
                                                             }
                                                             {
                                                                 data.process === 'New' &&

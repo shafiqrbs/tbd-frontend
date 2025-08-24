@@ -99,7 +99,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
         const fetchLedgerAccounts = async () => {
             const value = {
                 url: "accounting/account-head",
-                param: { group: "ledger", term: searchKeyword, page, offset: perPage },
+                param: { group: "ledger", page, offset: perPage },
             };
             try {
                 const result = await dispatch(getIndexEntityData(value));
