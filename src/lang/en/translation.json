@@ -1199,6 +1199,9 @@
   "PurchaseMode": "Purchase Mode",
   "ChoosePurchaseMode": "Choose Purchase Mode",
   "SplitAmount": "Split Amount",
+  "SyncProduct": "Sync Product",
+  "AreYouSureSyncProduct": "Are you sure to sync product.",
+  "AllDomainSyncProduct": "All Domain Sync Product",
   "xxxxxx": "xxxxxxx",
   "": ""
 }
