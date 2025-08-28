@@ -13,7 +13,7 @@ import matrixTable from "./Table.module.css";
 import {useDispatch} from "react-redux";
 import React, {useRef, useState, useEffect} from "react";
 import {useTranslation} from "react-i18next";
-import {useOutletContext} from "react-router-dom";
+import {useOutletContext, useParams} from "react-router-dom";
 import {
     IconX,
     IconDeviceFloppy,
@@ -27,6 +27,7 @@ import {modals} from "@mantine/modals";
 import RequisitionNavigation from "../common/RequisitionNavigation";
 
 export default function MatrixTable(props) {
+    const {id} = useParams()
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const tableHeight = mainAreaHeight - 160;
@@ -42,6 +43,7 @@ export default function MatrixTable(props) {
     const [expectedDate, setExpectedDate] = useState(null)
     const [indexData, setIndexData] = useState([])
     const [customers, setCustomers] = useState([])
+    const [boardId, setBoardId] = useState(null)
 
     const options = {
         year: 'numeric',
@@ -49,14 +51,11 @@ export default function MatrixTable(props) {
         day: '2-digit'
     };
     const fetchData = async () => {
-        !expectedDate && setExpectedDate(new Date())
         setGenerateButton(false)
 
         const value = {
-            url: 'inventory/requisition/matrix/board',
-            param: {
-                expected_date: new Date(expectedDate).toLocaleDateString("en-CA", options),
-            }
+            url: 'inventory/requisition/matrix/board/'+id,
+            param: {}
         }
 
         try {
@@ -65,6 +64,8 @@ export default function MatrixTable(props) {
             if (getIndexEntityData.rejected.match(resultAction)) {
                 console.error('Error:', resultAction);
             } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                setExpectedDate(new Date(resultAction?.payload?.board?.generate_date))
+                setBoardId(resultAction?.payload?.board?.id)
                 setIndexData(resultAction.payload.data);
                 setCustomers(resultAction.payload.customers);
             }
@@ -132,6 +133,9 @@ export default function MatrixTable(props) {
                 quantity: editedQuantity,
                 id: item[indexKey],
             };
+            if (editedQuantity === item[shopKey]){
+                return
+            }
 
             const value = {
                 url: 'inventory/requisition/matrix/board/quantity-update',
@@ -144,7 +148,7 @@ export default function MatrixTable(props) {
                 showNotificationComponent(resultAction.payload.message, 'red', true, 1000, true)
             } else if (storeEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
-                    // setFetching(true)
+                    setFetching(true)
                     // showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
                 } else {
                     showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
@@ -154,7 +158,7 @@ export default function MatrixTable(props) {
 
         return (
             <TextInput
-                disabled={item[shopKey] <= 0 || item.process === 'Confirmed'}
+                disabled={(item[shopKey] <= 0 && branchRequestQuantity<1) || item.process === 'Confirmed'}
                 type="number"
                 size="xs"
                 value={editedQuantity}
@@ -183,7 +187,7 @@ export default function MatrixTable(props) {
         }
 
         const value = {
-            url: 'inventory/requisition/matrix/board/batch-generate',
+            url: 'inventory/requisition/matrix/board/batch-generate/'+boardId,
             data: values
         }
 
@@ -234,7 +238,7 @@ export default function MatrixTable(props) {
                                         }}
                                     >
                                         <DateInput
-                                            disabled={fetching}
+                                            disabled={fetching || expectedDate}
                                             clearable
                                             maxDate={new Date()}
                                             onChange={(e) => {

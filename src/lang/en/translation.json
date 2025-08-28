@@ -1202,6 +1202,9 @@
   "SyncProduct": "Sync Product",
   "AreYouSureSyncProduct": "Are you sure to sync product.",
   "AllDomainSyncProduct": "All Domain Sync Product",
+  "BoardList": "Board List",
+  "NewBoard": "New Board",
+  "RequisitionMatrixBoard": "Requisition Matrix Board",
   "xxxxxx": "xxxxxxx",
   "": ""
 }

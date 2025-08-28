@@ -703,6 +703,11 @@ function AppRoute() {
 							<MatrixIndex />
 						</ProtectedRoute>
 					} />
+					<Route path="requisition-board/:id" element={
+						<ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
+							<MatrixIndex />
+						</ProtectedRoute>
+					} />
 					<Route path="inout" element={
 						<ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
 							<InoutIndex />
