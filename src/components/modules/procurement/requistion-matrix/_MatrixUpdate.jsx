@@ -26,7 +26,7 @@ import {showNotificationComponent} from "../../../core-component/showNotificatio
 import {modals} from "@mantine/modals";
 import RequisitionNavigation from "../common/RequisitionNavigation";
 
-export default function MatrixTable(props) {
+export default function _MatrixUpdate(props) {
     const {id} = useParams()
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -80,7 +80,7 @@ export default function MatrixTable(props) {
 
     useEffect(() => {
         fetchData();
-    }, [fetching]);
+    }, [fetching,id]);
 
 
     useEffect(() => {
@@ -412,7 +412,7 @@ export default function MatrixTable(props) {
                                                         <Flex direction={`column`} gap={0}>
                                                             <Text fz={14} fw={400}>
                                                                 {" "}
-                                                                {t("Generate")}
+                                                                {t("Approved")}
                                                             </Text>
                                                         </Flex>
                                                     </Button>

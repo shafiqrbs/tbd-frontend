@@ -91,6 +91,7 @@ import DailyProductionExpenseWarehouseReport
 import DailySalesWarehouseReport from "./components/modules/report/inventory/DailySalesWarehouseReport.jsx";
 
 import AccountingDashboard from "./components/modules/accounting/dashboard/AccountingDashboard";
+import _MatrixUpdate from "./components/modules/procurement/requistion-matrix/_MatrixUpdate.jsx";
 
 
 function AppRoute() {
@@ -705,7 +706,7 @@ function AppRoute() {
 					} />
 					<Route path="requisition-board/:id" element={
 						<ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
-							<MatrixIndex />
+							<_MatrixUpdate />
 						</ProtectedRoute>
 					} />
 					<Route path="inout" element={

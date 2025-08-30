@@ -1,41 +1,37 @@
-import React, {useEffect, useRef, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
-
-import tableCss from "../../../../assets/css/Table.module.css";
-import {useTranslation} from "react-i18next";
 import {
     ActionIcon,
     Box,
-    Button,
     Grid,
-    LoadingOverlay,
-    Menu,
-    rem,
     Stack,
     Text,
-    ScrollArea,
-    Table, Badge,
+    TextInput,
+    Button,
+    Flex, Tooltip, rem, Table, Badge, Menu, LoadingOverlay, ScrollArea,
 } from "@mantine/core";
-import _RequisitionSearch from "./_RequisitionSearch";
 import {DataTable} from "mantine-datatable";
-import {
-    IconDotsVertical,
-    IconPrinter,
-    IconEdit,
-    IconReceipt, IconTrashX, IconChevronsRight, IconPencil, IconCheck, IconX,
-} from "@tabler/icons-react";
+import matrixTable from "./Table.module.css";
 import {useDispatch, useSelector} from "react-redux";
-import _ShortcutTable from "../../shortcut/_ShortcutTable";
-import {useHotkeys} from "@mantine/hooks";
-import {InvoiceBatchPrintPos} from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintPos";
-import {deleteEntityData, getIndexEntityData, showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
-import {PrintNormal} from "../requisition-print/PrintNormal.jsx";
-import {modals} from "@mantine/modals";
+import React, {useRef, useState, useEffect} from "react";
+import {useTranslation} from "react-i18next";
+import {useNavigate, useOutletContext, useParams} from "react-router-dom";
+import {
+    IconX,
+    IconDeviceFloppy,
+    IconSearch, IconDotsVertical, IconChevronsRight, IconTrashX, IconPrinter, IconReceipt, IconEdit,
+} from "@tabler/icons-react";
+import {deleteEntityData, getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
+import {storeEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import {modals} from "@mantine/modals";
 import RequisitionNavigation from "../common/RequisitionNavigation";
-import {notifications} from "@mantine/notifications";
+import {useHotkeys} from "@mantine/hooks";
+import tableCss from "../../../../assets/css/Table.module.css";
+import _ShortcutTable from "../../shortcut/_ShortcutTable.jsx";
+import {PrintNormal} from "../requisition-print/PrintNormal.jsx";
+import {InvoiceBatchPrintPos} from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintPos.jsx";
+import __RequisitionMatrixSearch from "./__RequisitionMatrixSearch.jsx";
 
-export default function _RequisitionTable(props) {
+export default function _MatrixTable(props) {
     const printRef = useRef();
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -51,7 +47,7 @@ export default function _RequisitionTable(props) {
     const [selectedRow, setSelectedRow] = useState("");
     const [indexData, setIndexData] = useState([])
     const [fetching, setFetching] = useState(true)
-    const [requisitionViewData, setRequisitionViewData] = useState({});
+    const [requisitionMatrixViewData, setRequisitionMatrixViewData] = useState({});
     const requisitionFilterData = useSelector((state) => state.coreCrudSlice.requisitionFilterData);
 
     const [loading, setLoading] = useState(true);
@@ -68,7 +64,7 @@ export default function _RequisitionTable(props) {
             day: '2-digit'
         };
         const value = {
-            url: 'inventory/requisition',
+            url: 'inventory/requisition/matrix/board',
             param: {
                 term: requisitionFilterData.searchKeyword,
                 vendor_id: requisitionFilterData.vendor_id,
@@ -100,31 +96,40 @@ export default function _RequisitionTable(props) {
 
     useEffect(() => {
         setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].invoice)
-        setRequisitionViewData(
+        setRequisitionMatrixViewData(
             indexData.data && indexData.data[0] && indexData.data[0]
         );
     }, [indexData.data])
     const rows =
-        requisitionViewData &&
-        requisitionViewData?.requisition_items &&
-        requisitionViewData?.requisition_items.map((element, index) => (
+        requisitionMatrixViewData &&
+        requisitionMatrixViewData?.requisition_matrix &&
+        requisitionMatrixViewData?.requisition_matrix.map((element, index) => (
             <Table.Tr key={element.id}>
                 <Table.Td fz="xs" width={"20"}>
                     {index + 1}
                 </Table.Td>
                 <Table.Td ta="left" fz="xs" width={"300"}>
-                    {element.item_name}
+                    {element.customer_name}
                 </Table.Td>
-                <Table.Td ta="center" fz="xs" width={"60"}>
-                    {element.quantity}
+                <Table.Td ta="left" fz="xs" width={"300"}>
+                    {element.display_name}
                 </Table.Td>
                 <Table.Td ta="center" fz="xs" width={"60"}>
                     {element.unit_name}
                 </Table.Td>
-                <Table.Td ta="right" fz="xs" width={"80"}>
-                    {element.purchase_price}
+                <Table.Td ta="center" fz="xs" width={"60"}>
+                    {element.requested_quantity}
                 </Table.Td>
-                <Table.Td ta="right" fz="xs" width={"100"}>
+                <Table.Td ta="center" fz="xs" width={"60"}>
+                    {element.approved_quantity}
+                </Table.Td>
+                <Table.Td ta="center" fz="xs" width={"60"}>
+                    {element.received_quantity}
+                </Table.Td>
+                <Table.Td ta="center" fz="xs" width={"60"}>
+                    {element.vendor_stock_quantity}
+                </Table.Td>
+                <Table.Td ta="right" fz="xs" width={"80"}>
                     {element.sub_total}
                 </Table.Td>
             </Table.Tr>
@@ -142,7 +147,7 @@ export default function _RequisitionTable(props) {
         []
     );
 
-    const handleRequisitionApprove = (id) => {
+    const handleRequisitionMatrixApprove = (id) => {
         // Open confirmation modal
         modals.openConfirmModal({
             title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
@@ -153,18 +158,33 @@ export default function _RequisitionTable(props) {
                 console.log("Cancel");
             },
             onConfirm: () => {
-                handleConfirmRequisitionApprove(id)
+                handleConfirmRequisitionMatrixApprove(id)
             }, // Separate function for "onConfirm"
         });
     };
 
-    const handleConfirmRequisitionApprove = async (id) => {
+    const handleConfirmRequisitionMatrixApprove = async (id) => {
         try {
-            const resultAction = await dispatch(showInstantEntityData('inventory/requisition/approve/' + id));
+            const values = {
+                expected_date: null,
+                config_id: null
+            }
 
-            if (showInstantEntityData.fulfilled.match(resultAction)) {
+            const value = {
+                url: 'inventory/requisition/matrix/board/batch-generate/'+id,
+                data: values
+            }
+
+            const resultAction = await dispatch(storeEntityData(value));
+
+            if (storeEntityData.rejected.match(resultAction)) {
+                showNotificationComponent(resultAction.payload.message, 'red', true, 1000, true)
+            } else if (storeEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
-                    showNotificationComponent(t("ApprovedSuccessfully"),"teal",'',true,1000,true,"lightgray")
+                    setFetching(true)
+                    showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
+                } else {
+                    showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
                 }
             }
         } catch (error) {
@@ -191,7 +211,7 @@ export default function _RequisitionTable(props) {
                             <Grid>
                                 <Grid.Col>
                                     <Stack>
-                                        <_RequisitionSearch checkList={1} customerId={1} setFetching={setFetching}/>
+                                        <__RequisitionMatrixSearch checkList={1} customerId={1} setFetching={setFetching}/>
                                     </Stack>
                                 </Grid.Col>
                             </Grid>
@@ -224,15 +244,23 @@ export default function _RequisitionTable(props) {
                                             render: (item) => indexData.data.indexOf(item) + 1,
                                         },
                                         {
-                                            accessor: "created",
+                                            accessor: "created_date",
                                             title: t("Created"),
                                         },
                                         {
-                                            accessor: "expected_date",
-                                            title: t("ExpectedDate"),
+                                            accessor: "generate_date",
+                                            title: t("Generated"),
                                         },
                                         {
-                                            accessor: "invoice",
+                                            accessor: "total",
+                                            title: t("Total"),
+                                        },
+                                        {
+                                            accessor: "created_name",
+                                            title: t("Name"),
+                                        },
+                                        {
+                                            accessor: "batch",
                                             title: t("Invoice"),
                                             textAlign: "center",
                                             render: (item) => (
@@ -246,24 +274,13 @@ export default function _RequisitionTable(props) {
                                                         e.preventDefault();
                                                         setLoading(true);
                                                         setSelectedRow(item.invoice);
-                                                        setRequisitionViewData(item)
+                                                        setRequisitionMatrixViewData(item)
                                                     }}
                                                     style={{cursor: "pointer"}}
                                                 >
                                                     {item.invoice}
                                                 </Text>
                                             ),
-                                        },
-
-                                        {
-                                            accessor: "vendor_name",
-                                            title: t("Vendor"),
-                                            textAlign: "center",
-                                        },
-                                        {
-                                            accessor: "vendor_mobile",
-                                            title: t("vendorMobile"),
-                                            textAlign: "center",
                                         },
                                         {
                                             accessor: "process",
@@ -313,7 +330,7 @@ export default function _RequisitionTable(props) {
                                                                 data.process === 'Created' &&
                                                                 <Menu.Item
                                                                     onClick={() => {
-                                                                        navigate(`/procurement/requisition/edit/${data.id}`)
+                                                                        navigate(`/procurement/requisition-board/${data.id}`)
                                                                     }}
                                                                     component="a"
                                                                     w={'200'}
@@ -322,12 +339,12 @@ export default function _RequisitionTable(props) {
                                                                 </Menu.Item>
                                                             }
                                                             {
-                                                                !data.approved_by_id &&
+                                                                data.process === 'Created' &&
                                                                 <>
                                                                     <Menu.Item
                                                                         onClick={(e) => {
                                                                             e.preventDefault();
-                                                                            handleRequisitionApprove(data.id)
+                                                                            handleRequisitionMatrixApprove(data.id)
                                                                         }}
                                                                         color="green"
                                                                         component="a"
@@ -345,7 +362,7 @@ export default function _RequisitionTable(props) {
                                                                 </>
                                                             }
                                                             {
-                                                                data.process === 'Created' &&
+                                                                data.process === 'New' &&
                                                                 <Menu.Item
                                                                     onClick={() => {
                                                                         modals.openConfirmModal({
@@ -440,10 +457,10 @@ export default function _RequisitionTable(props) {
                                 pt={"xs"}
                                 className={"boxBackground textColor borderRadiusAll"}
                             >
-                                {t("Invoice")}: {requisitionViewData && requisitionViewData.invoice}
+                                {t("Invoice")}: {requisitionMatrixViewData && requisitionMatrixViewData.invoice}
                             </Box>
                             <Box className={"borderRadiusAll border-top-none"} fz={"sm"}>
-                                <ScrollArea h={100} type="never">
+                                {/*<ScrollArea h={100} type="never">
                                     <Box
                                         pl={`xs`}
                                         fz={"sm"}
@@ -463,9 +480,9 @@ export default function _RequisitionTable(props) {
                                                     </Grid.Col>
                                                     <Grid.Col span={9}>
                                                         <Text fz="sm" lh="xs">
-                                                            {requisitionViewData &&
-                                                                requisitionViewData.vendor_name &&
-                                                                requisitionViewData.vendor_name}
+                                                            {requisitionMatrixViewData &&
+                                                                requisitionMatrixViewData.vendor_name &&
+                                                                requisitionMatrixViewData.vendor_name}
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -477,9 +494,9 @@ export default function _RequisitionTable(props) {
                                                     </Grid.Col>
                                                     <Grid.Col span={9}>
                                                         <Text fz="sm" lh="xs">
-                                                            {requisitionViewData &&
-                                                                requisitionViewData.vendor_mobile &&
-                                                                requisitionViewData.vendor_mobile}
+                                                            {requisitionMatrixViewData &&
+                                                                requisitionMatrixViewData.vendor_mobile &&
+                                                                requisitionMatrixViewData.vendor_mobile}
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -491,9 +508,9 @@ export default function _RequisitionTable(props) {
                                                     </Grid.Col>
                                                     <Grid.Col span={9}>
                                                         <Text fz="sm" lh="xs">
-                                                            {requisitionViewData &&
-                                                                requisitionViewData.vendor_address &&
-                                                                requisitionViewData.vendor_address}
+                                                            {requisitionMatrixViewData &&
+                                                                requisitionMatrixViewData.vendor_address &&
+                                                                requisitionMatrixViewData.vendor_address}
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -505,8 +522,8 @@ export default function _RequisitionTable(props) {
                                                     </Grid.Col>
                                                     <Grid.Col span={9}>
                                                         <Text fz="sm" lh="xs">
-                                                            {requisitionViewData && requisitionViewData.balance
-                                                                ? Number(requisitionViewData.balance).toFixed(2)
+                                                            {requisitionMatrixViewData && requisitionMatrixViewData.balance
+                                                                ? Number(requisitionMatrixViewData.balance).toFixed(2)
                                                                 : 0.0}
                                                         </Text>
                                                     </Grid.Col>
@@ -521,9 +538,9 @@ export default function _RequisitionTable(props) {
                                                     </Grid.Col>
                                                     <Grid.Col span={9}>
                                                         <Text fz="sm" lh="xs">
-                                                            {requisitionViewData &&
-                                                                requisitionViewData.created &&
-                                                                requisitionViewData.created}
+                                                            {requisitionMatrixViewData &&
+                                                                requisitionMatrixViewData.created &&
+                                                                requisitionMatrixViewData.created}
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -535,9 +552,9 @@ export default function _RequisitionTable(props) {
                                                     </Grid.Col>
                                                     <Grid.Col span={9}>
                                                         <Text fz="sm" lh="xs">
-                                                            {requisitionViewData &&
-                                                                requisitionViewData.createdByUser &&
-                                                                requisitionViewData.createdByUser}
+                                                            {requisitionMatrixViewData &&
+                                                                requisitionMatrixViewData.createdByUser &&
+                                                                requisitionMatrixViewData.createdByUser}
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -557,13 +574,22 @@ export default function _RequisitionTable(props) {
                                                         {t("Name")}
                                                     </Table.Th>
                                                     <Table.Th fz="xs" ta="center" w={"60"}>
-                                                        {t("QTY")}
+                                                        {t("Customer")}
                                                     </Table.Th>
                                                     <Table.Th ta="center" fz="xs" w={"100"}>
                                                         {t("UOM")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"80"}>
-                                                        {t("Price")}
+                                                        {t("RequestQty")}
+                                                    </Table.Th>
+                                                    <Table.Th ta="right" fz="xs" w={"100"}>
+                                                        {t("ApproveQty")}
+                                                    </Table.Th>
+                                                    <Table.Th ta="right" fz="xs" w={"100"}>
+                                                        {t("ReceiveQty")}
+                                                    </Table.Th>
+                                                    <Table.Th ta="right" fz="xs" w={"100"}>
+                                                        {t("StockQty")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
                                                         {t("SubTotal")}
@@ -577,9 +603,9 @@ export default function _RequisitionTable(props) {
                                                         {t("SubTotal")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {requisitionViewData &&
-                                                            requisitionViewData.sub_total &&
-                                                            Number(requisitionViewData.sub_total).toFixed(2)}
+                                                        {requisitionMatrixViewData &&
+                                                            requisitionMatrixViewData.sub_total &&
+                                                            Number(requisitionMatrixViewData.sub_total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
@@ -587,9 +613,9 @@ export default function _RequisitionTable(props) {
                                                         {t("Discount")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {requisitionViewData &&
-                                                            requisitionViewData.discount &&
-                                                            Number(requisitionViewData.discount).toFixed(2)}
+                                                        {requisitionMatrixViewData &&
+                                                            requisitionMatrixViewData.discount &&
+                                                            Number(requisitionMatrixViewData.discount).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
@@ -597,9 +623,9 @@ export default function _RequisitionTable(props) {
                                                         {t("Total")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {requisitionViewData &&
-                                                            requisitionViewData.total &&
-                                                            Number(requisitionViewData.total).toFixed(2)}
+                                                        {requisitionMatrixViewData &&
+                                                            requisitionMatrixViewData.total &&
+                                                            Number(requisitionMatrixViewData.total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
@@ -607,9 +633,9 @@ export default function _RequisitionTable(props) {
                                                         {t("Receive")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {requisitionViewData &&
-                                                            requisitionViewData.payment &&
-                                                            Number(requisitionViewData.payment).toFixed(2)}
+                                                        {requisitionMatrixViewData &&
+                                                            requisitionMatrixViewData.payment &&
+                                                            Number(requisitionMatrixViewData.payment).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
@@ -617,18 +643,18 @@ export default function _RequisitionTable(props) {
                                                         {t("Due")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {requisitionViewData &&
-                                                            requisitionViewData.total &&
+                                                        {requisitionMatrixViewData &&
+                                                            requisitionMatrixViewData.total &&
                                                             (
-                                                                Number(requisitionViewData.total) -
-                                                                Number(requisitionViewData.payment)
+                                                                Number(requisitionMatrixViewData.total) -
+                                                                Number(requisitionMatrixViewData.payment)
                                                             ).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                             </Table.Tfoot>
                                         </Table>
                                     </Box>
-                                </ScrollArea>
+                                </ScrollArea>*/}
                             </Box>
                             <Button.Group mb={2}>
                                 <Button
@@ -654,23 +680,19 @@ export default function _RequisitionTable(props) {
                                     {t("Pos")}
                                 </Button>
 
-                                {
-                                    requisitionViewData?.process === 'Created' &&
-                                    <Button
-                                        href={`/procurement/requisition/edit/${requisitionViewData?.id}`}
-                                        component="a"
-                                        fullWidth={true}
-                                        variant="filled"
-                                        leftSection={<IconEdit size={14}/>}
-                                        color="cyan.5"
-                                        onClick={() => {
-                                            setMmSwapEnabled(true);
-                                        }}
-                                    >
-                                        {t("Edit")}
-                                    </Button>
-                                }
-
+                                <Button
+                                    href={`/procurement/requisition/edit/${requisitionMatrixViewData?.id}`}
+                                    component="a"
+                                    fullWidth={true}
+                                    variant="filled"
+                                    leftSection={<IconEdit size={14}/>}
+                                    color="cyan.5"
+                                    onClick={() => {
+                                        setMmSwapEnabled(true);
+                                    }}
+                                >
+                                    {t("Edit")}
+                                </Button>
                             </Button.Group>
                         </Box>
                     </Grid.Col>
@@ -689,7 +711,7 @@ export default function _RequisitionTable(props) {
             {printA4 && (
                 <div style={{display: "none"}}>
                     <PrintNormal
-                        requisitionViewData={requisitionViewData}
+                        requisitionMatrixViewData={requisitionMatrixViewData}
                         setPrintA4={setPrintA4}
                     />
                 </div>
@@ -697,7 +719,7 @@ export default function _RequisitionTable(props) {
             {printPos && (
                 <div style={{display: "none"}}>
                     <InvoiceBatchPrintPos
-                        invoiceBatchData={requisitionViewData}
+                        invoiceBatchData={requisitionMatrixViewData}
                         setPrintPos={setPrintPos}
                     />
                 </div>

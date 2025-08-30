@@ -318,7 +318,12 @@ export default function RequisitionNavigation(props) {
             <Flex justify="flex-end" style={{ marginTop: 24 }}>
                 <Button
                     onClick={async () => {
-                        modals.openConfirmModal({
+                        if (!expectedDate){
+                            setStartDateTooltip(true)
+                            return
+                        }
+                        handleGenerateMatrixBatch()
+                        /*modals.openConfirmModal({
                             title: <Text size="md">{t("SuretoProcessMatrixData")}</Text>,
                             children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
                             labels: { confirm: "Confirm", cancel: "Cancel" },
@@ -329,9 +334,8 @@ export default function RequisitionNavigation(props) {
                                     return
                                 }
                                 handleGenerateMatrixBatch()
-                                console.log(expectedDate);
                             },
-                        });
+                        });*/
                     }}
                     size="xs"
                     color="green.8"

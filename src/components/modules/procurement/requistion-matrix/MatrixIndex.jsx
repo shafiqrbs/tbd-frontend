@@ -2,7 +2,7 @@ import { Box, Progress } from "@mantine/core";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress";
 import ProcurementHeaderNavbar from "../ProcurementHeaderNavbar";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
-import MatrixTable from "./MatrixTable";
+import _MatrixTable from "./_MatrixTable.jsx";
 import { useTranslation } from "react-i18next";
 
 export default function MatrixIndex() {
@@ -31,7 +31,7 @@ export default function MatrixIndex() {
                 roles={t("Roles")}
               />
               <Box p={8}>
-                <MatrixTable
+                <_MatrixTable
                     currencySymbol={configData?.currency?.symbol}
                     configId = {configData?.id}
                 />
