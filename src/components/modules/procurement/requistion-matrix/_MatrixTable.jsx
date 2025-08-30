@@ -4,20 +4,15 @@ import {
     Grid,
     Stack,
     Text,
-    TextInput,
-    Button,
-    Flex, Tooltip, rem, Table, Badge, Menu, LoadingOverlay, ScrollArea,
+    Button, rem, Table, Badge, Menu, LoadingOverlay, ScrollArea,
 } from "@mantine/core";
 import {DataTable} from "mantine-datatable";
-import matrixTable from "./Table.module.css";
 import {useDispatch, useSelector} from "react-redux";
 import React, {useRef, useState, useEffect} from "react";
 import {useTranslation} from "react-i18next";
-import {useNavigate, useOutletContext, useParams} from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {
-    IconX,
-    IconDeviceFloppy,
-    IconSearch, IconDotsVertical, IconChevronsRight, IconTrashX, IconPrinter, IconReceipt, IconEdit,
+    IconDotsVertical, IconChevronsRight, IconTrashX, IconPrinter, IconReceipt, IconEdit,
 } from "@tabler/icons-react";
 import {deleteEntityData, getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
 import {storeEntityData} from "../../../../store/core/crudSlice.js";
@@ -30,8 +25,9 @@ import _ShortcutTable from "../../shortcut/_ShortcutTable.jsx";
 import {PrintNormal} from "../requisition-print/PrintNormal.jsx";
 import {InvoiceBatchPrintPos} from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintPos.jsx";
 import __RequisitionMatrixSearch from "./__RequisitionMatrixSearch.jsx";
+import _ProductionProcessModal from "./_ProductionProcessModal.jsx";
 
-export default function _MatrixTable(props) {
+export default function _MatrixTable() {
     const printRef = useRef();
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -49,6 +45,9 @@ export default function _MatrixTable(props) {
     const [fetching, setFetching] = useState(true)
     const [requisitionMatrixViewData, setRequisitionMatrixViewData] = useState({});
     const requisitionFilterData = useSelector((state) => state.coreCrudSlice.requisitionFilterData);
+    const [productionProcessModal, setProductionProcessModal] = useState(false)
+    const [boardId, setBoardId] = useState(null)
+
 
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -95,7 +94,7 @@ export default function _MatrixTable(props) {
     }, [page, fetching]);
 
     useEffect(() => {
-        setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].invoice)
+        setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].batch_no)
         setRequisitionMatrixViewData(
             indexData.data && indexData.data[0] && indexData.data[0]
         );
@@ -171,7 +170,7 @@ export default function _MatrixTable(props) {
             }
 
             const value = {
-                url: 'inventory/requisition/matrix/board/batch-generate/'+id,
+                url: 'inventory/requisition/matrix/board/batch-generate/' + id,
                 data: values
             }
 
@@ -188,7 +187,7 @@ export default function _MatrixTable(props) {
                 }
             }
         } catch (error) {
-            showNotificationComponent(t("UpdateFailed"),"red",'',true,1000,true,"lightgray")
+            showNotificationComponent(t("UpdateFailed"), "red", '', true, 1000, true, "lightgray")
         } finally {
             fetchData();
         }
@@ -211,7 +210,8 @@ export default function _MatrixTable(props) {
                             <Grid>
                                 <Grid.Col>
                                     <Stack>
-                                        <__RequisitionMatrixSearch checkList={1} customerId={1} setFetching={setFetching}/>
+                                        <__RequisitionMatrixSearch checkList={1} customerId={1}
+                                                                   setFetching={setFetching}/>
                                     </Stack>
                                 </Grid.Col>
                             </Grid>
@@ -222,7 +222,7 @@ export default function _MatrixTable(props) {
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
                     <Grid.Col span={1}>
-                        <RequisitionNavigation module={'requisition'} />
+                        <RequisitionNavigation module={'requisition'}/>
                     </Grid.Col>
                     <Grid.Col span={14}>
                         <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
@@ -260,7 +260,7 @@ export default function _MatrixTable(props) {
                                             title: t("Name"),
                                         },
                                         {
-                                            accessor: "batch",
+                                            accessor: "batch_no",
                                             title: t("Invoice"),
                                             textAlign: "center",
                                             render: (item) => (
@@ -272,13 +272,13 @@ export default function _MatrixTable(props) {
                                                     c="red.4"
                                                     onClick={(e) => {
                                                         e.preventDefault();
-                                                        setLoading(true);
-                                                        setSelectedRow(item.invoice);
+                                                        setLoading(true)
+                                                        setSelectedRow(item.batch_no)
                                                         setRequisitionMatrixViewData(item)
                                                     }}
                                                     style={{cursor: "pointer"}}
                                                 >
-                                                    {item.invoice}
+                                                    {item.batch_no}
                                                 </Text>
                                             ),
                                         },
@@ -291,7 +291,7 @@ export default function _MatrixTable(props) {
                                                     Approved: "red",
                                                 };
 
-                                                const badgeColor = colorMap[item.process] || "gray"; // fallback color
+                                                const badgeColor = colorMap[item.process] || "gray";
 
                                                 return item.process && <Badge color={badgeColor}>{item.process}</Badge>;
                                             }
@@ -361,6 +361,32 @@ export default function _MatrixTable(props) {
                                                                     </Menu.Item>
                                                                 </>
                                                             }
+
+                                                            {
+                                                                data.process === 'Confirmed' &&
+                                                                <>
+                                                                    <Menu.Item
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            setBoardId(data.id)
+                                                                            setProductionProcessModal(true)
+                                                                        }}
+                                                                        color="green"
+                                                                        component="a"
+                                                                        w={"200"}
+                                                                        leftSection={
+                                                                            <IconChevronsRight
+                                                                                style={{
+                                                                                    width: rem(14),
+                                                                                    height: rem(14)
+                                                                                }}/>
+                                                                        }
+                                                                    >
+                                                                        {t("Production")}
+                                                                    </Menu.Item>
+                                                                </>
+                                                            }
+
                                                             {
                                                                 data.process === 'New' &&
                                                                 <Menu.Item
@@ -422,10 +448,10 @@ export default function _MatrixTable(props) {
                                     height={tableHeight}
                                     scrollAreaProps={{type: "never"}}
                                     rowBackgroundColor={(item) => {
-                                        if (item.invoice === selectedRow) return "#e2c2c263";
+                                        if (item.batch_no === selectedRow) return "#e2c2c263";
                                     }}
                                     rowColor={(item) => {
-                                        if (item.invoice === selectedRow) return "red.6";
+                                        if (item.batch_no === selectedRow) return "red.6";
                                     }}
                                 />
                             </Box>
@@ -457,10 +483,10 @@ export default function _MatrixTable(props) {
                                 pt={"xs"}
                                 className={"boxBackground textColor borderRadiusAll"}
                             >
-                                {t("Invoice")}: {requisitionMatrixViewData && requisitionMatrixViewData.invoice}
+                                {t("Invoice")}: {requisitionMatrixViewData && requisitionMatrixViewData.batch_no}
                             </Box>
                             <Box className={"borderRadiusAll border-top-none"} fz={"sm"}>
-                                {/*<ScrollArea h={100} type="never">
+                                <ScrollArea h={100} type="never">
                                     <Box
                                         pl={`xs`}
                                         fz={"sm"}
@@ -475,72 +501,12 @@ export default function _MatrixTable(props) {
                                                 <Grid columns={15} gutter={{base: 4}}>
                                                     <Grid.Col span={6}>
                                                         <Text fz="sm" lh="xs">
-                                                            {t("Customer")}
-                                                        </Text>
-                                                    </Grid.Col>
-                                                    <Grid.Col span={9}>
-                                                        <Text fz="sm" lh="xs">
-                                                            {requisitionMatrixViewData &&
-                                                                requisitionMatrixViewData.vendor_name &&
-                                                                requisitionMatrixViewData.vendor_name}
-                                                        </Text>
-                                                    </Grid.Col>
-                                                </Grid>
-                                                <Grid columns={15} gutter={{base: 4}}>
-                                                    <Grid.Col span={6}>
-                                                        <Text fz="sm" lh="xs">
-                                                            {t("Mobile")}
-                                                        </Text>
-                                                    </Grid.Col>
-                                                    <Grid.Col span={9}>
-                                                        <Text fz="sm" lh="xs">
-                                                            {requisitionMatrixViewData &&
-                                                                requisitionMatrixViewData.vendor_mobile &&
-                                                                requisitionMatrixViewData.vendor_mobile}
-                                                        </Text>
-                                                    </Grid.Col>
-                                                </Grid>
-                                                <Grid columns={15} gutter={{base: 4}}>
-                                                    <Grid.Col span={6}>
-                                                        <Text fz="sm" lh="xs">
-                                                            {t("Address")}
-                                                        </Text>
-                                                    </Grid.Col>
-                                                    <Grid.Col span={9}>
-                                                        <Text fz="sm" lh="xs">
-                                                            {requisitionMatrixViewData &&
-                                                                requisitionMatrixViewData.vendor_address &&
-                                                                requisitionMatrixViewData.vendor_address}
-                                                        </Text>
-                                                    </Grid.Col>
-                                                </Grid>
-                                                <Grid columns={15} gutter={{base: 4}}>
-                                                    <Grid.Col span={6}>
-                                                        <Text fz="sm" lh="xs">
-                                                            {t("Balance")}
-                                                        </Text>
-                                                    </Grid.Col>
-                                                    <Grid.Col span={9}>
-                                                        <Text fz="sm" lh="xs">
-                                                            {requisitionMatrixViewData && requisitionMatrixViewData.balance
-                                                                ? Number(requisitionMatrixViewData.balance).toFixed(2)
-                                                                : 0.0}
-                                                        </Text>
-                                                    </Grid.Col>
-                                                </Grid>
-                                            </Grid.Col>
-                                            <Grid.Col span={"6"}>
-                                                <Grid columns={15} gutter={{base: 4}}>
-                                                    <Grid.Col span={6}>
-                                                        <Text fz="sm" lh="xs">
                                                             {t("Created")}
                                                         </Text>
                                                     </Grid.Col>
                                                     <Grid.Col span={9}>
                                                         <Text fz="sm" lh="xs">
-                                                            {requisitionMatrixViewData &&
-                                                                requisitionMatrixViewData.created &&
-                                                                requisitionMatrixViewData.created}
+                                                            {requisitionMatrixViewData && requisitionMatrixViewData.created_date}
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -552,9 +518,46 @@ export default function _MatrixTable(props) {
                                                     </Grid.Col>
                                                     <Grid.Col span={9}>
                                                         <Text fz="sm" lh="xs">
-                                                            {requisitionMatrixViewData &&
-                                                                requisitionMatrixViewData.createdByUser &&
-                                                                requisitionMatrixViewData.createdByUser}
+                                                            {requisitionMatrixViewData && requisitionMatrixViewData.created_name}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{base: 4}}>
+                                                    <Grid.Col span={6}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {t("Total")}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {requisitionMatrixViewData && Number(requisitionMatrixViewData.total).toFixed(2)}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+
+                                            </Grid.Col>
+                                            <Grid.Col span={"6"}>
+                                                <Grid columns={15} gutter={{base: 4}}>
+                                                    <Grid.Col span={6}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {t("ApprovedDate")}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {requisitionMatrixViewData && requisitionMatrixViewData.generate_date}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{base: 4}}>
+                                                    <Grid.Col span={6}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {t("ApprovedName")}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {requisitionMatrixViewData && requisitionMatrixViewData.approved_name}
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -599,27 +602,18 @@ export default function _MatrixTable(props) {
                                             <Table.Tbody>{rows}</Table.Tbody>
                                             <Table.Tfoot>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={"8"} ta="right" fz="xs" w={"100"}>
                                                         {t("SubTotal")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
                                                         {requisitionMatrixViewData &&
-                                                            requisitionMatrixViewData.sub_total &&
-                                                            Number(requisitionMatrixViewData.sub_total).toFixed(2)}
+                                                            requisitionMatrixViewData.total &&
+                                                            Number(requisitionMatrixViewData.total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
+
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
-                                                        {t("Discount")}
-                                                    </Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {requisitionMatrixViewData &&
-                                                            requisitionMatrixViewData.discount &&
-                                                            Number(requisitionMatrixViewData.discount).toFixed(2)}
-                                                    </Table.Th>
-                                                </Table.Tr>
-                                                <Table.Tr>
-                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={"8"} ta="right" fz="xs" w={"100"}>
                                                         {t("Total")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -628,33 +622,11 @@ export default function _MatrixTable(props) {
                                                             Number(requisitionMatrixViewData.total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
-                                                <Table.Tr>
-                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
-                                                        {t("Receive")}
-                                                    </Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {requisitionMatrixViewData &&
-                                                            requisitionMatrixViewData.payment &&
-                                                            Number(requisitionMatrixViewData.payment).toFixed(2)}
-                                                    </Table.Th>
-                                                </Table.Tr>
-                                                <Table.Tr>
-                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
-                                                        {t("Due")}
-                                                    </Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {requisitionMatrixViewData &&
-                                                            requisitionMatrixViewData.total &&
-                                                            (
-                                                                Number(requisitionMatrixViewData.total) -
-                                                                Number(requisitionMatrixViewData.payment)
-                                                            ).toFixed(2)}
-                                                    </Table.Th>
-                                                </Table.Tr>
+
                                             </Table.Tfoot>
                                         </Table>
                                     </Box>
-                                </ScrollArea>*/}
+                                </ScrollArea>
                             </Box>
                             <Button.Group mb={2}>
                                 <Button
@@ -680,19 +652,22 @@ export default function _MatrixTable(props) {
                                     {t("Pos")}
                                 </Button>
 
-                                <Button
-                                    href={`/procurement/requisition/edit/${requisitionMatrixViewData?.id}`}
-                                    component="a"
-                                    fullWidth={true}
-                                    variant="filled"
-                                    leftSection={<IconEdit size={14}/>}
-                                    color="cyan.5"
-                                    onClick={() => {
-                                        setMmSwapEnabled(true);
-                                    }}
-                                >
-                                    {t("Edit")}
-                                </Button>
+                                {
+                                    requisitionMatrixViewData?.process === 'Created' &&
+                                    <Button
+                                        href={`/procurement/requisition/edit/${requisitionMatrixViewData?.id}`}
+                                        component="a"
+                                        fullWidth={true}
+                                        variant="filled"
+                                        leftSection={<IconEdit size={14}/>}
+                                        color="cyan.5"
+                                        onClick={() => {
+                                            setMmSwapEnabled(true);
+                                        }}
+                                    >
+                                        {t("Edit")}
+                                    </Button>
+                                }
                             </Button.Group>
                         </Box>
                     </Grid.Col>
@@ -723,6 +698,14 @@ export default function _MatrixTable(props) {
                         setPrintPos={setPrintPos}
                     />
                 </div>
+            )}
+
+            {productionProcessModal && (
+                <_ProductionProcessModal
+                    productionProcessModal={productionProcessModal}
+                    setProductionProcessModal={setProductionProcessModal}
+                    boardId={boardId}
+                />
             )}
         </>
     );

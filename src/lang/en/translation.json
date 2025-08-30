@@ -1205,6 +1205,12 @@
   "BoardList": "Board List",
   "NewBoard": "New Board",
   "RequisitionMatrixBoard": "Requisition Matrix Board",
+  "ApprovedDate": "Approved Date",
+  "ApprovedName": "Approved Name",
+  "RequestQty": "Req Qty.",
+  "ApproveQty": "Approve Qty.",
+  "BoardDetails": "Board Details",
+  "ProductionProcess": "Production Process",
   "xxxxxx": "xxxxxxx",
   "": ""
 }
