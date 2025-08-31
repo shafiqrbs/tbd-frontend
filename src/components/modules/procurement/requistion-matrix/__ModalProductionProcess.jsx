@@ -20,7 +20,7 @@ export default function __ModalProductionProcess(props) {
             setEditedQuantity(newQuantity);
         };
 
-        /*const handleQuantityUpdateDB = async () => {
+        const handleQuantityUpdateDB = async () => {
             const indexKey = shopKey + "_id";
             const values = {
                 quantity: editedQuantity,
@@ -30,7 +30,7 @@ export default function __ModalProductionProcess(props) {
                 return
             }
 
-            const value = {
+            /*const value = {
                 url: 'inventory/requisition/matrix/board/quantity-update',
                 data: values
             }
@@ -46,8 +46,8 @@ export default function __ModalProductionProcess(props) {
                 } else {
                     showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
                 }
-            }
-        };*/
+            }*/
+        };
 
         return (
             <TextInput
@@ -55,7 +55,7 @@ export default function __ModalProductionProcess(props) {
                 size="xs"
                 value={editedQuantity}
                 onChange={handleQuantityChange}
-                // onBlur={handleQuantityUpdateDB}
+                onBlur={handleQuantityUpdateDB}
             />
         );
     };
