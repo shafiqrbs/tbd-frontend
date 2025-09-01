@@ -246,7 +246,6 @@ export default function RequisitionNavigation(props) {
                         radius="xl"
                         onClick={(e) => {
                             open()
-                            // navigate("/procurement/requisition-board");
                         }}
                     >
                         <Flex direction={`column`} align={"center"}>
@@ -274,88 +273,74 @@ export default function RequisitionNavigation(props) {
         </Flex>
       </ScrollArea>
 
-        <Modal
-            opened={opened}
-            onClose={close}
-            title={t("RequisitionMatrixBoard")}
-            overlayProps={{
-                backgroundOpacity: 0.55,
-                blur: 3,
-            }}
-        >
-            <Tooltip
-                label={t("ExpectedDate")}
-                opened={startDateTooltip}
-                px={16}
-                py={2}
-                position="top-end"
-                color='var(--theme-primary-color-6)'
-                withArrow
-                offset={2}
-                zIndex={100}
-                transitionProps={{
-                    transition: "pop-bottom-left",
-                    duration: 5000,
+        {
+            opened &&
+            <Modal
+                opened={opened}
+                onClose={close}
+                title={t("RequisitionMatrixBoard")}
+                overlayProps={{
+                    backgroundOpacity: 0.55,
+                    blur: 3,
                 }}
             >
-                <DateInput
-                    clearable
-                    maxDate={new Date()}
-                    onChange={(e) => {
-                        setExpectedDate(e)
-                        e != ""
-                            ? setStartDateTooltip(false)
-                            : (setStartDateTooltip(true),
-                                setTimeout(() => {
-                                    setStartDateTooltip(false);
-                                }, 1000));
+                <Tooltip
+                    label={t("ExpectedDate")}
+                    opened={startDateTooltip}
+                    px={16}
+                    py={2}
+                    position="top-end"
+                    color='var(--theme-primary-color-6)'
+                    withArrow
+                    offset={2}
+                    zIndex={100}
+                    transitionProps={{
+                        transition: "pop-bottom-left",
+                        duration: 5000,
                     }}
-                    value={expectedDate}
-                    placeholder={t("ExpectedDate")}
-                />
-            </Tooltip>
-
-            <Flex justify="flex-end" style={{ marginTop: 24 }}>
-                <Button
-                    onClick={async () => {
-                        if (!expectedDate){
-                            setStartDateTooltip(true)
-                            return
-                        }
-                        handleGenerateMatrixBatch()
-                        /*modals.openConfirmModal({
-                            title: <Text size="md">{t("SuretoProcessMatrixData")}</Text>,
-                            children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
-                            labels: { confirm: "Confirm", cancel: "Cancel" },
-                            onCancel: () => console.log("Cancel"),
-                            onConfirm: () => {
-                                if (!expectedDate){
-                                    setStartDateTooltip(true)
-                                    return
-                                }
-                                handleGenerateMatrixBatch()
-                            },
-                        });*/
-                    }}
-                    size="xs"
-                    color="green.8"
-                    type="submit"
-                    id="EntityFormSubmit"
-                    leftSection={<IconDeviceFloppy size={16} />}
                 >
-                    <Flex direction="column" gap={0}>
-                        <Text fz={14} fw={400}>
-                            {t("Create")}
-                        </Text>
-                    </Flex>
-                </Button>
-            </Flex>
+                    <DateInput
+                        clearable
+                        maxDate={new Date()}
+                        onChange={(e) => {
+                            setExpectedDate(e)
+                            e != ""
+                                ? setStartDateTooltip(false)
+                                : (setStartDateTooltip(true),
+                                    setTimeout(() => {
+                                        setStartDateTooltip(false);
+                                    }, 1000));
+                        }}
+                        value={expectedDate}
+                        placeholder={t("ExpectedDate")}
+                    />
+                </Tooltip>
 
-        </Modal>
+                <Flex justify="flex-end" style={{ marginTop: 24 }}>
+                    <Button
+                        onClick={async () => {
+                            if (!expectedDate){
+                                setStartDateTooltip(true)
+                                return
+                            }
+                            handleGenerateMatrixBatch()
+                        }}
+                        size="xs"
+                        color="green.8"
+                        type="submit"
+                        id="EntityFormSubmit"
+                        leftSection={<IconDeviceFloppy size={16} />}
+                    >
+                        <Flex direction="column" gap={0}>
+                            <Text fz={14} fw={400}>
+                                {t("Create")}
+                            </Text>
+                        </Flex>
+                    </Button>
+                </Flex>
 
-        <Button variant="default" onClick={open}>
-            Open modal
-        </Button>
+            </Modal>
+        }
     </>
   );
 }

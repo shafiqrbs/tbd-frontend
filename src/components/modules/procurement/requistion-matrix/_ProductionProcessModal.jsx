@@ -1,15 +1,12 @@
 import {Modal, Tabs, Box, Progress} from '@mantine/core';
 import {useTranslation} from 'react-i18next';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import __ModalBoardDetails from "./__ModalBoardDetails.jsx";
 import __ModalProductionProcess from "./__ModalProductionProcess.jsx";
-import {getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
 import {useDispatch} from "react-redux";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 
 export default function _ProductionProcessModal(props) {
-    const progress = getLoadingProgress();
-    const dispatch = useDispatch();
     const {productionProcessModal, setProductionProcessModal, boardId} = props;
     const {t, i18} = useTranslation();
     const [activeTab, setActiveTab] = useState('BoardDetails');
@@ -17,37 +14,6 @@ export default function _ProductionProcessModal(props) {
     const closeModel = () => {
         setProductionProcessModal(false);
     }
-
-    const [fetching, setFetching] = useState(false);
-    const [indexData, setIndexData] = useState([]);
-    const [customers, setCustomers] = useState([]);
-
-    const fetchData = async () => {
-        if (!boardId) return;
-
-        setFetching(true);
-        const value = {
-            url: 'inventory/requisition/matrix/board/' + boardId,
-            param: {}
-        };
-
-        try {
-            const resultAction = await dispatch(getIndexEntityData(value));
-
-            if (getIndexEntityData.fulfilled.match(resultAction)) {
-                setIndexData(resultAction.payload.data || []);
-                setCustomers(resultAction.payload.customers || []);
-            }
-        } catch (err) {
-            console.error('Unexpected error:', err);
-        } finally {
-            setFetching(false); // Remove the setTimeout!
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, [boardId]); // Remove 'fetching' from dependencies
 
     return (
         <>
@@ -88,39 +54,12 @@ export default function _ProductionProcessModal(props) {
 
                                     <Tabs.Panel value="BoardDetails">
                                         <Box>
-                                            {fetching ? (
-                                                <Progress
-                                                    color='var(--theme-primary-color-6)'
-                                                    size="sm"
-                                                    striped
-                                                    animated
-                                                    value={progress}
-                                                    transitionDuration={200}
-                                                />
-                                            ) : (
-                                                boardId && indexData && customers &&
-                                                <__ModalBoardDetails boardId={boardId} indexData={indexData}
-                                                                     customers={customers}/>
-                                            )}
+                                            <__ModalBoardDetails boardId={boardId}/>
                                         </Box>
                                     </Tabs.Panel>
                                     <Tabs.Panel value="Process">
                                         <Box>
-                                            {fetching ? (
-                                                <Progress
-                                                    color='var(--theme-primary-color-6)'
-                                                    size="sm"
-                                                    striped
-                                                    animated
-                                                    value={progress}
-                                                    transitionDuration={200}
-                                                />
-                                            ) : (
-                                                boardId && indexData && customers &&
-                                                <__ModalProductionProcess boardId={boardId} indexData={indexData}
-                                                                          customers={customers}/>
-                                            )}
-
+                                            <__ModalProductionProcess boardId={boardId}/>
                                         </Box>
                                     </Tabs.Panel>
                                 </Tabs>

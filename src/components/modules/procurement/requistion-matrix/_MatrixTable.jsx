@@ -158,7 +158,7 @@ export default function _MatrixTable() {
             },
             onConfirm: () => {
                 handleConfirmRequisitionMatrixApprove(id)
-            }, // Separate function for "onConfirm"
+            },
         });
     };
 
@@ -181,7 +181,17 @@ export default function _MatrixTable() {
             } else if (storeEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
                     setFetching(true)
-                    showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
+                    const processToProductionItems = resultAction?.payload?.data?.pro_item_process || 0;
+                    const message = resultAction.payload.data.message;
+
+                    showNotificationComponent(message, 'teal', true, 1000, true);
+                    showNotificationComponent(
+                        `Total ${processToProductionItems} production items processed`,
+                        processToProductionItems !== 0 ? 'teal' : 'red',
+                        true,
+                        1000,
+                        true
+                    );
                 } else {
                     showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
                 }
@@ -210,8 +220,7 @@ export default function _MatrixTable() {
                             <Grid>
                                 <Grid.Col>
                                     <Stack>
-                                        <__RequisitionMatrixSearch checkList={1} customerId={1}
-                                                                   setFetching={setFetching}/>
+                                        <__RequisitionMatrixSearch checkList={1} customerId={1} setFetching={setFetching}/>
                                     </Stack>
                                 </Grid.Col>
                             </Grid>

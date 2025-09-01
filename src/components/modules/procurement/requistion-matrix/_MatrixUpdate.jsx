@@ -1,12 +1,11 @@
 import {
-    ActionIcon,
     Box,
     Grid,
     Stack,
     Text,
     TextInput,
     Button,
-    Flex, Tooltip, rem,
+    Flex, Tooltip
 } from "@mantine/core";
 import {DataTable} from "mantine-datatable";
 import matrixTable from "./Table.module.css";
@@ -15,9 +14,7 @@ import React, {useRef, useState, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {useOutletContext, useParams} from "react-router-dom";
 import {
-    IconX,
     IconDeviceFloppy,
-    IconSearch,
 } from "@tabler/icons-react";
 import {DateInput} from "@mantine/dates";
 import {getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
@@ -117,7 +114,6 @@ export default function _MatrixUpdate(props) {
 
     const QuantityInput = ({item, shopKey}) => {
         const [editedQuantity, setEditedQuantity] = useState(item[shopKey] || 0);
-        const [branchApproveQuantity, setBranchApproveQuantity] = useState(item[shopKey + "_approved_quantity"] || null);
         const [branchRequestQuantity, setBranchRequestQuantity] = useState(item[shopKey + "_requested_quantity"] || null);
 
         (!generateButton && item.process === 'Confirmed') && setGenerateButton(true)
@@ -149,7 +145,6 @@ export default function _MatrixUpdate(props) {
             } else if (storeEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
                     setFetching(true)
-                    // showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
                 } else {
                     showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
                 }
@@ -172,7 +167,6 @@ export default function _MatrixUpdate(props) {
             />
         );
     };
-
 
     const handleGenerateMatrixBatch = async () => {
         const options = {
@@ -198,13 +192,22 @@ export default function _MatrixUpdate(props) {
         } else if (storeEntityData.fulfilled.match(resultAction)) {
             if (resultAction.payload.data.status === 200) {
                 setFetching(true)
-                showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
+                const processToProductionItems = resultAction?.payload?.data?.pro_item_process || 0;
+                const message = resultAction.payload.data.message;
+
+                showNotificationComponent(message, 'teal', true, 1000, true);
+                showNotificationComponent(
+                    `Total ${processToProductionItems} production items processed`,
+                    processToProductionItems !== 0 ? 'teal' : 'red',
+                    true,
+                    1000,
+                    true
+                );
             } else {
                 showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
             }
         }
     }
-
 
     return (
         <>
