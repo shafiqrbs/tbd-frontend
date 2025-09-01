@@ -363,7 +363,6 @@ function _SalesTable(props) {
                                                                             labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                                             onCancel: () => console.log('Cancel'),
                                                                             onConfirm: () => {
-                                                                                // console.log(data.id)
                                                                                 handleSalesCopy(data.id)
                                                                             },
                                                                         });
@@ -705,15 +704,18 @@ function _SalesTable(props) {
                                 >
                                     {t('Pos')}
                                 </Button>
-                                {!checked && <Button
-                                    onClick={() => navigate(`/inventory/sales/edit/${salesViewData?.id}`)}
-                                    component="a"
-                                    fullWidth={true}
-                                    variant="filled"
-                                    leftSection={<IconEdit size={14} />}
-                                    color="cyan.5"
-                                >{t('Edit')}
-                                </Button>}
+                                {/*{!checked && */}
+                                {(!salesViewData?.approved_by_id && !salesViewData?.is_domain_sales_completed) &&
+                                <Button
+                                        onClick={() => navigate(`/inventory/sales/edit/${salesViewData?.id}`)}
+                                        component="a"
+                                        fullWidth={true}
+                                        variant="filled"
+                                        leftSection={<IconEdit size={14} />}
+                                        color="cyan.5"
+                                    >{t('Edit')}
+                                    </Button>
+                                }
 
                             </Button.Group>
                         </Box>

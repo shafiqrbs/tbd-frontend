@@ -737,7 +737,7 @@ function _PurchaseTable() {
                                     {t("Pos")}
                                 </Button>
                                 {
-                                    (!purchaseViewData?.approved_by_id) &&
+                                    !purchaseViewData?.approved_by_id &&
 
                                     <Button
                                         onClick={() => {
