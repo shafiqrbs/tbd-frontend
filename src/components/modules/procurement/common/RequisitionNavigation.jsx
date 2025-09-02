@@ -70,14 +70,14 @@ export default function RequisitionNavigation(props) {
             }
         }
     }
-
+    console.log(module)
 
     return (
     <>
       <ScrollArea
         h={
           module === "requisition"
-            ? height - 52
+            ? height-10
             : module === 'config'
             ? height - 8
             : module
@@ -119,6 +119,7 @@ export default function RequisitionNavigation(props) {
             </Tooltip>
             <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
               <Text
+                fz={"10"}
                 size="xs"
                 c="black"
                 ta="center"
@@ -160,8 +161,9 @@ export default function RequisitionNavigation(props) {
                 </Flex>
               </Button>
             </Tooltip>
-            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+            <Flex direction={`column`} align={"center"}  c={"black"}>
               <Text
+                fz={"10"}
                 size="xs"
                 c="black"
                 ta="center"
@@ -210,6 +212,7 @@ export default function RequisitionNavigation(props) {
             <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
               <Text
                 size="xs"
+                fz={"10"}
                 c="black"
                 ta="center"
                 w={56}
@@ -237,7 +240,7 @@ export default function RequisitionNavigation(props) {
                     }}
                 >
                     <Button
-                        bg={"#E53935"}
+                        bg={"#4b99f8"}
                         size="md"
                         pl={"12"}
                         pr={"12"}
@@ -256,6 +259,7 @@ export default function RequisitionNavigation(props) {
                 <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
                     <Text
                         size="xs"
+                        fz={"10"}
                         c="black"
                         ta="center"
                         w={56}

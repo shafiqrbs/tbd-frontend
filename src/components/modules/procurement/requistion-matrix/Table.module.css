@@ -5,7 +5,7 @@
 .table {
   th,
   td {
-    border-color: var(--theme-primary-color-6);
+    border-color: var(--theme-primary-color-1);
   }
   tr {
     height: 46px;
@@ -14,7 +14,7 @@
 
 .header {
   th {
-    border-bottom: 1px solid #ffc9c91a;
+    border-bottom: 1px solid var(--theme-primary-color-1);
     /* background-color: rgba(208, 191, 191, 0.17); */
     background-color: #f7f4f4;
     font-size: 12px;
@@ -25,16 +25,16 @@
 
 .footer {
   color: #656565;
-  font-size: 13px;
+  font-size: 12px;
   th,
   td {
-    border-top: 1px solid rgba(226, 194, 194, 0.39);
+    border-top: 1px solid var(--theme-primary-color-1);
   }
 }
 
 .pagination {
   background: transparent;
-  border-top: 1px solid rgba(226, 194, 194, 0.39);
+  border-top: 1px solid var(--theme-primary-color-1);
 
   button {
     background: transparent;

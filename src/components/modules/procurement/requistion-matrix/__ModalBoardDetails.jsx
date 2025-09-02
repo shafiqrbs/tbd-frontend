@@ -13,7 +13,7 @@ export default function __ModalBoardDetails({boardId}) {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const progress = getLoadingProgress();
     const dispatch = useDispatch()
-    const tableHeight = mainAreaHeight - 160;
+    const tableHeight = mainAreaHeight-30;
     const leftTableRef = useRef(null);
     const centerTableRef = useRef(null);
     const rightTableRef = useRef(null);
@@ -86,7 +86,6 @@ export default function __ModalBoardDetails({boardId}) {
                             scrollAreaProps={{ type: "never" }}
                         />
                     </Grid.Col>
-
                     <Grid.Col span={14}>
                         <DataTable
                             border={1}

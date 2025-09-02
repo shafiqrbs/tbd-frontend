@@ -74,15 +74,7 @@ function SalesInvoice() {
                         </Grid.Col>
                     </Grid>
                     </Box>
-
-
-
-                    <Box p="8">
-
-
-
-
-                    </Box>
+                    <Box p="8"></Box>
                 </Box>
             )}
         </>

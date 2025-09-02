@@ -495,16 +495,16 @@ function __SalesForm(props) {
                                 </Grid>
                                 <Grid gutter={{ base: 4 }}>
                                     <Grid.Col span={3}>
-                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
+                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`} />
                                     </Grid.Col>
                                     <Grid.Col span={3}>
-                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
+                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}/>
                                     </Grid.Col>
                                     <Grid.Col span={3}>
-                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
+                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}/>
                                     </Grid.Col>
                                     <Grid.Col span={3}>
-                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
+                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}/>
                                     </Grid.Col>
                                 </Grid>
                                 <Grid gutter={{ base: 4 }}>

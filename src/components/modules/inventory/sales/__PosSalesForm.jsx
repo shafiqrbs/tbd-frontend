@@ -223,7 +223,7 @@ export default function __PosSalesForm(props) {
         // Include manual customer input fields if no customer is selected
         if (
             !form.values.customer_id ||
-            form.values.customer_id == defaultCustomerId
+            form.values.customer_id === defaultCustomerId
         ) {
             formValue["customer_name"] = form.values.name;
             formValue["customer_mobile"] = form.values.mobile;
@@ -255,7 +255,7 @@ export default function __PosSalesForm(props) {
         const hasReceiveAmount = form.values.receive_amount;
         const isDefaultCustomer =
             !form.values.customer_id ||
-            form.values.customer_id == defaultCustomerId;
+            form.values.customer_id === defaultCustomerId;
 
         formValue["payment"] = hasReceiveAmount ? (form.values.receive_amount > salesTotalAmount ? salesTotalAmount : form.values.receive_amount) : salesConfig?.is_zero_receive_allow && isDefaultCustomer ? salesTotalAmount : 0;
 

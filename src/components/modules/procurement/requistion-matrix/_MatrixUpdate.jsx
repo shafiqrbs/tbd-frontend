@@ -22,12 +22,13 @@ import {storeEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import {modals} from "@mantine/modals";
 import RequisitionNavigation from "../common/RequisitionNavigation";
+import inputCss from "../../../../assets/css/InlineInputField.module.css";
 
 export default function _MatrixUpdate(props) {
     const {id} = useParams()
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const tableHeight = mainAreaHeight - 160;
+    const tableHeight = mainAreaHeight - 116;
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [generateButton, setGenerateButton] = useState(false);
     const leftTableRef = useRef(null);
@@ -152,19 +153,22 @@ export default function _MatrixUpdate(props) {
         };
 
         return (
-            <TextInput
-                disabled={(item[shopKey] <= 0 && branchRequestQuantity<1) || item.process === 'Confirmed'}
-                type="number"
-                size="xs"
-                value={editedQuantity}
-                onChange={handleQuantityChange}
-                onBlur={handleQuantityUpdateDB}
-                rightSection={
-                    <>
-                        {branchRequestQuantity}
-                    </>
-                }
-            />
+            <>
+                { (item[shopKey] >= 0 && branchRequestQuantity > 1)  ? (
+                    <TextInput
+                        type="number"
+                        classNames={inputCss}
+                        size="xs"
+                        value={editedQuantity}
+                        onChange={handleQuantityChange}
+                        onBlur={handleQuantityUpdateDB}
+                        rightSection={<>{branchRequestQuantity}</>}
+                    />
+                ) : (
+                    <Text/>
+                )}
+
+        </>
         );
     };
 
