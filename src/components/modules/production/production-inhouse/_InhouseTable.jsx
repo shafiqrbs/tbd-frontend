@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from "react"
 import {useOutletContext} from "react-router-dom"
-import {Badge, Box, Group, Paper, Table, Text, TextInput, Title} from "@mantine/core"
+import {Badge, Box, Group, Paper, Table, Text, TextInput, Title, ActionIcon, Menu, Tooltip} from "@mantine/core"
 import {useDispatch, useSelector} from "react-redux"
 import {useTranslation} from "react-i18next"
 import {getHotkeyHandler} from "@mantine/hooks"
@@ -10,7 +10,11 @@ import {storeEntityData} from "../../../../store/core/crudSlice.js"
 import inputInlineCss from "../../../../assets/css/InlineInputField.module.css"
 import __InhouseAddItem from "./__InhouseAddItem.jsx"
 import batchTableCss from "../../../../assets/css/ProductBatchTable.module.css";
-
+import {
+    IconX
+} from "@tabler/icons-react";
+import {modals} from "@mantine/modals";
+import {deleteEntityData} from "../../../../store/inventory/crudSlice";
 
 function _InhouseTable(props) {
     const {setReloadBatchItemTable} = props
@@ -186,13 +190,13 @@ function _InhouseTable(props) {
                                     {productionItems?.map((item) => (
                                         <React.Fragment key={`issue-${item.id}`}>
                                             <Table.Th className={batchTableCss.successBackground}
-                                                      ta="center">{t('Issue')}</Table.Th>
+                                                      ta="center">{t('Demand')}</Table.Th>
                                             <Table.Th className={batchTableCss.warningBackground}
                                                       ta="center">{t('Receive')}</Table.Th>
                                         </React.Fragment>
                                     ))}
                                     <Table.Th className={batchTableCss.successBackground} rowSpan={3}
-                                              ta="center">{t('Issue')}</Table.Th>
+                                              ta="center">{t('Demand')}</Table.Th>
                                     <Table.Th className={batchTableCss.warningBackground} rowSpan={3}
                                               ta="center">{t('Expense')}</Table.Th>
                                     <Table.Th className={batchTableCss.lessBackground} rowSpan={3}
@@ -228,8 +232,39 @@ function _InhouseTable(props) {
                                     {/*<Table.Th>Narayangonj</Table.Th>*/}
                                     {productionItems?.map((item) => (
                                         <Table.Th key={`header-${item.id}`} ta="center" colSpan={2} color={'red'}
-                                                  style={{fontWeight: 1000}}>
+                                                  style={{fontWeight:500}}>
+                                            <Box
+                                                pos="relative"
+                                                h={'60'}
+                                                align={'left'}
+                                            >
+                                                <Tooltip arrowOffset={50} arrowSize={8} color="red.6"  offset={{ mainAxis: -2, crossAxis: 0 }} arrowRadius={2} label={t("RemoveItem")} withArrow  >
+
+                                                <ActionIcon variant="transparent" color="red.6" pos="absolute" top={-10}
+                                                        right={-12}
+                                                        onClick={() => {
+                                                            modals.openConfirmModal({
+                                                                title: (
+                                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                ),
+                                                                children: (
+                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                ),
+                                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                confirmProps: { color: 'red.6' },
+                                                                onCancel: () => console.log('Cancel'),
+                                                                onConfirm: () => {
+                                                                    dispatch(deleteEntityData('production/batch/item-delete/' + item.id))
+                                                                    setReloadBatchItemTable(true)
+                                                                },
+                                                            });
+                                                        }} >
+                                                    <IconX style={{ width: '60%', height: '60%' }} stroke={1.5} />
+                                            </ActionIcon>
+                                                </Tooltip>
                                             {item.name}
+                                            </Box>
+
                                         </Table.Th>
                                     ))}
                                 </Table.Tr>

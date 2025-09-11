@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useMemo} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import {Link, useNavigate, useOutletContext} from "react-router-dom";
 import {
     Group,
     Box,
@@ -11,10 +11,10 @@ import {
     Flex,
     Image,
     Modal,
-    Button, Paper,
+    Button, Paper, Grid, Tabs,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
-import {IconCheck, IconDotsVertical, IconTrashX} from "@tabler/icons-react";
+import {IconCheck, IconDotsVertical, IconList, IconListCheck, IconListDetails, IconTrashX} from "@tabler/icons-react";
 import {DataTable} from "mantine-datatable";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -38,6 +38,8 @@ import "@mantine/carousel/styles.css";
 import Autoplay from "embla-carousel-autoplay";
 import __DrawerAddon from "./__DrawerAddon";
 import {data} from "../../accounting/balance-entry/BalanceBarChart.jsx";
+import {useParams} from "react-router";
+import classes from "../../../../assets/css/TabCustomize.module.css";
 
 function ProductTable({categoryDropdown}) {
     const dispatch = useDispatch();
@@ -65,6 +67,12 @@ function ProductTable({categoryDropdown}) {
     const [addonDrawer, setAddonDrawer] = useState(false);
     const [id, setId] = useState(null);
     const [switchEnable, setSwitchEnable] = useState({});
+    const { slug } = useParams();
+    const [activeTab, setActiveTab] = useState(slug || "allstocks");
+
+    useEffect(() => {
+        if (slug) setActiveTab(slug);
+    }, [slug]);
 
     // Load user role
     const [userRole] = useState(() => {
@@ -120,6 +128,7 @@ function ProductTable({categoryDropdown}) {
                 page: loadPage,
                 offset: perPage,
                 type: "product",
+                product_nature: activeTab,
             },
         };
 
@@ -157,7 +166,7 @@ function ProductTable({categoryDropdown}) {
         setPage(1);
         setAllDataLoaded(false);
         fetchData(1, true);
-    }, [searchKeyword, productFilterData, fetchingReload]);
+    }, [searchKeyword, productFilterData, activeTab,fetchingReload]);
 
     const handleScrollToBottom = () => {
         if (!fetching && !allDataLoaded) {
@@ -194,7 +203,54 @@ function ProductTable({categoryDropdown}) {
     return (
         <>
             <Box pl="xs" pr={8} pt="6" pb="4" className="boxBackground borderRadiusAll border-bottom-none">
-                <_ProductSearch module="product" categoryDropdown={categoryDropdown}/>
+                <Grid columns={12} gutter={{ base: 8 }}>
+                    <Grid.Col span={12}>
+                        <Tabs variant="unstyled" defaultValue={activeTab} classNames={classes}>
+                            <Tabs defaultValue="allstocks">
+                                <Tabs.List grow>
+                                    <Tabs.Tab
+                                        value="allstocks"
+                                        component={Link}
+                                        to="/inventory/product/allstocks"
+                                        leftSection={<IconListCheck size={16} />}
+                                    >
+                                        {t('AllStocks')}
+                                    </Tabs.Tab>
+                                    <Tabs.Tab
+                                        value="production"
+                                        component={Link}
+                                        to="/inventory/product/production"
+                                        leftSection={<IconListCheck size={16} />}
+                                    >
+
+                                        {t('Production')}
+                                    </Tabs.Tab>
+
+                                    <Tabs.Tab
+                                        value="stockable"
+                                        component={Link}
+                                        to="/inventory/product/stockable"
+                                        leftSection={<IconList size={16} />}
+                                    >{t('Stockable')}
+
+                                    </Tabs.Tab>
+
+                                    <Tabs.Tab
+                                        value="rawmaterial"
+                                        component={Link}
+                                        to="/inventory/product/rawmaterial"
+                                        leftSection={<IconListDetails size={16} />}
+                                    >
+                                        {t('RawMaterial')}
+                                    </Tabs.Tab>
+                                </Tabs.List>
+                            </Tabs>
+                        </Tabs>
+                    </Grid.Col>
+                </Grid>
+                <Box>
+                    <_ProductSearch module="product" categoryDropdown={categoryDropdown}/>
+                </Box>
             </Box>
 
             <Box className="borderRadiusAll border-top-none">
@@ -394,7 +450,7 @@ function ProductTable({categoryDropdown}) {
                     fetching={fetching}
                     loaderSize="xs"
                     loaderColor="grape"
-                    height={height}
+                    height={height-40}
                     scrollViewportRef={scrollViewportRef}
                     onScrollToBottom={handleScrollToBottom}
                 />

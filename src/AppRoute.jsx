@@ -299,6 +299,14 @@ function AppRoute() {
 						}
 					/>
 					<Route
+						path="product/:slug"
+						element={
+							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+								<ProductIndex />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
 						path="product/:id"
 						element={
 							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
@@ -388,6 +396,14 @@ function AppRoute() {
 					/>
 					<Route
 						path="stock"
+						element={
+							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
+								<StockIndex />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="stock/:slug"
 						element={
 							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
 								<StockIndex />
