@@ -307,6 +307,7 @@ function _SalesTable(props) {
                                             )
                                         },
                                         { accessor: 'customerName', title: t("Customer") },
+                                        { accessor: 'customer_group', title: t("Group") },
                                         {
                                             accessor: 'total',
                                             title: t("Total"),

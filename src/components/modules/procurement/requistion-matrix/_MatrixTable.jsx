@@ -232,14 +232,6 @@ export default function _MatrixTable() {
                                         title: t("Generated"),
                                     },
                                     {
-                                        accessor: "total",
-                                        title: t("Total"),
-                                    },
-                                    {
-                                        accessor: "created_name",
-                                        title: t("Name"),
-                                    },
-                                    {
                                         accessor: "batch_no",
                                         title: t("Invoice"),
                                         textAlign: "center",
@@ -249,7 +241,7 @@ export default function _MatrixTable() {
                                                 component="a"
                                                 size="sm"
                                                 variant="subtle"
-                                                c="red.4"
+                                                color="var(--theme-secondary-color-8)"
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     setLoading(true)
@@ -262,6 +254,11 @@ export default function _MatrixTable() {
                                             </Text>
                                         ),
                                     },
+                                    {
+                                        accessor: "total",
+                                        title: t("Total"),
+                                    },
+
                                     {
                                         accessor: "process",
                                         title: t("Status"),

@@ -14,7 +14,7 @@ import {
     Stack,
     Text,
     ScrollArea,
-    Table, Badge,
+    Table, Badge, Group,
 } from "@mantine/core";
 import _RequisitionSearch from "./_RequisitionSearch";
 import {DataTable} from "mantine-datatable";
@@ -241,7 +241,7 @@ export default function _RequisitionTable(props) {
                                                     component="a"
                                                     size="sm"
                                                     variant="subtle"
-                                                    c="red.4"
+                                                    color="var(--theme-secondary-color-8)"
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setLoading(true);
@@ -284,7 +284,20 @@ export default function _RequisitionTable(props) {
                                             title: t("Action"),
                                             textAlign: "right",
                                             render: (data) => (
-                                                <Box>
+                                                <Group gap={4} justify="right" wrap="nowrap">
+                                                    {
+                                                        !data.approved_by_id &&
+                                                        <Button component="a" size="compact-xs" radius="xs"
+                                                                variant="filled" fw={'100'} fz={'12'}
+                                                                color='var(--theme-secondary-color-8)'
+                                                                mr={'4'}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    handleRequisitionApprove(data.id)
+                                                                }}
+                                                        >{t('Approve')}
+                                                        </Button>
+                                                    }
                                                     <Menu
                                                         position="bottom-end"
                                                         offset={3}
@@ -296,13 +309,13 @@ export default function _RequisitionTable(props) {
                                                         <Menu.Target>
                                                             <ActionIcon
                                                                 size="sm"
-                                                                variant="outline"
-                                                                color='var(--theme-primary-color-6)'
+                                                                variant="transparent"
+                                                                color='red'
                                                                 radius="xl"
                                                                 aria-label="Settings"
                                                             >
                                                                 <IconDotsVertical
-                                                                    style={{width: 12, height: 12}}
+                                                                    style={{width: 18, height: 18}}
                                                                     stroke={1.5}
                                                                 />
                                                             </ActionIcon>
@@ -321,29 +334,7 @@ export default function _RequisitionTable(props) {
                                                                     {t('Edit')}
                                                                 </Menu.Item>
                                                             }
-                                                            {
-                                                                !data.approved_by_id &&
-                                                                <>
-                                                                    <Menu.Item
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            handleRequisitionApprove(data.id)
-                                                                        }}
-                                                                        color="green"
-                                                                        component="a"
-                                                                        w={"200"}
-                                                                        leftSection={
-                                                                            <IconChevronsRight
-                                                                                style={{
-                                                                                    width: rem(14),
-                                                                                    height: rem(14)
-                                                                                }}/>
-                                                                        }
-                                                                    >
-                                                                        {t("Approve")}
-                                                                    </Menu.Item>
-                                                                </>
-                                                            }
+
                                                             {
                                                                 data.process === 'Created' &&
                                                                 <Menu.Item
@@ -389,7 +380,7 @@ export default function _RequisitionTable(props) {
                                                             }
                                                         </Menu.Dropdown>
                                                     </Menu>
-                                                </Box>
+                                                </Group>
                                             ),
                                         },
                                     ]}
@@ -405,10 +396,10 @@ export default function _RequisitionTable(props) {
                                     height={tableHeight}
                                     scrollAreaProps={{type: "never"}}
                                     rowBackgroundColor={(item) => {
-                                        if (item.invoice === selectedRow) return "#e2c2c263";
+                                        if (item.invoice === selectedRow) return "var(--theme-primary-color-1)";
                                     }}
                                     rowColor={(item) => {
-                                        if (item.invoice === selectedRow) return "red.6";
+                                        if (item.invoice === selectedRow) return "var(--mantine-color-black-9)";
                                     }}
                                 />
                             </Box>
