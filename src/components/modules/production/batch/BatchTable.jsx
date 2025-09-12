@@ -101,6 +101,7 @@ export default function BatchTable(props){
                         { accessor: 'issue_date', title: t('IssueDate') },
                         { accessor: 'invoice', title: t('Invoice') },
                         { accessor: 'created_by_name', title: t('CreatedBy') },
+                        { accessor: 'batch_no', title: t('RequisitionBatch') },
                         {
                             accessor: 'status',
                             title: t("Status"),
