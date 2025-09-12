@@ -30,7 +30,7 @@ export default function RequisitionNavigation(props) {
   const { module, id } = props;
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 30;
+  const height = mainAreaHeight - 18;
   const { configData } = getConfigData();
   const dispatch = useDispatch()
   const navigate = useNavigate();

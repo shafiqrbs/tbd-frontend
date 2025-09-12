@@ -68,9 +68,9 @@ export default function __RequistionForm(props) {
         formValue["invoice_date"] = values.invoice_date
             ? new Date(values.invoice_date).toLocaleDateString("en-CA", options)
             : new Date().toLocaleDateString("en-CA");
-        formValue["expected_date"] =
-            values.expected_date &&
-            new Date(values.expected_date).toLocaleDateString("en-CA", options);
+        formValue["expected_date"] = values.expected_date
+            ? new Date(values.expected_date).toLocaleDateString("en-CA", options)
+            : new Date().toLocaleDateString("en-CA");
         formValue["remark"] = values.narration;
         formValue["created_by_id"] = createdBy?.id;
         formValue["items"] = transformedArray ? transformedArray : [];

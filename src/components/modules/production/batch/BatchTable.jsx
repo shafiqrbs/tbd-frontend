@@ -165,7 +165,6 @@ export default function BatchTable(props){
                                                 component="a"
                                                 w={'200'}
                                                 mt={'2'}
-                                                bg='var(--mantine-color-gray-0)'
                                                 c='var(--theme-primary-color-9)'
                                                 leftSection={<IconCheckbox style={{ width: rem(14), height: rem(14) }} />}
                                                 onClick={(event) => {
@@ -206,7 +205,6 @@ export default function BatchTable(props){
                                                 component="a"
                                                 w={'200'}
                                                 mt={'2'}
-                                                bg='var(--mantine-color-gray-0)'
                                                 c='var(--theme-primary-color-9)'
                                                 leftSection={<IconCheckbox style={{ width: rem(14), height: rem(14) }} />}
                                                 onClick={(event) => {
@@ -224,9 +222,7 @@ export default function BatchTable(props){
                                                                 url: 'production/batch/approve/'+item.id,
                                                                 data: {}
                                                             }
-
                                                             const resultAction = await dispatch(storeEntityData(value));
-
                                                             if (storeEntityData.rejected.match(resultAction)) {
                                                                 showNotificationComponent(resultAction.payload?.message || t('ErrorOccurred'), 'red');
                                                             } else if (storeEntityData.fulfilled.match(resultAction)) {
@@ -248,7 +244,6 @@ export default function BatchTable(props){
                                                 component="a"
                                                 w={'200'}
                                                 mt={'2'}
-                                                bg='var(--mantine-color-gray-0)'
                                                 c={'green'}
                                                 onClick={() => {
                                                     navigate(`/production/batch/${item.id}`)

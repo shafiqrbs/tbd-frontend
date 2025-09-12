@@ -4,6 +4,11 @@
 
 :root {
 
+    --theme-text-color-9: var(var(--mantine-color-dark-9));
+    --theme-text-color-8: var(var(--mantine-color-dark-8));
+
+
+
     --theme-primary-color-0: var(--mantine-color-blue-0);
     --theme-primary-color-1: var(--mantine-color-blue-1);
     --theme-primary-color-2: var(--mantine-color-blue-2);
