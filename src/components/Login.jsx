@@ -45,6 +45,10 @@ export default function Login() {
         },
     });
 
+// Add this function to track loading state
+    const [isLoading, setIsLoading] = useState(true);
+
+// Modify the login function to handle localStorage more efficiently
     function login(data) {
         setSpinner(true);
         axios({
@@ -58,27 +62,28 @@ export default function Login() {
             },
             data: data
         })
-            .then(res => {
-                setTimeout(() => {
-                    if (res.data.status === 200) {
-                        localStorage.setItem("user", JSON.stringify(res.data.data));
-                        const allLocal = commonDataStoreIntoLocalStorage(res.data.data.id)
-                        const orderProcess = orderProcessDropdownLocalDataStore(res.data.data.id)
+            .then(async res => {
+                if (res.data.status === 200) {
+                    localStorage.setItem("user", JSON.stringify(res.data.data));
 
-                        setErrorMessage('')
-                        setSpinner(false)
-                        navigate('/')
-                    }
-                    setErrorMessage(res.data.message)
+                    // Wait for all data to be stored before navigating
+                    await Promise.all([
+                        commonDataStoreIntoLocalStorage(res.data.data.id),
+                        orderProcessDropdownLocalDataStore(res.data.data.id)
+                    ]);
+
+                    setErrorMessage('');
                     setSpinner(false);
-                }, 500)
+                    navigate('/');
+                } else {
+                    setErrorMessage(res.data.message);
+                    setSpinner(false);
+                }
             })
             .catch(function (error) {
-                setTimeout(() => {
-                    setSpinner(false);
-                    console.log(error)
-                }, 500)
-            })
+                setSpinner(false);
+                console.log(error);
+            });
     }
 
     useHotkeys([['alt+n', () => {

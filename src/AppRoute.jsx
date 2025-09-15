@@ -92,10 +92,12 @@ import DailySalesWarehouseReport from "./components/modules/report/inventory/Dai
 
 import AccountingDashboard from "./components/modules/accounting/dashboard/AccountingDashboard";
 import _MatrixUpdate from "./components/modules/procurement/requistion-matrix/_MatrixUpdate.jsx";
+import {AuthProvider} from "./components/context/AuthContext.jsx";
 
 
 function AppRoute() {
 	return (
+        <AuthProvider>
 		<Routes>
 			<Route path="/login" element={<Login />} />
 			<Route path="/" element={<Layout />}>
@@ -796,6 +798,7 @@ function AppRoute() {
 				</Route>
 			</Route>
 		</Routes>
+        </AuthProvider>
 	);
 }
 

@@ -1,23 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {Navigate, Outlet, useLocation, useNavigate} from "react-router-dom";
-import {useDisclosure, useViewportSize} from "@mantine/hooks";
-import {AppShell} from "@mantine/core";
+import React, { useEffect, useState } from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useDisclosure, useViewportSize } from "@mantine/hooks";
+import { AppShell, LoadingOverlay } from "@mantine/core";
 import Header from "./Header";
 import Footer from "./Footer";
 import MainDashboard from "../modules/dashboard/MainDashboard";
+import { useAuth } from "../context/AuthContext"; // Import the context
 
 const Layout = () => {
     const [isOnline, setNetworkStatus] = useState(navigator.onLine);
-    const {height, width} = useViewportSize();
-    const navigate = useNavigate();
+    const { height, width } = useViewportSize();
     const location = useLocation();
     const paramPath = window.location.pathname;
-
-    // check authentication
-    const user = JSON.parse(localStorage.getItem("user") || '{}');
-    if (!user) {
-        return <Navigate replace to="/login" />;
-    }
+    const { user, configData, isLoading } = useAuth(); // Use auth context
 
     // Handle network status
     useEffect(() => {
@@ -30,39 +25,24 @@ const Layout = () => {
         };
     }, []);
 
-    // Automatically log the user out after 30 minute
-    /*useEffect(() => {
-        const timeout = setTimeout(() => {
-            localStorage.clear();
-            navigate("/login");
-        }, 1800000);
-        return () => clearTimeout(timeout);
-    }, [navigate]);*/
-
-
-
     const headerHeight = 42;
     const footerHeight = 58;
     const padding = 0;
     const mainAreaHeight = height - headerHeight - footerHeight - padding;
 
-    const [configData, setConfigData] = useState(null);
-    useEffect(() => {
-        const checkConfigData = () => {
-            const storedConfigData = localStorage.getItem('config-data');
-            if (storedConfigData) {
-                setConfigData(JSON.parse(storedConfigData));
-            } else {
-                console.log("redirect to login from Layout");
-                navigate("/login");
-            }
-        };
+    if (isLoading) {
+        return <LoadingOverlay visible={true} />;
+    }
 
-        // Adding a short delay before checking localStorage (e.g., 500ms)
-        const timeoutId = setTimeout(checkConfigData, 500);
+    if (!user) {
+        return <Navigate replace to="/login" />;
+    }
 
-        return () => clearTimeout(timeoutId); // Clear the timeout if the component unmounts
-    }, [navigate]);  // Notice we're also adding `navigate` dependency here
+    if (!configData) {
+        // Optional: handle missing config data
+        console.log("Config data not available");
+        return <div>Loading configuration...</div>;
+    }
 
     return (
         <AppShell padding="0">
@@ -80,4 +60,3 @@ const Layout = () => {
 };
 
 export default Layout;
-

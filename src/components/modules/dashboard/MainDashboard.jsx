@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-	rem,
-	Text,
-	Card,
-	SimpleGrid,
-	Container,
-	useMantineTheme,
-	List,
-	ThemeIcon,
-	ScrollArea,
-	Grid,
-	NavLink,
-	Box,
-	Image,
-	Tooltip,
-	Title,
-	Divider,
+    rem,
+    Text,
+    Card,
+    SimpleGrid,
+    Container,
+    useMantineTheme,
+    List,
+    ThemeIcon,
+    ScrollArea,
+    Grid,
+    NavLink,
+    Box,
+    Image,
+    Tooltip,
+    Title,
+    Divider, LoadingOverlay,
 } from "@mantine/core";
 import {
 	IconUsers,
@@ -46,18 +46,36 @@ import requisition from "../../../assets/images/pos/requisition.png";
 import production from "../../../assets/images/pos/production.png";
 import getDomainConfig from "../../global-hook/config-data/getDomainConfig.js";
 import getAccessControl from "../../global-hook/access_control/getAccessControl";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 function MainDashboard(props) {
-	const { t, i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const height = props.height - 105;
+    const { domainConfig, fetchDomainConfig } = getDomainConfig();
+    const { configData, isLoading } = useAuth(); // Use auth context instead of localStorage
+    const navigate = useNavigate();
+    const theme = useMantineTheme();
+    const userRole = getAccessControl();
+
+    if (isLoading) {
+        return <LoadingOverlay visible={true} />;
+    }
+
+    if (!configData) {
+        // Config data should already be available from AuthContext
+        console.log("Configuration not available");
+        return <div>Loading configuration...</div>;
+    }
+	/*const { t, i18n } = useTranslation();
 	const height = props.height - 105; //TabList height 104
 	const { domainConfig, fetchDomainConfig } = getDomainConfig();
 	let configData = domainConfig?.inventory_config;
 
 	const navigate = useNavigate();
 	const theme = useMantineTheme();
-	/* start for user role check */
+	/!* start for user role check *!/
 
-	const userRole = getAccessControl();
+	const userRole = getAccessControl();*/
 
 	useEffect(() => {
 		const checkDomainConfig = () => {
