@@ -64,8 +64,6 @@ function _SalesTable(props) {
     const [indexData,setIndexData] = useState([])
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
 
-
-
     useEffect(() => {
         dispatch(setSearchKeyword(''))
     }, [])
@@ -85,16 +83,17 @@ function _SalesTable(props) {
         setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
         setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].invoice)
     }, [indexData.data])
+
     useHotkeys([['alt+n', () => {
         navigate('/inventory/sales-invoice');
-    }]], []);
+    }]], []);   
 
     const rows = salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element, index) => (
         <Table.Tr key={element.name}>
             <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
             <Table.Td ta="left" fz="xs" width={'300'}>{element.name}</Table.Td>
             {
-                isWarehouse==1 &&
+                isWarehouse === 1 &&
                 <Table.Td ta="center" fz="xs" width={'60'}>{element.warehouse_name}</Table.Td>
             }
             <Table.Td ta="center" fz="xs" width={'60'}>{element.bonus_quantity}</Table.Td>
@@ -338,6 +337,7 @@ function _SalesTable(props) {
                                                 </>
                                             )
                                         },
+                                        { accessor: 'process', title: t("Process") },
                                         {
                                             accessor: "action",
                                             title: t("Action"),
@@ -345,9 +345,31 @@ function _SalesTable(props) {
                                             render: (data) => (
 
                                                 <Group gap={4} justify="right" wrap="nowrap">
+                                                    {
+                                                        (data.customer_group === 'Domain' && !data.approved_by_id && !data.is_domain_sales_completed) && data.process === 'Created' &&
+
+                                                    <Button component="a" size="compact-xs" radius="xs"
+                                                            variant="filled" fw={'100'} fz={'12'}
+                                                            color='var(--theme-secondary-color-8)'
+                                                            mr={'4'}
+                                                            onClick={()=>{
+                                                                modals.openConfirmModal({
+                                                                    title: (<Text size="md"> {t("SalesConformation")}</Text>),
+                                                                    children: (
+                                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                    labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                    onCancel: () => console.log('Cancel'),
+                                                                    onConfirm: () => {
+                                                                        handleCustomerSalesProcess(data.id,'Domain')
+                                                                    },
+                                                                });
+                                                            }}
+                                                    >{t('Approve')}
+                                                    </Button>
+                                                    }
                                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                                         <Menu.Target>
-                                                            <ActionIcon size="sm" variant="outline" color='var(--theme-primary-color-6)' radius="xl" aria-label="Settings">
+                                                            <ActionIcon size="sm" variant="transparent" color='red' radius="xl" aria-label="Settings">
                                                                 <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Menu.Target>
@@ -368,7 +390,6 @@ function _SalesTable(props) {
                                                                         });
                                                                     }}
                                                                     component="a"
-                                                                    color="green"
                                                                     leftSection={
                                                                         <IconCopy
                                                                             style={{
@@ -381,37 +402,6 @@ function _SalesTable(props) {
                                                                     {t("Copy")}
                                                                 </Menu.Item>
                                                             }
-
-                                                            {
-                                                                (data.customer_group === 'Domain' && !data.approved_by_id && !data.is_domain_sales_completed) &&
-                                                                <Menu.Item
-                                                                    onClick={()=>{
-                                                                        modals.openConfirmModal({
-                                                                            title: (<Text size="md"> {t("SalesConformation")}</Text>),
-                                                                            children: (
-                                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
-                                                                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                                                                            onCancel: () => console.log('Cancel'),
-                                                                            onConfirm: () => {
-                                                                                handleCustomerSalesProcess(data.id,'Domain')
-                                                                            },
-                                                                        });
-                                                                    }}
-                                                                    component="a"
-                                                                    color="green"
-                                                                    leftSection={
-                                                                        <IconChevronsRight
-                                                                            style={{
-                                                                                width: rem(14),
-                                                                                height: rem(14)
-                                                                            }}/>
-                                                                    }
-                                                                    w={'200'}
-                                                                >
-                                                                    {t("Approve")}
-                                                                </Menu.Item>
-                                                            }
-
                                                             {
                                                                 (data.customer_group !=='Domain' && !data.approved_by_id) &&
                                                                 <Menu.Item
@@ -515,10 +505,10 @@ function _SalesTable(props) {
                                     height={tableHeight}
                                     scrollAreaProps={{ type: 'never' }}
                                     rowBackgroundColor={(item) => {
-                                        if (item.invoice === selectedRow) return '#e2c2c263';
+                                        if (item.invoice === selectedRow) return 'var(--theme-secondary-color-0)';
                                     }}
                                     rowColor={(item) => {
-                                        if (item.invoice === selectedRow) return 'red.6';
+                                        if (item.invoice === selectedRow);
                                     }}
                                 />
                             </Box>

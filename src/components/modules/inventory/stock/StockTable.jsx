@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext,Link } from "react-router-dom";
 import {
   Group,
   Box,
@@ -10,7 +10,7 @@ import {
   rem,
   Text,
   Image,
-  Modal,
+  Modal, Grid,Tabs
 } from "@mantine/core";
 
 import { DataTable } from "mantine-datatable";
@@ -21,10 +21,11 @@ import {
   setFetching,
 } from "../../../../store/core/crudSlice.js";
 import tableCss from "../../../../assets/css/Table.module.css";
+import classes from "../../../../assets/css/TabCustomize.module.css";
 import __StockSearch from "./__StockSearch.jsx";
 import { setDeleteMessage } from "../../../../store/inventory/crudSlice.js";
 import OverviewModal from "../product-overview/OverviewModal.jsx";
-import { IconCheck, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
+import { IconCheck, IconDotsVertical, IconTrashX ,IconListDetails,IconListCheck,IconList} from "@tabler/icons-react";
 import { showEntityData } from "../../../../store/core/crudSlice.js";
 import { notifications } from "@mantine/notifications";
 import axios from "axios";
@@ -40,6 +41,7 @@ import { Carousel } from "@mantine/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import { useForm } from "@mantine/form";
+import {useParams} from "react-router";
 
 function StockTable(props) {
   const { categoryDropdown, locationData } = props;
@@ -88,8 +90,13 @@ function StockTable(props) {
     }, 5000);
   };
 
-  const [downloadStockXLS, setDownloadStockXls] = useState(false);
+  const { slug } = useParams();
+  const [activeTab, setActiveTab] = useState(slug || "allstocks");
 
+  useEffect(() => {
+    if (slug) setActiveTab(slug);
+  }, [slug]);
+  const [downloadStockXLS, setDownloadStockXls] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const value = {
@@ -105,6 +112,7 @@ function StockTable(props) {
           page: searchKeyword ? 1: page,
           offset: perPage,
           type: "stock",
+          product_nature: activeTab,
         },
       };
 
@@ -123,7 +131,7 @@ function StockTable(props) {
     };
 
     fetchData();
-  }, [fetching, downloadStockXLS, searchKeyword, productFilterData, page]);
+  }, [fetching, activeTab,downloadStockXLS, searchKeyword, productFilterData, page]);
 
   useEffect(() => {
     dispatch(setDeleteMessage(""));
@@ -194,9 +202,6 @@ function StockTable(props) {
     },
   });
 
-
-
-
   const [sortStatus, setSortStatus] = useState({
     columnAccessor: 'product_name',
     direction: 'asc'
@@ -233,11 +238,58 @@ function StockTable(props) {
         mb={"xs"}
         className={"boxBackground borderRadiusAll"}
       >
-        <__StockSearch
-          module={"stock"}
-          setDownloadStockXls={setDownloadStockXls}
-          categoryDropdown={categoryDropdown}
-        />
+        <Grid columns={24} gutter={{ base: 8 }}>
+          <Grid.Col span={12}>
+            <Tabs variant="unstyled" defaultValue={activeTab} classNames={classes}>
+              <Tabs defaultValue="allstocks">
+                <Tabs.List grow>
+                  <Tabs.Tab
+                      value="allstocks"
+                      component={Link}
+                      to="/inventory/stock/allstocks"
+                      leftSection={<IconListCheck size={16} />}
+                  >
+                    {t('AllStocks')}
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                      value="production"
+                      component={Link}
+                      to="/inventory/stock/production"
+                      leftSection={<IconListCheck size={16} />}
+                  >
+
+                    {t('Production')}
+                  </Tabs.Tab>
+
+                  <Tabs.Tab
+                      value="stockable"
+                      component={Link}
+                      to="/inventory/stock/stockable"
+                      leftSection={<IconList size={16} />}
+                  >{t('Stockable')}
+
+                  </Tabs.Tab>
+
+                  <Tabs.Tab
+                      value="rawmaterial"
+                      component={Link}
+                      to="/inventory/stock/rawmaterial"
+                      leftSection={<IconListDetails size={16} />}
+                  >
+                    {t('RawMaterial')}
+                  </Tabs.Tab>
+                </Tabs.List>
+              </Tabs>
+            </Tabs>
+          </Grid.Col>
+          <Grid.Col span={12}>
+            <__StockSearch
+                module={"stock"}
+                setDownloadStockXls={setDownloadStockXls}
+                categoryDropdown={categoryDropdown}
+            />
+          </Grid.Col>
+        </Grid>
       </Box>
       <Box className={"borderRadiusAll"}>
         <DataTable
@@ -286,8 +338,6 @@ function StockTable(props) {
                   >
                     {item.unit_name}
                   </Button>
-
-
               ),
             },
             {
@@ -296,13 +346,16 @@ function StockTable(props) {
               textAlign: "center",
             },
             {
+              accessor: "average_price",
+              title: t("Avg.Purchase"),
+              textAlign: "center",
+            },
+            {
               accessor: "sales_price",
               title: t("SalesPrice"),
               textAlign: "center",
             },
             { accessor: "vat", title: t("Vat") },
-
-
             {
               accessor: "status",
               title: t("Status"),

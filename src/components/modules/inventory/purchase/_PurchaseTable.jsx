@@ -89,6 +89,8 @@ function _PurchaseTable() {
         );
     }, [indexData.data]);
 
+    console.log(purchaseViewData);
+
     const rows =
         purchaseViewData &&
         purchaseViewData.purchase_items &&
@@ -101,7 +103,7 @@ function _PurchaseTable() {
                     {element.item_name}
                 </Table.Td>
                 {
-                    isWarehouse==1 &&
+                    isWarehouse == 1 &&
                     <Table.Td ta="center" fz="xs" width={"60"}>
                         {element.warehouse_name}
                     </Table.Td>
@@ -303,6 +305,7 @@ function _PurchaseTable() {
                                         {accessor: "vendor_name", title: t("Vendor")},
                                         {accessor: "total", title: t("Total")},
                                         {accessor: "payment", title: t("Payment")},
+                                        {accessor: "mode", title: t("Mode")},
                                         {accessor: "due", title: t("Payable"),
                                             render: (item) => item.total - item.payment,
                                         },
@@ -326,6 +329,19 @@ function _PurchaseTable() {
                                             textAlign: "right",
                                             render: (data) => (
                                                 <Group gap={4} justify="right" wrap="nowrap">
+                                                    {
+                                                        !data.approved_by_id &&
+                                                        <Button component="a" size="compact-xs" radius="xs"
+                                                                variant="filled" fw={'100'} fz={'12'}
+                                                                color='var(--theme-secondary-color-8)'
+                                                                mr={'4'}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    handlePurchaseApprove(data.id)
+                                                                }}
+                                                        >{t('Approve')}
+                                                        </Button>
+                                                    }
                                                     <Menu
                                                         position="bottom-end"
                                                         offset={3}
@@ -337,8 +353,8 @@ function _PurchaseTable() {
                                                         <Menu.Target>
                                                             <ActionIcon
                                                                 size="sm"
-                                                                variant="outline"
-                                                                color='var(--theme-primary-color-6)'
+                                                                variant="transparent"
+                                                                color='red'
                                                                 radius="xl"
                                                                 aria-label="Settings"
                                                             >
@@ -366,7 +382,6 @@ function _PurchaseTable() {
                                                                         });
                                                                     }}
                                                                     component="a"
-                                                                    color="green"
                                                                     leftSection={
                                                                         <IconCopy
                                                                             style={{
@@ -379,52 +394,6 @@ function _PurchaseTable() {
                                                                     {t("Copy")}
                                                                 </Menu.Item>
                                                             }
-
-                                                            {
-                                                                !data.approved_by_id &&
-                                                                <>
-                                                                    <Menu.Item
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            handlePurchaseApprove(data.id)
-                                                                        }}
-                                                                        color="green"
-                                                                        component="a"
-                                                                        w={"200"}
-                                                                        leftSection={
-                                                                            <IconChevronsRight
-                                                                                style={{
-                                                                                    width: rem(14),
-                                                                                    height: rem(14)
-                                                                                }}/>
-                                                                        }
-                                                                    >
-                                                                        {t("Approve")}
-                                                                    </Menu.Item>
-
-                                                                    <Menu.Item
-                                                                        onClick={() => {
-                                                                            navigate(
-                                                                                `/inventory/purchase/edit/${data.id}`
-                                                                            );
-                                                                        }}
-                                                                        target="_blank"
-                                                                        component="a"
-                                                                        w={"200"}
-                                                                        leftSection={
-                                                                            <IconPencil
-                                                                                style={{
-                                                                                    width: rem(14),
-                                                                                    height: rem(14)
-                                                                                }}
-                                                                            />
-                                                                        }
-                                                                    >
-                                                                        {t("Edit")}
-                                                                    </Menu.Item>
-                                                                </>
-                                                            }
-
                                                             <Menu.Item
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
@@ -445,7 +414,28 @@ function _PurchaseTable() {
                                                             </Menu.Item>
 
                                                             {
-                                                                !data.approved_by_id &&
+                                                                !data.approved_by_id && data.is_requisition !== 1 &&
+                                                                <>
+                                                                <Menu.Item
+                                                                    onClick={() => {
+                                                                        navigate(
+                                                                            `/inventory/purchase/edit/${data.id}`
+                                                                        );
+                                                                    }}
+                                                                    target="_blank"
+                                                                    component="a"
+                                                                    w={"200"}
+                                                                    leftSection={
+                                                                        <IconPencil
+                                                                            style={{
+                                                                                width: rem(14),
+                                                                                height: rem(14)
+                                                                            }}
+                                                                        />
+                                                                    }
+                                                                >
+                                                                    {t("Edit")}
+                                                                </Menu.Item>
                                                                 <Menu.Item
                                                                     target="_blank"
                                                                     component="a"
@@ -488,10 +478,11 @@ function _PurchaseTable() {
                                                                             style={{width: rem(14), height: rem(14)}}
                                                                         />
                                                                     }
-                                                                >
-                                                                    {t("Delete")}
+                                                                > {t("Delete")}
                                                                 </Menu.Item>
+                                                                </>
                                                             }
+
                                                         </Menu.Dropdown>
                                                     </Menu>
                                                 </Group>
@@ -737,7 +728,7 @@ function _PurchaseTable() {
                                     {t("Pos")}
                                 </Button>
                                 {
-                                    !purchaseViewData?.approved_by_id &&
+                                    !purchaseViewData?.approved_by_id && purchaseViewData?.is_requisition !== 1 &&
 
                                     <Button
                                         onClick={() => {

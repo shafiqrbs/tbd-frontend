@@ -7,7 +7,7 @@ import {Box, Switch, Flex, Group, Button, Menu, ActionIcon, rem, Text, Badge} fr
 import { DataTable } from "mantine-datatable";
 import tableCss from '../../../../assets/css/Table.module.css';
 import { modals } from "@mantine/modals";
-import {IconDotsVertical, IconEye, IconFilePencil, IconTrashX} from '@tabler/icons-react'
+import {IconDotsVertical, IconEye, IconFilePencil, IconTrashX,IconCheckbox} from '@tabler/icons-react'
 import {storeEntityData , getIndexEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import { deleteEntityData } from "../../../../store/inventory/crudSlice.js";
@@ -101,6 +101,7 @@ export default function BatchTable(props){
                         { accessor: 'issue_date', title: t('IssueDate') },
                         { accessor: 'invoice', title: t('Invoice') },
                         { accessor: 'created_by_name', title: t('CreatedBy') },
+                        { accessor: 'batch_no', title: t('RequisitionBatch') },
                         {
                             accessor: 'status',
                             title: t("Status"),
@@ -152,7 +153,7 @@ export default function BatchTable(props){
                                     </Group>
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                     <Menu.Target>
-                                        <ActionIcon size="sm" variant="outline" color='var(--theme-primary-color-6)' radius="xl" aria-label="Settings">
+                                        <ActionIcon size="sm" variant="transparent" color='red' radius="sm" aria-label="Settings">
                                             <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
                                         </ActionIcon>
                                     </Menu.Target>
@@ -165,8 +166,8 @@ export default function BatchTable(props){
                                                 component="a"
                                                 w={'200'}
                                                 mt={'2'}
-                                                bg={'blue.1'}
-                                                c={'blue.6'}
+                                                c='var(--theme-primary-color-9)'
+                                                leftSection={<IconCheckbox style={{ width: rem(14), height: rem(14) }} />}
                                                 onClick={(event) => {
                                                     modals.openConfirmModal({
                                                         title: (
@@ -195,7 +196,7 @@ export default function BatchTable(props){
                                                     });
                                                 }}
                                             >
-                                                {t('ReceiveProduction')}
+                                                {t('Receive')}
                                             </Menu.Item>
                                         }
                                         {
@@ -205,8 +206,8 @@ export default function BatchTable(props){
                                                 component="a"
                                                 w={'200'}
                                                 mt={'2'}
-                                                bg={'yellow.1'}
-                                                c={'yellow.6'}
+                                                c='var(--theme-primary-color-9)'
+                                                leftSection={<IconCheckbox style={{ width: rem(14), height: rem(14) }} />}
                                                 onClick={(event) => {
                                                     modals.openConfirmModal({
                                                         title: (
@@ -222,9 +223,7 @@ export default function BatchTable(props){
                                                                 url: 'production/batch/approve/'+item.id,
                                                                 data: {}
                                                             }
-
                                                             const resultAction = await dispatch(storeEntityData(value));
-
                                                             if (storeEntityData.rejected.match(resultAction)) {
                                                                 showNotificationComponent(resultAction.payload?.message || t('ErrorOccurred'), 'red');
                                                             } else if (storeEntityData.fulfilled.match(resultAction)) {
@@ -246,12 +245,11 @@ export default function BatchTable(props){
                                                 component="a"
                                                 w={'200'}
                                                 mt={'2'}
-                                                bg={'green.1'}
-                                                c={'green.6'}
+                                                c={'green'}
                                                 onClick={() => {
                                                     navigate(`/production/batch/${item.id}`)
                                                 }}
-                                                rightSection={<IconFilePencil style={{ width: rem(14), height: rem(14) }} />}
+                                                leftSection={<IconFilePencil style={{ width: rem(14), height: rem(14) }} />}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
@@ -262,8 +260,8 @@ export default function BatchTable(props){
                                             component="a"
                                             w={'200'}
                                             mt={'2'}
-                                            bg={'red.1'}
-                                            c={'red.6'}
+                                            bg='var(--mantine-color-gray-0)'
+                                            c={'red'}
                                             onClick={() => {
                                                 modals.openConfirmModal({
                                                     title: (
@@ -280,7 +278,7 @@ export default function BatchTable(props){
                                                     },
                                                 });
                                             }}
-                                            rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                            leftSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
                                         >
                                             {t('Delete')}
                                         </Menu.Item>

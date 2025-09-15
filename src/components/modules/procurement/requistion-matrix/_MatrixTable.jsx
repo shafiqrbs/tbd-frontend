@@ -4,7 +4,7 @@ import {
     Grid,
     Stack,
     Text,
-    Button, rem, Table, Badge, Menu, LoadingOverlay, ScrollArea,
+    Button, rem, Table, Badge, Menu, LoadingOverlay, ScrollArea, Group,
 } from "@mantine/core";
 import {DataTable} from "mantine-datatable";
 import {useDispatch, useSelector} from "react-redux";
@@ -12,7 +12,7 @@ import React, {useRef, useState, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import {
-    IconDotsVertical, IconChevronsRight, IconTrashX, IconPrinter, IconReceipt, IconEdit,
+    IconDotsVertical, IconChevronsRight, IconTrashX, IconPrinter, IconReceipt, IconEdit, IconCheckbox,
 } from "@tabler/icons-react";
 import {deleteEntityData, getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
 import {storeEntityData} from "../../../../store/core/crudSlice.js";
@@ -93,12 +93,14 @@ export default function _MatrixTable() {
         fetchData();
     }, [page, fetching]);
 
+
+
     useEffect(() => {
-        setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].batch_no)
-        setRequisitionMatrixViewData(
-            indexData.data && indexData.data[0] && indexData.data[0]
-        );
+        setRequisitionMatrixViewData(indexData.data && indexData.data[0] && indexData.data[0])
+        setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].id)
     }, [indexData.data])
+    console.log(indexData.data)
+
     const rows =
         requisitionMatrixViewData &&
         requisitionMatrixViewData?.requisition_matrix &&
@@ -106,9 +108,6 @@ export default function _MatrixTable() {
             <Table.Tr key={element.id}>
                 <Table.Td fz="xs" width={"20"}>
                     {index + 1}
-                </Table.Td>
-                <Table.Td ta="left" fz="xs" width={"300"}>
-                    {element.customer_name}
                 </Table.Td>
                 <Table.Td ta="left" fz="xs" width={"300"}>
                     {element.display_name}
@@ -122,14 +121,8 @@ export default function _MatrixTable() {
                 <Table.Td ta="center" fz="xs" width={"60"}>
                     {element.approved_quantity}
                 </Table.Td>
-                <Table.Td ta="center" fz="xs" width={"60"}>
-                    {element.received_quantity}
-                </Table.Td>
-                <Table.Td ta="center" fz="xs" width={"60"}>
-                    {element.vendor_stock_quantity}
-                </Table.Td>
                 <Table.Td ta="right" fz="xs" width={"80"}>
-                    {element.sub_total}
+                    {element.sub_Total}
                 </Table.Td>
             </Table.Tr>
         ));
@@ -202,32 +195,8 @@ export default function _MatrixTable() {
             fetchData();
         }
     };
-
-
     return (
         <>
-            <Box>
-                <Grid columns={24} gutter={{base: 8}}>
-                    <Grid.Col span={24}>
-                        <Box
-                            pl={`xs`}
-                            pb={"4"}
-                            pr={"xs"}
-                            pt={"4"}
-                            mb={"4"}
-                            className={"boxBackground borderRadiusAll"}
-                        >
-                            <Grid>
-                                <Grid.Col>
-                                    <Stack>
-                                        <__RequisitionMatrixSearch checkList={1} customerId={1} setFetching={setFetching}/>
-                                    </Stack>
-                                </Grid.Col>
-                            </Grid>
-                        </Box>
-                    </Grid.Col>
-                </Grid>
-            </Box>
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
                     <Grid.Col span={1}>
@@ -235,235 +204,211 @@ export default function _MatrixTable() {
                     </Grid.Col>
                     <Grid.Col span={14}>
                         <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                            <Box className="borderRadiusAll">
-                                <DataTable
-                                    classNames={{
-                                        root: tableCss.root,
-                                        table: tableCss.table,
-                                        header: tableCss.header,
-                                        footer: tableCss.footer,
-                                        pagination: tableCss.pagination,
-                                    }}
-                                    records={indexData.data}
-                                    columns={[
-                                        {
-                                            accessor: "id",
-                                            title: t("S/N"),
-                                            textAlign: "left",
-                                            render: (item) => indexData.data.indexOf(item) + 1,
-                                        },
-                                        {
-                                            accessor: "created_date",
-                                            title: t("Created"),
-                                        },
-                                        {
-                                            accessor: "generate_date",
-                                            title: t("Generated"),
-                                        },
-                                        {
-                                            accessor: "total",
-                                            title: t("Total"),
-                                        },
-                                        {
-                                            accessor: "created_name",
-                                            title: t("Name"),
-                                        },
-                                        {
-                                            accessor: "batch_no",
-                                            title: t("Invoice"),
-                                            textAlign: "center",
-                                            render: (item) => (
-                                                <Text
-                                                    key={item.id}
-                                                    component="a"
-                                                    size="sm"
-                                                    variant="subtle"
-                                                    c="red.4"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        setLoading(true)
-                                                        setSelectedRow(item.batch_no)
-                                                        setRequisitionMatrixViewData(item)
-                                                    }}
-                                                    style={{cursor: "pointer"}}
+                            <__RequisitionMatrixSearch checkList={1} customerId={1} setFetching={setFetching}/>
+                        </Box>
+                        <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+                            <DataTable
+                                classNames={{
+                                    root: tableCss.root,
+                                    table: tableCss.table,
+                                    header: tableCss.header,
+                                    footer: tableCss.footer,
+                                    pagination: tableCss.pagination,
+                                }}
+                                records={indexData.data}
+                                columns={[
+                                    {
+                                        accessor: "id",
+                                        title: t("S/N"),
+                                        textAlign: "left",
+                                        render: (item) => indexData.data.indexOf(item) + 1,
+                                    },
+                                    {
+                                        accessor: "created_date",
+                                        title: t("Created"),
+                                    },
+                                    {
+                                        accessor: "generate_date",
+                                        title: t("Generated"),
+                                    },
+                                    {
+                                        accessor: "total",
+                                        title: t("Total"),
+                                    },
+                                    {
+                                        accessor: "created_name",
+                                        title: t("Name"),
+                                    },
+                                    {
+                                        accessor: "batch_no",
+                                        title: t("Invoice"),
+                                        textAlign: "center",
+                                        render: (item) => (
+                                            <Text
+                                                key={item.id}
+                                                component="a"
+                                                size="sm"
+                                                variant="subtle"
+                                                c="red.4"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setLoading(true)
+                                                    setSelectedRow(item.id)
+                                                    setRequisitionMatrixViewData(item)
+                                                }}
+                                                style={{cursor: "pointer"}}
+                                            >
+                                                {item.batch_no}
+                                            </Text>
+                                        ),
+                                    },
+                                    {
+                                        accessor: "process",
+                                        title: t("Status"),
+                                        render: (item) => {
+                                            const colorMap = {
+                                                Created: "blue",
+                                                Approved: "red",
+                                            };
+
+                                            const badgeColor = colorMap[item.process] || "gray";
+
+                                            return item.process && <Badge color={badgeColor}>{item.process}</Badge>;
+                                        }
+                                    },
+                                    {
+                                        accessor: "action",
+                                        title: t("Action"),
+                                        textAlign: "right",
+                                        render: (data) => (
+                                            <Group gap={4} justify="right" wrap="nowrap">
+                                                <Group gap={4} justify="right" wrap="nowrap">
+                                                    {
+                                                        data.process === 'Confirmed' &&
+                                                        <Button component="a" size="compact-xs" radius="xs"
+                                                                variant="filled" fw={'100'} fz={'12'}
+                                                                color='var(--theme-secondary-color-8)'
+                                                                mr={'4'}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    setBoardId(data.id)
+                                                                    setProductionProcessModal(true)
+                                                                }}>{t('Production')}</Button>
+                                                    }
+                                                    { data.process === 'Created' &&
+                                                        <Button component="a" size="compact-xs" radius="xs"
+                                                                variant="filled" fw={'100'} fz={'12'}
+                                                                color='var(--theme-secondary-color-8)'
+                                                                mr={'4'}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    handleRequisitionMatrixApprove(data.id)
+                                                                }}>{t('Approve')}</Button>
+                                                    }
+
+                                                </Group>
+                                                <Menu
+                                                    position="bottom-end"
+                                                    offset={3}
+                                                    withArrow
+                                                    trigger="hover"
+                                                    openDelay={100}
+                                                    closeDelay={400}
                                                 >
-                                                    {item.batch_no}
-                                                </Text>
-                                            ),
-                                        },
-                                        {
-                                            accessor: "process",
-                                            title: t("Status"),
-                                            render: (item) => {
-                                                const colorMap = {
-                                                    Created: "blue",
-                                                    Approved: "red",
-                                                };
+                                                    <Menu.Target>
+                                                        <ActionIcon
+                                                            size="sm"
+                                                            variant="transparent"
+                                                            color='red'
+                                                            radius="xl"
+                                                            aria-label="Settings"
+                                                        >
+                                                            <IconDotsVertical
+                                                                style={{width: 18, height: 18}}
+                                                                stroke={1.5}
+                                                            />
+                                                        </ActionIcon>
+                                                    </Menu.Target>
 
-                                                const badgeColor = colorMap[item.process] || "gray";
-
-                                                return item.process && <Badge color={badgeColor}>{item.process}</Badge>;
-                                            }
-                                        },
-                                        {
-                                            accessor: "action",
-                                            title: t("Action"),
-                                            textAlign: "right",
-                                            render: (data) => (
-                                                <Box>
-                                                    <Menu
-                                                        position="bottom-end"
-                                                        offset={3}
-                                                        withArrow
-                                                        trigger="hover"
-                                                        openDelay={100}
-                                                        closeDelay={400}
-                                                    >
-                                                        <Menu.Target>
-                                                            <ActionIcon
-                                                                size="sm"
-                                                                variant="outline"
-                                                                color='var(--theme-primary-color-6)'
-                                                                radius="xl"
-                                                                aria-label="Settings"
+                                                    <Menu.Dropdown>
+                                                        {
+                                                            data.process === 'Created' &&
+                                                            <Menu.Item
+                                                                onClick={() => {
+                                                                    navigate(`/procurement/requisition-board/${data.id}`)
+                                                                }}
+                                                                component="a"
+                                                                w={'200'}
                                                             >
-                                                                <IconDotsVertical
-                                                                    style={{width: 12, height: 12}}
-                                                                    stroke={1.5}
-                                                                />
-                                                            </ActionIcon>
-                                                        </Menu.Target>
-
-                                                        <Menu.Dropdown>
-                                                            {
-                                                                data.process === 'Created' &&
-                                                                <Menu.Item
-                                                                    onClick={() => {
-                                                                        navigate(`/procurement/requisition-board/${data.id}`)
-                                                                    }}
-                                                                    component="a"
-                                                                    w={'200'}
-                                                                >
-                                                                    {t('Edit')}
-                                                                </Menu.Item>
-                                                            }
-                                                            {
-                                                                data.process === 'Created' &&
-                                                                <>
-                                                                    <Menu.Item
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            handleRequisitionMatrixApprove(data.id)
-                                                                        }}
-                                                                        color="green"
-                                                                        component="a"
-                                                                        w={"200"}
-                                                                        leftSection={
-                                                                            <IconChevronsRight
-                                                                                style={{
-                                                                                    width: rem(14),
-                                                                                    height: rem(14)
-                                                                                }}/>
-                                                                        }
-                                                                    >
-                                                                        {t("Approve")}
-                                                                    </Menu.Item>
-                                                                </>
-                                                            }
-
-                                                            {
-                                                                data.process === 'Confirmed' &&
-                                                                <>
-                                                                    <Menu.Item
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            setBoardId(data.id)
-                                                                            setProductionProcessModal(true)
-                                                                        }}
-                                                                        color="green"
-                                                                        component="a"
-                                                                        w={"200"}
-                                                                        leftSection={
-                                                                            <IconChevronsRight
-                                                                                style={{
-                                                                                    width: rem(14),
-                                                                                    height: rem(14)
-                                                                                }}/>
-                                                                        }
-                                                                    >
-                                                                        {t("Production")}
-                                                                    </Menu.Item>
-                                                                </>
-                                                            }
-
-                                                            {
-                                                                data.process === 'New' &&
-                                                                <Menu.Item
-                                                                    onClick={() => {
-                                                                        modals.openConfirmModal({
-                                                                            title: (
-                                                                                <Text
-                                                                                    size="md"> {t("FormConfirmationTitle")}</Text>
-                                                                            ),
-                                                                            children: (
-                                                                                <Text
-                                                                                    size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                                            ),
-                                                                            labels: {
-                                                                                confirm: 'Confirm',
-                                                                                cancel: 'Cancel'
-                                                                            },
-                                                                            confirmProps: {color: 'red.6'},
-                                                                            onCancel: () => console.log('Cancel'),
-                                                                            onConfirm: async () => {
-                                                                                {
-                                                                                    const result = await dispatch(deleteEntityData('inventory/requisition/' + data.id)).unwrap();
-                                                                                    if (result.data.status === 200) {
-                                                                                        showNotificationComponent(t('DeleteSuccessfully'), 'teal', null, false, 1000)
-                                                                                        setFetching(true)
-                                                                                    } else {
-                                                                                        showNotificationComponent(t('FailedToUpdateData'), 'red', null, false, 1000)
-                                                                                    }
+                                                                {t('Edit')}
+                                                            </Menu.Item>
+                                                        }
+                                                        {
+                                                            data.process === 'New' &&
+                                                            <Menu.Item
+                                                                onClick={() => {
+                                                                    modals.openConfirmModal({
+                                                                        title: (
+                                                                            <Text
+                                                                                size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                        ),
+                                                                        children: (
+                                                                            <Text
+                                                                                size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                        ),
+                                                                        labels: {
+                                                                            confirm: 'Confirm',
+                                                                            cancel: 'Cancel'
+                                                                        },
+                                                                        onCancel: () => console.log('Cancel'),
+                                                                        onConfirm: async () => {
+                                                                            {
+                                                                                const result = await dispatch(deleteEntityData('inventory/requisition/' + data.id)).unwrap();
+                                                                                if (result.data.status === 200) {
+                                                                                    showNotificationComponent(t('DeleteSuccessfully'), 'teal', null, false, 1000)
+                                                                                    setFetching(true)
+                                                                                } else {
+                                                                                    showNotificationComponent(t('FailedToUpdateData'), 'red', null, false, 1000)
                                                                                 }
-                                                                            },
-                                                                        });
-                                                                    }}
-                                                                    component="a"
-                                                                    w={'200'}
-                                                                    mt={'2'}
-                                                                    bg={'red.1'}
-                                                                    c={'red.6'}
-                                                                    rightSection={<IconTrashX
-                                                                        style={{width: rem(14), height: rem(14)}}/>}
-                                                                >
-                                                                    {t('Delete')}
-                                                                </Menu.Item>
-                                                            }
-                                                        </Menu.Dropdown>
-                                                    </Menu>
-                                                </Box>
-                                            ),
-                                        },
-                                    ]}
-                                    fetching={fetching}
-                                    totalRecords={indexData.total}
-                                    recordsPerPage={perPage}
-                                    page={page}
-                                    onPageChange={(p) => {
-                                        setPage(p);
-                                    }}
-                                    loaderSize="xs"
-                                    loaderColor="grape"
-                                    height={tableHeight}
-                                    scrollAreaProps={{type: "never"}}
-                                    rowBackgroundColor={(item) => {
-                                        if (item.batch_no === selectedRow) return "#e2c2c263";
-                                    }}
-                                    rowColor={(item) => {
-                                        if (item.batch_no === selectedRow) return "red.6";
-                                    }}
-                                />
-                            </Box>
+                                                                            }
+                                                                        },
+                                                                    });
+                                                                }}
+                                                                component="a"
+                                                                w={'200'}
+                                                                mt={'2'}
+                                                                c={'red'}
+                                                                rightSection={<IconTrashX
+                                                                    style={{width: rem(14), height: rem(14)}}/>}
+                                                            >
+                                                                {t('Delete')}
+                                                            </Menu.Item>
+                                                        }
+                                                    </Menu.Dropdown>
+                                                </Menu>
+                                            </Group>
+                                        ),
+                                    },
+                                ]}
+                                fetching={fetching}
+                                totalRecords={indexData.total}
+                                recordsPerPage={perPage}
+                                page={page}
+                                onPageChange={(p) => {
+                                    setPage(p);
+                                }}
+                                loaderSize="xs"
+                                loaderColor="grape"
+                                height={tableHeight}
+                                scrollAreaProps={{type: "never"}}
+
+                                rowBackgroundColor={(item) => {
+                                    if (item.id === selectedRow) return 'var(--theme-secondary-color-0)';
+                                }}
+                                rowColor={(item) => {
+                                    if (item.id === selectedRow);
+                                }}
+                            />
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={8}>
@@ -574,7 +519,7 @@ export default function _MatrixTable() {
                                         </Grid>
                                     </Box>
                                 </ScrollArea>
-                                <ScrollArea h={height + 31} scrollbarSize={2} type="never">
+                                <ScrollArea h={height + 84} scrollbarSize={2} type="never">
                                     <Box>
                                         <Table stickyHeader>
                                             <Table.Thead>
@@ -582,26 +527,17 @@ export default function _MatrixTable() {
                                                     <Table.Th fz="xs" w={"20"}>
                                                         {t("S/N")}
                                                     </Table.Th>
-                                                    <Table.Th fz="xs" ta="left" w={"300"}>
-                                                        {t("Name")}
+                                                    <Table.Th fz="xs" ta="left">
+                                                        {t("ProductName")}
                                                     </Table.Th>
-                                                    <Table.Th fz="xs" ta="center" w={"60"}>
-                                                        {t("Customer")}
-                                                    </Table.Th>
-                                                    <Table.Th ta="center" fz="xs" w={"100"}>
+                                                    <Table.Th ta="center" fz="xs">
                                                         {t("UOM")}
                                                     </Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={"80"}>
-                                                        {t("RequestQty")}
+                                                    <Table.Th ta="right" fz="xs">
+                                                        {t("Request")}
                                                     </Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {t("ApproveQty")}
-                                                    </Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {t("ReceiveQty")}
-                                                    </Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {t("StockQty")}
+                                                    <Table.Th ta="right" fz="xs">
+                                                        {t("Approve")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
                                                         {t("SubTotal")}
@@ -611,7 +547,7 @@ export default function _MatrixTable() {
                                             <Table.Tbody>{rows}</Table.Tbody>
                                             <Table.Tfoot>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={"8"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
                                                         {t("SubTotal")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -622,7 +558,7 @@ export default function _MatrixTable() {
                                                 </Table.Tr>
 
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={"8"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
                                                         {t("Total")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>

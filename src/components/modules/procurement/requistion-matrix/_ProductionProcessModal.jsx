@@ -37,21 +37,19 @@ export default function _ProductionProcessModal(props) {
                                     onChange={(value) => setActiveTab(value)}
                                 >
                                     <Tabs.List pos={'relative'}>
-
                                         <Tabs.Tab
                                             m={2}
                                             value='BoardDetails'
                                         >
-                                            {t('BoardDetails')}
+                                            {t('RequisitionBoard')}
                                         </Tabs.Tab>
                                         <Tabs.Tab
                                             m={2}
                                             value='Process'
                                         >
-                                            {t('Process')}
+                                            {t('Production')}
                                         </Tabs.Tab>
                                     </Tabs.List>
-
                                     <Tabs.Panel value="BoardDetails">
                                         <Box>
                                             <__ModalBoardDetails boardId={boardId}/>

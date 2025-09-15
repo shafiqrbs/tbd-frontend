@@ -5,16 +5,16 @@
 .table {
   th,
   td {
-    border-color: var(--theme-primary-color-1);
+    border-color: var(--mantine-color-gray-3);
   }
   tr {
-    height: 46px;
+    height: 36px;
   }
 }
 
 .header {
   th {
-    border-bottom: 1px solid var(--theme-primary-color-1);
+    border-bottom: 1px solid var(--mantine-color-gray-3);
     /* background-color: rgba(208, 191, 191, 0.17); */
     background-color: #f7f4f4;
     font-size: 12px;
@@ -28,13 +28,13 @@
   font-size: 12px;
   th,
   td {
-    border-top: 1px solid var(--theme-primary-color-1);
+    border-top: 1px solid var(--mantine-color-gray-3);
   }
 }
 
 .pagination {
   background: transparent;
-  border-top: 1px solid var(--theme-primary-color-1);
+  border-top: 1px solid var(--mantine-color-gray-3);
 
   button {
     background: transparent;
