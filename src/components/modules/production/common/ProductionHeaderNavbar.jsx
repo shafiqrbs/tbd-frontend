@@ -1,5 +1,18 @@
 import React, {useState} from "react";
-import {Group, Menu, rem, ActionIcon, Text, Modal, Select, Flex, Button, TextInput,FocusTrap} from "@mantine/core";
+import {
+    Group,
+    Menu,
+    rem,
+    ActionIcon,
+    Text,
+    Modal,
+    Select,
+    Flex,
+    Button,
+    TextInput,
+    FocusTrap,
+    Grid, Box
+} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
@@ -141,9 +154,9 @@ function ProductionHeaderNavbar(props) {
                 opened={opened}
                 onClose={close}
                 title={
-                    <h2 className="text-lg font-medium text-gray-800">
+                    <h4 fz={'md'} className="text-gray-800">
                         {t("ChooseProductionWarehouse")}
-                    </h2>
+                    </h4>
                 }
                 overlayProps={{
                     backgroundOpacity: 0.55,
@@ -156,32 +169,41 @@ function ProductionHeaderNavbar(props) {
                     onSubmit={form.onSubmit(handleFormSubmit)}
                     className="flex flex-col items-center gap-6 mt-2"
                 >
+
                     <div className="w-full">
-                        <SelectForm
-                            tooltip={t("Warehouse")}
-                            label=""
-                            placeholder={t("Warehouse")}
-                            required={false}
-                            nextField="purchase_price"
-                            name="warehouse_id"
-                            form={form}
-                            dropdownValue={warehouseDropdownData}
-                            id="warehouse_id"
-                            searchable
-                            value={warehouseData}
-                            changeValue={setWarehouseData}
-                        />
+                        <Grid columns={24} gutter={{ base: 8 }}>
+                            <Grid.Col span={16}>
+                                <SelectForm
+                                    tooltip={t("Warehouse")}
+                                    label=""
+                                    placeholder={t("Warehouse")}
+                                    required={false}
+                                    nextField="purchase_price"
+                                    name="warehouse_id"
+                                    form={form}
+                                    dropdownValue={warehouseDropdownData}
+                                    id="warehouse_id"
+                                    searchable
+                                    value={warehouseData}
+                                    changeValue={setWarehouseData}
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={8}>
+                                <Button
+                                    size="sm"
+                                    type="submit"
+                                    id="EntityFormSubmit"
+                                    className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center gap-2"
+                                    leftSection={<IconPlus size={16} />}
+                                >
+                                    <span className="text-sm font-medium">{t("Process")}</span>
+                                </Button>
+                            </Grid.Col>
+                        </Grid>
+
                     </div>
 
-                    <Button
-                        size="sm"
-                        type="submit"
-                        id="EntityFormSubmit"
-                        className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center gap-2"
-                        leftSection={<IconPlus size={16} />}
-                    >
-                        <span className="text-sm font-medium">{t("Process")}</span>
-                    </Button>
+
                 </form>
             </Modal>
 

@@ -48,7 +48,7 @@ function ConfigurationForm() {
 
                     // Update state variables with fetched values
                     setCountryId(result.data.data.country_id?.toString() || '');
-                    setBusinessModelId(result.data.data.business_model_id?.toString() || '');
+                    setBusinessModelId(result.data.data.domain?.business_model_id?.toString() || '');
                     setPosInvoiceModeId(result.data.data.pos_invoice_mode_id?.toString() || '');
                     setCurrencyId(result.data.data.currency_id?.toString() || '');
                 }
@@ -61,7 +61,7 @@ function ConfigurationForm() {
 
         fetchData();
     }, [dispatch, id]);
-
+    console.log(configData)
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104

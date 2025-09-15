@@ -109,7 +109,7 @@ function WarehouseTable() {
                             render: (_, index) => index + 1, // Optimized index calculation
                         },
                         { accessor: "name", title: t("Name") },
-                        { accessor: "location", title: t("Location") },
+                        { accessor: "is_default", title: t("Location") },
                         { accessor: "contract_person", title: t("ContractPerson") },
                         { accessor: "mobile", title: t("Mobile") },
                         { accessor: "email", title: t("Email") },
@@ -119,90 +119,95 @@ function WarehouseTable() {
                             title: t("Action"),
                             textAlignment: "right",
                             render: (data) => (
-                                <Group gap={4} justify="right" wrap="nowrap">
-                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
-                                        <Menu.Target>
-                                            <ActionIcon size="sm" variant="outline" color='var(--theme-primary-color-6)' radius="xl" aria-label="Settings">
-                                                <IconDotsVertical height="18" width="18" stroke={1.5} />
-                                            </ActionIcon>
-                                        </Menu.Target>
-                                        <Menu.Dropdown>
-                                            <Menu.Item
-                                                onClick={() => {
-                                                    dispatch(setInsertType("update"));
-                                                    dispatch(editEntityData(`core/warehouse/${data.id}`));
-                                                    dispatch(setFormLoading(true));
-                                                    navigate(`/core/warehouse/${data.id}`);
-                                                }}
-                                                w="200"
-                                            >
-                                                {t("Edit")}
-                                            </Menu.Item>
+                                <>
+                                    { data?.is_default !== 1 &&(
+                                        <Group gap={4} justify="right" wrap="nowrap">
+                                            <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                                <Menu.Target>
+                                                    <ActionIcon size="sm" variant="outline" color='var(--theme-primary-color-6)' radius="xl" aria-label="Settings">
+                                                        <IconDotsVertical height="18" width="18" stroke={1.5} />
+                                                    </ActionIcon>
+                                                </Menu.Target>
+                                                <Menu.Dropdown>
+                                                    <Menu.Item
+                                                        onClick={() => {
+                                                            dispatch(setInsertType("update"));
+                                                            dispatch(editEntityData(`core/warehouse/${data.id}`));
+                                                            dispatch(setFormLoading(true));
+                                                            navigate(`/core/warehouse/${data.id}`);
+                                                        }}
+                                                        w="200"
+                                                    >
+                                                        {t("Edit")}
+                                                    </Menu.Item>
 
-                                            <Menu.Item
-                                                onClick={() => {
-                                                    const foundWarehouse = indexData.data.find((warehouse) => warehouse.id === data.id);
-                                                    if (foundWarehouse) {
-                                                        setWarehouseObject(foundWarehouse);
-                                                        setViewDrawer(true);
-                                                    } else {
-                                                        notifications.show({
-                                                            color: "red",
-                                                            title: t("Something Went wrong, please try again"),
-                                                            icon: <IconAlertCircle style={{ width: rem(18), height: rem(18) }} />,
-                                                            loading: false,
-                                                            autoClose: 900,
-                                                            style: { backgroundColor: "lightgray" },
-                                                        });
-                                                    }
-                                                }}
-                                                w="200"
-                                            >
-                                                {t("Show")}
-                                            </Menu.Item>
-
-                                            <Menu.Item
-                                                w="200"
-                                                bg="red.1"
-                                                c='var(--theme-primary-color-6)'
-                                                onClick={() => {
-                                                    modals.openConfirmModal({
-                                                        title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
-                                                        children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
-                                                        labels: { confirm: "Confirm", cancel: "Cancel" },
-                                                        confirmProps: { color: "red.6" },
-                                                        onConfirm: async () => {
-                                                            try {
-                                                                const resultAction = await dispatch(deleteEntityData(`core/warehouse/${data.id}`));
-
-                                                                if (deleteEntityData.fulfilled.match(resultAction)) {
-                                                                    // setIndexData(resultAction.payload);
-                                                                    notifications.show({
-                                                                        color: "red",
-                                                                        title: t("DeleteSuccessfully"),
-                                                                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                                                                        loading: false,
-                                                                        autoClose: 700,
-                                                                        style: { backgroundColor: "lightgray" },
-                                                                    });
-                                                                } else {
-                                                                    console.error("Error fetching warehouse data:", resultAction);
-                                                                }
-                                                            } catch (error) {
-                                                                console.error("Unexpected error:", error);
-                                                            } finally {
-                                                                setFetchingState(false);
+                                                    <Menu.Item
+                                                        onClick={() => {
+                                                            const foundWarehouse = indexData.data.find((warehouse) => warehouse.id === data.id);
+                                                            if (foundWarehouse) {
+                                                                setWarehouseObject(foundWarehouse);
+                                                                setViewDrawer(true);
+                                                            } else {
+                                                                notifications.show({
+                                                                    color: "red",
+                                                                    title: t("Something Went wrong, please try again"),
+                                                                    icon: <IconAlertCircle style={{ width: rem(18), height: rem(18) }} />,
+                                                                    loading: false,
+                                                                    autoClose: 900,
+                                                                    style: { backgroundColor: "lightgray" },
+                                                                });
                                                             }
-                                                        }
-                                                    });
-                                                }}
-                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
-                                            >
-                                                {t("Delete")}
-                                            </Menu.Item>
-                                        </Menu.Dropdown>
-                                    </Menu>
-                                </Group>
+                                                        }}
+                                                        w="200"
+                                                    >
+                                                        {t("Show")}
+                                                    </Menu.Item>
+
+                                                    <Menu.Item
+                                                        w="200"
+                                                        bg="red.1"
+                                                        c='var(--theme-primary-color-6)'
+                                                        onClick={() => {
+                                                            modals.openConfirmModal({
+                                                                title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
+                                                                children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
+                                                                labels: { confirm: "Confirm", cancel: "Cancel" },
+                                                                confirmProps: { color: "red.6" },
+                                                                onConfirm: async () => {
+                                                                    try {
+                                                                        const resultAction = await dispatch(deleteEntityData(`core/warehouse/${data.id}`));
+
+                                                                        if (deleteEntityData.fulfilled.match(resultAction)) {
+                                                                            // setIndexData(resultAction.payload);
+                                                                            notifications.show({
+                                                                                color: "red",
+                                                                                title: t("DeleteSuccessfully"),
+                                                                                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                                                                loading: false,
+                                                                                autoClose: 700,
+                                                                                style: { backgroundColor: "lightgray" },
+                                                                            });
+                                                                        } else {
+                                                                            console.error("Error fetching warehouse data:", resultAction);
+                                                                        }
+                                                                    } catch (error) {
+                                                                        console.error("Unexpected error:", error);
+                                                                    } finally {
+                                                                        setFetchingState(false);
+                                                                    }
+                                                                }
+                                                            });
+                                                        }}
+                                                        rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                                    >
+                                                        {t("Delete")}
+                                                    </Menu.Item>
+                                                </Menu.Dropdown>
+                                            </Menu>
+                                        </Group>
+                                    )}
+
+                                </>
                             ),
                         },
                     ]}
