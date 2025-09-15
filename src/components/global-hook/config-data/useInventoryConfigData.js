@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getShowEntityData } from "../../../store/inventory/crudSlice.js";
-const getInventoryConfigData = () => {
+const useInventoryConfigData = () => {
     const dispatch = useDispatch();
     const inventoryConfigData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
     useEffect(() => {
@@ -11,4 +11,4 @@ const getInventoryConfigData = () => {
     return inventoryConfigData;
 };
 
-export default getInventoryConfigData;
+export default useInventoryConfigData;

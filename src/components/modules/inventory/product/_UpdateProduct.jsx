@@ -31,7 +31,7 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 import { modals } from "@mantine/modals";
-import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 
 function _UpdateProduct(props) {
   const { categoryDropdown,product_config } = props;
@@ -220,7 +220,7 @@ function _UpdateProduct(props) {
               });
 
               setTimeout(() => {
-                productsDataStoreIntoLocalStorage();
+                useProductsDataStoreIntoLocalStorage();
                 dispatch(setFetching(true));
                 setSaveCreateLoading(false);
               }, 700);

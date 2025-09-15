@@ -18,13 +18,13 @@ import {
 import SelectForm from "../../../form-builders/SelectForm";
 import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 
 const PurchaseForm = ({vendorGroupDropdownData, height, closeDrawer}) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const {fetchDomainConfig, domainConfig} = getDomainConfig(true);
+    const {fetchDomainConfig, domainConfig} = useDomainConfig(true);
     const config_purchase = domainConfig?.inventory_config?.config_purchase;
     const domainId = domainConfig?.id;
     const productNature = getSettingProductTypeDropdownData();

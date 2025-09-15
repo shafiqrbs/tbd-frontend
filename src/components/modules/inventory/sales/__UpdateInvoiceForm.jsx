@@ -32,7 +32,7 @@ import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
 import _SmsPurchaseModel from "./modal/_SmsPurchaseModel.jsx";
 import _CustomerViewModel from "./modal/_CustomerViewModel.jsx";
-import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 import _addCustomer from "../../popover-form/_addCustomer.jsx";
 import _InvoiceDrawerForPrint from "./print-drawer/_InvoiceDrawerForPrint.jsx";
 
@@ -131,7 +131,7 @@ function __UpdateInvoiceForm(props) {
 
     useEffect(() => {
         const fetchCustomers = async () => {
-            await customerDataStoreIntoLocalStorage();
+            await useCustomerDataStoreIntoLocalStorage();
             let coreCustomers = localStorage.getItem('core-customers');
             coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : []
             let defaultId = defaultCustomerId;

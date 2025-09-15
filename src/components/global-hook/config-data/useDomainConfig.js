@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getShowConfigEntityData } from "../../../store/inventory/crudSlice.js";
 
-const getDomainConfig = (autoFetch = true) => {
+const useDomainConfig = (autoFetch = true) => {
     const dispatch = useDispatch();
     const domainConfig = useSelector((state) => state.inventoryCrudSlice.showConfigData);
 
@@ -31,4 +31,4 @@ const getDomainConfig = (autoFetch = true) => {
     return { domainConfig, fetchDomainConfig, setPath };
 };
 
-export default getDomainConfig;
+export default useDomainConfig;

@@ -18,14 +18,14 @@ import {
 import { Button, Flex, Text, Tooltip, ScrollArea } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 
 export default function Navigation(props) {
   const { module, id } = props;
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 20;
-  const { configData } = getConfigData();
+  const { configData } = useConfigData();
   const navigate = useNavigate();
   const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
   return (

@@ -24,7 +24,7 @@ import InputForm from "../../../form-builders/InputForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
 import {storeEntityData} from "../../../../store/core/crudSlice";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 import SelectForm from "../../../form-builders/SelectForm";
 
@@ -35,7 +35,7 @@ function VatForm(props) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-  const {domainConfig,fetchDomainConfig} = getDomainConfig()
+  const {domainConfig,fetchDomainConfig} = useDomainConfig()
   const id = domainConfig?.id;
   let config_vat = domainConfig?.inventory_config?.config_vat
   const [vatModeData, setVatModeData] = useState(null);

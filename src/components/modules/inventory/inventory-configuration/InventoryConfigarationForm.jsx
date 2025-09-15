@@ -28,7 +28,7 @@ import {
   getAccountingDropdown,
 } from "../../../../store/core/utilitySlice.js";
 import { setDropdownLoad } from "../../../../store/inventory/crudSlice";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 import _DomainDetailsSection from "./_DomainDetailsSection.jsx";
 import AccountingForm from "./AccountingForm.jsx";
 import ProductionForm from "./ProductionForm.jsx";
@@ -95,7 +95,7 @@ function InventoryConfigarationForm() {
   }, [dropdownLoad]);
 
 
-  const {domainConfig,fetchDomainConfig} = getDomainConfig()
+  const {domainConfig,fetchDomainConfig} = useDomainConfig()
   // const domainConfig = JSON.parse(localStorage.getItem('domain-config-data'))
 
   let inventory_config = domainConfig?.inventory_config;

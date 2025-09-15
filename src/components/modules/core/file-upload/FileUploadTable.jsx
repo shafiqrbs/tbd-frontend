@@ -34,11 +34,11 @@ import {deleteEntityData} from "../../../../store/core/crudSlice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import {notifications} from "@mantine/notifications";
 import axios from "axios";
-import commonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/commonDataStoreIntoLocalStorage.js";
-import orderProcessDropdownLocalDataStore
-    from "../../../global-hook/local-storage/orderProcessDropdownLocalDataStore.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import useCommonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCommonDataStoreIntoLocalStorage.js";
+import useOrderProcessDropdownLocalDataStore
+    from "../../../global-hook/local-storage/useOrderProcessDropdownLocalDataStore.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
+import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import {modals} from "@mantine/modals";
 
@@ -47,7 +47,7 @@ function FileUploadTable() {
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 98; //TabList height 104
-    const {configData, fetchData} = getConfigData();
+    const {configData, fetchData} = useConfigData();
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -115,7 +115,7 @@ function FileUploadTable() {
         })
             .then((res) => {
                 if (res.data.status == 200) {
-                    productsDataStoreIntoLocalStorage();
+                    useProductsDataStoreIntoLocalStorage();
                     setLoading(false);
                     setTimeout(() => {
                         notifications.show({

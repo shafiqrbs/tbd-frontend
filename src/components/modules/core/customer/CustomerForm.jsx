@@ -24,7 +24,7 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import CustomerGroupDrawer from "./CustomerGroupDrawer.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
-import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 
 
 function CustomerForm(props) {
@@ -131,7 +131,7 @@ function CustomerForm(props) {
                             style: { backgroundColor: 'lightgray' },
                         });
                         setTimeout(() => {
-                            customerDataStoreIntoLocalStorage()
+                            useCustomerDataStoreIntoLocalStorage()
                             form.reset()
                             setMarketingExeData(null)
                             setCustomerGroupData(null)

@@ -37,21 +37,21 @@ import {
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import classes from "../../../assets/css/FeaturesCards.module.css";
-import getConfigData from "../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../global-hook/config-data/useConfigData.js";
 import pos from "../../../assets/images/pos/pos.png";
 import invoice from "../../../assets/images/pos/invoice.png";
 import voucher from "../../../assets/images/pos/voucher.png";
 import accounting from "../../../assets/images/pos/accounting.png";
 import requisition from "../../../assets/images/pos/requisition.png";
 import production from "../../../assets/images/pos/production.png";
-import getDomainConfig from "../../global-hook/config-data/getDomainConfig.js";
+import useDomainConfig from "../../global-hook/config-data/useDomainConfig.js";
 import getAccessControl from "../../global-hook/access_control/getAccessControl";
 import {useAuth} from "../../context/AuthContext.jsx";
 
 function MainDashboard(props) {
     const { t, i18n } = useTranslation();
     const height = props.height - 105;
-    const { domainConfig, fetchDomainConfig } = getDomainConfig();
+    const { domainConfig, fetchDomainConfig } = useDomainConfig();
     const { configData, isLoading } = useAuth(); // Use auth context instead of localStorage
     const navigate = useNavigate();
     const theme = useMantineTheme();
@@ -66,16 +66,6 @@ function MainDashboard(props) {
         console.log("Configuration not available");
         return <div>Loading configuration...</div>;
     }
-	/*const { t, i18n } = useTranslation();
-	const height = props.height - 105; //TabList height 104
-	const { domainConfig, fetchDomainConfig } = getDomainConfig();
-	let configData = domainConfig?.inventory_config;
-
-	const navigate = useNavigate();
-	const theme = useMantineTheme();
-	/!* start for user role check *!/
-
-	const userRole = getAccessControl();*/
 
 	useEffect(() => {
 		const checkDomainConfig = () => {

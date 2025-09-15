@@ -10,7 +10,7 @@ import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
 import {showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function DomainTable(props) {
@@ -21,7 +21,7 @@ function DomainTable(props) {
     const perPage = 50;
     const [page, setPage] = useState(1);
 
-    const {configData, fetchData} = getConfigData()
+    const {configData, fetchData} = useConfigData()
     const [superadmin, setSuperadmin] = useState(configData?.domain?.modules?.includes(['superadmin']) || false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)

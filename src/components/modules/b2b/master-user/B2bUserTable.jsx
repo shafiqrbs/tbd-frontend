@@ -24,8 +24,8 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import useUtilityDomainTypeDropdownData from "../../../global-hook/dropdown/getUtilityDomainTypeDropdownData.js";
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
-import commonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/commonDataStoreIntoLocalStorage";
-import orderProcessDropdownLocalDataStore from "../../../global-hook/local-storage/orderProcessDropdownLocalDataStore";
+import useCommonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCommonDataStoreIntoLocalStorage.js";
+import useOrderProcessDropdownLocalDataStore from "../../../global-hook/local-storage/useOrderProcessDropdownLocalDataStore.js";
 
 export default function B2bUserTable({ id }) {
     const dispatch = useDispatch();
@@ -62,8 +62,8 @@ export default function B2bUserTable({ id }) {
                     } else if (showEntityData.fulfilled.match(resultAction)) {
                         if (resultAction.payload.data.status === 200) {
                             localStorage.setItem("user", JSON.stringify(resultAction.payload.data.data));
-                            const allLocal = commonDataStoreIntoLocalStorage(resultAction.payload.data.data.id)
-                            const orderProcess = orderProcessDropdownLocalDataStore(resultAction.payload.data.data.id)
+                            const allLocal = useCommonDataStoreIntoLocalStorage(resultAction.payload.data.data.id)
+                            const orderProcess = useOrderProcessDropdownLocalDataStore(resultAction.payload.data.data.id)
                             navigate('/')
                         }
                     }

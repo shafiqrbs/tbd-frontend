@@ -32,7 +32,7 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 import {modals} from "@mantine/modals";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
-import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 import InputForm from "../../../form-builders/InputForm.jsx";
 
 function _SkuManagement(props) {
@@ -146,7 +146,7 @@ function _SkuManagement(props) {
             }
             setTimeout(() => {
                 dispatch(inlineUpdateEntityData(updateData))
-                productsDataStoreIntoLocalStorage()
+                useProductsDataStoreIntoLocalStorage()
             }, 500)
         }
 
@@ -163,7 +163,7 @@ function _SkuManagement(props) {
             }
             setTimeout(() => {
                 dispatch(inlineUpdateEntityData(updateData))
-                productsDataStoreIntoLocalStorage()
+                useProductsDataStoreIntoLocalStorage()
             }, 500)
         }
 
@@ -180,7 +180,7 @@ function _SkuManagement(props) {
             }
             setTimeout(() => {
                 dispatch(inlineUpdateEntityData(updateData))
-                productsDataStoreIntoLocalStorage()
+                useProductsDataStoreIntoLocalStorage()
             }, 500)
         }
         if (priceFieldSlug === 'barcode') {
@@ -196,7 +196,7 @@ function _SkuManagement(props) {
             }
             setTimeout(() => {
                 dispatch(inlineUpdateEntityData(updateData))
-                productsDataStoreIntoLocalStorage()
+                useProductsDataStoreIntoLocalStorage()
             }, 500)
         }
 
@@ -296,7 +296,7 @@ function _SkuManagement(props) {
                                                     style: {backgroundColor: 'lightgray'},
                                                 });
                                             } else if (storeEntityData.fulfilled.match(resultAction)) {
-                                                await productsDataStoreIntoLocalStorage()
+                                                await useProductsDataStoreIntoLocalStorage()
                                                 notifications.show({
                                                     color: 'teal',
                                                     title: t('CreateSuccessfully'),

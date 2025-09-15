@@ -22,7 +22,7 @@ import { setFetching,storeEntityData } from "../../../../store/inventory/crudSli
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 import ProductCategoryDrawer from "./ProductCategoryDrawer.jsx";
-import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 
 function ProductForm(props) {
@@ -163,7 +163,7 @@ function ProductForm(props) {
                                 });
 
                                 setTimeout(() => {
-                                    productsDataStoreIntoLocalStorage()
+                                    useProductsDataStoreIntoLocalStorage()
                                     form.reset()
                                     setCategoryData(null)
                                     setProductTypeData(null)

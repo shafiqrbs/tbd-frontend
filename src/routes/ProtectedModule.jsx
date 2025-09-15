@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import getDomainConfig from "../components/global-hook/config-data/getDomainConfig.js";
+import useDomainConfig from "../components/global-hook/config-data/useDomainConfig.js";
 import { useNetwork, useViewportSize } from "@mantine/hooks";
 
 export default function ProtectedModule({ modules }) {

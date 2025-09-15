@@ -18,7 +18,7 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import { DataTable } from "mantine-datatable";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
-import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 import __UpdateInvoiceForm from "./__UpdateInvoiceForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
@@ -46,7 +46,7 @@ function _UpdateInvoice(props) {
     const [stockProductRestore, setStockProductRestore] = useState(false)
     useEffect(() => {
         if (stockProductRestore) {
-            const local = productsDataStoreIntoLocalStorage()
+            const local = useProductsDataStoreIntoLocalStorage()
         }
     }, [stockProductRestore])
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Progress, Tabs } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import VoucherFormIndex from "./VoucherFromIndex.jsx";
 import VoucherTableNew from "./VoucherTableNew.jsx";

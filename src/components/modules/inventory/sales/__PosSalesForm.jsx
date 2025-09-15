@@ -9,7 +9,7 @@ import {IconPercentage, IconSum, IconX} from "@tabler/icons-react";
 import {useOutletContext} from "react-router-dom";
 import __PosInvoiceSection from "./__PosInvoiceSetion.jsx";
 import {useToggle} from "@mantine/hooks";
-import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 import {useDispatch} from "react-redux";
 import {storeEntityData, updateEntityData} from "../../../../store/inventory/crudSlice.js";
 import inputCss from "../../../../assets/css/InlineInputField.module.css";
@@ -80,7 +80,7 @@ export default function __PosSalesForm(props) {
     // setting defualt customer
     useEffect(() => {
         const fetchCustomers = async () => {
-            await customerDataStoreIntoLocalStorage();
+            await useCustomerDataStoreIntoLocalStorage();
             let coreCustomers = localStorage.getItem("core-customers");
             coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : [];
             let defaultId = defaultCustomerId;

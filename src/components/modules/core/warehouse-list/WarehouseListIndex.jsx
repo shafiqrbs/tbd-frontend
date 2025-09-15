@@ -13,7 +13,7 @@ import {
 } from "../../../../store/core/crudSlice.js";
 
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 
 import CoreHeaderNavbar from "../CoreHeaderNavbar.jsx";
 import Navigation from "../common/Navigation.jsx";
@@ -25,7 +25,7 @@ function WarehouseListIndex() {
 	const navigate = useNavigate();
 	const { insertType } = useSelector((state) => state.crudSlice);
 	const progress = getLoadingProgress();
-	const { configData = {} } = getConfigData();
+	const { configData = {} } = useConfigData();
 	const { id } = useParams();
 
 	useEffect(() => {

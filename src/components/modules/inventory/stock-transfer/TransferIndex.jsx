@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress";
-import getConfigData from "../../../global-hook/config-data/getConfigData";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import TransferForm from "./TransferForm";
 import TransferTable from "./TransferTable";
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
@@ -18,7 +18,7 @@ import TransferUpdateForm from "./TransferUpdateForm";
 export default function TransferIndex() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
-  const { configData } = getConfigData();
+  const { configData } = useConfigData();
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();

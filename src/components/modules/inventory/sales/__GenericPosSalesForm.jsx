@@ -29,7 +29,7 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
 import _SmsPurchaseModel from "./modal/_SmsPurchaseModel.jsx";
-import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 import DatePickerForm from "../../../form-builders/DatePicker";
 import _InvoiceDrawerForPrint from "./print-drawer/_InvoiceDrawerForPrint.jsx";
 import AddCustomerDrawer from "./drawer-form/AddCustomerDrawer.jsx";
@@ -139,7 +139,7 @@ function __GenericPosSalesForm(props) {
 
     useEffect(() => {
         const fetchCustomers = async () => {
-            await customerDataStoreIntoLocalStorage();
+            await useCustomerDataStoreIntoLocalStorage();
             let coreCustomers = localStorage.getItem('core-customers');
             coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : []
             let defaultId = defaultCustomerId;

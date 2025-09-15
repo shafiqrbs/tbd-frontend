@@ -6,7 +6,7 @@ import {useDispatch} from "react-redux";
 import {modals} from "@mantine/modals";
 import {useHotkeys} from "@mantine/hooks";
 import {setValidationData, storeEntityData} from "../../../../store/core/crudSlice";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 import SelectForm from "../../../form-builders/SelectForm";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
@@ -16,7 +16,7 @@ function SalesForm({customerGroupDropdownData, height, id, config_sales, closeDr
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const {fetchDomainConfig} = getDomainConfig(false)
+    const {fetchDomainConfig} = useDomainConfig(false)
     const [customerGroupData, setCustomerGroupData] = useState(null);
 
     const productNature = getSettingProductTypeDropdownData();

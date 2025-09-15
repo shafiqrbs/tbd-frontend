@@ -39,7 +39,7 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 import { modals } from "@mantine/modals";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
-import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 import InputForm from "../../../form-builders/InputForm.jsx";
 import EditableNumberInput from "../../../form-builders/InputForm.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
@@ -180,7 +180,7 @@ function _SkuManagement(props) {
       };
       setTimeout(() => {
         dispatch(inlineUpdateEntityData(updateData));
-        productsDataStoreIntoLocalStorage();
+        useProductsDataStoreIntoLocalStorage();
       }, 500);
     }
 
@@ -197,7 +197,7 @@ function _SkuManagement(props) {
       };
       setTimeout(() => {
         dispatch(inlineUpdateEntityData(updateData));
-        productsDataStoreIntoLocalStorage();
+        useProductsDataStoreIntoLocalStorage();
       }, 500);
     }
 
@@ -214,7 +214,7 @@ function _SkuManagement(props) {
       };
       setTimeout(() => {
         dispatch(inlineUpdateEntityData(updateData));
-        productsDataStoreIntoLocalStorage();
+        useProductsDataStoreIntoLocalStorage();
       }, 500);
     }
     if (priceFieldSlug === "barcode") {
@@ -230,7 +230,7 @@ function _SkuManagement(props) {
       };
       setTimeout(() => {
         dispatch(inlineUpdateEntityData(updateData));
-        productsDataStoreIntoLocalStorage();
+        useProductsDataStoreIntoLocalStorage();
       }, 500);
     }
   };
@@ -291,7 +291,7 @@ function _SkuManagement(props) {
                   if (storeEntityData.rejected.match(resultAction)) {
                     showNotificationComponent(resultAction.payload.message,'red')
                   } else if (storeEntityData.fulfilled.match(resultAction)) {
-                    await productsDataStoreIntoLocalStorage();
+                    await useProductsDataStoreIntoLocalStorage();
 
                     showNotificationComponent(resultAction.message,'teal')
 

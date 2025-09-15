@@ -23,7 +23,7 @@ import {showNotificationComponent} from "../../../core-component/showNotificatio
 import getAccountHeadMasterDropdownData from "../../../global-hook/dropdown/getAccountHeadMasterDropdownData";
 import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/getAccountHeadAllDropdownData";
 import {notifications} from "@mantine/notifications";
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
+import useVendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 
 
 function HeadDomainForm() {

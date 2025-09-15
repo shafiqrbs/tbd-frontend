@@ -35,7 +35,7 @@ import invoice from "../../../../assets/images/pos/invoice.png";
 import voucher from "../../../../assets/images/pos/voucher.png";
 import requisition from "../../../../assets/images/pos/requisition.png";
 import production from "../../../../assets/images/pos/production.png";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import getAccessControl from "../../../global-hook/access_control/getAccessControl";
 import LedgerDetailsModel from "../ledger/LedgerDetailsModel";
@@ -45,7 +45,7 @@ function AccountingDashboard(props) {
     const dispatch = useDispatch();
     const progress = getLoadingProgress()
     const theme = useMantineTheme();
-    const { domainConfig, fetchDomainConfig } = getDomainConfig();
+    const { domainConfig, fetchDomainConfig } = useDomainConfig();
     let configData = domainConfig?.inventory_config;
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 98;

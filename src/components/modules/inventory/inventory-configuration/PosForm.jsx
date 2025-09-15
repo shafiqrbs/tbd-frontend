@@ -31,7 +31,7 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import getSettingPosInvoiceModeDropdownData from "../../../global-hook/dropdown/getSettingPosInvoiceModeDropdownData";
 import {storeEntityData} from "../../../../store/core/crudSlice";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 
 function PosForm({ height,id }) {
 
@@ -39,7 +39,7 @@ function PosForm({ height,id }) {
   const dispatch = useDispatch();
 
 
-  const { domainConfig, fetchDomainConfig } = getDomainConfig();
+  const { domainConfig, fetchDomainConfig } = useDomainConfig();
   const posInvoiceModeDropdown = getSettingPosInvoiceModeDropdownData();
   const inventory_config = useMemo(() => domainConfig?.inventory_config || {}, [domainConfig]);
 

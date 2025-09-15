@@ -20,8 +20,8 @@ import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import CustomerViewModel from "../../core/customer/CustomerViewModel.jsx";
-import transactionModeDataStoreIntoLocalStorage
-    from "../../../global-hook/local-storage/transactionModeDataStoreIntoLocalStorage.js";
+import useTransactionModeDataStoreIntoLocalStorage
+    from "../../../global-hook/local-storage/useTransactionModeDataStoreIntoLocalStorage.js";
 
 function TransactionModeTable(props) {
 
@@ -48,7 +48,7 @@ function TransactionModeTable(props) {
             }
         }
         dispatch(getIndexEntityData(value))
-        transactionModeDataStoreIntoLocalStorage(JSON.parse(localStorage.getItem('user')).id)
+        useTransactionModeDataStoreIntoLocalStorage(JSON.parse(localStorage.getItem('user')).id)
     }, [fetching]);
 
     return (

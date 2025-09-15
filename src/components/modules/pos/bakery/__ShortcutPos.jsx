@@ -18,14 +18,14 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
-import getConfigData from "../../../global-hook/config-data/getConfigData";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import { IconSettings } from "@tabler/icons-react";
 
 function __ShortcutPos({ settingsAction }) {
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 190;
-  const { configData } = getConfigData();
+  const { configData } = useConfigData();
   return (
 		<>
 			<ScrollArea

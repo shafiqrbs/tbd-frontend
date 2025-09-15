@@ -24,7 +24,7 @@ import getSettingPosInvoiceModeDropdownData
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/inventory/crudSlice";
 import {notifications} from "@mantine/notifications";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 
 function ConfigurationForm() {
     const {id} = useParams()

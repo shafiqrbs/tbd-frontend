@@ -27,7 +27,7 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
 import _VendorViewModel from "../../core/vendor/_VendorViewModel.jsx";
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
+import useVendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 import _PurchaseDrawerForPrint from './print-drawer/_PurchaseDrawerForPrint.jsx'
 
 function __UpdateInvoiceForm(props) {
@@ -80,7 +80,7 @@ function __UpdateInvoiceForm(props) {
 
     useEffect(() => {
         const fetchVendors = async () => {
-            await vendorDataStoreIntoLocalStorage()
+            await useVendorDataStoreIntoLocalStorage()
             let coreVendors = localStorage.getItem('core-vendors');
             coreVendors = coreVendors ? JSON.parse(coreVendors) : []
 

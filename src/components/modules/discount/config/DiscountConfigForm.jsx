@@ -27,9 +27,9 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import KeywordSearch from "../../filter/KeywordSearch";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 import {setFetching, storeEntityData} from "../../../../store/core/crudSlice";
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
+import useVendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 

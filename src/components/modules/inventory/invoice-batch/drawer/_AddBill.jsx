@@ -20,7 +20,7 @@ import { isNotEmpty, useForm } from "@mantine/form";
 
 import { getSalesDetails, storeEntityData, } from "../../../../../store/inventory/crudSlice.js";
 import { notifications } from "@mantine/notifications";
-import customerDataStoreIntoLocalStorage from "../../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import useCustomerDataStoreIntoLocalStorage from "../../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 import _addCustomer from "../../../popover-form/_addCustomer.jsx";
 import _GenericInvoiceForm from "../../sales/_GenericInvoiceForm.jsx";
 

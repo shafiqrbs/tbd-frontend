@@ -36,8 +36,8 @@ import SettingDrawer from "../common/SettingDrawer.jsx";
 import AddProductDrawer from "../sales/drawer-form/AddProductDrawer.jsx";
 import __PosPurchaseUpdateForm from "./__PosPurchaseUpdateForm.jsx";
 
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
-import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import useVendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
+import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 
@@ -123,7 +123,7 @@ function _UpdatePurchaseInvoice({editedData, domainConfigData: initialDomainConf
     // fetch core-vendors dropdown
     useEffect(() => {
         const fetchVendors = async () => {
-            await vendorDataStoreIntoLocalStorage();
+            await useVendorDataStoreIntoLocalStorage();
             let vendors = localStorage.getItem("core-vendors");
             vendors = vendors ? JSON.parse(vendors) : [];
 
@@ -153,7 +153,7 @@ function _UpdatePurchaseInvoice({editedData, domainConfigData: initialDomainConf
     // refresh local products if stock restored
     useEffect(() => {
         if (stockProductRestore) {
-            productsDataStoreIntoLocalStorage();
+            useProductsDataStoreIntoLocalStorage();
         }
     }, [stockProductRestore]);
 

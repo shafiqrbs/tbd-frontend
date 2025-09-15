@@ -1,7 +1,7 @@
 
 import axios from "axios";
 
-    const productsDataStoreIntoLocalStorage = async () => {
+    const useProductsDataStoreIntoLocalStorage = async () => {
         try {
             const user = localStorage.getItem('user');
             const userId = user ? JSON.parse(user).id : null;
@@ -29,5 +29,5 @@ import axios from "axios";
         }
     };
 
-export default productsDataStoreIntoLocalStorage;
+export default useProductsDataStoreIntoLocalStorage;
 

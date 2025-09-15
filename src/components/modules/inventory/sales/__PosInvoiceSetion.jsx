@@ -33,7 +33,7 @@ import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
-import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage";
+import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 
 export default function __PosInvoiceSection(props) {
     const {
@@ -103,7 +103,7 @@ export default function __PosInvoiceSection(props) {
     // get default customer id
     useEffect(() => {
         const fetchCustomers = async () => {
-            await customerDataStoreIntoLocalStorage();
+            await useCustomerDataStoreIntoLocalStorage();
             let coreCustomers = localStorage.getItem("core-customers");
             coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : [];
             let defaultId = defaultCustomerId;

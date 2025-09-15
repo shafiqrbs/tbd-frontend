@@ -41,12 +41,12 @@ import _PurchaseSearch from "./_PurchaseSearch.jsx";
 import {PurchasePrintNormal} from "./print-component/PurchasePrintNormal.jsx";
 import {PurchasePrintPos} from "./print-component/PurchasePrintPos.jsx";
 import {notifications} from "@mantine/notifications";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import Navigation from "../common/Navigation.jsx";
 
 function _PurchaseTable() {
-    const {configData} = getConfigData()
+    const {configData} = useConfigData()
     let isWarehouse = configData?.sku_warehouse
 
     const printRef = useRef();
@@ -88,8 +88,6 @@ function _PurchaseTable() {
             indexData.data && indexData.data[0] && indexData.data[0].invoice
         );
     }, [indexData.data]);
-
-    console.log(purchaseViewData);
 
     const rows =
         purchaseViewData &&
@@ -312,6 +310,7 @@ function _PurchaseTable() {
                                         {
                                             accessor: "process",
                                             title: t("Status"),
+                                            width : "130px",
                                             render: (item) => {
                                                 const colorMap = {
                                                     Created: "blue",

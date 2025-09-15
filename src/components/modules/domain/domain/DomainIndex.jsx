@@ -13,7 +13,7 @@ import DomainUpdateForm from "./DomainUpdateFrom";
 import { useNavigate, useParams } from "react-router-dom";
 import { setFormLoading } from "../../../../store/generic/crudSlice.js";
 import DomainForm from './DomainFrom.jsx'
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import _Shortcut from "../common/_Shortcut";
 import _Navigation from "../common/_Navigation";
 
@@ -23,7 +23,7 @@ function DomainIndex() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const progress = getLoadingProgress()
-    const {configData,fetchData} = getConfigData()
+    const {configData,fetchData} = useConfigData()
 
     const { id } = useParams();
     const navigate = useNavigate();

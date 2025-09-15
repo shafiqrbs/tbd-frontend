@@ -14,7 +14,7 @@ import {notifications} from "@mantine/notifications";
 import {modals} from "@mantine/modals";
 import {Dropzone, MIME_TYPES} from "@mantine/dropzone";
 import axios from "axios";
-import productsDataStoreIntoLocalStorage from "../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import useProductsDataStoreIntoLocalStorage from "../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 
 function FileUploadModel(props) {
     const {t, i18n} = useTranslation();
@@ -48,7 +48,7 @@ function FileUploadModel(props) {
         })
             .then(res => {
                 if (res.data.status == 200) {
-                    productsDataStoreIntoLocalStorage()
+                    useProductsDataStoreIntoLocalStorage()
                     closeModel()
                     props.tableDataLoading(true)
                     setTimeout(() => {

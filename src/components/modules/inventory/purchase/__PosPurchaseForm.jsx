@@ -16,7 +16,7 @@ import { IconSum, IconX, IconCheck } from "@tabler/icons-react";
 import { useOutletContext } from "react-router-dom";
 import __PosPurchaseInvoiceSection from "./__PosPurchaseInvoiceSection.jsx";
 import { useToggle } from "@mantine/hooks";
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
+import useVendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData";
 import { useDispatch } from "react-redux";
 import { notifications } from "@mantine/notifications";
@@ -118,7 +118,7 @@ export default function __PosPurchaseForm(props) {
     // Set vendor dropdown initially
     useEffect(() => {
         const fetchVendors = async () => {
-            await vendorDataStoreIntoLocalStorage();
+            await useVendorDataStoreIntoLocalStorage();
             let vendors = localStorage.getItem("core-vendors");
             vendors = vendors ? JSON.parse(vendors) : [];
 

@@ -32,7 +32,7 @@ import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
+import useVendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData";
 import SelectFormForSalesPurchaseProduct from "../../../form-builders/SelectFormForSalesPurchaseProduct.jsx";
 
@@ -79,7 +79,7 @@ export default function __PosPurchaseInvoiceSection(props) {
     // get default customer id
     useEffect(() => {
         const fetchVendors = async () => {
-            await vendorDataStoreIntoLocalStorage();
+            await useVendorDataStoreIntoLocalStorage();
             let coreVendors = localStorage.getItem("core-vendors");
             coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
 

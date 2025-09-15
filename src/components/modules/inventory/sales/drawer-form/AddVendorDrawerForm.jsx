@@ -23,7 +23,7 @@ import { notifications } from "@mantine/notifications";
 import { setFetching, storeEntityData } from "../../../../../store/inventory/crudSlice.js";
 import InputForm from "../../../../form-builders/InputForm.jsx";
 import PhoneNumber from "../../../../form-builders/PhoneNumberInput.jsx";
-import vendorDataStoreIntoLocalStorage from "../../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
+import useVendorDataStoreIntoLocalStorage from "../../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 
 function AddVendorDrawerForm(props) {
     const { t } = useTranslation();
@@ -97,7 +97,7 @@ function AddVendorDrawerForm(props) {
                             });
 
                             setTimeout(() => {
-                                vendorDataStoreIntoLocalStorage()
+                                useVendorDataStoreIntoLocalStorage()
                                 vendorAddedForm.reset()
                                 setRefreshVendorDropdown(true)
                                 setVendorDrawer(false)

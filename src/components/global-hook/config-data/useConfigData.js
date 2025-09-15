@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getShowEntityData } from "../../../store/inventory/crudSlice.js";
 
-const getConfigData = () => {
+const useConfigData = () => {
     const dispatch = useDispatch();
     const configData = useSelector((state) => state.inventoryCrudSlice.showEntityData);
 
@@ -17,4 +17,4 @@ const getConfigData = () => {
     return { configData, fetchData }; // Return both data and the function to manually re-fetch
 };
 
-export default getConfigData;
+export default useConfigData;

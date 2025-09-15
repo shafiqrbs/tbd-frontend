@@ -6,7 +6,7 @@ import InputForm from "../../../form-builders/InputForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput";
 import { useTranslation } from "react-i18next";
 import SelectForm from "../../../form-builders/SelectForm";
-import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage";
+import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 import {showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import {useDispatch} from "react-redux";
@@ -34,7 +34,7 @@ export default function __PosCustomerSection(props) {
     //fetching customer dropdownData
   useEffect(() => {
     const fetchCustomers = async () => {
-      await customerDataStoreIntoLocalStorage();
+      await useCustomerDataStoreIntoLocalStorage();
       let coreCustomers = localStorage.getItem("core-customers");
       coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : [];
       let defaultId = defaultCustomerId;

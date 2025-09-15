@@ -99,7 +99,6 @@ export default function _MatrixTable() {
         setRequisitionMatrixViewData(indexData.data && indexData.data[0] && indexData.data[0])
         setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].id)
     }, [indexData.data])
-    console.log(indexData.data)
 
     const rows =
         requisitionMatrixViewData &&

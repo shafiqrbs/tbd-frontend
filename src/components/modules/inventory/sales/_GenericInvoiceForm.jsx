@@ -34,7 +34,7 @@ import __SalesForm from "./__SalesForm.jsx";
 import { DataTable } from "mantine-datatable";
 import _ShortcutInvoice from "../../shortcut/_ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
-import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 import AddProductDrawer from "./drawer-form/AddProductDrawer.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
@@ -77,7 +77,7 @@ function _GenericInvoiceForm(props) {
   const [stockProductRestore, setStockProductRestore] = useState(false);
   useEffect(() => {
     if (stockProductRestore) {
-      const local = productsDataStoreIntoLocalStorage();
+      const local = useProductsDataStoreIntoLocalStorage();
       console.log(local)
     }
   }, [stockProductRestore]);

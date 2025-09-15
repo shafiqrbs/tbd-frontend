@@ -27,7 +27,7 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
-import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 
 function CustomerUpdateForm(props) {
     const { locationDropdown, customerGroupDropdownData, executiveDropdown } = props
@@ -186,7 +186,7 @@ function CustomerUpdateForm(props) {
                         });
 
                         setTimeout(() => {
-                            customerDataStoreIntoLocalStorage()
+                            useCustomerDataStoreIntoLocalStorage()
                             form.reset()
                             dispatch(setInsertType('create'))
                             dispatch(setEditEntityData([]))

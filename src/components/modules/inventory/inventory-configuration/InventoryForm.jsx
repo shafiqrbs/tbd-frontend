@@ -26,7 +26,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaGenericForm from "../../../form-builders/TextAreaGenericForm";
 import InputCheckboxForm from "../../../form-builders/InputCheckboxForm";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 
 function InventoryForm(props) {
   const {
@@ -35,7 +35,7 @@ function InventoryForm(props) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-  const {domainConfig,fetchDomainConfig} = getDomainConfig()
+  const {domainConfig,fetchDomainConfig} = useDomainConfig()
   const inventory_config = domainConfig?.inventory_config;
   const id = domainConfig?.id;
 

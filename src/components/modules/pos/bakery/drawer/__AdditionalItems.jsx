@@ -27,7 +27,7 @@ import { useDispatch } from "react-redux";
 import tableCss from "../../../../../assets/css/Table.module.css";
 import { DataTable } from "mantine-datatable";
 import { hasLength, useForm } from "@mantine/form";
-import getConfigData from "../../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../../global-hook/config-data/useConfigData.js";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import TextAreaForm from "../../../../form-builders/TextAreaForm.jsx";
 
@@ -37,7 +37,7 @@ export default function __AdditionalItems(props) {
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 100; //TabList height 104
-  const {configData} = getConfigData();
+  const {configData} = useConfigData();
 
   const additionalItemsForm = useForm({});
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);

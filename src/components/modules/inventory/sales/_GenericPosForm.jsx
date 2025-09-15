@@ -36,12 +36,12 @@ import __SalesForm from "./__SalesForm.jsx";
 import {DataTable} from "mantine-datatable";
 import _ShortcutInvoice from "../../shortcut/_ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
-import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 import AddProductDrawer from "./drawer-form/AddProductDrawer.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 import __GenericPosSalesForm from "./__GenericPosSalesForm";
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
+import useVendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
@@ -167,7 +167,7 @@ function _GenericPosForm({domainConfigData}) {
   // Effects
   useEffect(() => {
     const fetchVendors = async () => {
-      await vendorDataStoreIntoLocalStorage();
+      await useVendorDataStoreIntoLocalStorage();
       const coreVendors = localStorage.getItem("core-vendors");
       const parsedVendors = coreVendors ? JSON.parse(coreVendors) : [];
 
@@ -184,7 +184,7 @@ function _GenericPosForm({domainConfigData}) {
 
   useEffect(() => {
     if (stockProductRestore) {
-      productsDataStoreIntoLocalStorage();
+      useProductsDataStoreIntoLocalStorage();
     }
   }, [stockProductRestore]);
 

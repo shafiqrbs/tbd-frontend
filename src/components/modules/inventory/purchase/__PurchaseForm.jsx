@@ -27,7 +27,7 @@ import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
+import useVendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 import DatePickerForm from "../../../form-builders/DatePicker.jsx";
 import AddVendorDrawer from "../sales/drawer-form/AddVendorDrawer.jsx";
 import VendorViewDrawer from "../../core/vendor/VendorViewDrawer.jsx";
@@ -103,7 +103,7 @@ function __PurchaseForm(props) {
 
     useEffect(() => {
         const fetchVendors = async () => {
-            await vendorDataStoreIntoLocalStorage()
+            await useVendorDataStoreIntoLocalStorage()
             let coreVendors = localStorage.getItem('core-vendors');
             coreVendors = coreVendors ? JSON.parse(coreVendors) : []
 

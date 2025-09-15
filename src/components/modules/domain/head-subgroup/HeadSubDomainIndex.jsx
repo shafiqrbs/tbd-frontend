@@ -6,7 +6,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchKeyword } from "../../../../store/core/crudSlice";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import { useNavigate, useParams } from "react-router-dom";
 import { editEntityData, setEntityNewData, setFormLoading, setInsertType } from "../../../../store/accounting/crudSlice.js";
@@ -20,7 +20,7 @@ function HeadSubDomainIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
-    const {configData} = getConfigData()
+    const {configData} = useConfigData()
     const progress = getLoadingProgress()
 
     const { id } = useParams()

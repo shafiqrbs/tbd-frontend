@@ -30,7 +30,7 @@ import {
 } from "@tabler/icons-react";
 import {useDispatch} from "react-redux";
 import classes from "./css/Table.module.css";
-import getConfigData from "../../../global-hook/config-data/getConfigData";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import {DataTable} from "mantine-datatable";
 import tableCss from "./css/Table.module.css";
 import Invoice from "./Invoice.jsx";
@@ -67,7 +67,7 @@ export default function NewSales(props) {
     const height = mainAreaHeight - 190; //TabList height 104
     const [selected, setSelected] = useState([]);
     const [id, setId] = useState(null);
-    const {configData} = getConfigData();
+    const {configData} = useConfigData();
     //is_table_pos undefined thats why not rendering
     const enableTable = !!(configData?.is_pos && invoiceMode === 'table');
     const [loadCartProducts, setLoadCartProducts] = useState(false);

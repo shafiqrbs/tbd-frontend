@@ -17,8 +17,8 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import commonDataStoreIntoLocalStorage from "./global-hook/local-storage/commonDataStoreIntoLocalStorage.js";
-import orderProcessDropdownLocalDataStore from "./global-hook/local-storage/orderProcessDropdownLocalDataStore.js";
+import useCommonDataStoreIntoLocalStorage from "./global-hook/local-storage/useCommonDataStoreIntoLocalStorage.js";
+import useOrderProcessDropdownLocalDataStore from "./global-hook/local-storage/useOrderProcessDropdownLocalDataStore.js";
 
 export default function Login() {
 
@@ -68,8 +68,8 @@ export default function Login() {
 
                     // Wait for all data to be stored before navigating
                     await Promise.all([
-                        commonDataStoreIntoLocalStorage(res.data.data.id),
-                        orderProcessDropdownLocalDataStore(res.data.data.id)
+                        useCommonDataStoreIntoLocalStorage(res.data.data.id),
+                        useOrderProcessDropdownLocalDataStore(res.data.data.id)
                     ]);
 
                     setErrorMessage('');

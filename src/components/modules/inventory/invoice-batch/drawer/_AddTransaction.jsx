@@ -28,7 +28,7 @@ import {getSalesDetails, storeEntityData,} from "../../../../../store/inventory/
 import InputNumberForm from "../../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
-import customerDataStoreIntoLocalStorage from "../../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import useCustomerDataStoreIntoLocalStorage from "../../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 import _addCustomer from "../../../popover-form/_addCustomer.jsx";
 import DatePickerForm from "../../../../form-builders/DatePicker";
 import _GenericInvoiceForm from "../../sales/_GenericInvoiceForm";

@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useHotkeys } from "@mantine/hooks";
 import getSpotlightDropdownData from "../../global-hook/spotlight-dropdown/getSpotlightDropdownData.js";
-import getConfigData from "../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../global-hook/config-data/useConfigData.js";
 
 function SpotLightSearchModal({ onClose }) {
   const [filteredItems, setFilteredItems] = useState([]);
@@ -32,7 +32,7 @@ function SpotLightSearchModal({ onClose }) {
   // Initialize the loading state as true
   const [visible, setVisible] = useState(true);
 
-  const { configData, fetchData } = getConfigData();
+  const { configData, fetchData } = useConfigData();
 
   localStorage.setItem("config-data", JSON.stringify(configData));
 

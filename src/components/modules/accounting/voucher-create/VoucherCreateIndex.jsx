@@ -18,7 +18,7 @@ import {
   setSearchKeyword,
 } from "../../../../store/core/crudSlice.js";
 import { setInsertType } from "../../../../store/generic/crudSlice.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar.jsx";
 import VoucherForm from "./VoucherForm.jsx";

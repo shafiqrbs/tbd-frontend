@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setInsertType } from "../../../../store/inventory/crudSlice";
 import { editEntityData, setSearchKeyword } from "../../../../store/core/crudSlice";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import DomainHeaderNavbar from "../DomainHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
 import { setFormLoading } from "../../../../store/generic/crudSlice.js";
@@ -22,7 +22,7 @@ function SitemapIndex() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const progress = getLoadingProgress()
-    const {configData} = getConfigData()
+    const {configData} = useConfigData()
 
     const { id } = useParams();
     const navigate = useNavigate();

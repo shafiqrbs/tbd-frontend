@@ -5,7 +5,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
 import _PurchaseTable from "./_PurchaseTable.jsx";
 import Navigation from "../common/Navigation";
@@ -13,11 +13,9 @@ import _GenericInvoiceForm from "./_GenericInvoiceForm";
 
 function PurchaseIndex() {
     const { t, i18n } = useTranslation();
-    const dispatch = useDispatch();
-
     const progress = getLoadingProgress()
 
-    // Use the getConfigData hook
+    // Use the useConfigData hook
 
     const domainConfigData = JSON.parse(
         localStorage.getItem("domain-config-data")

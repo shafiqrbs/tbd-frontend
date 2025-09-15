@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const orderProcessDropdownLocalDataStore = async (user_id) => {
+const useOrderProcessDropdownLocalDataStore = async (user_id) => {
     try {
         const response = await axios({
             method: 'get',
@@ -30,4 +30,4 @@ const orderProcessDropdownLocalDataStore = async (user_id) => {
 
 };
 
-export default orderProcessDropdownLocalDataStore;
+export default useOrderProcessDropdownLocalDataStore;

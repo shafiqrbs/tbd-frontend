@@ -15,7 +15,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import { setFormLoading } from "../../../../store/inventory/crudSlice";
 import DatePickerForm from "../../../form-builders/DatePicker.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 import getAccountingSubHeadDropdownData from "../../../global-hook/dropdown/getAccountingSubHeadDropdownData";
 import getAccountingLedgerDropdownData from "../../../global-hook/dropdown/getAccountingLedgerDropdownData";
 import getVoucherDropdownData from "../../../global-hook/dropdown/getVoucherDropdownData";
@@ -29,7 +29,7 @@ function AccountingForm(props) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-  const {domainConfig,fetchDomainConfig} = getDomainConfig()
+  const {domainConfig,fetchDomainConfig} = useDomainConfig()
     const id = domainConfig?.id;
     const account_config = domainConfig?.account_config;
 

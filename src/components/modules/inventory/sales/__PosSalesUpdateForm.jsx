@@ -9,7 +9,7 @@ import {IconPercentage, IconSum, IconX} from "@tabler/icons-react";
 import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import __PosInvoiceSection from "./__PosInvoiceSetion.jsx";
 import {getHotkeyHandler, useToggle} from "@mantine/hooks";
-import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 import {useDispatch} from "react-redux";
 import {updateEntityData} from "../../../../store/inventory/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
@@ -119,7 +119,7 @@ export default function __PosSalesUpdateForm(props) {
     // Fetch customer dropdown data from local storage
     useEffect(() => {
         const fetchCustomers = async () => {
-            await customerDataStoreIntoLocalStorage();
+            await useCustomerDataStoreIntoLocalStorage();
             let coreCustomers = localStorage.getItem("core-customers");
             coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : [];
 

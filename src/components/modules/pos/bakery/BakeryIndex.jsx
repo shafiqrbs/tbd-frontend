@@ -9,7 +9,7 @@ import classes from "./css/Index.module.css";
 import HeaderNavbar from "../HeaderNavbar.jsx";
 import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
 import {setDropdownLoad} from "../../../../store/inventory/crudSlice.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import {getIndexEntityData} from "../../../../store/core/crudSlice.js";
 
 export default function BakeryIndex() {
@@ -18,7 +18,7 @@ export default function BakeryIndex() {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const progress = getLoadingProgress();
-    const {configData, fetchData} = getConfigData();
+    const {configData, fetchData} = useConfigData();
 
     // ✅ Redux Store Data
     const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad);

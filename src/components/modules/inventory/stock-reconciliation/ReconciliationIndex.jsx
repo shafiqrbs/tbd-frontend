@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress";
-import getConfigData from "../../../global-hook/config-data/getConfigData";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import ReconciliationForm from "./ReconciliationForm";
 import ReconciliationTable from "./ReconciliationTable";
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
@@ -19,7 +19,7 @@ export default function ReconciliationIndex() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
   const { id } = useParams();
-  const { configData } = getConfigData();
+  const { configData } = useConfigData();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

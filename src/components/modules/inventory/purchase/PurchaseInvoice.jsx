@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Box, Grid, Progress} from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
@@ -12,6 +12,10 @@ function PurchaseInvoice() {
   const domainConfigData = JSON.parse(
     localStorage.getItem("domain-config-data")
   );
+
+    useEffect(() => {
+        localStorage.removeItem("temp-purchase-products")
+    }, []);
 
   return (
     <>

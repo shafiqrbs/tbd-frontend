@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const vendorDataStoreIntoLocalStorage = async () => {
+const useCustomerDataStoreIntoLocalStorage = async () => {
     try {
         const user = localStorage.getItem('user');
         const userId = user ? JSON.parse(user).id : null;
 
         const response = await axios.get(
-            `${import.meta.env.VITE_API_GATEWAY_URL}core/vendor/local-storage`,
+            `${import.meta.env.VITE_API_GATEWAY_URL}core/customer/local-storage`,
             {
                 headers: {
                     "Accept": "application/json",
@@ -21,11 +21,11 @@ const vendorDataStoreIntoLocalStorage = async () => {
         let { data } = response;
 
         if (data && data.data) {
-            localStorage.setItem('core-vendors', JSON.stringify(data.data));
+            localStorage.setItem('core-customers', JSON.stringify(data.data));
         }
     } catch (error) {
         console.error(error);
     }
 };
 
-export default vendorDataStoreIntoLocalStorage;
+export default useCustomerDataStoreIntoLocalStorage;

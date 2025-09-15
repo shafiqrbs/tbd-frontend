@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import BatchIssueForm from "./BatchIssueForm.jsx";
 import { getLoadingProgress } from "../../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../../global-hook/config-data/useConfigData.js";
 import ProductionHeaderNavbar from "../../common/ProductionHeaderNavbar.jsx";
-import getDomainConfig from "../../../../global-hook/config-data/getDomainConfig.js";
+import useDomainConfig from "../../../../global-hook/config-data/useDomainConfig.js";
 export default function BatchIssueIndex() {
   const { t, i18n } = useTranslation();
   const progress = getLoadingProgress();

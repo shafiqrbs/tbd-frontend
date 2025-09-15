@@ -21,7 +21,7 @@ import InputForm from "../../../form-builders/InputForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput";
 import SelectForm from "../../../form-builders/SelectForm";
 
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
+import useVendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
 import _SmsPurchaseModel from "../sales/modal/_SmsPurchaseModel.jsx";
 import VendorViewDrawer from "../../core/vendor/VendorViewDrawer.jsx";
@@ -56,7 +56,7 @@ export default function __PosVendorSection(props) {
     useEffect(() => {
         const fetchVendors = async () => {
             try {
-                await vendorDataStoreIntoLocalStorage();
+                await useVendorDataStoreIntoLocalStorage();
                 const coreVendors = getLocalVendors();
 
                 let determinedDefaultId = defaultVendorId;

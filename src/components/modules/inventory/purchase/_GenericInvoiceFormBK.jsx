@@ -23,7 +23,7 @@ import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import __PurchaseForm from "./__PurchaseForm.jsx";
 import _addProduct from "../../popover-form/_addProduct.jsx";
-import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 import AddProductDrawer from "../sales/drawer-form/AddProductDrawer.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
@@ -53,7 +53,7 @@ function _GenericInvoiceFormBK(props) {
     const [stockProductRestore, setStockProductRestore] = useState(false)
     useEffect(() => {
         if (stockProductRestore) {
-            const local = productsDataStoreIntoLocalStorage()
+            const local = useProductsDataStoreIntoLocalStorage()
         }
     }, [stockProductRestore])
 

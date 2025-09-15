@@ -8,7 +8,7 @@ import {useTranslation} from "react-i18next";
 import {IconX} from "@tabler/icons-react";
 import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import {useToggle} from "@mantine/hooks";
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
+import useVendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 import {useDispatch} from "react-redux";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData";
 import __PosPurchaseInvoiceSection from "./__PosPurchaseInvoiceSection.jsx";
@@ -63,7 +63,7 @@ export default function __PosPurchaseUpdateForm(props) {
 
     // Load vendor data
     const loadVendors = async () => {
-        await vendorDataStoreIntoLocalStorage();
+        await useVendorDataStoreIntoLocalStorage();
         const coreVendors = JSON.parse(localStorage.getItem("core-vendors") || "[]");
 
         const transformed = coreVendors.map((vendor) => ({

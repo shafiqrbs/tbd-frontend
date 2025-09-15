@@ -29,7 +29,7 @@ import getCurrencyDropdownData from "../../../global-hook/dropdown/getCurrencyDr
 import getCountryDropdownData from "../../../global-hook/dropdown/getCountryDropdownData";
 import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 
 function DomainConfigForm(props) {
   const {
@@ -37,7 +37,7 @@ function DomainConfigForm(props) {
   } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const {domainConfig,fetchDomainConfig} = getDomainConfig()
+  const {domainConfig,fetchDomainConfig} = useDomainConfig()
   let currencyList = getCurrencyDropdownData();
   let countryList = getCountryDropdownData();
   let businessModelList = getSettingBusinessModelDropdownData();

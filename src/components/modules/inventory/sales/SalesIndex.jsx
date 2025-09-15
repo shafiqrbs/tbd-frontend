@@ -4,7 +4,7 @@ import {
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import _SalesTable from "./_SalesTable.jsx";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
 import Navigation from "../common/Navigation";

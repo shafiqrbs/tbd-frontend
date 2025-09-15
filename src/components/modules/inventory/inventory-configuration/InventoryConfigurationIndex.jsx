@@ -5,7 +5,7 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar.jsx";
 import Navigation from "../common/Navigation.jsx";
 import InventoryConfigarationForm from "./InventoryConfigarationForm.jsx";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
+import useDomainConfig from "../../../global-hook/config-data/useDomainConfig.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar";
 
 function InventoryConfigurationIndex() {

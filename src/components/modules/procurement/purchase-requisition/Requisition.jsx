@@ -1,14 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress";
-import getConfigData from "../../../global-hook/config-data/getConfigData";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import { Box, Progress } from "@mantine/core";
 import ProcurementHeaderNavbar from "../ProcurementHeaderNavbar";
 import _RequisitionTable from "./_RequisitionTable.jsx";
 export default function Requisition() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
-  const {configData} = getConfigData();
+  const {configData} = useConfigData();
 
   return (
     <>

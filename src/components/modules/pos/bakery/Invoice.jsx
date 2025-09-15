@@ -40,7 +40,7 @@ import {useDispatch} from "react-redux";
 import tableCss from "./css/Table.module.css";
 import classes from "./css/Invoice.module.css";
 import {IconChefHat} from "@tabler/icons-react";
-import getConfigData from "../../../global-hook/config-data/getConfigData";
+import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import {SalesPrintPos} from "../print/pos/SalesPrintPos";
 import {useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
@@ -50,7 +50,7 @@ import {
     storeEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import AddCustomerDrawer from "../../inventory/sales/drawer-form/AddCustomerDrawer.jsx";
-import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 import _CommonDrawer from "./drawer/_CommonDrawer.jsx";
 import {useScroll} from "./utils/ScrollOperations";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
@@ -86,7 +86,7 @@ export default function Invoice(props) {
     const height = mainAreaHeight - 190;
     const calculatedHeight = height - 200; //
 
-    const {configData} = getConfigData();
+    const {configData} = useConfigData();
     const enableTable = !!(configData?.is_pos && invoiceMode === 'table');
     const [printPos, setPrintPos] = useState(false);
     // Sales by user state management
@@ -317,7 +317,7 @@ export default function Invoice(props) {
 
     useEffect(() => {
         const fetchCustomers = async () => {
-            await customerDataStoreIntoLocalStorage();
+            await useCustomerDataStoreIntoLocalStorage();
             let coreCustomers = localStorage.getItem("core-customers");
             coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : [];
             let defaultId = defaultCustomerId;
