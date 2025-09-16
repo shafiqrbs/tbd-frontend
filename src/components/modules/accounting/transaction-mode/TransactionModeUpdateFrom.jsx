@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Button, Flex,
     Grid, Box, ScrollArea, Text, Title, Stack, Tooltip, SimpleGrid, Image,
-    rem,
+    rem, Tabs, LoadingOverlay,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -25,17 +25,17 @@ import {
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
 import { storeEntityDataWithFile } from "../../../../store/accounting/crudSlice.js";
 import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import getSettingAuthorizedTypeDropdownData
-    from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
+import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
+import getSettingAccountModeDropdownData from "../../../global-hook/dropdown/getSettingAccountModeDropdownData.js";
 import { setInsertType } from "../../../../store/inventory/crudSlice.js";
 import { setEditEntityData } from "../../../../store/core/crudSlice.js";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import { notifications } from "@mantine/notifications";
+import getBanksDropdownData from "../../../global-hook/dropdown/getBanksDropdownData";
 
 function TransactionModeUpdateFrom(props) {
     const { t, i18n } = useTranslation();
@@ -54,9 +54,16 @@ function TransactionModeUpdateFrom(props) {
     const [authorisedData, setAuthorisedData] = useState(null);
     const [methodData, setMethodData] = useState(null);
     const [accountTypeData, setAccountTypeData] = useState(null);
+    const [accountModeData, setAccountModeData] = useState(null);
+    const [bankData, setBankData] = useState("");
+    const [activeTab, setActiveTab] = useState("21");
+    const [isLoading, setIsLoading] = useState(true);
 
     const authorizedDropdown = getSettingAuthorizedTypeDropdownData()
     const accountDropdown = getSettingAccountTypeDropdownData()
+    const accountModeDropdown = getSettingAccountModeDropdownData()
+    const transactionMethods = getTransactionMethodDropdownData()
+    const banksDropdownData = getBanksDropdownData()
 
     const [files, setFiles] = useState([]);
 
@@ -67,6 +74,11 @@ function TransactionModeUpdateFrom(props) {
             short_name: '',
             authorised_mode_id: '',
             account_mode_id: '',
+            bank_id: '',
+            account_number: '',
+            branch_name: '',
+            routing_number: '',
+            account_type_mode_id: '',
             service_charge: '',
             account_owner: '',
             path: '',
@@ -76,7 +88,6 @@ function TransactionModeUpdateFrom(props) {
             method_id: isNotEmpty(),
             name: hasLength({ min: 2}),
             short_name: hasLength({ min: 2 }),
-            path: isNotEmpty(),
             service_charge: (value, values) => {
                 if (value) {
                     const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
@@ -92,33 +103,46 @@ function TransactionModeUpdateFrom(props) {
     useEffect(() => {
         setFormLoad(true)
         setFormDataForUpdate(true)
+        setIsLoading(true);
     }, [dispatch, formLoading])
 
     useEffect(() => {
+        if (entityEditData) {
+            form.setValues({
+                method_id: entityEditData?.method_id ? entityEditData.method_id : '',
+                name: entityEditData?.name ? entityEditData.name : '',
+                short_name: entityEditData?.short_name ? entityEditData.short_name : '',
+                authorised_mode_id: entityEditData?.authorised_mode_id ? entityEditData.authorised_mode_id : '',
+                account_mode_id: entityEditData?.account_mode_id ? entityEditData.account_mode_id : '',
+                bank_id: entityEditData?.bank_id ? entityEditData.bank_id : '',
+                account_number: entityEditData?.account_number ? entityEditData.account_number : '',
+                routing_number: entityEditData?.routing_number ? entityEditData.routing_number : '',
+                branch_name: entityEditData?.branch_name ? entityEditData.branch_name : '',
+                account_type_mode_id: entityEditData?.account_type_mode_id ? entityEditData.account_type_mode_id : '',
+                service_charge: entityEditData?.service_charge ? entityEditData.service_charge : '',
+                account_owner: entityEditData?.account_owner ? entityEditData.account_owner : '',
+                path: entityEditData?.path ? entityEditData.path : '',
+                is_selected: entityEditData?.is_selected == 1 ? true : false,
+            });
 
-        form.setValues({
-            method_id: entityEditData?.method_id ? entityEditData.method_id : '',
-            name: entityEditData?.name ? entityEditData.name : '',
-            short_name: entityEditData?.short_name ? entityEditData.short_name : '',
-            authorised_mode_id: entityEditData?.authorised_mode_id ? entityEditData.authorised_mode_id : '',
-            account_mode_id: entityEditData?.account_mode_id ? entityEditData.account_mode_id : '',
-            service_charge: entityEditData?.service_charge ? entityEditData.service_charge : '',
-            account_owner: entityEditData?.account_owner ? entityEditData.account_owner : '',
-            account_number: entityEditData?.account_number ? entityEditData.account_number : '',
-            routing_number: entityEditData?.routing_number ? entityEditData.routing_number : '',
-            branch_name: entityEditData?.branch_name ? entityEditData.branch_name : '',
-            bank_id: entityEditData?.bank_id ? entityEditData.bank_id : '',
-            path: entityEditData?.path ? entityEditData.path : '',
-            is_selected: entityEditData?.is_selected ? entityEditData.is_selected : '',
-        })
+            // Set active tab based on method_id
+            if (entityEditData.method_id) {
+                setActiveTab(String(entityEditData.method_id));
+            }
+        }
 
         dispatch(setFormLoading(false))
-        setTimeout(() => {
+
+        // Simulate loading delay for better UX
+        const loadingTimer = setTimeout(() => {
             setFormLoad(false)
             setFormDataForUpdate(false)
+            setIsLoading(false);
         }, 500)
 
-    }, [dispatch, setFormData])
+        return () => clearTimeout(loadingTimer);
+
+    }, [dispatch, setFormData, entityEditData]);
 
     useHotkeys([['alt+n', () => {
         document.getElementById('method_id').click()
@@ -132,9 +156,40 @@ function TransactionModeUpdateFrom(props) {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
 
+    if (isLoading) {
+        return (
+            <Box style={{ position: 'relative', height: '400px' }}>
+                <LoadingOverlay
+                    visible={true}
+                    loaderProps={{
+                        size: 'xs',
+                        color: 'blue',
+                    }}
+                    overlayProps={{
+                        blur: 2,
+                        radius: "sm",
+                    }}
+                    zIndex={1000}
+                />
+            </Box>
+        );
+    }
 
     return (
-        <Box>
+        <Box style={{ position: 'relative' }}>
+            <LoadingOverlay
+                visible={formLoad}
+                loaderProps={{
+                    size: 'xs',
+                    color: 'blue',
+                }}
+                overlayProps={{
+                    blur: 2,
+                    radius: "sm",
+                }}
+                zIndex={1000}
+            />
+
             <Grid columns={9} gutter={{ base: 8 }}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
@@ -149,7 +204,7 @@ function TransactionModeUpdateFrom(props) {
                             labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red.5' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
-                                setSaveCreateLoading(false)
+                                setSaveCreateLoading(true);
                                 const formValue = { ...form.values };
                                 formValue['path'] = files[0];
                                 formValue['is_selected'] = form.values.is_selected == true ? 1 : 0;
@@ -158,7 +213,6 @@ function TransactionModeUpdateFrom(props) {
                                     data: formValue
                                 }
                                 dispatch(storeEntityDataWithFile(data))
-
 
                                 notifications.show({
                                     color: 'teal',
@@ -181,7 +235,6 @@ function TransactionModeUpdateFrom(props) {
                     })}>
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
-
                                 <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
                                     <Grid>
                                         <Grid.Col span={6} >
@@ -198,16 +251,17 @@ function TransactionModeUpdateFrom(props) {
                                                             type="submit"
                                                             id="EntityFormSubmit"
                                                             leftSection={<IconDeviceFloppy size={16} />}
+                                                            loading={saveCreateLoading}
                                                         >
-
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={14} fw={400}>
-                                                                    {t("UpdateAndSave")}
+                                                                    {saveCreateLoading ? t('Saving') : t("UpdateAndSave")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>
                                                     }
-                                                </></Stack>
+                                                </>
+                                            </Stack>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -216,23 +270,31 @@ function TransactionModeUpdateFrom(props) {
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box>
-                                                    <Box mt={'xs'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseMethod')}
-                                                            label={t('Method')}
-                                                            placeholder={t('ChooseMethod')}
-                                                            required={true}
-                                                            nextField={'name'}
-                                                            name={'method_id'}
-                                                            form={form}
-                                                            dropdownValue={getTransactionMethodDropdownData()}
-                                                            mt={8}
-                                                            id={'method_id'}
-                                                            searchable={false}
-                                                            value={methodData ? String(methodData) : (entityEditData?.method_id ? String(entityEditData.method_id) : null)}
-                                                            changeValue={setMethodData}
-                                                        />
-                                                    </Box>
+                                                    {/* Tab System */}
+                                                    {transactionMethods && (
+                                                        <Tabs
+                                                            height={50}
+                                                            p={4}
+                                                            bg={"#f0f1f9"}
+                                                            value={activeTab}
+                                                            color="var(--theme-primary-color-6)"
+                                                            variant="pills"
+                                                            radius="sm"
+                                                            onChange={(value) => {
+                                                                setActiveTab(value);
+                                                                form.setFieldValue("method_id", value);
+                                                            }}
+                                                        >
+                                                            <Tabs.List grow>
+                                                                {transactionMethods.map((item, index) => (
+                                                                    <Tabs.Tab key={index} m={2} value={item.value}>
+                                                                        {t(item.label)}
+                                                                    </Tabs.Tab>
+                                                                ))}
+                                                            </Tabs.List>
+                                                        </Tabs>
+                                                    )}
+
                                                     <Box mt={'xs'}>
                                                         <InputForm
                                                             tooltip={t('TransactionModeNameValidateMessage')}
@@ -252,54 +314,199 @@ function TransactionModeUpdateFrom(props) {
                                                             label={t('ShortName')}
                                                             placeholder={t('ShortName')}
                                                             required={true}
-                                                            nextField={'authorised_mode_id'}
+                                                            nextField={'account_owner'}
                                                             name={'short_name'}
                                                             form={form}
                                                             mt={0}
                                                             id={'short_name'}
                                                         />
                                                     </Box>
-                                                    <Box mt={'xs'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseAuthorised')}
-                                                            label={t('Authorised')}
-                                                            placeholder={t('ChooseAuthorised')}
-                                                            required={false}
-                                                            nextField={'account_mode_id'}
-                                                            name={'authorised_mode_id'}
-                                                            form={form}
-                                                            dropdownValue={authorizedDropdown}
-                                                            mt={8}
-                                                            id={'authorised_mode_id'}
-                                                            searchable={false}
-                                                            value={authorisedData ? String(authorisedData) : (entityEditData?.authorised_mode_id ? String(entityEditData.authorised_mode_id) : null)}
-                                                            changeValue={setAuthorisedData}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseAccountType')}
-                                                            label={t('AccountType')}
-                                                            placeholder={t('ChooseAccountType')}
-                                                            required={false}
-                                                            nextField={'service_charge'}
-                                                            name={'account_mode_id'}
-                                                            form={form}
-                                                            dropdownValue={accountDropdown}
-                                                            mt={8}
-                                                            id={'account_mode_id'}
-                                                            searchable={false}
-                                                            value={accountTypeData ? String(accountTypeData) : (entityEditData?.account_mode_id ? String(entityEditData.account_mode_id) : null)}
-                                                            changeValue={setAccountTypeData}
-                                                        />
-                                                    </Box>
+
+                                                    {/* Bank Transfer Fields (Method ID 21) */}
+                                                    {activeTab === '21' && (
+                                                        <>
+                                                            <Box mt={'xs'}>
+                                                                <InputForm
+                                                                    tooltip={t('AccountOwnerValidateMessage')}
+                                                                    label={t('AccountOwner')}
+                                                                    placeholder={t('AccountOwner')}
+                                                                    required={false}
+                                                                    nextField={'bank_id'}
+                                                                    name={'account_owner'}
+                                                                    form={form}
+                                                                    mt={8}
+                                                                    id={'account_owner'}
+                                                                />
+                                                            </Box>
+                                                            <Box mt={'xs'}>
+                                                                <SelectForm
+                                                                    tooltip={t("ChooseBank")}
+                                                                    label={t("ChooseBank")}
+                                                                    placeholder={t("ChooseBank")}
+                                                                    required={false}
+                                                                    nextField="account_mode_id"
+                                                                    name="bank_id"
+                                                                    form={form}
+                                                                    dropdownValue={banksDropdownData}
+                                                                    id="bank_id"
+                                                                    searchable={true}
+                                                                    value={bankData || (entityEditData?.bank_id ? String(entityEditData.bank_id) : '')}
+                                                                    changeValue={(value) => {
+                                                                        setBankData(value);
+                                                                        form.setFieldValue("bank_id", value);
+                                                                    }}
+                                                                />
+                                                            </Box>
+                                                            <Box mt={'xs'}>
+                                                                <SelectForm
+                                                                    tooltip={t('ChooseBankMode')}
+                                                                    label={t('BankMode')}
+                                                                    placeholder={t('BankMode')}
+                                                                    required={false}
+                                                                    nextField={'account_type_mode_id'}
+                                                                    name={'account_mode_id'}
+                                                                    form={form}
+                                                                    dropdownValue={accountModeDropdown}
+                                                                    mt={8}
+                                                                    id={'account_mode_id'}
+                                                                    searchable={false}
+                                                                    value={accountModeData || (entityEditData?.account_mode_id ? String(entityEditData.account_mode_id) : '')}
+                                                                    changeValue={setAccountModeData}
+                                                                />
+                                                            </Box>
+                                                            <Box mt={'xs'}>
+                                                                <SelectForm
+                                                                    tooltip={t('ChooseAccountType')}
+                                                                    label={t('AccountType')}
+                                                                    placeholder={t('ChooseAccountType')}
+                                                                    required={false}
+                                                                    nextField={'account_number'}
+                                                                    name={'account_type_mode_id'}
+                                                                    form={form}
+                                                                    dropdownValue={accountDropdown}
+                                                                    mt={8}
+                                                                    id={'account_type_mode_id'}
+                                                                    searchable={false}
+                                                                    value={accountTypeData || (entityEditData?.account_type_mode_id ? String(entityEditData.account_type_mode_id) : '')}
+                                                                    changeValue={setAccountTypeData}
+                                                                />
+                                                            </Box>
+                                                            <Box mt={'xs'}>
+                                                                <InputForm
+                                                                    tooltip={t('AccountNumberValidationMessage')}
+                                                                    label={t('AccountNumber')}
+                                                                    placeholder={t('AccountNumber')}
+                                                                    required={false}
+                                                                    nextField={'branch_name'}
+                                                                    name={'account_number'}
+                                                                    form={form}
+                                                                    mt={'md'}
+                                                                    id={'account_number'}
+                                                                />
+                                                            </Box>
+                                                            <Box mt={'xs'}>
+                                                                <InputForm
+                                                                    tooltip={t('BranchNameValidationMessage')}
+                                                                    label={t('BranchName')}
+                                                                    placeholder={t('BranchName')}
+                                                                    required={false}
+                                                                    nextField={'routing_number'}
+                                                                    name={'branch_name'}
+                                                                    form={form}
+                                                                    mt={'md'}
+                                                                    id={'branch_name'}
+                                                                />
+                                                            </Box>
+                                                            <Box mt={'xs'}>
+                                                                <InputForm
+                                                                    tooltip={t('RoutingNumberValidationMessage')}
+                                                                    label={t('RoutingNumber')}
+                                                                    placeholder={t('RoutingNumber')}
+                                                                    required={false}
+                                                                    nextField={'service_charge'}
+                                                                    name={'routing_number'}
+                                                                    form={form}
+                                                                    mt={'md'}
+                                                                    id={'routing_number'}
+                                                                />
+                                                            </Box>
+                                                        </>
+                                                    )}
+
+                                                    {/* Mobile Banking Fields (Method ID 22) */}
+                                                    {activeTab === '22' && (
+                                                        <>
+                                                            <Box mt={'xs'}>
+                                                                <SelectForm
+                                                                    tooltip={t('ChooseBankMode')}
+                                                                    label={t('BankMode')}
+                                                                    placeholder={t('BankMode')}
+                                                                    required={false}
+                                                                    nextField={'account_type_mode_id'}
+                                                                    name={'account_mode_id'}
+                                                                    form={form}
+                                                                    dropdownValue={accountModeDropdown}
+                                                                    mt={8}
+                                                                    id={'account_mode_id'}
+                                                                    searchable={false}
+                                                                    value={accountModeData || (entityEditData?.account_mode_id ? String(entityEditData.account_mode_id) : '')}
+                                                                    changeValue={setAccountModeData}
+                                                                />
+                                                            </Box>
+                                                            <Box mt={'xs'}>
+                                                                <InputForm
+                                                                    tooltip={t('AccountOwnerValidateMessage')}
+                                                                    label={t('AccountOwner')}
+                                                                    placeholder={t('AccountOwner')}
+                                                                    required={false}
+                                                                    nextField={'is_selected'}
+                                                                    name={'account_owner'}
+                                                                    form={form}
+                                                                    mt={8}
+                                                                    id={'account_owner'}
+                                                                />
+                                                            </Box>
+                                                            <Box mt={'xs'}>
+                                                                <InputForm
+                                                                    tooltip={t('MobileAccountValidateMessage')}
+                                                                    label={t('MobileAccount')}
+                                                                    placeholder={t('MobileAccount')}
+                                                                    required={false}
+                                                                    nextField={'account_mode_id'}
+                                                                    name={'mobile'}
+                                                                    form={form}
+                                                                    mt={0}
+                                                                    id={'mobile'}
+                                                                />
+                                                            </Box>
+                                                            <Box mt={'xs'}>
+                                                                <SelectForm
+                                                                    tooltip={t('ChooseAuthorised')}
+                                                                    label={t('Authorised')}
+                                                                    placeholder={t('ChooseAuthorised')}
+                                                                    required={false}
+                                                                    nextField={'service_charge'}
+                                                                    name={'authorised_mode_id'}
+                                                                    form={form}
+                                                                    dropdownValue={authorizedDropdown}
+                                                                    mt={8}
+                                                                    id={'authorised_mode_id'}
+                                                                    searchable={false}
+                                                                    value={authorisedData || (entityEditData?.authorised_mode_id ? String(entityEditData.authorised_mode_id) : '')}
+                                                                    changeValue={setAuthorisedData}
+                                                                />
+                                                            </Box>
+                                                        </>
+                                                    )}
+
+                                                    {/* Common Fields */}
                                                     <Box mt={'xs'}>
                                                         <InputForm
                                                             tooltip={t('ServiceChargeValidationMessage')}
                                                             label={t('ServiceCharge')}
                                                             placeholder={t('ServiceCharge')}
                                                             required={false}
-                                                            nextField={'account_owner'}
+                                                            nextField={''}
                                                             name={'service_charge'}
                                                             form={form}
                                                             mt={'md'}
@@ -308,19 +515,6 @@ function TransactionModeUpdateFrom(props) {
                                                             leftSection={
                                                                 <IconPlusMinus size={16} opacity={0.5} />
                                                             }
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
-                                                            tooltip={t('AccountOwnerValidateMessage')}
-                                                            label={t('AccountOwner')}
-                                                            placeholder={t('AccountOwner')}
-                                                            required={false}
-                                                            nextField={'service_name'}
-                                                            name={'account_owner'}
-                                                            form={form}
-                                                            mt={8}
-                                                            id={'account_owner'}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
@@ -333,7 +527,7 @@ function TransactionModeUpdateFrom(props) {
                                                             color='var(--theme-primary-color-6)'
                                                             id={'is_selected'}
                                                             position={'left'}
-                                                            checked={form.values?.is_selected == 1 ? true : false}
+                                                            checked={form.values?.is_selected}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
@@ -376,16 +570,19 @@ function TransactionModeUpdateFrom(props) {
                                                             mt={'xs'}
                                                             mb={'xs'}
                                                         >
-                                                            <Image height={100} fit="cover" alt="Logo" src={'https://poshbackend.poskeeper.com/uploads/accounting/transaction-mode/' + entityEditData?.path} />
+                                                            <Image
+                                                                height={100}
+                                                                fit="cover"
+                                                                alt="Logo"
+                                                                src={entityEditData?.path}
+                                                            />
                                                         </Flex>
-
                                                     </Box>
                                                 </Box>
                                             </ScrollArea>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-
                             </Box>
                         </Box>
                     </form>
@@ -402,7 +599,7 @@ function TransactionModeUpdateFrom(props) {
                 </Grid.Col>
             </Grid>
         </Box>
-
     );
 }
+
 export default TransactionModeUpdateFrom;
