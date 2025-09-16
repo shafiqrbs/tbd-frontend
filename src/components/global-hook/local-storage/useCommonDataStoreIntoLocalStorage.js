@@ -2,7 +2,7 @@ import axios from "axios";
 
 const useCommonDataStoreIntoLocalStorage = async (user_id) => {
     const apiBackendRoutes = [
-        'inventory/config', // this is old implementation , remove this after new domain config final implementation
+        'inventory/config',  // this is old implementation , remove this after new domain config final implementation
         'inventory/stock-item',
         'core/customer/local-storage',
         'core/vendor/local-storage',
@@ -18,6 +18,8 @@ const useCommonDataStoreIntoLocalStorage = async (user_id) => {
         'accounting-transaction-mode',
     ];
 
+    let configData = null;
+
     for (let i = 0; i < apiBackendRoutes.length; i++) {
         try {
             const response = await axios({
@@ -31,16 +33,22 @@ const useCommonDataStoreIntoLocalStorage = async (user_id) => {
                     "X-Api-User": user_id
                 }
             })
+
             if (response.data.data) {
-                if ('inventory/config' == apiBackendRoutes[i]){
-                    localStorage.setItem(localStorageKeys[i], JSON.stringify(response.data.data.configData));
+                if (apiBackendRoutes[i] === 'inventory/config') {
+                    // Store the main config data
+                    configData = response.data.data.configData || response.data.data;
+                    localStorage.setItem('config-data', JSON.stringify(configData));
+                } else {
+                    localStorage.setItem(localStorageKeys[i], JSON.stringify(response.data.data));
                 }
-                localStorage.setItem(localStorageKeys[i], JSON.stringify(response.data.data));
             }
         } catch (error) {
-            console.log(error);
+            console.log("Error fetching data for", apiBackendRoutes[i], error);
         }
     }
+
+    return configData; // Return the main config data
 };
 
 export default useCommonDataStoreIntoLocalStorage;

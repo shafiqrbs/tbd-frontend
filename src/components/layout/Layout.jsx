@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useDisclosure, useViewportSize } from "@mantine/hooks";
-import { AppShell, LoadingOverlay } from "@mantine/core";
+import { Navigate, Outlet } from "react-router-dom";
+import { useViewportSize } from "@mantine/hooks";
+import { AppShell, LoadingOverlay, Text, Button } from "@mantine/core";
 import Header from "./Header";
 import Footer from "./Footer";
 import MainDashboard from "../modules/dashboard/MainDashboard";
-import { useAuth } from "../context/AuthContext"; // Import the context
+import { useAuth } from "../context/AuthContext";
 
 const Layout = () => {
     const [isOnline, setNetworkStatus] = useState(navigator.onLine);
-    const { height, width } = useViewportSize();
-    const location = useLocation();
+    const { height } = useViewportSize();
     const paramPath = window.location.pathname;
-    const { user, configData, isLoading } = useAuth(); // Use auth context
+    const { user, configData, isLoading, logout } = useAuth();
 
     // Handle network status
     useEffect(() => {
@@ -38,10 +37,17 @@ const Layout = () => {
         return <Navigate replace to="/login" />;
     }
 
+    // Handle missing config data more gracefully
     if (!configData) {
-        // Optional: handle missing config data
-        console.log("Config data not available");
-        return <div>Loading configuration...</div>;
+        return (
+            <div style={{ padding: '2rem', textAlign: 'center' }}>
+                <Text size="xl" mb="md">Configuration data not available</Text>
+                <Text mb="lg">Please try logging in again or contact support.</Text>
+                <Button onClick={logout} color="red">
+                    Logout and Try Again
+                </Button>
+            </div>
+        );
     }
 
     return (

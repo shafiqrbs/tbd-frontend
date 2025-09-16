@@ -5,90 +5,110 @@ import {
     Checkbox,
     Button,
     Title,
-    Text,
-    Anchor, Alert, Tooltip, Group, Center, rem, Box, Loader, Card,
+    Anchor, Alert, Tooltip, Group, Center, rem, Box, Loader
 } from '@mantine/core';
 import LoginPage from './../assets/css/LoginPage.module.css';
 import classes from './../assets/css/AuthenticationImage.module.css';
-import { useViewportSize, getHotkeyHandler, useHotkeys } from '@mantine/hooks'
+import { getHotkeyHandler, useHotkeys } from '@mantine/hooks'
 import { IconInfoCircle, IconLogin, IconArrowLeft } from '@tabler/icons-react';
 import { isNotEmpty, useForm } from '@mantine/form';
 import { Navigate, useNavigate } from 'react-router-dom'
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import useCommonDataStoreIntoLocalStorage from "./global-hook/local-storage/useCommonDataStoreIntoLocalStorage.js";
 import useOrderProcessDropdownLocalDataStore from "./global-hook/local-storage/useOrderProcessDropdownLocalDataStore.js";
+import {useAuth} from "./context/AuthContext.jsx";
 
 export default function Login() {
-
     const { t, i18n } = useTranslation();
     const navigate = useNavigate()
     const icon = <IconInfoCircle />;
+    const { user, isLoading: authLoading, login: authLogin } = useAuth();
 
     const [spinner, setSpinner] = useState(false);
     const [errorMessage, setErrorMessage] = useState('')
 
-    const user = localStorage.getItem("user");
-
-    if (user) {
-        return <Navigate replace to="/" />;
-    }
-
     const form = useForm({
         initialValues: { username: '', password: '' },
-
-        // functions will be used to validate values at corresponding key
         validate: {
             username: isNotEmpty(),
             password: isNotEmpty(),
         },
     });
 
-// Add this function to track loading state
-    const [isLoading, setIsLoading] = useState(true);
-
-// Modify the login function to handle localStorage more efficiently
-    function login(data) {
-        setSpinner(true);
-        axios({
-            method: 'POST',
-            url: `${import.meta.env.VITE_API_GATEWAY_URL + 'user-login'}`,
-            headers: {
-                "Accept": `application/json`,
-                "Content-Type": `application/json`,
-                "Access-Control-Allow-Origin": '*',
-                "X-Api-Key": import.meta.env.VITE_API_KEY
-            },
-            data: data
-        })
-            .then(async res => {
-                if (res.data.status === 200) {
-                    localStorage.setItem("user", JSON.stringify(res.data.data));
-
-                    // Wait for all data to be stored before navigating
-                    await Promise.all([
-                        useCommonDataStoreIntoLocalStorage(res.data.data.id),
-                        useOrderProcessDropdownLocalDataStore(res.data.data.id)
-                    ]);
-
-                    setErrorMessage('');
-                    setSpinner(false);
-                    navigate('/');
-                } else {
-                    setErrorMessage(res.data.message);
-                    setSpinner(false);
-                }
-            })
-            .catch(function (error) {
-                setSpinner(false);
-                console.log(error);
-            });
-    }
-
     useHotkeys([['alt+n', () => {
         document.getElementById('Username').focus()
     }]], []);
+
+    // Show loading while checking auth status
+    if (authLoading) {
+        return <div>Loading...</div>;
+    }
+
+    // Redirect if already logged in - this must come AFTER all hooks
+    if (user) {
+        return <Navigate replace to="/" />;
+    }
+
+    async function login(data) {
+        setSpinner(true);
+        try {
+            const response = await axios({
+                method: 'POST',
+                url: `${import.meta.env.VITE_API_GATEWAY_URL + 'user-login'}`,
+                headers: {
+                    "Accept": `application/json`,
+                    "Content-Type": `application/json`,
+                    "Access-Control-Allow-Origin": '*',
+                    "X-Api-Key": import.meta.env.VITE_API_KEY
+                },
+                data: data
+            });
+
+            if (response.data.status === 200) {
+                try {
+                    // Wait for all data to be stored and get the main config data
+                    const [configData, orderProcessData] = await Promise.all([
+                        useCommonDataStoreIntoLocalStorage(response.data.data.id),
+                        useOrderProcessDropdownLocalDataStore(response.data.data.id)
+                    ]);
+
+                    if (!configData) {
+                        throw new Error("Failed to load configuration data");
+                    }
+
+                    // Update auth context with user data and config
+                    await authLogin(response.data.data, {
+                        configData: configData
+                    });
+
+                    setErrorMessage('');
+                    setSpinner(false);
+                    navigate('/', { replace: true });
+                } catch (dataError) {
+                    console.error("Error loading user data:", dataError);
+                    setErrorMessage('Failed to load user configuration data');
+                    setSpinner(false);
+
+                    // Clear any partially stored data
+                    localStorage.removeItem("user");
+                    localStorage.removeItem("config-data");
+                }
+            } else {
+                setErrorMessage(response.data.message);
+                setSpinner(false);
+            }
+        } catch (error) {
+            setSpinner(false);
+            setErrorMessage('Login failed. Please try again.');
+            console.error("Login error:", error);
+
+            // Clear any partially stored data
+            localStorage.removeItem("user");
+            localStorage.removeItem("config-data");
+        }
+    }
 
     return (
         <div className={classes.wrapper}>
@@ -155,7 +175,6 @@ export default function Login() {
                                 }],
                             ])}
                         />
-
                     </Tooltip>
                     <Checkbox label="Keep me logged in" mt="xl" size="md" />
                     <Group justify="space-between" mt="lg" className={LoginPage.controls}>

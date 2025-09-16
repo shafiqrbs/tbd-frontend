@@ -224,11 +224,11 @@ export default function _MatrixTable() {
                                     },
                                     {
                                         accessor: "created_date",
-                                        title: t("Created"),
+                                        title: t("CreatedDate"),
                                     },
                                     {
                                         accessor: "generate_date",
-                                        title: t("Generated"),
+                                        title: t("ExpectedDate"),
                                     },
                                     {
                                         accessor: "batch_no",

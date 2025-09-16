@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Layout from "./components/layout/Layout";
 import SampleDashboard from "./components/modules/sample-module/DashBoard";
@@ -98,722 +98,722 @@ import {AuthProvider} from "./components/context/AuthContext.jsx";
 function AppRoute() {
 	return (
         <AuthProvider>
-		<Routes>
-			<Route path="/login" element={<Login />} />
-			<Route path="/" element={<Layout />}>
-				<Route path="/sample/">
-					<Route path="" element={<SampleDashboard />} />
-					<Route path="invoice" element={<SampleInvoice />} />
-					<Route path="index" element={<SampleIndex />} />
-				</Route>
-				<Route path="/core" element={<ProtectedModule modules={["core"]} />}>
-					<Route path="file-upload/">
-						<Route path="" element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin"]}>
-								<FileUploadIndex />
-							</ProtectedRoute>
-						} />
-					</Route>
-					<Route
-						path="customer"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
-								<CustomerIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="customer/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
-								<CustomerIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="user"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin"]}>
-								<UserIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="user/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin"]}>
-								<UserIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="vendor"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
-								<VendorIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="vendor/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
-								<VendorIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="setting"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin"]}>
-								<SettingsIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="setting/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin"]}>
-								<SettingsIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="warehouse"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
-								<WarehouseIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="warehouse/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
-								<WarehouseIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="warehouse-list"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
-								<WarehouseListIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="marketing-executive"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
-								<MarketingExecutiveIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="marketing-executive/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
-								<MarketingExecutiveIndex />
-							</ProtectedRoute>
-						}
-					/>
-				</Route>
-				<Route path="/inventory" element={<ProtectedModule modules={["sales-purchase", "inventory"]} />}>
-					<Route
-						path="warehouse-issue"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
-								<WarehouseIssueIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="sales/edit/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
-								<SalesEdit />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="sales"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
-								<SalesIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="sales-invoice"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
-								<SalesInvoice />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="purchase/edit/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
-								<PurchaseEdit />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="purchase"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
-								<PurchaseIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="purchase-invoice"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
-								<PurchaseInvoice />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="opening-stock"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<OpeningStockIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="opening-approve-stock"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin"]}>
-								<OpeningApproveIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="product"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<ProductIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="product/:slug"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<ProductIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="product/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<ProductIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="category"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<CategoryIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="category/:categoryId"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<CategoryIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="category-group"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<CategoryGroupIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="category-group/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<CategoryGroupIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="config"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin"]}>
-								<InventoryConfigurationIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="invoice-batch"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<InvoiceBatchIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="particular"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<ParticularIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="particular/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<ParticularIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="product-settings"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin"]}>
-								<ProductSettingsIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="product-settings/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin"]}>
-								<ProductSettingsIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="stock"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
-								<StockIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="stock/:slug"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
-								<StockIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="stock-reconciliation"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<ReconciliationIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="stock-reconciliation/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<ReconciliationIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="stock-transfer"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<TransferIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="stock-transfer/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<TransferIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="coupon-code"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<CouponIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="coupon-code/:id"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<CouponIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="barcode-print"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<BarcodePrintIndex />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="product-batch"
-						element={
-							<ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-								<ProductBatch />
-							</ProtectedRoute>
-						}
-					/>
-				</Route>
-				<Route path="/discount" element={<ProtectedModule modules={["sales-purchase", "inventory"]} />}>
-					<Route path="" element={
-						<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
-							<DiscountDashboard />
-						</ProtectedRoute>
-					} />
-					<Route path="users" element={
-						<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>
-							<DiscountUserIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="config" element={
-						<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>
-							<DiscountConfigIndex />
-						</ProtectedRoute>
-					} />
-				</Route>
-				<Route path="/production" element={<ProtectedModule modules={["production"]} />}>
-					<Route path="items" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
-							<RecipeItemsIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="recipe-update/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
-							<RecipeIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="setting" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin"]}>
-							<ProductionSettingIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="setting/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin"]}>
-							<ProductionSettingIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="config" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin"]}>
-							<ProductionConfigurationIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="batch" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval", "role_production_operator"]}>
-							<BatchIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="batch/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval", "role_production_operator"]}>
-							<InhouseIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="issue-production-general/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
-							<GeneralIssueIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="issue-production/:type" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
-							<IssueIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="issue-production-batch/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
-							<BatchIssueIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="user-warehouse" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
-							<IssueWarehouseIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="user-warehouse/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
-							<IssueWarehouseIndex />
-						</ProtectedRoute>
-					} />
-				</Route>
-				<Route path="/domain" element={<ProtectedModule modules={["domain"]} />}>
-					<Route path="" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<DomainIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="user" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<DomainUserIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="head" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<HeadDomainIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="sub-head" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<HeadSubGroupIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="ledger" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<LedgerDomainIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="edit/:id" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<DomainIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="config/:id" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<ConfigurationIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="sitemap" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<SitemapIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="sitemap/:id" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<SitemapIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="branch-management" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<BranchManagementIndex />
-						</ProtectedRoute>
-					} />
-
-				</Route>
-				<Route path="/accounting" element={<ProtectedModule modules={["accounting"]} />}>
-					<Route path="dashboard" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
-							<AccountingDashboard type={'index'}/>
-						</ProtectedRoute>
-					} />
-					<Route path="entry" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
-							<VoucherIndex type={'index'}/>
-						</ProtectedRoute>
-					} />
-					<Route path="voucher-entry" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
-							<VoucherIndex type={'create'}/>
-						</ProtectedRoute>
-					} />
-					<Route path="ledger" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
-							<LedgerIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="ledger/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
-							<LedgerIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="ledger/view/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
-							<LedgerViewIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="head-group" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
-							<HeadGroupIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="head-group/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
-							<HeadGroupIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="head-subgroup" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
-							<HeadSubGroupIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="head-subgroup/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
-							<HeadSubGroupIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="transaction-mode" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
-							<TransactionModeIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="voucher-create" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
-							<VoucherCreateIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="voucher-create/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
-							<VoucherCreateIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="transaction-mode/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
-							<TransactionModeIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="config" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
-							<AccountingConfig />
-						</ProtectedRoute>
-					} />
-					<Route path="modalIndex" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
-							<SampleModalIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="balance-sheet" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
-							<BalanceSheetIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="balance-entry" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
-							<BalanceEntryIndex />
-						</ProtectedRoute>
-					} />
-				</Route>
-				<Route path="/procurement" element={<ProtectedModule modules={["procurement"]} />}>
-					<Route path="requisition" element={
-						<ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_operator"]}>
-							<Requisition />
-						</ProtectedRoute>
-					} />
-					<Route path="new-requisition" element={
-						<ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_operator"]}>
-							<RequisitionInvoice />
-						</ProtectedRoute>
-					} />
-					<Route path="requisition/edit/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_operator"]}>
-							<RequisitionUpdate />
-						</ProtectedRoute>
-					} />
-					<Route path="requisition-board" element={
-						<ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
-							<MatrixIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="requisition-board/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
-							<_MatrixUpdate />
-						</ProtectedRoute>
-					} />
-					<Route path="inout" element={
-						<ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
-							<InoutIndex />
-						</ProtectedRoute>
-					} />
-				</Route>
-				<Route path="/reporting" element={<ProtectedModule modules={["accounting", "sales-purchase", "inventory", "production"]} />}>
-					<Route path="reports" element={
-						<ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_sales_purchase_admin", "role_inventory_admin", "role_production_admin"]}>
-							<ReportIndex />
-						</ProtectedRoute>
-					} />
-				</Route>
-				<Route path="sitemap" element={
-					<ProtectedRoute roles={["role_domain"]}>
-						<Sitemap />
-					</ProtectedRoute>
-				} />
-				<Route path="/pos" element={<ProtectedModule modules={["sales-purchase"]} />}>
-					<Route path="bakery" element={
-						<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
-							<BakeryIndex />
-						</ProtectedRoute>
-					} />
-				</Route>
-				<Route path="/b2b" element={<ProtectedModule modules={["sales-purchase"]} />}>
-					<Route path="dashboard" element={
-						<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>
-							<DashboardIndexB2B />
-						</ProtectedRoute>
-					} />
-					<Route path="domain" element={
-						<ProtectedRoute roles={["role_domain"]}>
-							<B2bDomainIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="master-user" element={
-						<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>
-							<B2bUserIndex />
-						</ProtectedRoute>
-					} />
-					<Route path="sub-domain/category/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
-							<CategoryIndexB2B />
-						</ProtectedRoute>
-					} />
-					<Route path="sub-domain/product/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
-							<ProductIndexB2B />
-						</ProtectedRoute>
-					} />
-					<Route path="sub-domain/setting/:id" element={
-						<ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>
-							<SettingIndexB2B />
-						</ProtectedRoute>
-					} />
-				</Route>
-
-				<Route path="report" element={<ProtectedModule modules={["accounting", "sales-purchase", "inventory", "production"]} />}>
-					<Route path="production" element={<ProtectedModule modules={["production"]} />}>
-						<Route path="issue" element={
-							<ProtectedRoute roles={["role_production_admin"]}>
-								<ProductionIssueReport />
-							</ProtectedRoute>
-						} />
-						<Route path="daily" element={
-							<ProtectedRoute roles={["role_production_admin"]}>
-								<DailyProductionExpenseReport />
-							</ProtectedRoute>
-						} />
-						<Route path="daily-warehouse" element={
-							<ProtectedRoute roles={["role_production_admin"]}>
-								<DailyProductionExpenseWarehouseReport />
-							</ProtectedRoute>
-						} />
-					</Route>
-
-                    <Route path="inventory" element={<ProtectedModule modules={["inventory"]} />}>
-						<Route path="daily/sales-warehouse" element={
+            <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Layout />}>
+                    <Route path="/sample/">
+                        <Route path="" element={<SampleDashboard />} />
+                        <Route path="invoice" element={<SampleInvoice />} />
+                        <Route path="index" element={<SampleIndex />} />
+                    </Route>
+                    <Route path="/core" element={<ProtectedModule modules={["core"]} />}>
+                        <Route path="file-upload/">
+                            <Route path="" element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin"]}>
+                                    <FileUploadIndex />
+                                </ProtectedRoute>
+                            } />
+                        </Route>
+                        <Route
+                            path="customer"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
+                                    <CustomerIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="customer/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
+                                    <CustomerIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="user"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin"]}>
+                                    <UserIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="user/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin"]}>
+                                    <UserIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="vendor"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
+                                    <VendorIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="vendor/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
+                                    <VendorIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="setting"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin"]}>
+                                    <SettingsIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="setting/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin"]}>
+                                    <SettingsIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="warehouse"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
+                                    <WarehouseIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="warehouse/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
+                                    <WarehouseIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="warehouse-list"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
+                                    <WarehouseListIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="marketing-executive"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
+                                    <MarketingExecutiveIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="marketing-executive/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_core_admin", "role_core_manager"]}>
+                                    <MarketingExecutiveIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                    </Route>
+                    <Route path="/inventory" element={<ProtectedModule modules={["sales-purchase", "inventory"]} />}>
+                        <Route
+                            path="warehouse-issue"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+                                    <WarehouseIssueIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="sales/edit/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+                                    <SalesEdit />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="sales"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
+                                    <SalesIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="sales-invoice"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
+                                    <SalesInvoice />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="purchase/edit/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+                                    <PurchaseEdit />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="purchase"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
+                                    <PurchaseIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="purchase-invoice"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
+                                    <PurchaseInvoice />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="opening-stock"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <OpeningStockIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="opening-approve-stock"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin"]}>
+                                    <OpeningApproveIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="product"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <ProductIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="product/:slug"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <ProductIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="product/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <ProductIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="category"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <CategoryIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="category/:categoryId"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <CategoryIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="category-group"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <CategoryGroupIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="category-group/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <CategoryGroupIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="config"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin"]}>
+                                    <InventoryConfigurationIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="invoice-batch"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <InvoiceBatchIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="particular"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <ParticularIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="particular/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <ParticularIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="product-settings"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin"]}>
+                                    <ProductSettingsIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="product-settings/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin"]}>
+                                    <ProductSettingsIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="stock"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
+                                    <StockIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="stock/:slug"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
+                                    <StockIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="stock-reconciliation"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <ReconciliationIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="stock-reconciliation/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <ReconciliationIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="stock-transfer"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <TransferIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="stock-transfer/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <TransferIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="coupon-code"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <CouponIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="coupon-code/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <CouponIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="barcode-print"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <BarcodePrintIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="product-batch"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
+                                    <ProductBatch />
+                                </ProtectedRoute>
+                            }
+                        />
+                    </Route>
+                    <Route path="/discount" element={<ProtectedModule modules={["sales-purchase", "inventory"]} />}>
+                        <Route path="" element={
                             <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
-								<DailySalesWarehouseReport />
-							</ProtectedRoute>
-						} />
-					</Route>
-				</Route>
-			</Route>
-		</Routes>
+                                <DiscountDashboard />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="users" element={
+                            <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>
+                                <DiscountUserIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="config" element={
+                            <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>
+                                <DiscountConfigIndex />
+                            </ProtectedRoute>
+                        } />
+                    </Route>
+                    <Route path="/production" element={<ProtectedModule modules={["production"]} />}>
+                        <Route path="items" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
+                                <RecipeItemsIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="recipe-update/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
+                                <RecipeIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="setting" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin"]}>
+                                <ProductionSettingIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="setting/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin"]}>
+                                <ProductionSettingIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="config" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin"]}>
+                                <ProductionConfigurationIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="batch" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval", "role_production_operator"]}>
+                                <BatchIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="batch/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval", "role_production_operator"]}>
+                                <InhouseIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="issue-production-general/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
+                                <GeneralIssueIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="issue-production/:type" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
+                                <IssueIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="issue-production-batch/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
+                                <BatchIssueIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="user-warehouse" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
+                                <IssueWarehouseIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="user-warehouse/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
+                                <IssueWarehouseIndex />
+                            </ProtectedRoute>
+                        } />
+                    </Route>
+                    <Route path="/domain" element={<ProtectedModule modules={["domain"]} />}>
+                        <Route path="" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <DomainIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="user" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <DomainUserIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="head" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <HeadDomainIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="sub-head" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <HeadSubGroupIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="ledger" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <LedgerDomainIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="edit/:id" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <DomainIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="config/:id" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <ConfigurationIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="sitemap" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <SitemapIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="sitemap/:id" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <SitemapIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="branch-management" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <BranchManagementIndex />
+                            </ProtectedRoute>
+                        } />
+
+                    </Route>
+                    <Route path="/accounting" element={<ProtectedModule modules={["accounting"]} />}>
+                        <Route path="dashboard" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+                                <AccountingDashboard type={'index'}/>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="entry" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+                                <VoucherIndex type={'index'}/>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="voucher-entry" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+                                <VoucherIndex type={'create'}/>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="ledger" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+                                <LedgerIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="ledger/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+                                <LedgerIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="ledger/view/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+                                <LedgerViewIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="head-group" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
+                                <HeadGroupIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="head-group/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
+                                <HeadGroupIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="head-subgroup" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
+                                <HeadSubGroupIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="head-subgroup/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
+                                <HeadSubGroupIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="transaction-mode" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
+                                <TransactionModeIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="voucher-create" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+                                <VoucherCreateIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="voucher-create/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+                                <VoucherCreateIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="transaction-mode/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
+                                <TransactionModeIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="config" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
+                                <AccountingConfig />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="modalIndex" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
+                                <SampleModalIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="balance-sheet" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
+                                <BalanceSheetIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="balance-entry" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin"]}>
+                                <BalanceEntryIndex />
+                            </ProtectedRoute>
+                        } />
+                    </Route>
+                    <Route path="/procurement" element={<ProtectedModule modules={["procurement"]} />}>
+                        <Route path="requisition" element={
+                            <ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_operator"]}>
+                                <Requisition />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="new-requisition" element={
+                            <ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_operator"]}>
+                                <RequisitionInvoice />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="requisition/edit/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_operator"]}>
+                                <RequisitionUpdate />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="requisition-board" element={
+                            <ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
+                                <MatrixIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="requisition-board/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
+                                <_MatrixUpdate />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="inout" element={
+                            <ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
+                                <InoutIndex />
+                            </ProtectedRoute>
+                        } />
+                    </Route>
+                    <Route path="/reporting" element={<ProtectedModule modules={["accounting", "sales-purchase", "inventory", "production"]} />}>
+                        <Route path="reports" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_sales_purchase_admin", "role_inventory_admin", "role_production_admin"]}>
+                                <ReportIndex />
+                            </ProtectedRoute>
+                        } />
+                    </Route>
+                    <Route path="sitemap" element={
+                        <ProtectedRoute roles={["role_domain"]}>
+                            <Sitemap />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/pos" element={<ProtectedModule modules={["sales-purchase"]} />}>
+                        <Route path="bakery" element={
+                            <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
+                                <BakeryIndex />
+                            </ProtectedRoute>
+                        } />
+                    </Route>
+                    <Route path="/b2b" element={<ProtectedModule modules={["sales-purchase"]} />}>
+                        <Route path="dashboard" element={
+                            <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>
+                                <DashboardIndexB2B />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="domain" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <B2bDomainIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="master-user" element={
+                            <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>
+                                <B2bUserIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="sub-domain/category/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+                                <CategoryIndexB2B />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="sub-domain/product/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+                                <ProductIndexB2B />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="sub-domain/setting/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin"]}>
+                                <SettingIndexB2B />
+                            </ProtectedRoute>
+                        } />
+                    </Route>
+
+                    <Route path="report" element={<ProtectedModule modules={["accounting", "sales-purchase", "inventory", "production"]} />}>
+                        <Route path="production" element={<ProtectedModule modules={["production"]} />}>
+                            <Route path="issue" element={
+                                <ProtectedRoute roles={["role_production_admin"]}>
+                                    <ProductionIssueReport />
+                                </ProtectedRoute>
+                            } />
+                            <Route path="daily" element={
+                                <ProtectedRoute roles={["role_production_admin"]}>
+                                    <DailyProductionExpenseReport />
+                                </ProtectedRoute>
+                            } />
+                            <Route path="daily-warehouse" element={
+                                <ProtectedRoute roles={["role_production_admin"]}>
+                                    <DailyProductionExpenseWarehouseReport />
+                                </ProtectedRoute>
+                            } />
+                        </Route>
+
+                        <Route path="inventory" element={<ProtectedModule modules={["inventory"]} />}>
+                            <Route path="daily/sales-warehouse" element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+                                    <DailySalesWarehouseReport />
+                                </ProtectedRoute>
+                            } />
+                        </Route>
+                    </Route>
+                </Route>
+            </Routes>
         </AuthProvider>
 	);
 }

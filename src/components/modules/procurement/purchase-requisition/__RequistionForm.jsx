@@ -33,7 +33,7 @@ export default function __RequistionForm(props) {
             vendor_id: "",
             order_process: "",
             narration: "",
-            expected_date: "",
+            expected_date: new Date(),
         },
         validate: {
             vendor_id: isNotEmpty(),
