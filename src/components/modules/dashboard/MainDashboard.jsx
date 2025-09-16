@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import {useNavigate} from "react-router-dom";
 import {
     rem,
     Text,
@@ -37,7 +37,6 @@ import {
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import classes from "../../../assets/css/FeaturesCards.module.css";
-import useConfigData from "../../global-hook/config-data/useConfigData.js";
 import pos from "../../../assets/images/pos/pos.png";
 import invoice from "../../../assets/images/pos/invoice.png";
 import voucher from "../../../assets/images/pos/voucher.png";
@@ -51,7 +50,7 @@ import {useAuth} from "../../context/AuthContext.jsx";
 function MainDashboard(props) {
     const { t, i18n } = useTranslation();
     const height = props.height - 105;
-    const { domainConfig, fetchDomainConfig } = useDomainConfig();
+    const { domainConfig } = useDomainConfig();
     const { configData, isLoading } = useAuth(); // Use auth context instead of localStorage
     const navigate = useNavigate();
     const theme = useMantineTheme();

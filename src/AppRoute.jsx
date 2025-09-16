@@ -93,6 +93,7 @@ import DailySalesWarehouseReport from "./components/modules/report/inventory/Dai
 import AccountingDashboard from "./components/modules/accounting/dashboard/AccountingDashboard";
 import _MatrixUpdate from "./components/modules/procurement/requistion-matrix/_MatrixUpdate.jsx";
 import {AuthProvider} from "./components/context/AuthContext.jsx";
+import MainDashboard from "./components/modules/dashboard/MainDashboard.jsx";
 
 
 function AppRoute() {
@@ -101,6 +102,7 @@ function AppRoute() {
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Layout />}>
+                    <Route index element={<MainDashboard />} />
                     <Route path="/sample/">
                         <Route path="" element={<SampleDashboard />} />
                         <Route path="invoice" element={<SampleInvoice />} />

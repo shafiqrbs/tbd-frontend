@@ -4,7 +4,6 @@ import { useViewportSize } from "@mantine/hooks";
 import { AppShell, LoadingOverlay, Text, Button } from "@mantine/core";
 import Header from "./Header";
 import Footer from "./Footer";
-import MainDashboard from "../modules/dashboard/MainDashboard";
 import { useAuth } from "../context/AuthContext";
 
 const Layout = () => {
@@ -56,7 +55,7 @@ const Layout = () => {
                 <Header isOnline={isOnline} configData={configData} mainAreaHeight={mainAreaHeight}/>
             </AppShell.Header>
             <AppShell.Main>
-                {paramPath !== '/' ? <Outlet context={{isOnline, mainAreaHeight}}/> : <MainDashboard height={mainAreaHeight} />}
+                <Outlet context={{isOnline, mainAreaHeight}}/>
             </AppShell.Main>
             <AppShell.Footer height={footerHeight}>
                 <Footer />
