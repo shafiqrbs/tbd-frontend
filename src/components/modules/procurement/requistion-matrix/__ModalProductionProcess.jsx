@@ -202,6 +202,7 @@ export default function __ModalProductionProcess({ boardId }) {
                         onChange={() => handleCheckboxChange(item.id, item.pro_batch_item_id)}
                         disabled={!!item.pro_batch_item_id}
                     />
+                    {item.pro_batch_id}
                 </Table.Td>
                 <Table.Td>{item.product_name}</Table.Td>
                 <Table.Td style={{ textAlign: 'center' }}>{item.quantity}</Table.Td>

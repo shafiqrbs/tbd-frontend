@@ -74,7 +74,7 @@ export default function __UpdateRequistionForm(props) {
         formValue["remark"] = values.narration;
         formValue["created_by_id"] = createdBy?.id;
         formValue["items"] = transformedArray ? transformedArray : [];
-        formValue["process"] = "New";
+        formValue["process"] = "Created";
         formValue["vendor_id"] = form.values.vendor_id;
 
         const value = {

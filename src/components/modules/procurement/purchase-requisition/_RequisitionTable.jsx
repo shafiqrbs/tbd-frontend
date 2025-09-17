@@ -164,11 +164,11 @@ export default function _RequisitionTable(props) {
 
             if (showInstantEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
-                    showNotificationComponent(t("ApprovedSuccessfully"),"teal",'',true,1000,true,"lightgray")
+                    showNotificationComponent(t("ApprovedSuccessfully"),"teal",'',true,1000,true)
                 }
             }
         } catch (error) {
-            showNotificationComponent(t("UpdateFailed"),"red",'',true,1000,true,"lightgray")
+            showNotificationComponent(t("UpdateFailed"),"red",'',true,1000,true)
         } finally {
             fetchData();
         }

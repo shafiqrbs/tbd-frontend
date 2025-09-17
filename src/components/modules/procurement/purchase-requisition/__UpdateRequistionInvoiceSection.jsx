@@ -55,7 +55,7 @@ export default function __UpdateRequistionInvoiceSection(props) {
                                         id="vendor_id"
                                         mt={1}
                                         searchable={true}
-                                        value={vendorData?.value}
+                                        value={String(vendorData)}
                                         changeValue={setVendorData}
                                         disabled={true}
                                     />

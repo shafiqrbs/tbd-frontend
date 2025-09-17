@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
 
 import {
-    Button, Flex, Grid, Box, ScrollArea, Text, Title, Stack, Tooltip, rem
+    Button, Flex, Grid, Box, Text, Stack, Tooltip, rem
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -13,17 +13,15 @@ import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
 import { useDispatch } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
-import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 
 import { DateInput } from "@mantine/dates";
 import {modals} from "@mantine/modals";
 import {updateEntityData} from "../../../../store/core/crudSlice.js";
-import {notifications} from "@mantine/notifications";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
-import TextAreaGenericForm from "../../../form-builders/TextAreaGenericForm";
 import inputCss from "../../../../assets/css/InputField.module.css";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function _InhouseForm(Props) {
     const {batchData} = Props
@@ -84,12 +82,15 @@ function _InhouseForm(Props) {
                     labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
                     onConfirm: async () => {
+                        const options = {year: "numeric", month: "2-digit", day: "2-digit"};
+
                         const formData = {
                             remark: values.remark,
-                            issue_date: issueDate ? new Date(issueDate).toISOString().split('T')[0]  : null,
-                            receive_date: receiveDate ? new Date(receiveDate).toISOString().split('T')[0]  : null,
+                            issue_date: issueDate ? new Date(issueDate).toLocaleDateString("en-CA", options) : new Date().toLocaleDateString("en-CA"),
+                            receive_date: receiveDate ? new Date(receiveDate).toLocaleDateString("en-CA", options) : new Date().toLocaleDateString("en-CA"),
                             process: process
                         }
+
                         const value = {
                             url: 'production/batch/' + batchData.id,
                             data: formData
@@ -110,20 +111,12 @@ function _InhouseForm(Props) {
                             }
                         } else if (updateEntityData.fulfilled.match(resultAction)) {
                             // Extract the updated data from the action payload
-                            notifications.show({
-                                color: 'teal',
-                                title: t('UpdateSuccessfully'),
-                                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                                loading: false,
-                                autoClose: 700,
-                                style: {backgroundColor: 'lightgray'},
-                            });
+                            showNotificationComponent(t('UpdateSuccessfully'),'teal','',true,1000,true)
 
                             setTimeout(() => {
                                 navigate('/production/batch', {replace: true});
                             }, 700);
                         }
-
                     },
                 });
             })}>
