@@ -453,6 +453,7 @@
   "WhereWePresentThePurchaseInformationN": "Acquisition of goods or services through procurement processes",
   "NewPurchaseN": "New Purchase",
   "WhereWePresentThePurchaseInvoiceInformationN": "Make new Purchase",
+  "WhereWePresentThePurchaseInvoiceInformationN": "Make Purchase Return",
   "InvoiceBatchN": "Invoice Batch",
   "WhereWePresentTheInvoiceBatchInformationN": "Invoice Batch details information",
   "ProductionN": "Production",
@@ -1211,6 +1212,8 @@
   "ApproveQty": "Approve Qty.",
   "BoardDetails": "Board Details",
   "ProductionProcess": "Production Process",
+  "PurchaseReturn": "Purchase Return",
+  "PurchaseReturnNew": "New Purchase Return",
   "xxxxxx": "xxxxxxx",
   "": ""
 }

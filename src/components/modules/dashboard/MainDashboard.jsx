@@ -592,6 +592,57 @@ function MainDashboard(props) {
 													}}
 												/>
 											</List.Item>
+
+                                            <List.Item
+                                                pl={"xs"}
+                                                icon={
+                                                    <ThemeIcon color="teal.6" size={20} radius="xl" variant="outline">
+                                                        <IconShoppingCartUp />
+                                                    </ThemeIcon>
+                                                }
+                                            >
+                                                <NavLink
+                                                    pl={"md"}
+                                                    href="/inventory/purchase-return"
+                                                    label={t("PurchaseReturn")}
+                                                    component="button"
+                                                    onClick={(e) => {
+                                                        navigate("inventory/purchase-return");
+                                                    }}
+                                                    onAuxClick={(e) => {
+                                                        // Handle middle mouse button click for browsers that support it
+                                                        if (e.button === 1) {
+                                                            window.open("/inventory/purchase-return", "_blank");
+                                                        }
+                                                    }}
+                                                />
+                                            </List.Item>
+
+                                            <List.Item
+                                                pl={"xs"}
+                                                icon={
+                                                    <ThemeIcon color="teal.6" size={20} radius="xl" variant="outline">
+                                                        <IconShoppingCartUp />
+                                                    </ThemeIcon>
+                                                }
+                                            >
+                                                <NavLink
+                                                    pl={"md"}
+                                                    href="/inventory/purchase-return-invoice"
+                                                    label={t("PurchaseReturnNew")}
+                                                    component="button"
+                                                    onClick={(e) => {
+                                                        navigate("inventory/purchase-return-invoice");
+                                                    }}
+                                                    onAuxClick={(e) => {
+                                                        // Handle middle mouse button click for browsers that support it
+                                                        if (e.button === 1) {
+                                                            window.open("/inventory/purchase-return-invoice", "_blank");
+                                                        }
+                                                    }}
+                                                />
+                                            </List.Item>
+
 											{configData?.is_batch_invoice === 1 && (
 												<List.Item
 													pl={"xs"}

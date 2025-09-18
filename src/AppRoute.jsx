@@ -94,6 +94,7 @@ import AccountingDashboard from "./components/modules/accounting/dashboard/Accou
 import _MatrixUpdate from "./components/modules/procurement/requistion-matrix/_MatrixUpdate.jsx";
 import {AuthProvider} from "./components/context/AuthContext.jsx";
 import MainDashboard from "./components/modules/dashboard/MainDashboard.jsx";
+import PurchaseReturnInvoice from "./components/modules/inventory/purchase-return/PurchaseReturnInvoice.jsx";
 
 
 function AppRoute() {
@@ -275,6 +276,22 @@ function AppRoute() {
                             element={
                                 <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
                                     <PurchaseInvoice />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="purchase-return"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
+                                    <PurchaseInvoice />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="purchase-return-invoice"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
+                                    <PurchaseReturnInvoice />
                                 </ProtectedRoute>
                             }
                         />
