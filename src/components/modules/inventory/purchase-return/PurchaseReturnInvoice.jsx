@@ -27,7 +27,7 @@ export default function PurchaseReturnInvoice() {
           {domainConfigData && (
             <>
               <_SalesPurchaseHeaderNavbar
-                  pageTitle={t("WarehouseIssue")}
+                  pageTitle={t("PurchaseReturn")}
                   roles={t("Roles")}
                   allowZeroPercentage={domainConfigData?.zero_stock}
                   currencySymbol={domainConfigData?.currency?.symbol}

@@ -95,6 +95,8 @@ import _MatrixUpdate from "./components/modules/procurement/requistion-matrix/_M
 import {AuthProvider} from "./components/context/AuthContext.jsx";
 import MainDashboard from "./components/modules/dashboard/MainDashboard.jsx";
 import PurchaseReturnInvoice from "./components/modules/inventory/purchase-return/PurchaseReturnInvoice.jsx";
+import PurchaseReturnIndex from "./components/modules/inventory/purchase-return/PurchaseReturnIndex.jsx";
+import PurchaseReturnEdit from "./components/modules/inventory/purchase-return/PurchaseReturnEdit.jsx";
 
 
 function AppRoute() {
@@ -283,7 +285,7 @@ function AppRoute() {
                             path="purchase-return"
                             element={
                                 <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
-                                    <PurchaseInvoice />
+                                    <PurchaseReturnIndex />
                                 </ProtectedRoute>
                             }
                         />
@@ -292,6 +294,14 @@ function AppRoute() {
                             element={
                                 <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
                                     <PurchaseReturnInvoice />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="purchase-return/edit/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+                                    <PurchaseReturnEdit />
                                 </ProtectedRoute>
                             }
                         />

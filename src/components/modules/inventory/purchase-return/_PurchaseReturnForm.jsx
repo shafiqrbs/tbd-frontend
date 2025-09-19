@@ -35,37 +35,6 @@ import {showEntityData} from "../../../../store/core/crudSlice.js";
 import Navigation from "../common/Navigation.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 
-// ➤ Debounce hook
-function useDebouncedValue(value, delay) {
-    const [debounced, setDebounced] = useState(value);
-
-    useEffect(() => {
-        const timer = setTimeout(() => setDebounced(value), delay);
-        return () => clearTimeout(timer);
-    }, [value, delay]);
-
-    return debounced;
-}
-
-// ➤ Helper functions
-const getUserData = () => {
-    try {
-        return JSON.parse(localStorage.getItem("user") || "{}");
-    } catch (e) {
-        console.error("Error parsing localStorage user:", e);
-        return {};
-    }
-};
-
-const getCoreProducts = () => {
-    try {
-        return JSON.parse(localStorage.getItem("core-products") || "[]");
-    } catch (e) {
-        console.error("Error parsing core-products:", e);
-        return [];
-    }
-};
-
 export default function _PurchaseReturnForm(props) {
     const {domainConfigData} = props;
     const {id} = useParams();
@@ -73,147 +42,60 @@ export default function _PurchaseReturnForm(props) {
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 360;
-    const form = useForm({
-        initialValues: {},
-    });
+    const form = useForm({ initialValues: {} });
 
-    const isWarehouse = domainConfigData?.production_config?.is_warehouse;
-    const [warehouseDropdownData, setWarehouseDataDropdown] = useState([]);
-    const [warehouseData, setWarehouseData] = useState(null);
     const [searchValue, setSearchValue] = useState("");
     const [productQuantities, setProductQuantities] = useState({});
-    const [warehouseIssueItems, setWarehouseIssueItems] = useState([]);
-    const [warehousesIssueData, setWarehousesIssueData] = useState({});
-
-    // Cache user data & core products using memo
-    const userData = useMemo(() => getUserData(), []);
-    const coreProducts = useMemo(() => getCoreProducts(), []);
-    const debouncedSearchValue = useDebouncedValue(searchValue, 250);
-
-    // Load issue data from API
-    useEffect(() => {
-        const fetchData = async () => {
-            if (id) {
-                try {
-                    const result = await dispatch(showEntityData(`production/issue/${id}`)).unwrap();
-                    if (result.data.status === 200) {
-                        setWarehousesIssueData(result.data.data);
-                        setWarehouseIssueItems(result.data.data.issue_items);
-                    } else {
-                        showNotificationComponent(t("FailedToFetchData"), "red", null, false, 1000);
-                    }
-                } catch (error) {
-                    console.error("Fetch issue data error:", error);
-                }
-            }
-        };
-
-        fetchData();
-    }, [dispatch, id]);
-
-    // Load warehouse dropdown data
-    useEffect(() => {
-        if (isWarehouse && userData?.user_warehouse?.length > 0) {
-            const transformed = userData.user_warehouse.map((wh) => ({
-                label: `${wh.warehouse_name} [${wh.warehouse_location}]`,
-                value: String(wh.id),
-            }));
-            setWarehouseDataDropdown(transformed);
-            setWarehouseData(userData.user_warehouse[0].id);
-        }
-    }, [isWarehouse, userData]);
-
-    // ➤ Memoized filtered products
-    const filteredProducts = useMemo(() => {
-        let filtered = [];
-
-        if (isWarehouse) {
-            const warehouseId = warehouseData || userData?.user_warehouse?.[0]?.id;
-            const prodItems = userData?.production_item || [];
-
-            filtered = prodItems.filter((product) => product.user_warehouse_id === Number(warehouseId));
-
-            if (debouncedSearchValue) {
-                const search = debouncedSearchValue.toLowerCase();
-                filtered = filtered.filter((product) =>
-                    `${product.item_name} ${product.uom} ${product.closing_quantity}`
-                        .toLowerCase()
-                        .includes(search)
-                );
-            }
-        } else {
-            filtered = coreProducts.filter((product) => product.product_nature === "raw-materials");
-
-            if (debouncedSearchValue) {
-                const search = debouncedSearchValue.toLowerCase();
-                filtered = filtered.filter((product) =>
-                    `${product.name} ${product.unit_name} ${product.quantity}`.toLowerCase().includes(search)
-                );
-            }
-        }
-
-        return filtered;
-    }, [isWarehouse, warehouseData, debouncedSearchValue, userData, coreProducts]);
-
-    // ➤ Filter table products by name/display_name (optional)
-    const filteredTableProducts = useMemo(() => {
-        const lower = debouncedSearchValue.toLowerCase();
-        return filteredProducts.filter((product) =>
-            (product.display_name || product.item_name || product.name || "").toLowerCase().includes(lower)
-        );
-    }, [filteredProducts, debouncedSearchValue]);
-
-
-
-    // START PURCHASE RETURN
+    const [purchaseReturnItems, setPurchaseReturnItems] = useState([]);
 
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]); // vendors array from backend
 
-
     const [vendorsOptions, setVendorsOptions] = useState([]);
     const [selectedVendor, setSelectedVendor] = useState(null);
-
 
     const [purchasesOptions, setPurchasesOptions] = useState([]);
     const [selectedPurchase, setSelectedPurchase] = useState(null);
 
-
     const [itemsOptions, setItemsOptions] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
 
-
+    // Fetch vendors and purchases
     useEffect(() => {
-        // fetch structured data with custom header
-        fetch(import.meta.env.VITE_API_GATEWAY_URL+'inventory/purchase-return/vendor-wise-purchase-item', {
-            method: 'GET',
-            headers: {
-                "Accept": `application/json`,
-                "Content-Type": `application/json`,
-                "Access-Control-Allow-Origin": '*',
-                "X-Api-Key": import.meta.env.VITE_API_KEY,
-                "X-Api-User": JSON.parse(localStorage.getItem('user')).id
-            }
-        })
-            .then((res) => res.json())
-            .then((res) => {
-                if (res.status === 200) {
-                    setData(res.data);
+        const fetchData = async () => {
+            try {
+                const result = await dispatch(
+                    showEntityData(`inventory/purchase/return/vendor-wise-purchase-item`)
+                ).unwrap();
 
-                    const vendors = res.data.map((v) => ({
+                if (result?.data?.status === 200) {
+                    setData(result?.data?.data);
+
+                    const vendors = result?.data?.data.map((v) => ({
                         value: String(v.vendor_id),
                         label: v.vendor_name,
                     }));
-                    console.log(vendors)
                     setVendorsOptions(vendors);
+                } else {
+                    showNotificationComponent(
+                        t("FailedToFetchData"),
+                        "red",
+                        null,
+                        false,
+                        1000
+                    );
                 }
-            })
-            .catch((err) => console.error(err))
-            .finally(() => setLoading(false));
-    }, []);
+            } catch (error) {
+                console.error("Fetch issue data error:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
+        fetchData();
+    }, [dispatch]);
 
-
+    // Reset dependent selects when vendor changes
     useEffect(() => {
         if (!selectedVendor) {
             setPurchasesOptions([]);
@@ -223,10 +105,12 @@ export default function _PurchaseReturnForm(props) {
             return;
         }
 
-
         const vendor = data.find((v) => String(v.vendor_id) === String(selectedVendor));
         if (vendor) {
-            const purchases = vendor.purchases.map((p) => ({ value: String(p.id), label: `${p.invoice} — ${p.created} — ${p.total}` }));
+            const purchases = vendor.purchases.map((p) => ({
+                value: String(p.id),
+                label: `${p.invoice} — ${p.created} — ${p.total}`
+            }));
             setPurchasesOptions(purchases);
             setSelectedPurchase(null);
             setItemsOptions([]);
@@ -234,7 +118,7 @@ export default function _PurchaseReturnForm(props) {
         }
     }, [selectedVendor, data]);
 
-
+    // Update items when purchase changes
     useEffect(() => {
         if (!selectedPurchase || !selectedVendor) {
             setItemsOptions([]);
@@ -242,10 +126,8 @@ export default function _PurchaseReturnForm(props) {
             return;
         }
 
-
         const vendor = data.find((v) => String(v.vendor_id) === String(selectedVendor));
         if (!vendor) return;
-
 
         const purchase = vendor.purchases.find((p) => String(p.id) === String(selectedPurchase));
         if (purchase) {
@@ -255,7 +137,7 @@ export default function _PurchaseReturnForm(props) {
         }
     }, [selectedPurchase, selectedVendor, data]);
 
-
+    // Table items to display
     const selectedTableItems = (() => {
         if (!selectedVendor || !selectedPurchase) return [];
         const vendor = data.find((v) => String(v.vendor_id) === String(selectedVendor));
@@ -264,13 +146,10 @@ export default function _PurchaseReturnForm(props) {
         return purchase ? purchase.items : [];
     })();
 
-    console.log(selectedTableItems)
-
+    // Add all items to purchase return
     const handleFormSubmit = () => {
         const productsToAdd = selectedTableItems.filter(
-            (data) =>
-                productQuantities[data.id] &&
-                Number(productQuantities[data.id]) > 0
+            (data) => productQuantities[data.id] && Number(productQuantities[data.id]) > 0
         );
 
         if (productsToAdd.length === 0) {
@@ -278,8 +157,7 @@ export default function _PurchaseReturnForm(props) {
             return;
         }
 
-        // Update state-based product list
-        setWarehouseIssueItems((prevItems) => {
+        setPurchaseReturnItems((prevItems) => {
             const updatedItems = [...prevItems];
 
             productsToAdd.forEach((data) => {
@@ -287,15 +165,11 @@ export default function _PurchaseReturnForm(props) {
 
                 const productToAdd = {
                     id: data.id,
-                    // stock_item_id: isWarehouse ? data.stock_item_id : data.stock_id,
-                    display_name: data.item_name ,
+                    display_name: data.item_name,
                     quantity: Number(quantity),
                     unit_name: data.unit_name,
                     purchase_price: data.purchase_price,
-                    // sales_price: data.sales_price,
-                    // stock_quantity: isWarehouse ? data.stock_quantity : data.quantity,
-                    // warehouse_id: isWarehouse ? data.warehouse_id : null,
-                    sub_total: (Number(quantity) * (data.purchase_price ? data.purchase_price:0)),
+                    sub_total: (Number(quantity) * (data.purchase_price ?? 0)),
                 };
 
                 const existingIndex = updatedItems.findIndex(
@@ -314,10 +188,9 @@ export default function _PurchaseReturnForm(props) {
 
             return updatedItems;
         });
-        setProductQuantities({})
+        setProductQuantities({});
         showNotificationComponent(t("ProductAddedSuccessfully"), 'green')
-    }
-
+    };
 
     return (
         <>
@@ -334,7 +207,7 @@ export default function _PurchaseReturnForm(props) {
                                         <Grid columns={12} gutter={{base: 2}}>
                                             <Grid.Col span={7}>
                                                 <Text fz="md" fw={500} className={classes.cardTitle}>
-                                                    {t("WarehouseIssue")}
+                                                    {t("PurchaseReturn")}
                                                 </Text>
                                             </Grid.Col>
                                             <Grid.Col span={5} align="center">
@@ -355,9 +228,7 @@ export default function _PurchaseReturnForm(props) {
                                                             color="gray"
                                                             mt={"1"}
                                                             aria-label="Settings"
-                                                            onClick={() => {
-                                                                setSettingDrawer(true);
-                                                            }}
+                                                            onClick={() => {}}
                                                         >
                                                             <IconDotsVertical
                                                                 style={{width: "100%", height: "70%"}}
@@ -369,14 +240,10 @@ export default function _PurchaseReturnForm(props) {
                                             </Grid.Col>
                                         </Grid>
                                     </Box>
-                                    <Box
-                                        pl={`8`}
-                                        pr={8}
-                                        mb={"xs"}
-                                        className={"boxBackground borderRadiusAll"}
-                                    >
-                                        <Box mt={"8"}></Box>
-                                        <Box mt={"4"}>
+
+                                    {/* Vendor select + cross button */}
+                                    <Box pl={`8`} pr={8} mb={"xs"} className={"boxBackground borderRadiusAll"}>
+                                        <Box pl={`8`} pr={8} mb={"xs"} className={"boxBackground borderRadiusAll"} style={{ position: "relative" }}>
                                             <SelectForm
                                                 tooltip={t("Vendor")}
                                                 label=""
@@ -389,10 +256,38 @@ export default function _PurchaseReturnForm(props) {
                                                 id={"vendor_id"}
                                                 mt={1}
                                                 searchable={true}
-                                                value={String(selectedVendor)}
+                                                value={selectedVendor ? String(selectedVendor) : ""}
                                                 changeValue={setSelectedVendor}
+                                                disabled={!!selectedVendor}
+                                                clearable={true}
                                             />
+                                            {selectedVendor && (
+                                                <ActionIcon
+                                                    size="sm"
+                                                    color="red"
+                                                    variant="filled"
+                                                    style={{
+                                                        position: "absolute",
+                                                        right: 8,
+                                                        top: "50%",
+                                                        transform: "translateY(-50%)",
+                                                        zIndex: 10,
+                                                    }}
+                                                    onClick={() => {
+                                                        // Reset all dependent selects and items
+                                                        setSelectedVendor(null);
+                                                        setSelectedPurchase(null);
+                                                        setSelectedItem(null);
+                                                        setPurchaseReturnItems([]);
+                                                        setProductQuantities({});
+                                                    }}
+                                                >
+                                                    <IconX size={16}/>
+                                                </ActionIcon>
+                                            )}
+
                                         </Box>
+
                                         <Box mt={"4"}>
                                             <SelectForm
                                                 tooltip={t("Purchase")}
@@ -406,9 +301,10 @@ export default function _PurchaseReturnForm(props) {
                                                 id={"purchase_id"}
                                                 mt={1}
                                                 searchable={true}
-                                                value={String(selectedPurchase)}
+                                                value={selectedPurchase ? String(selectedPurchase) : ""}
                                                 changeValue={setSelectedPurchase}
                                                 disabled={!purchasesOptions.length}
+                                                clearable={true}
                                             />
                                         </Box>
 
@@ -454,41 +350,10 @@ export default function _PurchaseReturnForm(props) {
                                                     {
                                                         accessor: "purchase_price",
                                                         width: 300,
-                                                        title: (
-                                                            <Group
-                                                                justify={"flex-end"}
-                                                                spacing="xs"
-                                                                noWrap
-                                                                pl={"sm"}
-                                                                ml={"sm"}
-                                                            >
-                                                                <Box pl={"4"}>{t("")}</Box>
-                                                                <ActionIcon
-                                                                    mr={"sm"}
-                                                                    radius="xl"
-                                                                    variant="transparent"
-                                                                    color="grey"
-                                                                    size="xs"
-                                                                    onClick={() => {
-                                                                    }}
-                                                                >
-                                                                    <IconRefresh
-                                                                        style={{width: "100%", height: "100%"}}
-                                                                        stroke={1.5}
-                                                                    />
-                                                                </ActionIcon>
-                                                            </Group>
-                                                        ),
+                                                        title: t("Price / Qty"),
                                                         textAlign: "right",
                                                         render: (data) => (
-                                                            <Group
-                                                                wrap="nowrap"
-                                                                w="100%"
-                                                                gap={0}
-                                                                justify="flex-end"
-                                                                align="center"
-                                                                mx="auto"
-                                                            >
+                                                            <Group wrap="nowrap" w="100%" gap={0} justify="flex-end" align="center" mx="auto">
                                                                 <Button
                                                                     size="compact-xs"
                                                                     color={"#f8eedf"}
@@ -502,10 +367,8 @@ export default function _PurchaseReturnForm(props) {
                                                                             borderBottomColor: "#905923",
                                                                             borderRightColor: "#905923",
                                                                             borderLeftColor: "#905923",
-                                                                            borderTopLeftRadius:
-                                                                                "var(--mantine-radius-sm)",
-                                                                            borderBottomLeftRadius:
-                                                                                "var(--mantine-radius-sm)",
+                                                                            borderTopLeftRadius: "var(--mantine-radius-sm)",
+                                                                            borderBottomLeftRadius: "var(--mantine-radius-sm)",
                                                                         },
                                                                     }}
                                                                 >
@@ -543,16 +406,10 @@ export default function _PurchaseReturnForm(props) {
                                                                             borderTopColor: "#905923",
                                                                             borderBottomColor: "#905923",
                                                                         },
-                                                                        placeholder: {
-                                                                            fontSize: "var(--mantine-font-size-xs)",
-                                                                            fontWeight: 300,
-                                                                        },
                                                                     }}
                                                                     size="xxs"
                                                                     w="80"
                                                                     type={"number"}
-                                                                    tooltip={""}
-                                                                    label={""}
                                                                     value={productQuantities[data.id] || ""}
                                                                     onChange={(e) => {
                                                                         const value = e.currentTarget.value;
@@ -561,10 +418,6 @@ export default function _PurchaseReturnForm(props) {
                                                                             [data.id]: value,
                                                                         }));
                                                                     }}
-                                                                    required={false}
-                                                                    nextField={"credit_limit"}
-                                                                    name={"quantity"}
-                                                                    id={"quantity"}
                                                                 />
                                                                 <Button
                                                                     size="compact-xs"
@@ -575,49 +428,40 @@ export default function _PurchaseReturnForm(props) {
                                                                         root: {
                                                                             height: "26px",
                                                                             borderRadius: 0,
-                                                                            borderTopRightRadius:
-                                                                                "var(--mantine-radius-sm)",
-                                                                            borderBottomRightRadius:
-                                                                                "var(--mantine-radius-sm)",
+                                                                            borderTopRightRadius: "var(--mantine-radius-sm)",
+                                                                            borderBottomRightRadius: "var(--mantine-radius-sm)",
                                                                         },
                                                                     }}
-
                                                                     onClick={() => {
                                                                         const quantity = productQuantities[data.id];
 
                                                                         if (quantity && Number(quantity) > 0) {
                                                                             const productToAdd = {
                                                                                 id: data.id,
-                                                                                // stock_item_id: isWarehouse ? data.stock_item_id : data.stock_id,
                                                                                 display_name: data.item_name ,
                                                                                 quantity: Number(quantity),
                                                                                 unit_name: data.unit_name,
                                                                                 purchase_price: data.purchase_price,
-                                                                                // sales_price: data.sales_price,
-                                                                                // stock_quantity: isWarehouse ? data.stock_quantity : data.quantity,
-                                                                                // warehouse_id: isWarehouse ? data.warehouse_id : null,
-                                                                                sub_total: (Number(quantity) * (data.purchase_price ? data.purchase_price:0)),
+                                                                                sub_total: Number(quantity) * (data.purchase_price ?? 0),
                                                                             };
 
-                                                                            setWarehouseIssueItems(prevItems => {
+                                                                            setPurchaseReturnItems(prevItems => {
                                                                                 const existingIndex = prevItems.findIndex(
                                                                                     item => String(item.id) === String(productToAdd.id)
                                                                                 );
 
                                                                                 if (existingIndex !== -1) {
-                                                                                    // Replace the entire product object with updated fields
                                                                                     const updatedItems = [...prevItems];
                                                                                     updatedItems[existingIndex] = {
                                                                                         ...updatedItems[existingIndex],
-                                                                                        ...productToAdd, // update all values (including quantity)
+                                                                                        ...productToAdd,
                                                                                     };
                                                                                     return updatedItems;
                                                                                 } else {
-                                                                                    // Add new item
                                                                                     return [...prevItems, productToAdd];
                                                                                 }
                                                                             });
-                                                                            setProductQuantities({})
+                                                                            setProductQuantities({});
                                                                         } else {
                                                                             showNotificationComponent(t('InvalidQuantity'), 'red', null, false, 1000)
                                                                         }
@@ -635,100 +479,75 @@ export default function _PurchaseReturnForm(props) {
                                                 loaderColor="grape"
                                                 height={ height + 50}
                                             />
-
-                                        </Box>
-                                        <Box
-                                            p={"xs"}
-                                            mt={"8"}
-                                            className={genericClass.genericHighlightedBox}
-                                            ml={"-xs"}
-                                            mr={-8}
-                                        >
-                                            <Grid gutter={{base: 6}}>
-                                                <Grid.Col span={12}>
-                                                    <Box>
-                                                        <Tooltip
-                                                            label={t("EnterSearchAnyKeyword")}
-                                                            px={16}
-                                                            py={2}
-                                                            position="top-end"
-                                                            color='var(--theme-primary-color-6)'
-                                                            withArrow
-                                                            offset={2}
-                                                            zIndex={100}
-                                                            transitionProps={{
-                                                                transition: "pop-bottom-left",
-                                                                duration: 1000,
-                                                            }}
-                                                        >
-                                                            <TextInput
-                                                                leftSection={
-                                                                    <IconSearch size={16} opacity={0.5}/>
-                                                                }
-                                                                size="sm"
-                                                                placeholder={t("ChooseProduct")}
-                                                                onChange={(e) => {
-                                                                    setSearchValue(e.target.value);
-                                                                }}
-                                                                value={searchValue}
-                                                                id={"SearchKeyword"}
-                                                                rightSection={
-                                                                    searchValue ? (
-                                                                        <Tooltip
-                                                                            label={t("Close")}
-                                                                            withArrow
-                                                                            bg={`red.5`}
-                                                                        >
-                                                                            <IconX
-                                                                                color={`red`}
-                                                                                size={16}
-                                                                                opacity={0.5}
-                                                                                onClick={() => {
-                                                                                    setSearchValue("");
-                                                                                }}
-                                                                            />
-                                                                        </Tooltip>
-                                                                    ) : (
-                                                                        <Tooltip
-                                                                            label={t("FieldIsRequired")}
-                                                                            withArrow
-                                                                            position={"bottom"}
-                                                                            c={"red"}
-                                                                            bg={`red.1`}
-                                                                        >
-                                                                            <IconInfoCircle size={16} opacity={0.5}/>
-                                                                        </Tooltip>
-                                                                    )
-                                                                }
-                                                            />
-                                                        </Tooltip>
-                                                    </Box>
-                                                </Grid.Col>
-                                            </Grid>
                                         </Box>
                                     </Box>
                                 </Box>
+
                                 <Box mb="xs">
-                                    <Grid
-                                        className={genericClass.genericBackground}
-                                        columns={12}
-                                        justify="space-between"
-                                        align="center"
-                                    >
-                                        <Grid.Col span={6}>
-                                            <Box pl={"xs"}>
-                                                <ActionIcon
-                                                    variant="transparent"
-                                                    size={"lg"}
-                                                    color="grey.6"
-                                                    mt={"1"}
-                                                    onClick={() => {
+                                    <Grid className={genericClass.genericBackground} columns={12} justify="space-between" align="center">
+                                        <Grid.Col span={12}>
+                                            <Box>
+                                                <Tooltip
+                                                    label={t("EnterSearchAnyKeyword")}
+                                                    px={16}
+                                                    py={2}
+                                                    position="top-end"
+                                                    color='var(--theme-primary-color-6)'
+                                                    withArrow
+                                                    offset={2}
+                                                    zIndex={100}
+                                                    transitionProps={{
+                                                        transition: "pop-bottom-left",
+                                                        duration: 1000,
                                                     }}
                                                 >
-                                                    <IconRefresh
-                                                        style={{width: "100%", height: "70%"}}
-                                                        stroke={1.5}
+                                                    <TextInput
+                                                        leftSection={
+                                                            <IconSearch size={16} opacity={0.5}/>
+                                                        }
+                                                        size="sm"
+                                                        placeholder={t("ChooseProduct")}
+                                                        onChange={(e) => {
+                                                            setSearchValue(e.target.value);
+                                                        }}
+                                                        value={searchValue}
+                                                        id={"SearchKeyword"}
+                                                        rightSection={
+                                                            searchValue ? (
+                                                                <Tooltip
+                                                                    label={t("Close")}
+                                                                    withArrow
+                                                                    bg={`red.5`}
+                                                                >
+                                                                    <IconX
+                                                                        color={`red`}
+                                                                        size={16}
+                                                                        opacity={0.5}
+                                                                        onClick={() => {
+                                                                            setSearchValue("");
+                                                                        }}
+                                                                    />
+                                                                </Tooltip>
+                                                            ) : (
+                                                                <Tooltip
+                                                                    label={t("FieldIsRequired")}
+                                                                    withArrow
+                                                                    position={"bottom"}
+                                                                    c={"red"}
+                                                                    bg={`red.1`}
+                                                                >
+                                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                                </Tooltip>
+                                                            )
+                                                        }
                                                     />
+                                                </Tooltip>
+                                            </Box>
+                                        </Grid.Col>
+                                        <Grid.Col span={6}>
+                                            <Box pl={"xs"}>
+                                                <ActionIcon variant="transparent" size={"lg"} color="grey.6" mt={"1"}>
+                                                    <IconRefresh style={{width: "100%", height: "70%"}} stroke={1.5}/>
                                                 </ActionIcon>
                                             </Box>
                                         </Grid.Col>
@@ -756,11 +575,13 @@ export default function _PurchaseReturnForm(props) {
                             </Box>
                         </form>
                     </Grid.Col>
+
                     <Grid.Col span={15}>
                         <__PurchaseReturnSubmitForm
-                            warehouseIssueItems={warehouseIssueItems}
-                            setWarehouseIssueItems={setWarehouseIssueItems}
-                            warehousesIssueData={warehousesIssueData}
+                            purchaseReturnItems={purchaseReturnItems}
+                            setPurchaseReturnItems={setPurchaseReturnItems}
+                            selectedVendor={selectedVendor}
+                            setSelectedVendor={setSelectedVendor}
                         />
                     </Grid.Col>
                 </Grid>
@@ -768,3 +589,4 @@ export default function _PurchaseReturnForm(props) {
         </>
     );
 }
+
