@@ -26,7 +26,7 @@ import {
 import { DateInput } from "@mantine/dates";
 import __FilterPopover from "../sales/__FilterPopover.jsx";
 
-function _PurchaseReturnSearch() {
+function _SalesReturnSearch() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
 
@@ -387,4 +387,4 @@ function _PurchaseReturnSearch() {
   );
 }
 
-export default _PurchaseReturnSearch;
+export default _SalesReturnSearch;

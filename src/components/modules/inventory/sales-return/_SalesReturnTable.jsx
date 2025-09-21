@@ -42,9 +42,9 @@ import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import {PurchasePrintNormal} from "../purchase/print-component/PurchasePrintNormal.jsx";
 import {PurchasePrintPos} from "../purchase/print-component/PurchasePrintPos.jsx";
-import _PurchaseReturnSearch from "./_PurchaseReturnSearch.jsx";
+import _SalesReturnSearch from "./_SalesReturnSearch.jsx";
 
-function _PurchaseReturnTable() {
+function _SalesReturnTable() {
     const {configData} = useConfigData()
     let isWarehouse = configData?.sku_warehouse
 
@@ -90,8 +90,8 @@ function _PurchaseReturnTable() {
 
     const rows =
         purchaseReturnViewData &&
-        purchaseReturnViewData.purchase_return_items &&
-        purchaseReturnViewData.purchase_return_items.map((element, index) => (
+        purchaseReturnViewData.sales_return_items &&
+        purchaseReturnViewData.sales_return_items.map((element, index) => (
             <Table.Tr key={`${element.name}-${index}`}>
                 <Table.Td fz="xs" width={"20"}>
                     {index + 1}
@@ -104,7 +104,7 @@ function _PurchaseReturnTable() {
                     {element.quantity}
                 </Table.Td>
                 <Table.Td ta="right" fz="xs" width={"80"}>
-                    {element.purchase_price}
+                    {element.price}
                 </Table.Td>
                 <Table.Td ta="right" fz="xs" width={"100"}>
                     {element.sub_total}
@@ -117,7 +117,7 @@ function _PurchaseReturnTable() {
         setFetching(true);
 
         const value = {
-            url: "inventory/purchase/return",
+            url: "inventory/sales/return",
             param: {
                 term: purchaseReturnFilterData.searchKeyword,
                 vendor_id: purchaseReturnFilterData.vendor_id,
@@ -194,7 +194,7 @@ function _PurchaseReturnTable() {
                             <Grid>
                                 <Grid.Col>
                                     <Stack>
-                                        <_PurchaseReturnSearch/>
+                                        <_SalesReturnSearch/>
                                     </Stack>
                                 </Grid.Col>
                             </Grid>
@@ -245,7 +245,7 @@ function _PurchaseReturnTable() {
                                                 </Text>
                                             ),
                                         },
-                                        {accessor: "vendor_name", title: t("Vendor")},
+                                        {accessor: "customer_name", title: t("Customer")},
                                         {accessor: "quantity", title: t("Quantity")},
                                         {accessor: "sub_total", title: t("Total")},
 
@@ -270,7 +270,7 @@ function _PurchaseReturnTable() {
                                             textAlign: "right",
                                             render: (data) => (
                                                 <Group gap={4} justify="right" wrap="nowrap">
-                                                    {
+                                                    {/*{
                                                         !data.approved_by_id && data.process == "Created" && data.sub_domain_id &&
                                                         <Button component="a" size="compact-xs" radius="xs"
                                                                 variant="filled" fw={'100'} fz={'12'}
@@ -441,7 +441,7 @@ function _PurchaseReturnTable() {
                                                             }
 
                                                         </Menu.Dropdown>
-                                                    </Menu>
+                                                    </Menu>*/}
                                                 </Group>
                                             ),
                                         },
@@ -492,14 +492,14 @@ function _PurchaseReturnTable() {
                                                 <Grid columns={15} gutter={{base: 4}}>
                                                     <Grid.Col span={6}>
                                                         <Text fz="sm" lh="xs">
-                                                            {t("Vendor")}
+                                                            {t("Customer")}
                                                         </Text>
                                                     </Grid.Col>
                                                     <Grid.Col span={9}>
                                                         <Text fz="sm" lh="xs">
                                                             {purchaseReturnViewData &&
-                                                                purchaseReturnViewData.vendor_name &&
-                                                                purchaseReturnViewData.vendor_name}
+                                                                purchaseReturnViewData.customer_name &&
+                                                                purchaseReturnViewData.customer_name}
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -512,8 +512,8 @@ function _PurchaseReturnTable() {
                                                     <Grid.Col span={9}>
                                                         <Text fz="sm" lh="xs">
                                                             {purchaseReturnViewData &&
-                                                                purchaseReturnViewData.vendor_mobile &&
-                                                                purchaseReturnViewData.vendor_mobile}
+                                                                purchaseReturnViewData.customer_mobile &&
+                                                                purchaseReturnViewData.customer_mobile}
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -569,7 +569,7 @@ function _PurchaseReturnTable() {
                                                         {t("QTY")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
-                                                        {t("PurchasePrice")}
+                                                        {t("Price")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
                                                         {t("SubTotal")}
@@ -680,4 +680,4 @@ function _PurchaseReturnTable() {
     );
 }
 
-export default _PurchaseReturnTable;
+export default _SalesReturnTable;

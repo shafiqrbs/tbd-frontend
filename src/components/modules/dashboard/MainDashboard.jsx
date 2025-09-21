@@ -568,6 +568,32 @@ function MainDashboard(props) {
 													/>
 												</List.Item>
 											)}
+
+                                            <List.Item
+                                                pl={"xs"}
+                                                icon={
+                                                    <ThemeIcon color="teal.6" size={20} radius="xl" variant="outline">
+                                                        <IconShoppingCartUp />
+                                                    </ThemeIcon>
+                                                }
+                                            >
+                                                <NavLink
+                                                    pl={"md"}
+                                                    href="/inventory/sales-return"
+                                                    label={t("SalesReturn")}
+                                                    component="button"
+                                                    onClick={(e) => {
+                                                        navigate("inventory/sales-return");
+                                                    }}
+                                                    onAuxClick={(e) => {
+                                                        // Handle middle mouse button click for browsers that support it
+                                                        if (e.button === 1) {
+                                                            window.open("/inventory/purchase-return", "_blank");
+                                                        }
+                                                    }}
+                                                />
+                                            </List.Item>
+
 											<List.Item
 												pl={"xs"}
 												icon={

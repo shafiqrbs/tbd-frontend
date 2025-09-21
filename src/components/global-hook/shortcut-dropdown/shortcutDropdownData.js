@@ -67,6 +67,18 @@ const shortcutDropdownData = (t, configData) => {
               description: t("WhereWePresentTheSalesInvoiceInformationN"),
               isShow: true,
             },
+              {
+                  id: "sales-return",
+                  label: t("SalesReturn"),
+                  description: t("WhereWePresentThePurchaseReturnInformationN"),
+                  isShow: true
+              },
+              /*{
+                  id: "sales-return-invoice",
+                  label: t("SalesReturnNew"),
+                  description: t("WhereWePresentThePurchaseReturnInformationN"),
+                  isShow: true
+              },*/
             {
               id: "purchase",
               label: t("PurchaseN"),

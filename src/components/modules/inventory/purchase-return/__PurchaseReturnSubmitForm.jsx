@@ -179,12 +179,12 @@ export default function __PurchaseReturnSubmitForm({
             narration: form.values.narration
         };
 
-        const value = {
-            url: 'inventory/purchase/return',
-            data: formValue
-        };
-
         if (editedData && editedData.id){
+            const value = {
+                url: 'inventory/purchase/return/'+editedData.id,
+                data: formValue
+            };
+
             const resultAction = await dispatch(updateEntityData(value));
 
             if (updateEntityData.rejected.match(resultAction)) {
@@ -194,6 +194,10 @@ export default function __PurchaseReturnSubmitForm({
                 navigate("/inventory/purchase-return");
             }
         } else {
+            const value = {
+                url: 'inventory/purchase/return',
+                data: formValue
+            };
             const resultAction = await dispatch(storeEntityData(value));
             if (storeEntityData.rejected.match(resultAction)) {
                 const fieldErrors = resultAction.payload.errors;
