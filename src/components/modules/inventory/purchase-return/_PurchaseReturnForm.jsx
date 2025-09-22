@@ -350,10 +350,32 @@ export default function _PurchaseReturnForm(props) {
                                                     {
                                                         accessor: "purchase_price",
                                                         width: 300,
-                                                        title: t("Price / Qty"),
+                                                        title: t("Quantity / Price / UOM"),
                                                         textAlign: "right",
                                                         render: (data) => (
                                                             <Group wrap="nowrap" w="100%" gap={0} justify="flex-end" align="center" mx="auto">
+                                                                <Button
+                                                                    size="compact-xs"
+                                                                    color={"#f8eedf"}
+                                                                    radius={0}
+                                                                    w="80"
+                                                                    styles={{
+                                                                        root: {
+                                                                            height: "26px",
+                                                                            borderRadius: 0,
+                                                                            borderTopColor: "#905923",
+                                                                            borderBottomColor: "#905923",
+                                                                            borderRightColor: "#905923",
+                                                                            borderLeftColor: "#905923",
+                                                                            borderTopLeftRadius: "var(--mantine-radius-sm)",
+                                                                            borderBottomLeftRadius: "var(--mantine-radius-sm)",
+                                                                        },
+                                                                    }}
+                                                                >
+                                                                    <Text fz={9} fw={400} c={"black"}>
+                                                                        {data.quantity}
+                                                                    </Text>
+                                                                </Button>
                                                                 <Button
                                                                     size="compact-xs"
                                                                     color={"#f8eedf"}
@@ -413,10 +435,14 @@ export default function _PurchaseReturnForm(props) {
                                                                     value={productQuantities[data.id] || ""}
                                                                     onChange={(e) => {
                                                                         const value = e.currentTarget.value;
-                                                                        setProductQuantities((prev) => ({
-                                                                            ...prev,
-                                                                            [data.id]: value,
-                                                                        }));
+                                                                        if (value<=data.quantity) {
+                                                                            setProductQuantities((prev) => ({
+                                                                                ...prev,
+                                                                                [data.id]: value,
+                                                                            }));
+                                                                        }else {
+                                                                            showNotificationComponent('Purchase Quantity '+data.quantity+' but you return '+value,'red')
+                                                                        }
                                                                     }}
                                                                 />
                                                                 <Button
