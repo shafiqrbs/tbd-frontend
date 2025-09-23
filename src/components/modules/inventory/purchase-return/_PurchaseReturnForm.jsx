@@ -25,8 +25,8 @@ import {DataTable} from "mantine-datatable";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import tableCss from "../../../../assets/css/Table.module.css";
 import {useTranslation} from "react-i18next";
-import {useOutletContext, useParams} from "react-router-dom";
-import React, {useEffect, useState, useMemo} from "react";
+import {useOutletContext} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import genericClass from "../../../../assets/css/Generic.module.css";
 import __PurchaseReturnSubmitForm from "./__PurchaseReturnSubmitForm.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
@@ -36,11 +36,9 @@ import Navigation from "../common/Navigation.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 
 export default function _PurchaseReturnForm(props) {
-    const {domainConfigData} = props;
-    const {id} = useParams();
     const dispatch = useDispatch();
-    const {t, i18n} = useTranslation();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { t } = useTranslation();
+    const { mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 360;
     const form = useForm({ initialValues: {} });
 
@@ -55,12 +53,13 @@ export default function _PurchaseReturnForm(props) {
     const [selectedVendor, setSelectedVendor] = useState(null);
 
     const [purchasesOptions, setPurchasesOptions] = useState([]);
+    const [selectedReturnType, setSelectedReturnType] = useState(null);
     const [selectedPurchase, setSelectedPurchase] = useState(null);
 
     const [itemsOptions, setItemsOptions] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
 
-    // Fetch vendors and purchases
+    // Fetch vendors + purchases
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -70,12 +69,6 @@ export default function _PurchaseReturnForm(props) {
 
                 if (result?.data?.status === 200) {
                     setData(result?.data?.data);
-
-                    const vendors = result?.data?.data.map((v) => ({
-                        value: String(v.vendor_id),
-                        label: v.vendor_name,
-                    }));
-                    setVendorsOptions(vendors);
                 } else {
                     showNotificationComponent(
                         t("FailedToFetchData"),
@@ -95,9 +88,44 @@ export default function _PurchaseReturnForm(props) {
         fetchData();
     }, [dispatch]);
 
-    // Reset dependent selects when vendor changes
+    // Filter vendors when return type changes
     useEffect(() => {
-        if (!selectedVendor) {
+        if (!selectedReturnType) {
+            setVendorsOptions([]);
+            setSelectedVendor(null);
+            setSelectedPurchase(null);
+            setItemsOptions([]);
+            setSelectedItem(null);
+            setPurchaseReturnItems([]);
+            return;
+        }
+
+        let filteredVendors = [];
+        if (selectedReturnType === "General") {
+            filteredVendors = data
+                .filter((vendor) =>
+                    vendor.purchases.some((p) => p.is_requisition === null)
+                )
+                .map((v) => ({ value: String(v.vendor_id), label: v.vendor_name }));
+        } else if (selectedReturnType === "Requisition") {
+            filteredVendors = data
+                .filter((vendor) =>
+                    vendor.purchases.some((p) => p.is_requisition === 1)
+                )
+                .map((v) => ({ value: String(v.vendor_id), label: v.vendor_name }));
+        }
+
+        setVendorsOptions(filteredVendors);
+        setSelectedVendor(null);
+        setSelectedPurchase(null);
+        setItemsOptions([]);
+        setSelectedItem(null);
+        setPurchaseReturnItems([]);
+    }, [selectedReturnType, data]);
+
+    // Filter purchases when vendor changes
+    useEffect(() => {
+        if (!selectedVendor || !selectedReturnType) {
             setPurchasesOptions([]);
             setSelectedPurchase(null);
             setItemsOptions([]);
@@ -105,20 +133,29 @@ export default function _PurchaseReturnForm(props) {
             return;
         }
 
-        const vendor = data.find((v) => String(v.vendor_id) === String(selectedVendor));
+        const vendor = data.find(
+            (v) => String(v.vendor_id) === String(selectedVendor)
+        );
         if (vendor) {
-            const purchases = vendor.purchases.map((p) => ({
-                value: String(p.id),
-                label: `${p.invoice} — ${p.created} — ${p.total}`
-            }));
+            const purchases = vendor.purchases
+                .filter((p) =>
+                    selectedReturnType === "General"
+                        ? p.is_requisition === null
+                        : p.is_requisition === 1
+                )
+                .map((p) => ({
+                    value: String(p.id),
+                    label: `${p.invoice} — ${p.created} — ${p.total}`,
+                }));
+
             setPurchasesOptions(purchases);
             setSelectedPurchase(null);
             setItemsOptions([]);
             setSelectedItem(null);
         }
-    }, [selectedVendor, data]);
+    }, [selectedVendor, selectedReturnType, data]);
 
-    // Update items when purchase changes
+    // Items when purchase changes
     useEffect(() => {
         if (!selectedPurchase || !selectedVendor) {
             setItemsOptions([]);
@@ -126,34 +163,45 @@ export default function _PurchaseReturnForm(props) {
             return;
         }
 
-        const vendor = data.find((v) => String(v.vendor_id) === String(selectedVendor));
+        const vendor = data.find(
+            (v) => String(v.vendor_id) === String(selectedVendor)
+        );
         if (!vendor) return;
 
-        const purchase = vendor.purchases.find((p) => String(p.id) === String(selectedPurchase));
+        const purchase = vendor.purchases.find(
+            (p) => String(p.id) === String(selectedPurchase)
+        );
         if (purchase) {
-            const items = purchase.items.map((it) => ({ value: String(it.id), label: `${it.item_name} — ${it.quantity}` }));
+            const items = purchase.items.map((it) => ({
+                value: String(it.id),
+                label: `${it.item_name} — ${it.quantity}`,
+            }));
             setItemsOptions(items);
             setSelectedItem(null);
         }
     }, [selectedPurchase, selectedVendor, data]);
 
-    // Table items to display
+    // Table items
     const selectedTableItems = (() => {
         if (!selectedVendor || !selectedPurchase) return [];
-        const vendor = data.find((v) => String(v.vendor_id) === String(selectedVendor));
+        const vendor = data.find(
+            (v) => String(v.vendor_id) === String(selectedVendor)
+        );
         if (!vendor) return [];
-        const purchase = vendor.purchases.find((p) => String(p.id) === String(selectedPurchase));
+        const purchase = vendor.purchases.find(
+            (p) => String(p.id) === String(selectedPurchase)
+        );
         return purchase ? purchase.items : [];
     })();
 
-    // Add all items to purchase return
+    // Add all
     const handleFormSubmit = () => {
         const productsToAdd = selectedTableItems.filter(
             (data) => productQuantities[data.id] && Number(productQuantities[data.id]) > 0
         );
 
         if (productsToAdd.length === 0) {
-            showNotificationComponent(t("WeNotifyYouThat"), 'red')
+            showNotificationComponent(t("WeNotifyYouThat"), "red");
             return;
         }
 
@@ -167,9 +215,10 @@ export default function _PurchaseReturnForm(props) {
                     id: data.id,
                     display_name: data.item_name,
                     quantity: Number(quantity),
+                    purchase_quantity: Number(data.purchase_quantity),
                     unit_name: data.unit_name,
                     purchase_price: data.purchase_price,
-                    sub_total: (Number(quantity) * (data.purchase_price ?? 0)),
+                    sub_total: Number(quantity) * (data.purchase_price ?? 0),
                 };
 
                 const existingIndex = updatedItems.findIndex(
@@ -189,7 +238,7 @@ export default function _PurchaseReturnForm(props) {
             return updatedItems;
         });
         setProductQuantities({});
-        showNotificationComponent(t("ProductAddedSuccessfully"), 'green')
+        showNotificationComponent(t("ProductAddedSuccessfully"), "green");
     };
 
     return (
@@ -241,9 +290,28 @@ export default function _PurchaseReturnForm(props) {
                                         </Grid>
                                     </Box>
 
-                                    {/* Vendor select + cross button */}
                                     <Box pl={`8`} pr={8} mb={"xs"} className={"boxBackground borderRadiusAll"}>
-                                        <Box pl={`8`} pr={8} mb={"xs"} className={"boxBackground borderRadiusAll"} style={{ position: "relative" }}>
+                                        <Box mt={"4"}>
+                                            <SelectForm
+                                                tooltip={t("ChooseReturnType")}
+                                                label=""
+                                                placeholder={t("ChooseReturnType")}
+                                                required={false}
+                                                nextField={"vendor_id"}
+                                                name={"return_type"}
+                                                form={form}
+                                                dropdownValue={['General','Requisition']}
+                                                id={"return_type"}
+                                                mt={1}
+                                                searchable={true}
+                                                value={selectedReturnType ? String(selectedReturnType) : ""}
+                                                changeValue={setSelectedReturnType}
+                                                clearable={false}
+                                                disabled={!!selectedReturnType}
+                                            />
+                                        </Box>
+
+                                        <Box mt={"4"}>
                                             <SelectForm
                                                 tooltip={t("Vendor")}
                                                 label=""
@@ -254,38 +322,13 @@ export default function _PurchaseReturnForm(props) {
                                                 form={form}
                                                 dropdownValue={vendorsOptions}
                                                 id={"vendor_id"}
-                                                mt={1}
+                                                mt={2}
                                                 searchable={true}
                                                 value={selectedVendor ? String(selectedVendor) : ""}
                                                 changeValue={setSelectedVendor}
-                                                disabled={!!selectedVendor}
+                                                disabled={!!selectedVendor || !selectedReturnType}
                                                 clearable={true}
                                             />
-                                            {selectedVendor && (
-                                                <ActionIcon
-                                                    size="sm"
-                                                    color="red"
-                                                    variant="filled"
-                                                    style={{
-                                                        position: "absolute",
-                                                        right: 8,
-                                                        top: "50%",
-                                                        transform: "translateY(-50%)",
-                                                        zIndex: 10,
-                                                    }}
-                                                    onClick={() => {
-                                                        // Reset all dependent selects and items
-                                                        setSelectedVendor(null);
-                                                        setSelectedPurchase(null);
-                                                        setSelectedItem(null);
-                                                        setPurchaseReturnItems([]);
-                                                        setProductQuantities({});
-                                                    }}
-                                                >
-                                                    <IconX size={16}/>
-                                                </ActionIcon>
-                                            )}
-
                                         </Box>
 
                                         <Box mt={"4"}>
@@ -307,25 +350,6 @@ export default function _PurchaseReturnForm(props) {
                                                 clearable={true}
                                             />
                                         </Box>
-
-                                        {/*<Box mt={"4"}>
-                                            <SelectForm
-                                                tooltip={t("Item")}
-                                                label=""
-                                                placeholder={t("Item")}
-                                                required={false}
-                                                nextField={"category_id"}
-                                                name={"item_id"}
-                                                form={form}
-                                                dropdownValue={itemsOptions}
-                                                id={"item_id"}
-                                                mt={1}
-                                                searchable={true}
-                                                value={String(selectedItem)}
-                                                changeValue={setSelectedItem}
-                                                disabled={!itemsOptions.length}
-                                            />
-                                        </Box>*/}
 
                                         <Box mt={"xs"}>
                                             <DataTable
@@ -373,7 +397,7 @@ export default function _PurchaseReturnForm(props) {
                                                                     }}
                                                                 >
                                                                     <Text fz={9} fw={400} c={"black"}>
-                                                                        {data.quantity}
+                                                                        {data.purchase_quantity}
                                                                     </Text>
                                                                 </Button>
                                                                 <Button
@@ -435,13 +459,20 @@ export default function _PurchaseReturnForm(props) {
                                                                     value={productQuantities[data.id] || ""}
                                                                     onChange={(e) => {
                                                                         const value = e.currentTarget.value;
-                                                                        if (value<=data.quantity) {
+                                                                        if (selectedReturnType=='Requisition') {
+                                                                            if (value <= data.purchase_quantity) {
+                                                                                setProductQuantities((prev) => ({
+                                                                                    ...prev,
+                                                                                    [data.id]: value,
+                                                                                }));
+                                                                            } else {
+                                                                                showNotificationComponent('Purchase Quantity ' + data.purchase_quantity + ' but you return ' + value, 'red')
+                                                                            }
+                                                                        }else {
                                                                             setProductQuantities((prev) => ({
                                                                                 ...prev,
                                                                                 [data.id]: value,
                                                                             }));
-                                                                        }else {
-                                                                            showNotificationComponent('Purchase Quantity '+data.quantity+' but you return '+value,'red')
                                                                         }
                                                                     }}
                                                                 />
@@ -466,6 +497,7 @@ export default function _PurchaseReturnForm(props) {
                                                                                 id: data.id,
                                                                                 display_name: data.item_name ,
                                                                                 quantity: Number(quantity),
+                                                                                purchase_quantity: data.purchase_quantity ?? null,
                                                                                 unit_name: data.unit_name,
                                                                                 purchase_price: data.purchase_price,
                                                                                 sub_total: Number(quantity) * (data.purchase_price ?? 0),
@@ -503,7 +535,7 @@ export default function _PurchaseReturnForm(props) {
                                                 ]}
                                                 loaderSize="xs"
                                                 loaderColor="grape"
-                                                height={ height + 50}
+                                                height={ height + 35}
                                             />
                                         </Box>
                                     </Box>
@@ -607,6 +639,7 @@ export default function _PurchaseReturnForm(props) {
                             purchaseReturnItems={purchaseReturnItems}
                             setPurchaseReturnItems={setPurchaseReturnItems}
                             selectedVendor={selectedVendor}
+                            selectedReturnType={selectedReturnType}
                             setSelectedVendor={setSelectedVendor}
                         />
                     </Grid.Col>

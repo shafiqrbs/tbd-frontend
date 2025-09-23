@@ -31,13 +31,13 @@ export default function __PurchaseReturnSubmitForm({
                                                        setPurchaseReturnItems,
                                                        selectedVendor,
                                                        setSelectedVendor,
-                                                        editedData
+                                                        editedData,
+                                                       selectedReturnType
                                                    }) {
     const { t } = useTranslation();
     const { mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 170;
     const dispatch = useDispatch();
-    const { id } = useParams();
     const navigate = useNavigate()
 
     const form = useForm({
@@ -50,6 +50,7 @@ export default function __PurchaseReturnSubmitForm({
             issue_by_id: isNotEmpty(),
         },
     });
+
 
     useEffect(() => {
         editedData?.invoice_date && form.setFieldValue('invoice_date',new Date(editedData?.invoice_date))
@@ -103,9 +104,10 @@ export default function __PurchaseReturnSubmitForm({
             textAlign: "center",
         },
         {
-            accessor: "stock_quantity",
-            title: t("Stock"),
+            accessor: "purchase_quantity",
+            title: t("PurchaseQuantity"),
             textAlign: "center",
+            hidden: selectedReturnType=='General'?true:false
         },
         {
             accessor: "quantity",
@@ -115,13 +117,35 @@ export default function __PurchaseReturnSubmitForm({
             render: (item) => {
                 const handleQuantityChange = (e) => {
                     const newQuantity = Number(e.currentTarget.value || 0);
-                    setPurchaseReturnItems((prevItems) =>
-                        prevItems.map((product) =>
-                            product.id === item.id
-                                ? { ...product, quantity: newQuantity, sub_total: Number(product.purchase_price || 0) * newQuantity }
-                                : product
-                        )
-                    );
+                    if (selectedReturnType=='Requisition') {
+                        if (newQuantity <= item.purchase_quantity) {
+                            setPurchaseReturnItems((prevItems) =>
+                                prevItems.map((product) =>
+                                    product.id === item.id
+                                        ? {
+                                            ...product,
+                                            quantity: newQuantity,
+                                            sub_total: Number(product.purchase_price || 0) * newQuantity
+                                        }
+                                        : product
+                                )
+                            );
+                        } else {
+                            showNotificationComponent('Purchase Quantity ' + item.purchase_quantity + ' but you return ' + newQuantity, 'red')
+                        }
+                    }else {
+                        setPurchaseReturnItems((prevItems) =>
+                            prevItems.map((product) =>
+                                product.id === item.id
+                                    ? {
+                                        ...product,
+                                        quantity: newQuantity,
+                                        sub_total: Number(product.purchase_price || 0) * newQuantity
+                                    }
+                                    : product
+                            )
+                        );
+                    }
                 };
                 return <TextInput type="number" size="xs" value={item.quantity ?? ""} onChange={handleQuantityChange} />;
             },
@@ -162,6 +186,7 @@ export default function __PurchaseReturnSubmitForm({
             id: product.id,
             display_name: product.display_name,
             quantity: product.quantity,
+            purchase_quantity: product.purchase_quantity,
             unit_name: product.unit_name,
             purchase_price: product.purchase_price,
             sub_total: Number(product.quantity || 0) * Number(product.purchase_price || 0),
@@ -176,7 +201,8 @@ export default function __PurchaseReturnSubmitForm({
             issue_by_id: form.values.issue_by_id,
             vendor_id: selectedVendor,
             items: transformedArray,
-            narration: form.values.narration
+            narration: form.values.narration,
+            return_type: selectedReturnType
         };
 
         if (editedData && editedData.id){
@@ -216,11 +242,8 @@ export default function __PurchaseReturnSubmitForm({
                     form.reset();
                 }, 100);
                 navigate("/inventory/purchase-return");
-
             }
         }
-
-
     };
 
     return (

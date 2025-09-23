@@ -1215,6 +1215,8 @@
   "PurchaseReturn": "Purchase Return",
   "PurchaseReturnNew": "New Purchase Return",
   "SendToVendor": "Send to vendor",
+  "ChooseReturnType": "Choose return type",
+  "PurchaseQuantity": "Purchase Quantity",
   "xxxxxx": "xxxxxxx",
   "": ""
 }

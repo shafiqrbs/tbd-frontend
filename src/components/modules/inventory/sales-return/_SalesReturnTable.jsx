@@ -151,9 +151,9 @@ function _SalesReturnTable() {
     }, [page, purchaseReturnFilterData]);
 
 
-    const handlePurchaseReturnApprove = async (id,type) => {
+    const handleSalesReturnApprove = async (id,type) => {
         try {
-            const resultAction = await dispatch(showInstantEntityData(`inventory/purchase/return/${id}/approve/${type}`));
+            const resultAction = await dispatch(showInstantEntityData(`inventory/sales/return/${id}/approve/${type}`));
 
             if (showInstantEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
@@ -270,8 +270,9 @@ function _SalesReturnTable() {
                                             textAlign: "right",
                                             render: (data) => (
                                                 <Group gap={4} justify="right" wrap="nowrap">
-                                                    {/*{
-                                                        !data.approved_by_id && data.process == "Created" && data.sub_domain_id &&
+
+                                                    {
+                                                        !data.approved_by_id && data.process == "Created" &&
                                                         <Button component="a" size="compact-xs" radius="xs"
                                                                 variant="filled" fw={'100'} fz={'12'}
                                                                 color='var(--theme-red-color-8)'
@@ -296,12 +297,14 @@ function _SalesReturnTable() {
                                                                         },
                                                                         confirmProps: {color: "red.6"},
                                                                         onCancel: () => console.log("Cancel"),
-                                                                        onConfirm: () => handlePurchaseReturnApprove(data.id,'vendor'),
+                                                                        onConfirm: () => handleSalesReturnApprove(data.id,'child'),
                                                                     });
                                                                 }}
-                                                        >{t('SendToVendor')}
+                                                        >{t('Approve')}
                                                         </Button>
                                                     }
+
+                                                    {/*
                                                     {
                                                         !data.approved_by_id && data.process == "Created" && !data.sub_domain_id &&
                                                         <Button component="a" size="compact-xs" radius="xs"
@@ -328,7 +331,7 @@ function _SalesReturnTable() {
                                                                         },
                                                                         confirmProps: {color: "red.6"},
                                                                         onCancel: () => console.log("Cancel"),
-                                                                        onConfirm: () => handlePurchaseReturnApprove(data.id,'purchase'),
+                                                                        onConfirm: () => handleSalesReturnApprove(data.id,'purchase'),
                                                                     });
                                                                 }}
                                                         >{t('Approve')}

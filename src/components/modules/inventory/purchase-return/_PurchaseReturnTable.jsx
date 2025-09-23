@@ -11,7 +11,6 @@ import {
     Button,
     ScrollArea,
     Table,
-    Loader,
     Menu,
     rem,
     LoadingOverlay, Badge,
@@ -24,15 +23,12 @@ import {
     IconDotsVertical,
     IconPencil,
     IconEyeEdit,
-    IconTrashX,
-    IconCheck, IconChevronsRight, IconX, IconCopy,
+    IconTrashX
 } from "@tabler/icons-react";
 import {DataTable} from "mantine-datatable";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    getIndexEntityData,
-    setDeleteMessage,
-    setFetching, setValidationData, showInstantEntityData, updateEntityData,
+    getIndexEntityData, showInstantEntityData
 } from "../../../../store/inventory/crudSlice.js";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
@@ -45,9 +41,6 @@ import {PurchasePrintPos} from "../purchase/print-component/PurchasePrintPos.jsx
 import _PurchaseReturnSearch from "./_PurchaseReturnSearch.jsx";
 
 function _PurchaseReturnTable() {
-    const {configData} = useConfigData()
-    let isWarehouse = configData?.sku_warehouse
-
     const printRef = useRef();
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
@@ -67,7 +60,6 @@ function _PurchaseReturnTable() {
     const purchaseReturnFilterData = useSelector(
         (state) => state.inventoryCrudSlice.purchaseReturnFilterData
     );
-
 
     const [loading, setLoading] = useState(true);
 
@@ -149,7 +141,6 @@ function _PurchaseReturnTable() {
     useEffect(() => {
         fetchData();
     }, [page, purchaseReturnFilterData]);
-
 
     const handlePurchaseReturnApprove = async (id,type) => {
         try {
@@ -271,7 +262,7 @@ function _PurchaseReturnTable() {
                                             render: (data) => (
                                                 <Group gap={4} justify="right" wrap="nowrap">
                                                     {
-                                                        !data.approved_by_id && data.process == "Created" && data.sub_domain_id &&
+                                                        !data.approved_by_id && data.process == "Created" && data.return_type == 'Requisition' &&
                                                         <Button component="a" size="compact-xs" radius="xs"
                                                                 variant="filled" fw={'100'} fz={'12'}
                                                                 color='var(--theme-red-color-8)'
@@ -303,7 +294,7 @@ function _PurchaseReturnTable() {
                                                         </Button>
                                                     }
                                                     {
-                                                        !data.approved_by_id && data.process == "Created" && !data.sub_domain_id &&
+                                                        !data.approved_by_id && data.process == "Created" && data.return_type == 'General' &&
                                                         <Button component="a" size="compact-xs" radius="xs"
                                                                 variant="filled" fw={'100'} fz={'12'}
                                                                 color='var(--theme-secondary-color-8)'
@@ -628,7 +619,7 @@ function _PurchaseReturnTable() {
                                     {t("Pos")}
                                 </Button>
                                 {
-                                    !purchaseReturnViewData?.approved_by_id && purchaseReturnViewData?.is_requisition !== 1 &&
+                                    !purchaseReturnViewData?.approved_by_id &&
 
                                     <Button
                                         onClick={() => {
