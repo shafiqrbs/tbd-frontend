@@ -37,7 +37,7 @@ function CategoryForm(props) {
 
     const form = useForm({
         initialValues: {
-            parent: '', name: '', status: true
+            parent: '', name: '','expiry_duration': '', status: true
         },
         validate: {
             parent: isNotEmpty(),
@@ -184,10 +184,22 @@ function CategoryForm(props) {
                                                     label={t('CategoryName')}
                                                     placeholder={t('CategoryName')}
                                                     required={true}
-                                                    nextField={'status'}
+                                                    nextField={'expiry_duration'}
                                                     form={form}
                                                     name={'name'}
                                                     id={'name'}
+                                                />
+                                            </Box>
+                                            <Box mt={'xs'}>
+                                                <InputForm
+                                                    tooltip={t('ExpiryDuration')}
+                                                    label={t('ExpiryDuration')}
+                                                    placeholder={t('ExpiryDuration')}
+                                                    required={false}
+                                                    nextField={'status'}
+                                                    form={form}
+                                                    name={'expiry_duration'}
+                                                    id={'expiry_duration'}
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>

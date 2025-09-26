@@ -80,6 +80,7 @@ function ProductForm(props) {
             min_quantity: '',
             description: '',
             color_id: '',
+            expiry_duration: '',
             brand_id: '',
             size_id: '',
             grade_id: '',
@@ -319,10 +320,30 @@ function ProductForm(props) {
                                                 name={'bangla_name'}
                                                 mt={8}
                                                 id={'bangla_name'}
-                                                nextField={'sku'}
+                                                nextField={'expiry_duration'}
                                             />
                                         </Box>
                                         <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <InputForm
+                                                        tooltip={t('ExpiryDuration')}
+                                                        label={t('ExpiryDuration')}
+                                                        placeholder={t('ExpiryDuration')}
+                                                        required={false}
+                                                        nextField={'sku'}
+                                                        form={form}
+                                                        name={'expiry_duration'}
+                                                        id={'expiry_duration'}
+                                                    />
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+
+                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
                                                     <InputForm

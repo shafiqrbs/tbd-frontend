@@ -61,6 +61,7 @@ function CategoryUpdateForm(props) {
         form.setValues({
             parent: entityEditData.parent ? entityEditData.parent : '',
             name: entityEditData.name ? entityEditData.name : '',
+            expiry_duration: entityEditData.expiry_duration ? entityEditData.expiry_duration : '',
             status: entityEditData.status ? entityEditData.status : ''
         })
 
@@ -195,6 +196,18 @@ function CategoryUpdateForm(props) {
                                                         form={form}
                                                         name={'name'}
                                                         id={'name'}
+                                                    />
+                                                </Box>
+                                                <Box mt={'xs'}>
+                                                    <InputForm
+                                                        tooltip={t('ExpiryDuration')}
+                                                        label={t('ExpiryDuration')}
+                                                        placeholder={t('ExpiryDuration')}
+                                                        required={false}
+                                                        nextField={'status'}
+                                                        form={form}
+                                                        name={'expiry_duration'}
+                                                        id={'expiry_duration'}
                                                     />
                                                 </Box>
                                                 <Box mt={'xs'}>

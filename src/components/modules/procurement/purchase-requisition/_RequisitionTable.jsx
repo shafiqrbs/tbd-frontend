@@ -449,7 +449,7 @@ export default function _RequisitionTable(props) {
                                                 <Grid columns={15} gutter={{base: 4}}>
                                                     <Grid.Col span={6}>
                                                         <Text fz="sm" lh="xs">
-                                                            {t("Customer")}
+                                                            {t("VendorName")}
                                                         </Text>
                                                     </Grid.Col>
                                                     <Grid.Col span={9}>
