@@ -15,7 +15,7 @@ import {
     rem,
     Checkbox,
     Tooltip,
-    LoadingOverlay, List
+    LoadingOverlay, List, Badge
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -44,6 +44,7 @@ import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import Navigation from "../common/Navigation.jsx";
+import {formatDate, parseDate} from "../../../../utils";
 
 function _SalesTable(props) {
     const {isWarehouse,configData} = props
@@ -220,8 +221,12 @@ function _SalesTable(props) {
         }
 
     };
+    const modeColorMap = {Inventory: 'green',Requisition: 'blue'};
+    const processColorMap = {Created: 'Red','In-progress':'blue',Approved:'blue'};
 
 
+    const current_date = formatDate(new Date());
+    console.log(current_date)
     return (
         <>
             <Box>
@@ -307,7 +312,6 @@ function _SalesTable(props) {
                                             )
                                         },
                                         { accessor: 'customerName', title: t("Customer") },
-                                        { accessor: 'customer_group', title: t("Group") },
                                         {
                                             accessor: 'total',
                                             title: t("Total"),
@@ -338,74 +342,45 @@ function _SalesTable(props) {
                                                 </>
                                             )
                                         },
-                                        { accessor: 'process', title: t("Process") },
+                                        { accessor: 'sales_form',textAlign: 'center', title: t('Mode') ,
+                                            render: (item) => {
+                                                const color = modeColorMap[item.sales_form] || 'red'; // fallback for unknown status
+                                                return (
+                                                    <Badge size="xs" radius="sm" color={color}>
+                                                        {item.sales_form}
+                                                    </Badge>
+                                                );
+                                            },
+                                            cellsClassName: tableCss.statusBackground
+                                        },
+                                        { accessor: 'expected_date', title: t("Expected") },
+                                        { accessor: 'process',textAlign: 'center', title: t('Process') ,
+                                            render: (item) => {
+                                                const color = processColorMap[item.process] || ''; // fallback for unknown status
+                                                return (
+                                                    <Badge size="xs" radius="sm" color={color}>
+                                                        {item.process}
+                                                    </Badge>
+                                                );
+                                            },
+                                            cellsClassName: tableCss.statusBackground
+                                        },
                                         {
                                             accessor: "action",
                                             title: t("Action"),
                                             textAlign: "right",
-                                            render: (data) => (
+                                            render: (data) => {
+                                                const current_date = new Date();
+                                                const expectedDate = parseDate(data.expected_date);
+                                                return (
+                                                    <Group gap={4} justify="right" wrap="nowrap">
+                                                        {
+                                                            (data.customer_group === 'Domain' && data?.expected_date && expectedDate <= current_date && !data.approved_by_id && !data.is_domain_sales_completed) && data.process === 'Created' &&
 
-                                                <Group gap={4} justify="right" wrap="nowrap">
-                                                    {
-                                                        (data.customer_group === 'Domain' && !data.approved_by_id && !data.is_domain_sales_completed) && data.process === 'Created' &&
-
-                                                    <Button component="a" size="compact-xs" radius="xs"
-                                                            variant="filled" fw={'100'} fz={'12'}
-                                                            color='var(--theme-secondary-color-8)'
-                                                            mr={'4'}
-                                                            onClick={()=>{
-                                                                modals.openConfirmModal({
-                                                                    title: (<Text size="md"> {t("SalesConformation")}</Text>),
-                                                                    children: (
-                                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
-                                                                    labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                                                                    onCancel: () => console.log('Cancel'),
-                                                                    onConfirm: () => {
-                                                                        handleCustomerSalesProcess(data.id,'Domain')
-                                                                    },
-                                                                });
-                                                            }}
-                                                    >{t('Approve')}
-                                                    </Button>
-                                                    }
-                                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
-                                                        <Menu.Target>
-                                                            <ActionIcon size="sm" variant="transparent" color='red' radius="xl" aria-label="Settings">
-                                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
-                                                            </ActionIcon>
-                                                        </Menu.Target>
-                                                        <Menu.Dropdown>
-
-                                                            {
-                                                                <Menu.Item
-                                                                    onClick={()=>{
-                                                                        modals.openConfirmModal({
-                                                                            title: (<Text size="md"> {t("CopySales")}</Text>),
-                                                                            children: (
-                                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
-                                                                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                                                                            onCancel: () => console.log('Cancel'),
-                                                                            onConfirm: () => {
-                                                                                handleSalesCopy(data.id)
-                                                                            },
-                                                                        });
-                                                                    }}
-                                                                    component="a"
-                                                                    leftSection={
-                                                                        <IconCopy
-                                                                            style={{
-                                                                                width: rem(14),
-                                                                                height: rem(14)
-                                                                            }}/>
-                                                                    }
-                                                                    w={'200'}
-                                                                >
-                                                                    {t("Copy")}
-                                                                </Menu.Item>
-                                                            }
-                                                            {
-                                                                (data.customer_group !=='Domain' && !data.approved_by_id) &&
-                                                                <Menu.Item
+                                                            <Button component="a" size="compact-xs" radius="xs"
+                                                                    variant="filled" fw={'100'} fz={'12'}
+                                                                    color='var(--theme-secondary-color-8)'
+                                                                    mr={'4'}
                                                                     onClick={()=>{
                                                                         modals.openConfirmModal({
                                                                             title: (<Text size="md"> {t("SalesConformation")}</Text>),
@@ -414,82 +389,137 @@ function _SalesTable(props) {
                                                                             labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                                             onCancel: () => console.log('Cancel'),
                                                                             onConfirm: () => {
-                                                                                handleCustomerSalesProcess(data.id,'NotDomain')
+                                                                                handleCustomerSalesProcess(data.id,'Domain')
                                                                             },
                                                                         });
                                                                     }}
-                                                                    component="a"
-                                                                    w={'200'}
-                                                                >
-                                                                    {t('SalesProcess')}
-                                                                </Menu.Item>
-                                                            }
-                                                            {
-                                                                !data.invoice_batch_id && !data.approved_by_id &&
-                                                                <Menu.Item
-                                                                    onClick={() => {
-                                                                        navigate(`/inventory/sales/edit/${data.id}`)
-                                                                    }}
-                                                                    component="a"
-                                                                    w={'200'}
-                                                                    leftSection={
-                                                                        <IconPencil style={{width: rem(14), height: rem(14)}} />
-                                                                    }
-                                                                >
-                                                                    {t('Edit')}
-                                                                </Menu.Item>
-                                                            }
-                                                            <Menu.Item
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    setLoading(true)
-                                                                    setSalesViewData(data)
-                                                                    setSelectedRow(data.invoice)
-                                                                    data?.invoice_batch_id ? setChecked(true) : setChecked(false)
-                                                                }}
-                                                                component="a"
-                                                                leftSection={
-                                                                    <IconEyeEdit style={{width: rem(14), height: rem(14)}} />
+                                                            >{t('Approve')}
+                                                            </Button>
+                                                        }
+                                                        <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                                            <Menu.Target>
+                                                                <ActionIcon size="sm" variant="transparent" color='red' radius="xl" aria-label="Settings">
+                                                                    <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                                                </ActionIcon>
+                                                            </Menu.Target>
+                                                            <Menu.Dropdown>
+
+                                                                {
+                                                                    <Menu.Item
+                                                                        onClick={()=>{
+                                                                            modals.openConfirmModal({
+                                                                                title: (<Text size="md"> {t("CopySales")}</Text>),
+                                                                                children: (
+                                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                                onCancel: () => console.log('Cancel'),
+                                                                                onConfirm: () => {
+                                                                                    handleSalesCopy(data.id)
+                                                                                },
+                                                                            });
+                                                                        }}
+                                                                        component="a"
+                                                                        leftSection={
+                                                                            <IconCopy
+                                                                                style={{
+                                                                                    width: rem(14),
+                                                                                    height: rem(14)
+                                                                                }}/>
+                                                                        }
+                                                                        w={'200'}
+                                                                    >
+                                                                        {t("Copy")}
+                                                                    </Menu.Item>
                                                                 }
-                                                                w={'200'}
-                                                            >
-                                                                {t('Show')}
-                                                            </Menu.Item>
-                                                            {
-                                                                !data.invoice_batch_id && !data.approved_by_id &&
+                                                                {
+                                                                    (data.customer_group !=='Domain' && !data.approved_by_id) &&
+                                                                    <Menu.Item
+                                                                        onClick={()=>{
+                                                                            modals.openConfirmModal({
+                                                                                title: (<Text size="md"> {t("SalesConformation")}</Text>),
+                                                                                children: (
+                                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                                onCancel: () => console.log('Cancel'),
+                                                                                onConfirm: () => {
+                                                                                    handleCustomerSalesProcess(data.id,'NotDomain')
+                                                                                },
+                                                                            });
+                                                                        }}
+                                                                        component="a"
+                                                                        w={'200'}
+                                                                    >
+                                                                        {t('SalesProcess')}
+                                                                    </Menu.Item>
+                                                                }
+                                                                {
+                                                                    !data.invoice_batch_id && !data.approved_by_id &&
+                                                                    <Menu.Item
+                                                                        onClick={() => {
+                                                                            navigate(`/inventory/sales/edit/${data.id}`)
+                                                                        }}
+                                                                        component="a"
+                                                                        w={'200'}
+                                                                        leftSection={
+                                                                            <IconPencil style={{width: rem(14), height: rem(14)}} />
+                                                                        }
+                                                                    >
+                                                                        {t('Edit')}
+                                                                    </Menu.Item>
+                                                                }
                                                                 <Menu.Item
-                                                                    onClick={() => {
-                                                                        modals.openConfirmModal({
-                                                                            title: (
-                                                                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                                            ),
-                                                                            children: (
-                                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                                            ),
-                                                                            labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                                            confirmProps: { color: 'red.6' },
-                                                                            onCancel: () => console.log('Cancel'),
-                                                                            onConfirm: () => {
-                                                                                {
-                                                                                    dispatch(deleteEntityData('inventory/sales/' + data.id));
-                                                                                }
-                                                                            },
-                                                                        });
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        setLoading(true)
+                                                                        setSalesViewData(data)
+                                                                        setSelectedRow(data.invoice)
+                                                                        data?.invoice_batch_id ? setChecked(true) : setChecked(false)
                                                                     }}
                                                                     component="a"
+                                                                    leftSection={
+                                                                        <IconEyeEdit style={{width: rem(14), height: rem(14)}} />
+                                                                    }
                                                                     w={'200'}
-                                                                    mt={'2'}
-                                                                    bg={'red.1'}
-                                                                    c={'red.6'}
-                                                                    rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
                                                                 >
-                                                                    {t('Delete')}
+                                                                    {t('Show')}
                                                                 </Menu.Item>
-                                                            }
-                                                        </Menu.Dropdown>
-                                                    </Menu>
-                                                </Group>
-                                            ),
+                                                                {
+                                                                    !data.invoice_batch_id && !data.approved_by_id &&
+                                                                    <Menu.Item
+                                                                        onClick={() => {
+                                                                            modals.openConfirmModal({
+                                                                                title: (
+                                                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                                ),
+                                                                                children: (
+                                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                                ),
+                                                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                                confirmProps: { color: 'red.6' },
+                                                                                onCancel: () => console.log('Cancel'),
+                                                                                onConfirm: () => {
+                                                                                    {
+                                                                                        dispatch(deleteEntityData('inventory/sales/' + data.id));
+                                                                                    }
+                                                                                },
+                                                                            });
+                                                                        }}
+                                                                        component="a"
+                                                                        w={'200'}
+                                                                        mt={'2'}
+                                                                        bg={'red.1'}
+                                                                        c={'red.6'}
+                                                                        rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                                                    >
+                                                                        {t('Delete')}
+                                                                    </Menu.Item>
+                                                                }
+                                                            </Menu.Dropdown>
+                                                        </Menu>
+                                                    </Group>
+                                                )
+                                            }
+
                                         },
                                     ]
                                     }

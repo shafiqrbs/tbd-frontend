@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    Button, LoadingOverlay,
+    Button, LoadingOverlay, ActionIcon, Menu, Text, rem, ScrollArea,
 } from "@mantine/core";
 
 import { DataTable } from 'mantine-datatable';
@@ -23,6 +23,10 @@ import {
     setInsertType,
 } from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import {deleteEntityData} from "../../../../store/production/crudSlice";
+import {IconCopy, IconDotsVertical, IconEyeEdit, IconPencil, IconTrashX, IconX} from "@tabler/icons-react";
+import {modals} from "@mantine/modals";
+import dayjs from "dayjs";
 
 function _RecipeItemsTable(props) {
     const {fetching,setFetching,layoutLoading,setLayoutLoading} = props
@@ -38,8 +42,11 @@ function _RecipeItemsTable(props) {
     const recipeItemFilterData = useSelector((state) => state.productionCrudSlice.recipeItemFilterData)
     const navigate = useNavigate()
 
+    const formatDate = (dateString, format = "DD-MMM-YYYY") => {
+        if (!dateString) return "";
+        return dayjs(dateString).format(format);
+    };
     const [indexData,setIndexData] = useState([])
-
     useEffect(() => {
         const fetchData = async () => {
             const value = {
@@ -135,6 +142,7 @@ function _RecipeItemsTable(props) {
                         },
                         { accessor: 'product_name', title: t("Item") },
                         { accessor: 'unit_name', title: t("Uom") },
+                        { accessor: 'warehouse_name', title: t("Warehouse") },
                         { accessor: 'license_date', title: t("LicenseDate") },
                         { accessor: 'initiate_date', title: t("InitiateDate") },
                         { accessor: 'waste_percent', title: t("Wastage%"), textAlign: "center" },
@@ -169,21 +177,59 @@ function _RecipeItemsTable(props) {
                             title: t("Action"),
                             textAlign: "right",
                             render: (item) => (
-                                item.process != 'approved' ?
+                                <>
                                     <Group gap={4} justify="right" wrap="nowrap">
-                                        <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'}  color='var(--theme-primary-color-6)' mr={'4'}
-                                            onClick={() => {
-                                                {
-                                                    navigate(`/production/recipe-update/${item.id}`)
-                                                }
-                                            }}
-                                        >  {t('Recipe')}</Button>
+                                    {item.process != 'approved' ?
+                                        <Group gap={4} justify="right" wrap="nowrap">
+                                            <Button component="a" size="compact-xs" radius="xs" variant="filled"
+                                                    fw={'100'} fz={'12'} color='var(--theme-primary-color-6)' mr={'4'}
+                                                    onClick={() => {
+                                                        {
+                                                            navigate(`/production/recipe-update/${item.id}`)
+                                                        }
+                                                    }}
+                                            >  {t('Recipe')}</Button>
+                                        </Group>
+                                        :
+                                            <Button component="a" size="compact-xs" radius="xs" variant="filled"
+                                                    fw={'100'} fz={'12'} color='var(--theme-reset-btn-color)' mr={'4'}
+                                                    onClick={() => {
+                                                        {
+                                                            navigate(`/production/recipe-update/${item.id}`)
+                                                        }
+                                                    }}
+                                            >  {t('Amendment')}</Button>
+
+                                    }
+
+                                        {item?.is_revised === 1 &&(
+                                            <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                            <Menu.Target>
+                                                <ActionIcon size="sm" variant="transparent" color='red' radius="xl" aria-label="Settings">
+                                                    <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                                </ActionIcon>
+                                            </Menu.Target>
+                                            <Menu.Dropdown>
+                                                {item?.item_amendment && item.item_amendment.length > 0 && (
+                                                    item.item_amendment.map((amendment, j) => (
+                                                        <Menu.Item
+                                                            key={j}
+                                                            component="a"
+                                                            leftSection={
+                                                                <IconEyeEdit style={{ width: rem(14), height: rem(14) }} />
+                                                            }
+                                                            w={200}
+                                                        >
+                                                            {formatDate(amendment?.created_at)}
+                                                        </Menu.Item>
+                                                    ))
+                                                )}
+
+                                            </Menu.Dropdown>
+                                        </Menu>
+                                        )}
                                     </Group>
-                                    :
-                                    <Group gap={4} justify="right" wrap="nowrap">
-                                        <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'}  color='var(--theme-primary-color-6)' mr={'4'}
-                                        >  {t('Amendment')}</Button>
-                                    </Group>
+                            </>
                             ),
                         },
                     ]

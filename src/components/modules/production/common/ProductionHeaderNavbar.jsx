@@ -134,7 +134,6 @@ function ProductionHeaderNavbar(props) {
         try {
             setLayoutLoading(true)
             const result = await dispatch(showEntityData("production/restore/item")).unwrap();
-
             if (result.data.status === 200) {
                 showNotificationComponent(t('ProductionItemRestoreSuccessfully'), 'teal', null, false, 1000)
             } else {
@@ -143,8 +142,8 @@ function ProductionHeaderNavbar(props) {
         } catch (error) {
             showNotificationComponent(t('FailedToItemRestore'), 'red', null, false, 1000)
         } finally {
-            setFetching(true)
-            setLayoutLoading(false)
+           // setFetching(true)
+          //  setLayoutLoading(false)
         }
     }
 
