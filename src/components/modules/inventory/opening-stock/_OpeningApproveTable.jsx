@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import {Grid, Box } from "@mantine/core";
+import {Grid, Box, Select} from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 
-import { useHotkeys } from "@mantine/hooks";
+import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import { useForm } from "@mantine/form";
 import { DataTable } from "mantine-datatable";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import _OpeningSearch from "./_OpeningSearch";
-import {getIndexEntityData} from "../../../../store/inventory/crudSlice";
+import {getIndexEntityData, inlineUpdateEntityData} from "../../../../store/inventory/crudSlice";
 import Navigation from "../common/Navigation";
 
 function _OpeningApproveTable(props) {
@@ -19,6 +19,9 @@ function _OpeningApproveTable(props) {
     const height = mainAreaHeight - 130; //TabList height 104
     const [fetching, setFetching] = useState(true);
     const dispatch = useDispatch();
+
+    const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
+    const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
 
     const perPage = 15;
     const [page, setPage] = useState(1);
@@ -141,6 +144,11 @@ function _OpeningApproveTable(props) {
                                             title: t('UOM'),
                                             width: '10%',
                                             textAlign: "center"
+                                        },
+                                        isWarehouse && {
+                                            accessor: "warehouse_name",
+                                            title: t("Warehouse"),
+                                            width: '15%',
                                         },
                                         {
                                             accessor: 'opening_quantity',

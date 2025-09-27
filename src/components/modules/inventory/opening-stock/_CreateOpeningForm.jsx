@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Button, ActionIcon, TextInput, Grid, Box, Group, Text,
-    Tooltip, Menu, rem, SegmentedControl, Center, Flex, ScrollArea
+    Tooltip, Menu, rem, SegmentedControl, Center, Flex, ScrollArea, Select
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -40,8 +40,12 @@ import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
 import SelectForm from "../../../form-builders/SelectForm";
 import _OpeningSearch from "./_OpeningSearch";
+import SelectFormForSalesPurchaseProduct from "../../../form-builders/SelectFormForSalesPurchaseProduct.jsx";
+import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 
 function _CreateOpeningForm(props) {
+    const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
+    const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
     const { currencySymbol } = props
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
@@ -62,6 +66,10 @@ function _CreateOpeningForm(props) {
     const [uploadOpeningStockModel, setUploadOpeningStockModel] = useState(false)
     const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
     const [invoiceProductMode, setInvoiceProductMode] = useState("product");
+
+    let warehouseDropdownData = getCoreWarehouseDropdownData();
+    const [warehouseData, setWarehouseData] = useState(null);
+
     useEffect(() => {
             dispatch(setDeleteMessage(''))
             if (entityDataDelete?.message === 'delete') {
@@ -125,7 +133,7 @@ function _CreateOpeningForm(props) {
         }
     }, [stockProductRestore])
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (searchValue.length > 0) {
             const storedProducts = localStorage.getItem('core-products');
             const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
@@ -144,7 +152,39 @@ function _CreateOpeningForm(props) {
         } else {
             setProductDropdown([]);
         }
+    }, [searchValue]);*/
+
+    useEffect(() => {
+        const storedProducts = localStorage.getItem('core-products');
+        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+        if (searchValue.length > 0) {
+            const lowerCaseSearchTerm = searchValue.toLowerCase();
+            const fieldsToSearch = ['product_name'];
+
+            const productFilterData = localProducts.filter(product =>
+                fieldsToSearch.some(field =>
+                    product[field] && String(product[field]).toLowerCase().includes(lowerCaseSearchTerm)
+                )
+            );
+
+            setProductDropdown(
+                productFilterData.map(type => ({
+                    label: type.product_name,
+                    value: String(type.id)
+                }))
+            );
+        } else {
+            // 👉 initial state = all products
+            setProductDropdown(
+                localProducts.map(type => ({
+                    label: type.product_name,
+                    value: String(type.id)
+                }))
+            );
+        }
     }, [searchValue]);
+
 
 
     /**
@@ -158,6 +198,7 @@ function _CreateOpeningForm(props) {
                 product_id: product.id,
                 display_name: product.display_name,
                 opening_quantity: Number(values.opening_quantity),
+                warehouse_id: values?.warehouse_id ?? null,
                 unit_name: product.unit_name,
                 purchase_price: Number(values.purchase_price),
                 sub_total: Number(values.sub_total),
@@ -195,6 +236,7 @@ function _CreateOpeningForm(props) {
             product_id: product.id,
             display_name: product.display_name,
             opening_quantity: 1,
+            warehouse_id: values?.warehouse_id ?? null,
             unit_name: product.unit_name,
             purchase_price: product.purchase_price,
             sub_total: Number(product.purchase_price),
@@ -226,7 +268,7 @@ function _CreateOpeningForm(props) {
 
     const form = useForm({
         initialValues: {
-            product_id: '', sales_price: '', purchase_price: '', barcode: '', sub_total: '', opening_quantity: ''
+            product_id: '', sales_price: '', purchase_price: '', barcode: '', sub_total: '', opening_quantity: '', warehouse_id:''
         },
         validate: {
             product_id: (value, values) => {
@@ -253,6 +295,13 @@ function _CreateOpeningForm(props) {
                     }
                 }
                 return null;
+            },
+            warehouse_id: (value) => {
+                if (isWarehouse === 1) {
+                    if (!value) {
+                        return true;
+                    }
+                }
             }
         }
     });
@@ -456,7 +505,7 @@ function _CreateOpeningForm(props) {
                                                 label=''
                                                 placeholder={t('ChooseStockProduct')}
                                                 required={false}
-                                                nextField={'opening_quantity'}
+                                                nextField={'warehouse_id'}
                                                 name={'product_id'}
                                                 form={form}
                                                 id={'product_id'}
@@ -466,7 +515,35 @@ function _CreateOpeningForm(props) {
                                                 dropdownValue={productDropdown}
                                             />
                                         </Box>
+
                                         <Box  p={"xs"} className={'boxBackground'}>
+
+                                            {isWarehouse === 1 && (
+                                            <Box mt={'4'} className={'boxBackground'}>
+                                                <Grid columns={24} gutter={{base: 1}}>
+                                                    <Grid.Col span={10} fz="sm" mt={8}>
+                                                        {t("Warehouse")}
+                                                    </Grid.Col>
+                                                    <Grid.Col span={14}>
+                                                        <SelectFormForSalesPurchaseProduct
+                                                            tooltip={t("ChooseWarehouse")}
+                                                            label=""
+                                                            placeholder={t("ChooseWarehouse")}
+                                                            required={false}
+                                                            nextField={"opening_quantity"}
+                                                            name={"warehouse_id"}
+                                                            form={form}
+                                                            dropdownValue={warehouseDropdownData}
+                                                            id={"warehouse_id"}
+                                                            mt={1}
+                                                            searchable={true}
+                                                            value={warehouseData}
+                                                            changeValue={setWarehouseData}
+                                                        />
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            )}
                                             <Box mt={'4'}>
                                                 <Grid columns={24} gutter={{ base: 1 }}>
                                                     <Grid.Col span={10} fz="sm" mt={8}>
@@ -672,13 +749,57 @@ function _CreateOpeningForm(props) {
                                             {
                                                 accessor: 'product_name',
                                                 title: t("Name"),
-                                                width: '25%',
+                                                width: '20%',
                                             },
                                             {
                                                 accessor: 'unit_name',
                                                 title: t('UOM'),
-                                                width: '10%',
+                                                width: '5%',
                                                 textAlign: "center"
+                                            },
+                                            isWarehouse && {
+                                                accessor: "warehouse_id",
+                                                title: t("Warehouse"),
+                                                width: '15%',
+                                                render: (item) => {
+                                                    const [editedWarehouse, setEditedWarehouse] = useState(item.warehouse_id);
+
+                                                    const handleWarehouseChange = (e) => {
+                                                        setEditedWarehouse(e);
+
+                                                        const editedWarehouseData = {
+                                                            url: 'inventory/opening-stock/inline-update',
+                                                            data: {
+                                                                field_name: "warehouse_id",
+                                                                warehouse_id: editedWarehouse,
+                                                                id: item.id
+                                                            }
+                                                        }
+
+                                                        setTimeout(() => {
+                                                            dispatch(inlineUpdateEntityData(editedWarehouseData));
+                                                            setFetching(true);
+                                                        }, 1000);
+                                                    };
+
+                                                    return (
+                                                        <>
+                                                            <Select
+                                                                label=""
+                                                                size="xs"
+                                                                id={"inline-update-warehouse-" + item.id}
+                                                                value={String(editedWarehouse)}
+                                                                data={warehouseDropdownData}
+                                                                onChange={(e) => handleWarehouseChange(e)}
+                                                                onKeyDown={getHotkeyHandler([
+                                                                    ['Enter', (e) => {
+                                                                        document.getElementById('inline-update-quantity-' + item.id).focus();
+                                                                    }],
+                                                                ])}
+                                                            />
+                                                        </>
+                                                    );
+                                                }
                                             },
                                             {
                                                 accessor: 'opening_quantity',
@@ -688,7 +809,7 @@ function _CreateOpeningForm(props) {
                                                 render: (item) => {
                                                     const [editedQuantity, setEditedQuantity] = useState(item.opening_quantity);
 
-                                                    const handlQuantityChange = (e) => {
+                                                    const handelQuantityChange = (e) => {
                                                         const editedQuantity = e.currentTarget.value;
                                                         setEditedQuantity(editedQuantity);
 
@@ -726,7 +847,7 @@ function _CreateOpeningForm(props) {
                                                                 size="xs"
                                                                 id={"inline-update-quantity-" + item.id}
                                                                 value={Number(editedQuantity)}
-                                                                onChange={handlQuantityChange}
+                                                                onChange={handelQuantityChange}
                                                                 onKeyDown={getHotkeyHandler([
                                                                     ['Enter', (e) => {
                                                                         document.getElementById('inline-update-purchase-price-' + item.id).focus();
