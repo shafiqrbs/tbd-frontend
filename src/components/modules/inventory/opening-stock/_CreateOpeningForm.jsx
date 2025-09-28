@@ -1,13 +1,13 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Button, ActionIcon, TextInput, Grid, Box, Group, Text,
-    Tooltip, Menu, rem, SegmentedControl, Center, Flex, ScrollArea, Select
+    Tooltip, SegmentedControl, Center, Flex, ScrollArea, Select
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconDeviceFloppy, IconX, IconBarcode, IconChevronsRight, IconArrowRight, IconLoader,
-    IconPlus, IconDotsVertical, IconCheck,
+    IconX, IconBarcode, IconChevronsRight,
+    IconPlus, IconDotsVertical,
     IconSortAscendingNumbers,
     IconPlusMinus,
     IconSum, IconCoinMonero, IconRefresh
@@ -15,7 +15,6 @@ import {
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "@mantine/form";
-import {notifications, showNotification} from "@mantine/notifications";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
@@ -27,7 +26,7 @@ import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-sto
 import {
     deleteEntityData,
     getIndexEntityData,
-    inlineUpdateEntityData, setPurchaseItemsFilterData,
+    inlineUpdateEntityData,
     storeEntityData, setDeleteMessage
 } from "../../../../store/inventory/crudSlice.js";
 import AddProductDrawer from "../sales/drawer-form/AddProductDrawer.jsx";
@@ -38,7 +37,6 @@ import InputForm from "../../../form-builders/InputForm.jsx";
 import Navigation from "../common/Navigation.jsx";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
-import SelectForm from "../../../form-builders/SelectForm";
 import _OpeningSearch from "./_OpeningSearch";
 import SelectFormForSalesPurchaseProduct from "../../../form-builders/SelectFormForSalesPurchaseProduct.jsx";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
@@ -62,7 +60,6 @@ function _CreateOpeningForm(props) {
     const [productDropdown, setProductDropdown] = useState([])
     const [productDrawer, setProductDrawer] = useState(false);
     const [indexData,setIndexData] = useState([])
-    const purchaseItemsFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseItemsFilterData)
     const [uploadOpeningStockModel, setUploadOpeningStockModel] = useState(false)
     const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
     const [invoiceProductMode, setInvoiceProductMode] = useState("product");
@@ -73,15 +70,7 @@ function _CreateOpeningForm(props) {
     useEffect(() => {
             dispatch(setDeleteMessage(''))
             if (entityDataDelete?.message === 'delete') {
-                notifications.show({
-                    color: 'red',
-                    title: t('DeleteSuccessfully'),
-                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                    loading: false,
-                    autoClose: 700,
-                    style: { backgroundColor: 'lightgray' },
-                });
-    
+                showNotificationComponent(t('DeleteSuccessfully'),'red','',true,1000,true)
                 setTimeout(() => {
                     setFetching(true)
                 }, 700)
@@ -133,27 +122,6 @@ function _CreateOpeningForm(props) {
         }
     }, [stockProductRestore])
 
-    /*useEffect(() => {
-        if (searchValue.length > 0) {
-            const storedProducts = localStorage.getItem('core-products');
-            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-            const lowerCaseSearchTerm = searchValue.toLowerCase();
-            const fieldsToSearch = ['product_name'];
-            const productFilterData = localProducts.filter(product =>
-                fieldsToSearch.some(field =>
-                    product[field] && String(product[field]).toLowerCase().includes(lowerCaseSearchTerm)
-                )
-            );
-            const formattedProductData = productFilterData.map(type => ({
-                label: type.product_name, value: String(type.id)
-            }));
-
-            setProductDropdown(formattedProductData);
-        } else {
-            setProductDropdown([]);
-        }
-    }, [searchValue]);*/
-
     useEffect(() => {
         const storedProducts = localStorage.getItem('core-products');
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
@@ -175,7 +143,7 @@ function _CreateOpeningForm(props) {
                 }))
             );
         } else {
-            // 👉 initial state = all products
+            // initial state = all products
             setProductDropdown(
                 localProducts.map(type => ({
                     label: type.product_name,
@@ -220,14 +188,7 @@ function _CreateOpeningForm(props) {
                 createOpeningStockAndResetForm(addProduct, 'barcode');
             }
         } else {
-            notifications.show({
-                loading: true,
-                color: 'red',
-                title: 'Product not found with this barcode',
-                message: 'Data will be loaded in 3 seconds, you cannot close this yet',
-                autoClose: 1000,
-                withCloseButton: true,
-            });
+            showNotificationComponent('Product not found with this barcode','red','',true,1000,true)
         }
     }
 

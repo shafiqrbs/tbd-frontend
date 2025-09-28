@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import {Grid, Box, Select} from "@mantine/core";
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from "react";
+import {useOutletContext} from "react-router-dom";
+import {Grid, Box} from "@mantine/core";
+import {useTranslation} from 'react-i18next';
 
-import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
+import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import { useForm } from "@mantine/form";
-import { DataTable } from "mantine-datatable";
+import {useForm} from "@mantine/form";
+import {DataTable} from "mantine-datatable";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import _OpeningSearch from "./_OpeningSearch";
-import {getIndexEntityData, inlineUpdateEntityData} from "../../../../store/inventory/crudSlice";
+import {getIndexEntityData} from "../../../../store/inventory/crudSlice";
 import Navigation from "../common/Navigation";
 
-function _OpeningApproveTable(props) {
-    const { t, i18n } = useTranslation();
-    const { isOnline, mainAreaHeight } = useOutletContext();
+function _OpeningApproveTable() {
+    const {t, i18n} = useTranslation();
+    const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
     const [fetching, setFetching] = useState(true);
     const dispatch = useDispatch();
@@ -29,7 +29,7 @@ function _OpeningApproveTable(props) {
     const invFetching = useSelector((state) => state.inventoryCrudSlice.fetching)
 
 
-    const [indexData,setIndexData] = useState([])
+    const [indexData, setIndexData] = useState([])
 
     useEffect(() => {
         let isMounted = true; // To handle cleanup properly in `useEffect`
@@ -46,9 +46,9 @@ function _OpeningApproveTable(props) {
                 param: {
                     page: page,
                     offset: perPage,
-                    mode:"opening",
-                    is_approved:1,
-                    term:purchaseItemsFilterData.searchKeyword,
+                    mode: "opening",
+                    is_approved: 1,
+                    term: purchaseItemsFilterData.searchKeyword,
                     start_date: purchaseItemsFilterData.start_date && new Date(purchaseItemsFilterData.start_date).toLocaleDateString("en-CA", options),
                     end_date: purchaseItemsFilterData.end_date && new Date(purchaseItemsFilterData.end_date).toLocaleDateString("en-CA", options)
                 }
@@ -76,7 +76,7 @@ function _OpeningApproveTable(props) {
         return () => {
             isMounted = false; // Cleanup the effect to prevent state updates on unmounted component
         };
-    }, [fetching,invFetching,dispatch,page]);
+    }, [fetching, invFetching, dispatch, page]);
 
     const form = useForm({
         initialValues: {
@@ -100,16 +100,17 @@ function _OpeningApproveTable(props) {
     return (
         <>
             <Box>
-                <Grid columns={24} gutter={{ base: 8 }}>
-                    <Grid.Col span={1} >
-                        <Navigation module = {"opening-approve-stock"} />
+                <Grid columns={24} gutter={{base: 8}}>
+                    <Grid.Col span={1}>
+                        <Navigation module={"opening-approve-stock"}/>
                     </Grid.Col>
-                    <Grid.Col span={22} >
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                    <Grid.Col span={22}>
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
                             <Box>
                                 <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
                                     <Box pb={'xs'}>
-                                       <_OpeningSearch module={'opening-approve-stock'} tableDataLoading={setFetching}/>
+                                        <_OpeningSearch module={'opening-approve-stock'}
+                                                        tableDataLoading={setFetching}/>
                                     </Box>
                                 </Box>
                             </Box>
@@ -133,6 +134,7 @@ function _OpeningApproveTable(props) {
                                         {
                                             accessor: 'created',
                                             title: t("CreatedDate"),
+                                            width: '10%',
                                         },
                                         {
                                             accessor: 'product_name',
@@ -205,13 +207,13 @@ function _OpeningApproveTable(props) {
                                     loaderSize="xs"
                                     loaderColor="grape"
                                     height={height + 10}
-                                    scrollAreaProps={{ type: 'never' }}
+                                    scrollAreaProps={{type: 'never'}}
                                 />
                             </Box>
                         </Box>
                     </Grid.Col>
 
-                    <Grid.Col span={1} >
+                    <Grid.Col span={1}>
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                             <ShortcutInvoice
                                 form={form}

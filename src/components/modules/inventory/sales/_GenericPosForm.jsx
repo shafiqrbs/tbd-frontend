@@ -568,7 +568,8 @@ function _GenericPosForm({domainConfigData}) {
                                   />
                                 </Box>
                             )}
-                            {domainConfigData?.inventory_config?.sku_warehouse === 1 && salesConfig?.search_by_warehouse === 1 && (       <Box mt={"4"}>
+                            {domainConfigData?.inventory_config?.sku_warehouse === 1 && salesConfig?.search_by_warehouse === 1 && (
+                                <Box mt={"4"}>
                                   <SelectForm
                                       tooltip={t("Warehouse")}
                                       label=""

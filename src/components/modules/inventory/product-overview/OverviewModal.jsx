@@ -1,5 +1,5 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Modal, Button, Progress, Tabs, Box } from '@mantine/core';
+import { Modal, Tabs, Box } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { getLoadingProgress } from '../../../global-hook/loading-progress/getLoadingProgress.js';
 import { useEffect, useState } from 'react';
@@ -9,9 +9,6 @@ export default function OverviewModal(props) {
 
     const { viewModal, setViewModal } = props;
     const { t, i18 } = useTranslation();
-    const progress = getLoadingProgress();
-    const [opened, { open, close }] = useDisclosure(false);
-    const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : [];
     const [activeTab, setActiveTab] = useState('');
     useEffect(() => {
         setActiveTab('');

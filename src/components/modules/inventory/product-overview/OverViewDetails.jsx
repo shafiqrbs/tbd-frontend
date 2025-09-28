@@ -1,25 +1,24 @@
 import React from 'react';
 import {
-    Box, Grid, useMantineTheme, Text,
+    Box, Grid, Text,
     Title, Stack, Card,
     Chip, Image,
-    ScrollArea, Flex,
+    ScrollArea
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import barcode from '../../../../assets/images/frame.png';
 
-function OverViewDetails(props) {
-    const theme = useMantineTheme();
+function OverViewDetails() {
+    const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
+    const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
     const { t, i18n } = useTranslation();
-    const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
 
     const showEntityData = useSelector((state) => state.inventoryCrudSlice.showEntityData);
-
-    const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
+    const warehouseStock = showEntityData?.warehouse_wise_stock ?? []
 
 
     return (
@@ -184,6 +183,24 @@ function OverViewDetails(props) {
                                                             <Text fz="xs" fw={600} pt={2} >{showEntityData?.stock_quantity}</Text>
                                                         </Grid.Col>
                                                     </Grid>
+
+                                                    {isWarehouse &&
+                                                        warehouseStock.map((stock, index) => (
+                                                            <Grid columns={12} gutter={0} pt="4" key={index}>
+                                                                <Grid.Col span={5}>
+                                                                    <Text pt={2} fz="xs" fw={600} color={'red'}>{stock.warehouse_name}</Text>
+                                                                </Grid.Col>
+                                                                <Grid.Col span={1}>
+                                                                    <Text fz="xs" fw={600} pt={2}>:</Text>
+                                                                </Grid.Col>
+                                                                <Grid.Col span={6}>
+                                                                    <Text fz="xs" fw={600} pt={2} color={'red'}>{stock?.stock}</Text>
+                                                                </Grid.Col>
+                                                            </Grid>
+                                                        ))
+                                                    }
+
+
                                                 </Grid.Col>
                                             </Grid>
                                         </Stack>

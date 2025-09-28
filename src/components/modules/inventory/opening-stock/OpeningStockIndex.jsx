@@ -2,15 +2,14 @@ import React from "react";
 import {
     Box, Progress
 } from "@mantine/core";
-import { useTranslation } from 'react-i18next';
-import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import useConfigData from "../../../global-hook/config-data/useConfigData.js";
+import {useTranslation} from 'react-i18next';
+import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
 import _CreateOpeningForm from "./_CreateOpeningForm.jsx";
 
 
 function OpeningStockIndex() {
-    const { t, i18n } = useTranslation();
+    const {t, i18n} = useTranslation();
     const progress = getLoadingProgress()
 
     const domainConfigData = JSON.parse(
@@ -21,7 +20,8 @@ function OpeningStockIndex() {
     return (
         <>
             {progress !== 100 &&
-                <Progress color='var(--theme-primary-color-6)' size={"sm"} striped animated value={progress} transitionDuration={200} />}
+                <Progress color='var(--theme-primary-color-6)' size={"sm"} striped animated value={progress}
+                          transitionDuration={200}/>}
             {progress === 100 &&
                 <Box>
                     {
