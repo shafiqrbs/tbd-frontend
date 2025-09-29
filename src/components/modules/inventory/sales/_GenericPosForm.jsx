@@ -50,6 +50,7 @@ import __PosSalesForm from "./__PosSalesForm.jsx";
 import {useHotkeys} from "@mantine/hooks";
 import SettingDrawer from "../common/SettingDrawer.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import SelectFormForSalesPurchaseProduct from "../../../form-builders/SelectFormForSalesPurchaseProduct.jsx";
 
 function _GenericPosForm({domainConfigData}) {
   // Constants
@@ -58,13 +59,14 @@ function _GenericPosForm({domainConfigData}) {
   const isSMSActive = domainConfigData?.inventory_config?.is_active_sms;
   const salesConfig = domainConfigData?.inventory_config?.config_sales;
   const id = domainConfigData?.id;
-  const categoryDropDownData = getSettingCategoryDropdownData();
+  const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
+   const categoryDropDownData = getSettingCategoryDropdownData();
 
   // Hooks
   const {t, i18n} = useTranslation();
   const {isOnline, mainAreaHeight} = useOutletContext();
   const height = mainAreaHeight - 360;
-  const itemFormheight = mainAreaHeight - 140;
+  const itemFromHeight = mainAreaHeight - 140;
 
   // State
 
@@ -532,7 +534,7 @@ function _GenericPosForm({domainConfigData}) {
                 <Box className="boxBackground">
                   <Box  pt={'0'}>
                     {productSalesMode === "product" && (
-                        <ScrollArea h={itemFormheight-56} scrollbarSize={2} scrollbars="y" type="never">
+                        <ScrollArea h={itemFromHeight-56} scrollbarSize={2} scrollbars="y" type="never">
                           {salesConfig?.is_barcode === 1 && (
                           <Box  p={"xs"} className={genericClass.genericHighlightedBox}>
                               <InputNumberForm
@@ -739,6 +741,34 @@ function _GenericPosForm({domainConfigData}) {
                               </Grid.Col>
                             </Grid>
                           </Box>
+
+                              {isWarehouse === 1 && (
+                                  <Box mt={'4'} className={'boxBackground'}>
+                                      <Grid columns={24} gutter={{base: 1}}>
+                                          <Grid.Col span={10} fz="sm" mt={8}>
+                                              {t("Warehouse")}
+                                          </Grid.Col>
+                                          <Grid.Col span={14}>
+                                              <SelectFormForSalesPurchaseProduct
+                                                  tooltip={t("ChooseWarehouse")}
+                                                  label=""
+                                                  placeholder={t("ChooseWarehouse")}
+                                                  required={false}
+                                                  nextField={"opening_quantity"}
+                                                  name={"warehouse_id"}
+                                                  form={form}
+                                                  dropdownValue={warehouseDropdownData}
+                                                  id={"warehouse_id"}
+                                                  mt={1}
+                                                  searchable={true}
+                                                  value={warehouseData}
+                                                  changeValue={setWarehouseData}
+                                              />
+                                          </Grid.Col>
+                                      </Grid>
+                                  </Box>
+                              )}
+
                           { salesConfig?.item_sales_percent ===1 && (
                               <Box  mt={"4"}>
                                 <Grid columns={24} gutter={{ base: 1 }}>
@@ -1062,7 +1092,7 @@ function _GenericPosForm({domainConfigData}) {
                               ]}
                               loaderSize="xs"
                               loaderColor="grape"
-                              height={itemFormheight-6}
+                              height={itemFromHeight-6}
                               scrollAreaProps={{
                                 scrollbarSize: 4,
                               }}

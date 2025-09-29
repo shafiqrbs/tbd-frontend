@@ -194,7 +194,7 @@ function _OpeningApproveTable() {
                                             },
 
                                         },
-                                    ]
+                                    ].filter(Boolean)
                                     }
                                     fetching={fetching || invFetching}
                                     totalRecords={indexData.total}

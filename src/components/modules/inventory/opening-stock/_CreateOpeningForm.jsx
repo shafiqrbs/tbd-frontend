@@ -46,11 +46,10 @@ function _CreateOpeningForm(props) {
     const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
     const { currencySymbol } = props
     const { t, i18n } = useTranslation();
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 120; //TabList height 104
-    const itemFormheight = mainAreaHeight - 160; //TabList height 104
+    const itemFromHeight = mainAreaHeight - 160; //TabList height 104
     const [fetching, setFetching] = useState(true);
 
     const perPage = 15;
@@ -446,7 +445,7 @@ function _CreateOpeningForm(props) {
                                 </Box>
                                 <Box className="boxBackground">
                                     <Box  pt={'0'}>
-                                        <ScrollArea h={itemFormheight-56} scrollbarSize={2} scrollbars="y" type="never">
+                                        <ScrollArea h={itemFromHeight-56} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box  p={"xs"} className={genericClass.genericHighlightedBox}>
                                             <InputNumberForm
                                                 tooltip={t("BarcodeValidateMessage")}
@@ -974,7 +973,7 @@ function _CreateOpeningForm(props) {
 
                                                 ),
                                             },
-                                        ]
+                                        ].filter(Boolean)
                                         }
                                         fetching={fetching}
                                         totalRecords={indexData.total}

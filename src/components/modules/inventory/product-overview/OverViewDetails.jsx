@@ -184,7 +184,7 @@ function OverViewDetails() {
                                                         </Grid.Col>
                                                     </Grid>
 
-                                                    {isWarehouse &&
+                                                    {isWarehouse==1 &&
                                                         warehouseStock.map((stock, index) => (
                                                             <Grid columns={12} gutter={0} pt="4" key={index}>
                                                                 <Grid.Col span={5}>
