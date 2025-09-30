@@ -698,7 +698,7 @@ function _GenericInvoiceForm() {
                                                 </Grid>
                                             </Box>
                                             <Box pl={"xs"} pr={'xs'}>
-                                                {domainConfigData?.inventory_config?.sku_warehouse === 1 && configPurchase?.is_warehouse === 1 && (
+                                                {domainConfigData?.inventory_config?.sku_warehouse === 1 && (
                                                     <Box mt={"4"}>
                                                         <Grid columns={24} gutter={{base: 1}}>
                                                             <Grid.Col span={10} fz="sm" mt={8}>

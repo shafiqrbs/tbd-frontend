@@ -1209,6 +1209,8 @@
   "ApprovedDate": "Approved Date",
   "ApprovedName": "Approved Name",
   "RequestQty": "Req Qty.",
+  "PurchaseItem": "Purchase Item",
+  "ChoosePurchaseItem": "Choose Purchase Item",
   "ApproveQty": "Approve Qty.",
   "BoardDetails": "Board Details",
   "ProductionProcess": "Production Process",

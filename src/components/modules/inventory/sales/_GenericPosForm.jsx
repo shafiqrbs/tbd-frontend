@@ -85,6 +85,10 @@ function _GenericPosForm({domainConfigData}) {
     const [productDropdown, setProductDropdown] = useState([]);
     const [multiPriceDropdown, setMultiPriceDropdown] = useState([]);
     const [unitDropdown, setUnitDropdown] = useState([]);
+    const [productWarehouseData, setProductWarehouseData] = useState(null);
+    const [productWarehouseDropdown, setProductWarehouseDropdown] = useState([]);
+    const [productPurchaseItemData, setProductPurchaseItemData] = useState(null);
+    const [productPurchaseItemDropdown, setProductPurchaseItemDropdown] = useState([]);
     const [selectProductDetails, setSelectProductDetails] = useState(null);
     const [productQuantities, setProductQuantities] = useState({});
     const [categoryData, setCategoryData] = useState(null);
@@ -110,6 +114,7 @@ function _GenericPosForm({domainConfigData}) {
             bonus_quantity: "",
             percent: "",
             product_id: "",
+            product_warehouse_id: "",
             barcode: "",
             sub_total: "",
             warehouse_id: "",
@@ -119,11 +124,29 @@ function _GenericPosForm({domainConfigData}) {
         },
         validate: {
             product_id: (value, values) => {
-                const isDigitsOnly = /^\d+$/.test(value);
-                if (!isDigitsOnly && values.product_id) {
-                    return true;
+                if (value && value!= '') {
+                    const isDigitsOnly = /^\d+$/.test(value);
+                    console.log(isDigitsOnly, values.product_id)
+                    if (!isDigitsOnly && values.product_id) {
+                        return true;
+                    }
+                    return null;
                 }
-                return null;
+                return true;
+            },
+            product_warehouse_id: (value) => {
+                if (isWarehouse === 1) {
+                    if (!value) {
+                        return true;
+                    }
+                }
+            },
+            purchase_item_id: (value) => {
+                if (productPurchaseItemDropdown.length > 0 && !productPurchaseItemData) {
+                    if (!value) {
+                        return true;
+                    }
+                }
             },
             quantity: (value, values) => {
                 if (values.product_id) {
@@ -151,7 +174,7 @@ function _GenericPosForm({domainConfigData}) {
                     }
                 }
                 return null;
-            },
+            }
         },
     });
 
@@ -235,6 +258,23 @@ function _GenericPosForm({domainConfigData}) {
                 setUnitDropdown(unitDropdown);
             }
 
+            if (isWarehouse === 1 && selectedProduct.current_warehouse_stock) {
+                const wd = selectedProduct.current_warehouse_stock.map((warehouse) => ({
+                    label: warehouse.warehouse_name+" ( stock #"+warehouse.quantity+" )",
+                    value: String(warehouse.warehouse_id),
+                }));
+                setProductWarehouseDropdown(wd);
+            }
+
+            if (selectedProduct.purchase_item_for_sales && isWarehouse === 0) {
+                const pi = selectedProduct.purchase_item_for_sales.map((pItem) => ({
+                    label: "Expire: "+pItem.expired_date+" (stock #"+pItem.remain_quantity+")",
+                    value: String(pItem.id),
+                }));
+                setProductPurchaseItemDropdown(pi);
+            }
+
+
             form.setFieldValue("price", selectedProduct.sales_price);
             form.setFieldValue("sales_price", selectedProduct.sales_price);
 
@@ -251,6 +291,28 @@ function _GenericPosForm({domainConfigData}) {
     }, [form.values.product_id]);
 
     useEffect(() => {
+        if (form.values.product_warehouse_id) {
+            const storedProducts = localStorage.getItem("core-products");
+            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+            const filteredProducts = localProducts.filter(
+                (product) => product.id === Number(form.values.product_id)
+            );
+            if (filteredProducts[0].purchase_item_for_sales) {
+                const pi = filteredProducts[0].purchase_item_for_sales
+                    .filter(pItem => pItem.warehouse_id == form.values.product_warehouse_id) // filter first
+                    .map(pItem => ({
+                        label: "Expire: " + pItem.expired_date + " (stock #" + pItem.remain_quantity + ")",
+                        value: String(pItem.id),
+                    }));
+
+                setProductPurchaseItemDropdown(pi);
+            }
+        }
+    }, [form.values.product_warehouse_id]);
+
+
+    useEffect(() => {
         let quantity = 0;
         const selectedQuantity = selectUnitDetails?.quantity;
         const unitId = form?.values?.unit_id;
@@ -261,6 +323,18 @@ function _GenericPosForm({domainConfigData}) {
             form.setFieldValue("quantity", quantity);
         } else {
             quantity = Number(form?.values?.quantity) || 0;
+        }
+
+        if (productPurchaseItemDropdown.length > 0 && productPurchaseItemData ){
+            // extract number inside parentheses after "stock #"
+            const match = productPurchaseItemData.label.match(/\(stock #(\d+)\)/);
+
+            const stockNumber = match ? Number(match[1]) : null;
+            if (quantity > stockNumber){
+                form.setFieldError("quantity", true);
+                form.setFieldValue('quantity','')
+                return
+            }
         }
 
         const salesPrice = Number(form.values.sales_price);
@@ -349,6 +423,10 @@ function _GenericPosForm({domainConfigData}) {
         setProduct(null);
         setMultiPrice(null);
         setUnitType(null);
+        setProductPurchaseItemData(null);
+        setProductWarehouseData(null);
+        setProductWarehouseDropdown([]);
+        setProductPurchaseItemDropdown([]);
         form.reset();
         document.getElementById("product_id")?.focus();
     }, [form]);
@@ -573,7 +651,7 @@ function _GenericPosForm({domainConfigData}) {
                                                         />
                                                     </Box>
                                                 )}
-                                                {domainConfigData?.inventory_config?.sku_warehouse === 1 && salesConfig?.search_by_warehouse === 1 && (
+                                                {isWarehouse === 1 && salesConfig?.search_by_warehouse === 1 && (
                                                     <Box mt={"4"}>
                                                         <SelectForm
                                                             tooltip={t("Warehouse")}
@@ -731,7 +809,12 @@ function _GenericPosForm({domainConfigData}) {
                                                                 label=""
                                                                 placeholder={t("SalesPrice")}
                                                                 required={true}
-                                                                nextField={salesConfig?.item_sales_percent === 1 ? "percent" : 'quantity'}
+                                                                nextField={(() => {
+                                                                    if (isWarehouse === 1) return 'product_warehouse_id';
+                                                                    if (productPurchaseItemDropdown) return 'purchase_item_id';
+                                                                    if (salesConfig?.item_sales_percent === 1) return 'percent';
+                                                                    return 'quantity';
+                                                                })()}
                                                                 form={form}
                                                                 name={"sales_price"}
                                                                 id={"sales_price"}
@@ -756,16 +839,50 @@ function _GenericPosForm({domainConfigData}) {
                                                                     tooltip={t("ChooseWarehouse")}
                                                                     label=""
                                                                     placeholder={t("ChooseWarehouse")}
-                                                                    required={false}
-                                                                    nextField={"opening_quantity"}
-                                                                    name={"warehouse_id"}
+                                                                    required={true}
+                                                                    nextField={(() => {
+                                                                        if (productPurchaseItemDropdown) return 'purchase_item_id';
+                                                                        if (salesConfig?.item_sales_percent === 1) return 'percent';
+                                                                        return 'quantity';
+                                                                    })()}
+                                                                    name={"product_warehouse_id"}
                                                                     form={form}
-                                                                    dropdownValue={warehouseDropdownData}
-                                                                    id={"warehouse_id"}
+                                                                    dropdownValue={productWarehouseDropdown}
+                                                                    id={"product_warehouse_id"}
                                                                     mt={1}
                                                                     searchable={true}
-                                                                    value={warehouseData}
-                                                                    changeValue={setWarehouseData}
+                                                                    value={productWarehouseData}
+                                                                    changeValue={setProductWarehouseData}
+                                                                />
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                )}
+
+                                                {productPurchaseItemDropdown.length > 0 && (
+                                                    <Box mt={'4'} className={'boxBackground'}>
+                                                        <Grid columns={24} gutter={{base: 1}}>
+                                                            <Grid.Col span={10} fz="sm" mt={8}>
+                                                                {t("PurchaseItem")}
+                                                            </Grid.Col>
+                                                            <Grid.Col span={14}>
+                                                                <SelectFormForSalesPurchaseProduct
+                                                                    tooltip={t("ChoosePurchaseItem")}
+                                                                    label=""
+                                                                    placeholder={t("ChoosePurchaseItem")}
+                                                                    required={true}
+                                                                    nextField={(() => {
+                                                                        if (salesConfig?.item_sales_percent === 1) return 'percent';
+                                                                        return 'quantity';
+                                                                    })()}
+                                                                    name={"purchase_item_id"}
+                                                                    form={form}
+                                                                    dropdownValue={productPurchaseItemDropdown}
+                                                                    id={"purchase_item_id"}
+                                                                    mt={1}
+                                                                    searchable={true}
+                                                                    value={productPurchaseItemData}
+                                                                    changeValue={setProductPurchaseItemData}
                                                                 />
                                                             </Grid.Col>
                                                         </Grid>
