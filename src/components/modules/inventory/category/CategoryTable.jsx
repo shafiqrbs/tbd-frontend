@@ -101,6 +101,7 @@ function CategoryTable() {
                         },
                         { accessor: 'parent_name', title: t("ParentName") },
                         { accessor: 'name', title: t("Name") },
+                        { accessor: 'generate_id', title: t("Code") },
                         { accessor: 'expiry_duration', title: t("ExpiryDuration") },
                         {
                             accessor: 'status',

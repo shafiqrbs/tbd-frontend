@@ -311,6 +311,11 @@ function StockTable(props) {
             { accessor: "product_type", title: t("NatureOfProduct") ,sortable: true},
             { accessor: "category_name", title: t("Category"),sortable: true },
             { accessor: "product_name", title: t("Name"),sortable: true },
+            {
+              accessor: 'product_code',
+              title: t('ProductCode'),
+              sortable: true
+            },
             { accessor: "barcode", title: t("Barcode"),sortable: true },
             { accessor: "rem_quantity", title: t("Quantity"), textAlign: "center" },
             { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },

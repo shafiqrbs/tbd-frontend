@@ -564,7 +564,7 @@ function _SkuManagement(props) {
                 <Grid columns={32} gutter={{ base: 8 }}>
                   <Grid.Col span={16}></Grid.Col>
                   <Grid.Col span={16}>
-                <ScrollArea h={height-360} scrollbarSize={2}   scrollbars="y">
+                <ScrollArea h={height-420} scrollbarSize={2}   scrollbars="y">
                   <Box pl={'md'} pr={'md'} mt={"xs"}>
                     <Grid columns={24} gutter={{ base: 1 }}>
                       <Grid.Col span={12} fz={"sm"} mt={8}>

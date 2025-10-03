@@ -280,6 +280,11 @@ function ProductTable({categoryDropdown}) {
                             sortable: true
                         },
                         {
+                            accessor: 'product_code',
+                            title: t('ProductCode'),
+                            sortable: true
+                        },
+                        {
                             accessor: 'unit_name',
                             title: t('Unit'),
                             sortable: true,
