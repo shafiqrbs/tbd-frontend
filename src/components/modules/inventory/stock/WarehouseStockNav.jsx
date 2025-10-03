@@ -66,6 +66,28 @@ function WarehouseStockNav() {
               mt="4"
               variant="default"
               onClick={() => {
+                navigate(`/inventory/stock/expiry`);
+              }}
+          >
+            <Text
+                size="sm"
+                pt={8}
+                pl={8}
+                fw={500}
+                c="black">
+              {t("ExpiryStock")}
+            </Text>
+          </Box>
+          <Box
+              style={{
+                borderRadius: 4,
+                cursor: "pointer",
+              }}
+              className={`${classes["pressable-card"]} border-radius`}
+              mih={40}
+              mt="4"
+              variant="default"
+              onClick={() => {
                 navigate(`/inventory/stock/matrix`);
               }}
           >

@@ -41,6 +41,7 @@ import InhouseIndex from "./components/modules/production/production-inhouse/Inh
 import SettingsIndex from "./components/modules/core/settings/SettingsIndex";
 
 import StockIndex from "./components/modules/inventory/stock/StockIndex.jsx";
+import StockExpiryIndex from "./components/modules/inventory/stock/StockExpiryIndex.jsx";
 import StockMatrixIndex from "./components/modules/inventory/stock/StockMatrixIndex.jsx";
 import ConfigurationIndex from "./components/modules/domain/configuraton/ConfigurationIndex.jsx";
 import SitemapIndex from "./components/modules/domain/sitemap/SitemapIndex.jsx";
@@ -446,6 +447,14 @@ function AppRoute() {
                             element={
                                 <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
                                     <StockIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="stock/expiry"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
+                                    <StockExpiryIndex />
                                 </ProtectedRoute>
                             }
                         />
