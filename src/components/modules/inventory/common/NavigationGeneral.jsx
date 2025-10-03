@@ -83,7 +83,7 @@ export default function NavigationGeneral(props) {
               </Text>
             </Flex>
           </Flex>
-          <Flex direction={`column`} align={"center"} mt={"xs"} >
+          <Flex direction={`column`} align={"center"} >
             <Tooltip
                 label={t("Product")}
                 px={16}

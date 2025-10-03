@@ -41,6 +41,7 @@ import InhouseIndex from "./components/modules/production/production-inhouse/Inh
 import SettingsIndex from "./components/modules/core/settings/SettingsIndex";
 
 import StockIndex from "./components/modules/inventory/stock/StockIndex.jsx";
+import StockMatrixIndex from "./components/modules/inventory/stock/StockMatrixIndex.jsx";
 import ConfigurationIndex from "./components/modules/domain/configuraton/ConfigurationIndex.jsx";
 import SitemapIndex from "./components/modules/domain/sitemap/SitemapIndex.jsx";
 import BatchIndex from "./components/modules/production/batch/BatchIndex.jsx";
@@ -98,6 +99,7 @@ import PurchaseReturnInvoice from "./components/modules/inventory/purchase-retur
 import PurchaseReturnIndex from "./components/modules/inventory/purchase-return/PurchaseReturnIndex.jsx";
 import PurchaseReturnEdit from "./components/modules/inventory/purchase-return/PurchaseReturnEdit.jsx";
 import SalesReturnIndex from "./components/modules/inventory/sales-return/SalesReturnIndex.jsx";
+import StockMatrixTable from "./components/modules/inventory/stock/StockMatrixTable";
 
 
 function AppRoute() {
@@ -448,10 +450,42 @@ function AppRoute() {
                             }
                         />
                         <Route
+                            path="stock/:warehouse"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
+                                    <StockIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
                             path="stock/:slug"
                             element={
                                 <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
                                     <StockIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="stock/:warehouse/:slug"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
+                                    <StockIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="stock/matrix"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
+                                    <StockMatrixIndex />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="stock/matrix/:slug"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
+                                    <StockMatrixIndex />
                                 </ProtectedRoute>
                             }
                         />

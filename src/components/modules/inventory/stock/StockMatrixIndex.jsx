@@ -91,22 +91,10 @@ function StockIndex() {
                   <Grid.Col span={20}>
                     <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                       <>
-                        {selectedDomainId ? (
-                            <StockWarehouseTable
-                                categoryDropdown={categoryDropdown}
-                                locationData={locationData}
-                            />
-                        ) : selectedMatrix ? (
-                            <StockMatrixTable
-                                categoryDropdown={categoryDropdown}
-                                locationData={locationData}
-                            />
-                        ) : (
-                            <StockTable
-                                categoryDropdown={categoryDropdown}
-                                locationData={locationData}
-                            />
-                        )}
+                        <StockMatrixTable
+                            categoryDropdown={categoryDropdown}
+                            locationData={locationData}
+                        />
                       </>
                     </Box>
                   </Grid.Col>

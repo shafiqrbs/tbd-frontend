@@ -43,7 +43,7 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import { useForm } from "@mantine/form";
 import {useParams} from "react-router";
 
-function StockTable(props) {
+function StockMatrixTable(props) {
   const { categoryDropdown, locationData } = props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
@@ -52,7 +52,8 @@ function StockTable(props) {
   const navigate = useNavigate();
   const perPage = 50;
   const [page, setPage] = useState(1);
-
+  const {warehouse} = useParams();
+  const [selectedDomainId, setSelectedDomainId] = useState(warehouse);
   const fetchingReload = useSelector((state) => state.crudSlice.fetching);
   const [fetching, setFetching] = useState(true);
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
@@ -244,7 +245,7 @@ function StockTable(props) {
                   <Tabs.Tab
                       value="allstocks"
                       component={Link}
-                      to="/inventory/stock/allstocks"
+                      to={"/inventory/stock/matrix/allstocks"}
                       leftSection={<IconListCheck size={16} />}
                   >
                     {t('AllStocks')}
@@ -252,26 +253,23 @@ function StockTable(props) {
                   <Tabs.Tab
                       value="production"
                       component={Link}
-                      to="/inventory/stock/production"
+                      to={"/inventory/stock/matrix/production"}
                       leftSection={<IconListCheck size={16} />}
                   >
 
                     {t('Production')}
                   </Tabs.Tab>
-
                   <Tabs.Tab
                       value="stockable"
                       component={Link}
-                      to="/inventory/stock/stockable"
+                      to={"/inventory/stock/matrix/stockable"}
                       leftSection={<IconList size={16} />}
                   >{t('Stockable')}
-
                   </Tabs.Tab>
-
                   <Tabs.Tab
                       value="rawmaterial"
                       component={Link}
-                      to="/inventory/stock/rawmaterial"
+                      to={"/inventory/stock/matrix/rawmaterial"}
                       leftSection={<IconListDetails size={16} />}
                   >
                     {t('RawMaterial')}
@@ -313,71 +311,16 @@ function StockTable(props) {
               title: t('ProductCode'),
               sortable: true
             },
-            { accessor: "barcode", title: t("Barcode"),sortable: true },
-            { accessor: "rem_quantity", title: t("Quantity"), textAlign: "center" },
             { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
             { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
             { accessor: "color_name", title: t("Color"), hidden: !isColor },
             { accessor: "size_name", title: t("Size"), hidden: !isSize },
             { accessor: "model_name", title: t("Model"), hidden: !isModel },
-
             {
               accessor: "unit_name",
               title: t("Unit"),
-              render: (item) => (
-                  <Button
-                      component="a"
-                      size="compact-xs"
-                      radius="xs"
-                      color='var(--theme-primary-color-4)'
-                      variant="filled"
-                      fw={"100"}
-                      fz={"12"}
-                      onClick={() => {
-                        setId(item.product_id);
-                        setMeasurementDrawer(true);
-                      }}
-                  >
-                    {item.unit_name}
-                  </Button>
-              ),
             },
-            {
-              accessor: "purchase_price",
-              title: t("PurchasePrice"),
-              textAlign: "center",
-            },
-            {
-              accessor: "average_price",
-              title: t("Avg.Purchase"),
-              textAlign: "center",
-            },
-            {
-              accessor: "sales_price",
-              title: t("SalesPrice"),
-              textAlign: "center",
-            },
-            { accessor: "vat", title: t("Vat") },
-            {
-              accessor: "status",
-              title: t("Status"),
-              render: (item) => (
-                <>
-                  <Switch
-                    disabled={swtichEnable[item.product_id] || false}
-                    checked={checked[item.product_id] || item.status === 1}
-                    color='var(--theme-primary-color-6)'
-                    radius="xs"
-                    size="md"
-                    onLabel="Enable"
-                    offLabel="Disable"
-                    onChange={(event) => {
-                      handleSwtich(event, item);
-                    }}
-                  />
-                </>
-              ),
-            },
+            { accessor: "rem_quantity", title: t("Narayangonj"), textAlign: "center" },
             {
               accessor: "action",
               title: t("Action"),
@@ -401,85 +344,6 @@ function StockTable(props) {
                     {" "}
                     {t("View")}
                   </Button>
-                  {!item.parent_id &&
-                  <Menu
-                      position="bottom-end"
-                      offset={3}
-                      withArrow
-                      trigger="hover"
-                      openDelay={100}
-                      closeDelay={400}
-                  >
-                    <Menu.Target>
-                      <ActionIcon
-                          size="sm"
-                          variant="outline"
-                          color='var(--theme-primary-color-6)'
-                          radius="xl"
-                          aria-label="Settings"
-                      >
-                        <IconDotsVertical
-                            height={"18"}
-                            width={"18"}
-                            stroke={1.5}
-                        />
-                      </ActionIcon>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                      <Menu.Item
-                          onClick={() => {
-                            dispatch(setInsertType("update"));
-                            dispatch(
-                                editEntityData("inventory/product/" + item.product_id)
-                            );
-                            dispatch(setFormLoading(true));
-                            navigate(`/inventory/product/${item.product_id}`);
-                          }}
-                      >
-                        {t("Edit")}
-                      </Menu.Item>
-
-                      <Menu.Item
-                          target="_blank"
-                          component="a"
-                          w={"200"}
-                          mt={"2"}
-                          bg={"red.1"}
-                          c={"red.6"}
-                          onClick={() => {
-                            modals.openConfirmModal({
-                              title: (
-                                  <Text size="md">
-                                    {" "}
-                                    {t("FormConfirmationTitle")}
-                                  </Text>
-                              ),
-                              children: (
-                                  <Text size="sm">
-                                    {" "}
-                                    {t("FormConfirmationMessage")}
-                                  </Text>
-                              ),
-                              labels: {confirm: "Confirm", cancel: "Cancel"},
-                              confirmProps: {color: "red.6"},
-                              onCancel: () => console.log("Cancel"),
-                              onConfirm: () => {
-                                console.log("ok pressed");
-                              },
-                            });
-                          }}
-                          rightSection={
-                            <IconTrashX
-                                style={{width: rem(14), height: rem(14)}}
-                            />
-                          }
-                      >
-                        {t("Delete")}
-                      </Menu.Item>
-                    </Menu.Dropdown>
-                  </Menu>
-                  }
-
                 </Group>
               ),
             },
@@ -514,4 +378,4 @@ function StockTable(props) {
   );
 }
 
-export default StockTable;
+export default StockMatrixTable;
