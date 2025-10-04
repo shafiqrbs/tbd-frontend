@@ -152,68 +152,89 @@ export default function __PosInvoiceSection(props) {
                                             transactionModeData.map((mode, index) => {
                                                 return (
                                                     <Grid.Col span={4} key={index}>
-                                                        <Box bg={"gray.1"} h={"82"}>
+                                                        <Box
+                                                            bg="gray.1"
+                                                            h={82}
+                                                            className="transaction-mode-box"
+                                                            p={2}
+                                                            radius="md"
+                                                        >
                                                             <input
                                                                 type="radio"
                                                                 name="transaction_mode_id"
-                                                                id={"transaction_mode_id_" + mode.id}
+                                                                id={`transaction_mode_id_${mode.id}`}
                                                                 className="input-hidden"
                                                                 value={mode.id}
                                                                 onChange={(e) => {
-                                                                    form.setFieldValue(
-                                                                        "transaction_mode_id",
-                                                                        e.currentTarget.value
-                                                                    );
-                                                                    form.setFieldError(
-                                                                        "transaction_mode_id",
-                                                                        null
-                                                                    );
+                                                                    form.setFieldValue("transaction_mode_id", e.currentTarget.value);
+                                                                    form.setFieldError("transaction_mode_id", null);
                                                                 }}
                                                                 defaultChecked={
+                                                                    // ✅ Priority 1: If editing existing data
                                                                     entityEditData?.transaction_mode_id
-                                                                        ? entityEditData?.transaction_mode_id ===
-                                                                        mode.id
-                                                                        : mode.is_selected
-                                                                            ? true
-                                                                            : false
+                                                                        ? entityEditData.transaction_mode_id === mode.id
+                                                                        : // ✅ Priority 2: Default to first mode in the list
+                                                                        mode.index === 0 ||
+                                                                        // ✅ Fallback if backend defines is_selected
+                                                                        !!mode.is_selected
                                                                 }
                                                             />
+
                                                             <Tooltip
-                                                                label={mode.name}
-                                                                opened={hoveredModeId === mode.id}
+                                                                label={t("ChooseTransactionMode")}
+                                                                opened={!!form.errors.transaction_mode_id}
                                                                 position="top"
-                                                                bg={"orange.8"}
+                                                                bg="orange.8"
                                                                 offset={12}
                                                                 withArrow
                                                                 arrowSize={8}
                                                             >
-                                                                <label
-                                                                    htmlFor={"transaction_mode_id_" + mode.id}
-                                                                    onMouseEnter={() => {
-                                                                        setHoveredModeId(mode.id);
-                                                                    }}
-                                                                    onMouseLeave={() => {
-                                                                        setHoveredModeId(null);
-                                                                    }}
+                                                                <Tooltip
+                                                                    label={mode.name}
+                                                                    opened={hoveredModeId === mode.id}
+                                                                    position="top"
+                                                                    bg="orange.8"
+                                                                    offset={12}
+                                                                    withArrow
+                                                                    arrowSize={8}
                                                                 >
-                                                                    <img
-                                                                        src={
-                                                                            isOnline
-                                                                                ? mode.path
-                                                                                : "/images/transaction-mode-offline.jpg"
-                                                                        }
-                                                                        alt={mode.method_name}
-                                                                    />
-                                                                    <Center fz={"xs"} className={"textColor"}>
-                                                                        {mode.authorized_name}
-                                                                    </Center>
-                                                                </label>
+                                                                    <label
+                                                                        htmlFor={`transaction_mode_id_${mode.id}`}
+                                                                        onMouseEnter={() => setHoveredModeId(mode.id)}
+                                                                        onMouseLeave={() => setHoveredModeId(null)}
+                                                                        style={{
+                                                                            cursor: "pointer",
+                                                                            display: "flex",
+                                                                            flexDirection: "column",
+                                                                            alignItems: "center",
+                                                                            justifyContent: "center",
+                                                                        }}
+                                                                    >
+                                                                        <img
+                                                                            src={isOnline ? mode.path : "/images/transaction-mode-offline.jpg"}
+                                                                            alt={mode.method_name}
+                                                                            style={{
+                                                                                width: 50,
+                                                                                height: 50,
+                                                                                objectFit: "contain",
+                                                                                borderRadius: 8,
+                                                                                border:
+                                                                                    form.values.transaction_mode_id == mode.id
+                                                                                        ? "2px solid #f97316"
+                                                                                        : "1px solid #e2e8f0",
+                                                                                transition: "all 0.2s ease",
+                                                                            }}
+                                                                        />
+                                                                        <Center fz="xs" className="textColor" mt={4}>
+                                                                            {mode.authorized_name}
+                                                                        </Center>
+                                                                    </label>
+                                                                </Tooltip>
                                                             </Tooltip>
                                                         </Box>
                                                     </Grid.Col>
                                                 );
                                             })}
-
                                     </Grid>
                                 </Box>
                             </ScrollArea>

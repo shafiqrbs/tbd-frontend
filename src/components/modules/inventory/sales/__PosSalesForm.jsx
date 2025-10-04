@@ -1,7 +1,7 @@
 import {isNotEmpty, useForm} from "@mantine/form";
 import React, {useEffect, useState} from "react";
 import __PosCustomerSection from "./__PosCustomerSection";
-import {Box, Text, ActionIcon, Group, TextInput} from "@mantine/core";
+import {Box, Text, ActionIcon, Group, TextInput, Select} from "@mantine/core";
 import {DataTable} from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
 import {useTranslation} from "react-i18next";
@@ -15,6 +15,8 @@ import {storeEntityData, updateEntityData} from "../../../../store/inventory/cru
 import inputCss from "../../../../assets/css/InlineInputField.module.css";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import genericClass from "../../../../assets/css/Generic.module.css";
+import useProductsDataStoreIntoLocalStorage
+    from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 
 // Utility: Parses localStorage safely
 const getJSON = (key, fallback = null) => {
@@ -32,7 +34,9 @@ export default function __PosSalesForm(props) {
         currencySymbol,
         tempCardProducts,
         setLoadCardProducts,
-        salesConfig
+        salesConfig,
+        isWarehouse,
+        setSearchValue
     } = props;
 
     //common hooks
@@ -65,18 +69,10 @@ export default function __PosSalesForm(props) {
     });
 
 
-    //calculate subTotal amount
     let salesSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
-
-    //customer dropdown data
     const [customersDropdownData, setCustomersDropdownData] = useState([]);
-
-    //customer hook
     const [customerData, setCustomerData] = useState(null);
-
-    //default customer hook
     const [defaultCustomerId, setDefaultCustomerId] = useState(null);
-
     // setting defualt customer
     useEffect(() => {
         const fetchCustomers = async () => {
@@ -107,34 +103,15 @@ export default function __PosSalesForm(props) {
         fetchCustomers();
     }, []);
 
-    //Custoemr object hook
     const [customerObject, setCustomerObject] = useState({});
-
-    //profit amount hook
     const [salesProfitAmount, setSalesProfitAmount] = useState(0);
-
-    //sales discount amount hook
     const [salesDiscountAmount, setSalesDiscountAmount] = useState(0);
-
-    // sales by user hook
     const [salesByUser, setSalesByUser] = useState(null);
-
-    //order process hook
     const [orderProcess, setOrderProcess] = useState(null);
-
-    //vat amount hook
     const [salesVatAmount, setSalesVatAmount] = useState(0);
-
-    //sales total amount hook
     const [salesTotalAmount, setSalesTotalAmount] = useState(0);
-
-    // sales due amount hook
     const [salesDueAmount, setSalesDueAmount] = useState(0);
-
-    //return or due text hook
     const [returnOrDueText, setReturnOrDueText] = useState("Due");
-
-    //discount type hook
     const [discountType, setDiscountType] = useToggle(["Flat", "Percent"]);
     const [discount, setDiscount] = useState('')
     // calculate sales total amount after discount and vat change
@@ -205,7 +182,8 @@ export default function __PosSalesForm(props) {
                 unit_id: product.unit_id,
                 purchase_price: product.purchase_price,
                 sub_total: product.sub_total,
-                warehouse_id: product.warehouse_id,
+                warehouse_id: product.product_warehouse_id,
+                purchase_item_id: product.purchase_item_id,
                 bonus_quantity: product.bonus_quantity,
             };
         });
@@ -297,6 +275,7 @@ export default function __PosSalesForm(props) {
                 showNotificationComponent('Fail to sales', 'red')
             } else if (storeEntityData.fulfilled.match(resultAction)) {
                 showNotificationComponent(t("CreateSuccessfully"), 'teal')
+                await useProductsDataStoreIntoLocalStorage()
 
                 setTimeout(() => {
                     localStorage.removeItem("temp-sales-products");
@@ -306,6 +285,7 @@ export default function __PosSalesForm(props) {
                     setOrderProcess(null);
                     setLoadCardProducts(true);
                     setCustomerObject(null);
+                    setSearchValue(null)
                 }, 500);
             }
         } else {
@@ -364,11 +344,88 @@ export default function __PosSalesForm(props) {
                                     },
                                 },
 
+                                isWarehouse && {
+                                    accessor: "product_warehouse_id",
+                                    title: t("Warehouse"),
+                                    render: (item) => {
+                                        const warehouseValue = String(item.product_warehouse_id || "");
+                                        return (
+                                            <Select
+                                                size="xs"
+                                                placeholder="Select"
+                                                value={warehouseValue}
+                                                data={item?.productWarehouseDropdown}
+                                                onChange={(newValue) => {
+                                                    const data =
+                                                        JSON.parse(
+                                                            localStorage.getItem("temp-sales-products") || "[]"
+                                                        ) || [];
+
+                                                    const updated = data.map((p) =>
+                                                        p.product_id === item.product_id
+                                                            ? {
+                                                                ...p,
+                                                                product_warehouse_id: Number(newValue),
+                                                                warehouse_name:
+                                                                    item?.productWarehouseDropdown.find(
+                                                                        (w) => w.value === newValue
+                                                                    )?.label || "",
+                                                            }
+                                                            : p
+                                                    );
+
+                                                    localStorage.setItem(
+                                                        "temp-sales-products",
+                                                        JSON.stringify(updated)
+                                                    );
+                                                    setLoadCardProducts(true);
+                                                }}
+                                            />
+                                        );
+                                    },
+                                },
                                 {
                                     accessor: "stock",
                                     title: t("Stock"),
                                     textAlign: "center",
                                 },
+                                {
+                                    accessor: "purchase_item_id",
+                                    title: t("PurchaseItem"),
+                                    render: (item) => {
+                                        const purchaseItemValue = String(item.purchase_item_id || "");
+                                        return (
+                                            <Select
+                                                size="xs"
+                                                placeholder="Select"
+                                                value={purchaseItemValue}
+                                                data={item?.productPurchaseItemDropdown}
+                                                onChange={(newValue) => {
+                                                    const data =
+                                                        JSON.parse(localStorage.getItem("temp-sales-products") || "[]") || [];
+
+                                                    const updated = data.map((p) =>
+                                                        p.product_id === item.product_id
+                                                            ? {
+                                                                ...p,
+                                                                purchase_item_id: Number(newValue),
+                                                                quantity: null, // reset quantity to 0
+                                                                unit_quantity: null,
+                                                            }
+                                                            : p
+                                                    );
+
+                                                    localStorage.setItem("temp-sales-products", JSON.stringify(updated));
+                                                    setLoadCardProducts(true);
+                                                    const el = document.getElementById("quantity_"+item.id);
+                                                    if (!el) return;
+                                                    el.focus();
+                                                }}
+                                            />
+                                        );
+                                    },
+                                },
+
                                 {
                                     accessor: "quantity",
                                     title: t("Quantity"),
@@ -376,12 +433,23 @@ export default function __PosSalesForm(props) {
                                     width: "140px",
                                     render: (item) => {
                                         const [editedQuantity, setEditedQuantity] = useState(
-                                            item.unit_quantity !== undefined && item?.measurement_unit?.quantity ? item.unit_quantity : item.quantity
+                                            item.unit_quantity !== undefined && item?.measurement_unit?.quantity
+                                                ? item.unit_quantity
+                                                : item.quantity
                                         );
 
+                                        // 🔹 Add this effect to sync UI when purchase_item_id or quantity changes
+                                        useEffect(() => {
+                                            const newValue =
+                                                item.unit_quantity !== undefined && item?.measurement_unit?.quantity
+                                                    ? item.unit_quantity
+                                                    : item.quantity;
+                                            setEditedQuantity(newValue || '');
+                                        }, [item.purchase_item_id, item.quantity]);
+
                                         const handleQuantityChange = (e) => {
-                                            const newValue = e.currentTarget.value;
-                                            setEditedQuantity(newValue); // Update the input value
+                                            const newValue = Number(e.currentTarget.value) || 0;
+                                            setEditedQuantity(newValue);
 
                                             const tempCardProducts = localStorage.getItem("temp-sales-products");
                                             const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
@@ -391,18 +459,36 @@ export default function __PosSalesForm(props) {
                                                     let quantity = 0;
                                                     const selectedQuantity = item?.measurement_unit?.quantity;
                                                     const unitId = item?.measurement_unit?.id;
-                                                    const unitQuantity = newValue;
 
                                                     if (selectedQuantity && unitId) {
-                                                        quantity = selectedQuantity * (unitQuantity || 0);
+                                                        quantity = selectedQuantity * newValue;
                                                     } else {
-                                                        quantity = Number(newValue) || 0;
+                                                        quantity = newValue;
                                                     }
+
+                                                    // --- Validation ---
+                                                    const productPurchaseItemDropdown = item?.productPurchaseItemDropdown || [];
+                                                    const selectedItem = productPurchaseItemDropdown.find(
+                                                        (opt) => Number(opt.value) === Number(item.purchase_item_id)
+                                                    );
+
+                                                    if (productPurchaseItemDropdown.length > 0 && selectedItem) {
+                                                        const match = selectedItem.label.match(/\(stock #(\d+)\)/);
+                                                        const stockNumber = match ? Number(match[1]) : null;
+
+                                                        if (stockNumber !== null && quantity > stockNumber) {
+                                                            alert(`Quantity exceeds stock limit (${stockNumber})`);
+                                                            setEditedQuantity("");
+                                                            return product;
+                                                        }
+                                                    }
+                                                    // --- End Validation ---
 
                                                     return {
                                                         ...product,
                                                         quantity: quantity,
-                                                        unit_quantity: (selectedQuantity && unitId) && (newValue || null),
+                                                        unit_quantity:
+                                                            selectedQuantity && unitId ? newValue || null : null,
                                                         sub_total: quantity * item.sales_price,
                                                     };
                                                 }
@@ -412,13 +498,14 @@ export default function __PosSalesForm(props) {
                                             localStorage.setItem("temp-sales-products", JSON.stringify(updatedProducts));
                                             setLoadCardProducts(true);
                                         };
+
                                         const handleKeyDown = (e) => {
-                                            if (e.key === 'Enter') {
+                                            if (e.key === "Enter") {
                                                 e.preventDefault();
-                                                const nextElement = document.getElementById(`inline-update-quantity-${item.product_id}`);
-                                                if (nextElement) {
-                                                    nextElement.focus();
-                                                }
+                                                const nextElement = document.getElementById(
+                                                    `inline-update-quantity-${item.product_id}`
+                                                );
+                                                if (nextElement) nextElement.focus();
                                             }
                                         };
 
@@ -426,16 +513,21 @@ export default function __PosSalesForm(props) {
                                             <TextInput
                                                 type="number"
                                                 label=""
+                                                id={`quantity_`+item.id}
                                                 classNames={inputCss}
                                                 size="xs"
                                                 value={editedQuantity}
                                                 onChange={handleQuantityChange}
-                                                onKeyDown={handleKeyDown} // Use direct handler instead of getHotkeyHandler
-                                                rightSection={<Text
-                                                    style={{textAlign: "right", width: "100%", paddingRight: 16}}
-                                                    fz={'xs'} color={"gray"}>
-                                                    {(item?.measurement_unit) ? item?.measurement_unit?.unit_name ? item?.measurement_unit.unit_name : item?.measurement_unit?.unit_name : item.unit_name}
-                                                </Text>}
+                                                onKeyDown={handleKeyDown}
+                                                rightSection={
+                                                    <Text
+                                                        style={{ textAlign: "right", width: "100%", paddingRight: 16 }}
+                                                        fz="xs"
+                                                        color={"gray"}
+                                                    >
+                                                        {item?.measurement_unit?.unit_name || item.unit_name}
+                                                    </Text>
+                                                }
                                                 rightSectionWidth={50}
                                             />
                                         );
@@ -652,7 +744,7 @@ export default function __PosSalesForm(props) {
                                         </Group>
                                     ),
                                 },
-                            ]}
+                            ].filter(Boolean)}
                             fetching={fetching}
                             totalRecords={100}
                             recordsPerPage={10}

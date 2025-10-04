@@ -22,6 +22,8 @@ import { useDispatch } from "react-redux";
 import { notifications } from "@mantine/notifications";
 import { rem } from "@mantine/core";
 import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
+import useProductsDataStoreIntoLocalStorage
+    from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 
 export default function __PosPurchaseForm(props) {
     const {
@@ -133,7 +135,7 @@ export default function __PosPurchaseForm(props) {
 
     return (
         <form
-            onSubmit={form.onSubmit((values) => {
+            onSubmit={form.onSubmit(async (values) => {
                 const tempProducts = localStorage.getItem("temp-purchase-products");
                 let items = tempProducts ? JSON.parse(tempProducts) : [];
                 const transformedItems = items.map((product) => ({
@@ -174,10 +176,11 @@ export default function __PosPurchaseForm(props) {
                 notifications.show({
                     color: "teal",
                     title: t("CreateSuccessfully"),
-                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
                     autoClose: 700,
-                    style: { backgroundColor: "#e6fff2" },
+                    style: {backgroundColor: "#e6fff2"},
                 });
+                await useProductsDataStoreIntoLocalStorage()
 
                 setTimeout(() => {
                     localStorage.removeItem("temp-purchase-products");

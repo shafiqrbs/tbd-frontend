@@ -39,6 +39,8 @@ import {showNotificationComponent} from "../../../core-component/showNotificatio
 import {PurchasePrintNormal} from "../purchase/print-component/PurchasePrintNormal.jsx";
 import {PurchasePrintPos} from "../purchase/print-component/PurchasePrintPos.jsx";
 import _PurchaseReturnSearch from "./_PurchaseReturnSearch.jsx";
+import useProductsDataStoreIntoLocalStorage
+    from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 
 function _PurchaseReturnTable() {
     const printRef = useRef();
@@ -149,6 +151,7 @@ function _PurchaseReturnTable() {
             if (showInstantEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
                     showNotificationComponent(resultAction.payload.data.message,"teal",'',true,1000,true)
+                    await useProductsDataStoreIntoLocalStorage()
                 }
             }
         } catch (error) {

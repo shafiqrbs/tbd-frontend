@@ -918,7 +918,7 @@ function _CreateOpeningForm(props) {
                                                                     labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                                     confirmProps: { color: 'red.6' },
                                                                     onCancel: () => console.log('Cancel'),
-                                                                    onConfirm: () => {
+                                                                    onConfirm: async () => {
                                                                         const approveData = {
                                                                             url: 'inventory/opening-stock/inline-update',
                                                                             data: {
@@ -928,14 +928,15 @@ function _CreateOpeningForm(props) {
                                                                             }
                                                                         }
 
-                                                                        if (!item.opening_quantity){
+                                                                        if (!item.opening_quantity) {
                                                                             showNotificationComponent(t("EnterOpeningQuantity"), 'red', null, false, 1000, true)
                                                                         }
-                                                                        if (!item.purchase_price){
+                                                                        if (!item.purchase_price) {
                                                                             showNotificationComponent(t("EnterPurchasePrice"), 'red', null, false, 1000, true);
                                                                         }
-                                                                        if (item.opening_quantity && item.purchase_price){
+                                                                        if (item.opening_quantity && item.purchase_price) {
                                                                             dispatch(inlineUpdateEntityData(approveData))
+                                                                            await useProductsDataStoreIntoLocalStorage()
                                                                             setFetching(true)
                                                                         }
                                                                     },

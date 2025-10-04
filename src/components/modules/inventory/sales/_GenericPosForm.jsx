@@ -333,6 +333,7 @@ function _GenericPosForm({domainConfigData}) {
             if (quantity > stockNumber){
                 form.setFieldError("quantity", true);
                 form.setFieldValue('quantity','')
+                alert(`Quantity exceeds stock limit (${stockNumber})`);
                 return
             }
         }
@@ -444,9 +445,12 @@ function _GenericPosForm({domainConfigData}) {
             purchase_price: product.purchase_price,
             sub_total: Number(values.quantity) * Number(values.sales_price),
             unit_id: product.unit_id,
-            warehouse_id: values.warehouse_id ? Number(values.warehouse_id) : null,
-            warehouse_name: values.warehouse_id
-                ? warehouseDropdownData.find((warehouse) => warehouse.value === values.warehouse_id)?.label || null
+            purchase_item_id: values.purchase_item_id ? Number(values.purchase_item_id) : null,
+            productPurchaseItemDropdown: productPurchaseItemDropdown ?? null,
+            productWarehouseDropdown: productWarehouseDropdown ?? null,
+            product_warehouse_id: values.product_warehouse_id ? Number(values.product_warehouse_id) : null,
+            warehouse_name: values.product_warehouse_id
+                ? warehouseDropdownData.find((warehouse) => warehouse.value === values.product_warehouse_id)?.label || null
                 : null,
             bonus_quantity: Number(values.bonus_quantity) || 0,
         };
@@ -470,9 +474,12 @@ function _GenericPosForm({domainConfigData}) {
                     purchase_price: product.purchase_price,
                     sub_total: Number(values.quantity) * Number(values.sales_price),
                     unit_id: product.unit_id,
-                    warehouse_id: values.warehouse_id ? Number(values.warehouse_id) : null,
-                    warehouse_name: values.warehouse_id
-                        ? warehouseDropdownData.find((warehouse) => warehouse.value === values.warehouse_id)?.label || null
+                    purchase_item_id: values.purchase_item_id ? Number(values.purchase_item_id) : null,
+                    productPurchaseItemDropdown: productPurchaseItemDropdown ?? null,
+                    product_warehouse_id: values.product_warehouse_id ? Number(values.product_warehouse_id) : null,
+                    productWarehouseDropdown: productWarehouseDropdown ?? null,
+                    warehouse_name: values.product_warehouse_id
+                        ? warehouseDropdownData.find((warehouse) => warehouse.value === values.product_warehouse_id)?.label || null
                         : null,
                     bonus_quantity: Number(values.bonus_quantity) || 0,
                 });
@@ -1490,6 +1497,8 @@ function _GenericPosForm({domainConfigData}) {
                         isSMSActive={isSMSActive}
                         salesConfig={salesConfig}
                         tempCardProducts={tempCardProducts}
+                        isWarehouse={isWarehouse}
+                        setSearchValue={setSearchValue}
                         setLoadCardProducts={setLoadCardProducts}
                         setTempCardProducts={setTempCardProducts}
                     />
