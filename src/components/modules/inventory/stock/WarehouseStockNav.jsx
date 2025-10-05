@@ -104,7 +104,7 @@ function WarehouseStockNav() {
           {warehouseDropdownData && (
               warehouseDropdownData.map((data, index) => (
                   <Box
-                      key={index}
+
                       style={{
                         borderRadius: 4,
                         cursor: "pointer",
@@ -114,7 +114,7 @@ function WarehouseStockNav() {
                       mt="4"
                       variant="default"
                       bg={
-                        data?.id == selectedDomainId ? "#f8eedf" : "gray.1"
+                        data?.id === selectedDomainId ? "#f8eedf" : "gray.1"
                       }
                       key={data.id}
                       onClick={() => {
