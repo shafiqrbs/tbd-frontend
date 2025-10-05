@@ -47,6 +47,7 @@ import Navigation from "../common/Navigation.jsx";
 import __PosSalesUpdateForm from "./__PosSalesUpdateForm.jsx";
 import {useHotkeys} from "@mantine/hooks";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import SelectFormForSalesPurchaseProduct from "../../../form-builders/SelectFormForSalesPurchaseProduct.jsx";
 
 function _UpdateInvoice(props) {
     const {
@@ -58,7 +59,7 @@ function _UpdateInvoice(props) {
     const isSMSActive = domainConfigData?.inventory_config?.is_active_sms;
     const salesConfig = domainConfigData?.inventory_config?.config_sales;
     const isZeroReceiveAllow = domainConfigData?.inventory_config?.config_sales?.is_zero_receive_allow;
-    const isWarehouse = domainConfigData?.inventory_config?.config_sales?.is_warehouse;
+    const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
     const categoryDropDownData = getSettingCategoryDropdownData();
 
     //common hooks and variables
@@ -84,42 +85,16 @@ function _UpdateInvoice(props) {
     // Data
     const warehouseDropdownData = getCoreWarehouseDropdownData();
 
+    const [productWarehouseData, setProductWarehouseData] = useState(null);
+    const [productWarehouseDropdown, setProductWarehouseDropdown] = useState([]);
+    const [productPurchaseItemData, setProductPurchaseItemData] = useState(null);
+    const [productPurchaseItemDropdown, setProductPurchaseItemDropdown] = useState([]);
+
 
     //function to handling button clicks
     const handleClick = (event) => {
         setLastClicked(event.currentTarget.name);
     };
-
-    //product dropdown update based on searchValue
-    useEffect(() => {
-        if (searchValue.length > 0) {
-            const storedProducts = localStorage.getItem("core-products");
-            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-            // Filter products where product_nature is not 'raw-materials'
-            const filteredProducts = localProducts.filter(
-                (product) => product.product_nature !== "raw-materials"
-            );
-
-            const lowerCaseSearchTerm = searchValue.toLowerCase();
-            const fieldsToSearch = ["product_name"];
-            const productFilterData = filteredProducts.filter((product) =>
-                fieldsToSearch.some(
-                    (field) =>
-                        product[field] &&
-                        String(product[field]).toLowerCase().includes(lowerCaseSearchTerm)
-                )
-            );
-            const formattedProductData = productFilterData.map((type) => ({
-                label: type.product_name,
-                value: String(type.id),
-            }));
-
-            setProductDropdown(formattedProductData);
-        } else {
-            setProductDropdown([]);
-        }
-    }, [searchValue]);
 
     //input group currency to show in input right section
     const inputGroupCurrency = (
@@ -176,14 +151,33 @@ function _UpdateInvoice(props) {
             sub_total: "",
             warehouse_id: "",
             category_id: "",
+            product_warehouse_id: "",
         },
         validate: {
             product_id: (value, values) => {
-                const isDigitsOnly = /^\d+$/.test(value);
-                if (!isDigitsOnly && values.product_id) {
-                    return true;
+                if (value && value!= '') {
+                    const isDigitsOnly = /^\d+$/.test(value);
+                    console.log(isDigitsOnly, values.product_id)
+                    if (!isDigitsOnly && values.product_id) {
+                        return true;
+                    }
+                    return null;
                 }
-                return null;
+                return true;
+            },
+            product_warehouse_id: (value) => {
+                if (isWarehouse === 1) {
+                    if (!value) {
+                        return true;
+                    }
+                }
+            },
+            purchase_item_id: (value) => {
+                if (productPurchaseItemDropdown.length > 0 && !productPurchaseItemData) {
+                    if (!value) {
+                        return true;
+                    }
+                }
             },
             quantity: (value, values) => {
                 if (values.product_id) {
@@ -211,12 +205,30 @@ function _UpdateInvoice(props) {
                     }
                 }
                 return null;
-            },
+            }
         },
     });
 
     //actions when product is selected from table or form
     const [selectProductDetails, setSelectProductDetails] = useState("");
+    const [selectMultiPriceItemDetails, setSelectMultiPriceItemDetails] = useState(null);
+    const [selectUnitDetails, setSelectUnitDetails] = useState(null);
+
+    useEffect(() => {
+        const priceItem = selectProductDetails?.multi_price?.find((price) => price.id == form.values.multi_price);
+        form.setFieldValue("price", priceItem?.price);
+        form.setFieldValue("sales_price", priceItem?.price);
+        setSelectMultiPriceItemDetails(priceItem);
+        setMultiPrice(priceItem?.price);
+        document.getElementById("quantity")?.focus();
+    }, [form.values.multi_price]);
+
+    useEffect(() => {
+        const unitItem = selectProductDetails?.measurements?.find((unit) => unit.id == form.values.unit_id);
+        setSelectUnitDetails(unitItem);
+        setUnitType(form.values.unit_id);
+    }, [form.values.unit_id]);
+
     useEffect(() => {
         const storedProducts = localStorage.getItem("core-products");
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
@@ -227,18 +239,76 @@ function _UpdateInvoice(props) {
 
         if (filteredProducts.length > 0) {
             const selectedProduct = filteredProducts[0];
-
             setSelectProductDetails(selectedProduct);
+
+            if (salesConfig?.is_multi_price === 1 && selectedProduct.multi_price) {
+                const priceDropdown = selectedProduct.multi_price.map((price) => ({
+                    label: `${currencySymbol} ${price.price} - ${price.field_name}`,
+                    value: String(price.id),
+                }));
+                setMultiPriceDropdown(priceDropdown);
+            }
+
+            if (salesConfig?.is_measurement_enable === 1 && selectedProduct.measurements) {
+                const unitDropdown = selectedProduct.measurements.map((unit) => ({
+                    label: unit.unit_name + ' (1 ' + unit.unit_name + '=' + unit.quantity + ' ' + selectedProduct.unit_name + ')',
+                    value: String(unit.id),
+                }));
+                setUnitDropdown(unitDropdown);
+            }
+
+            if (isWarehouse === 1 && selectedProduct.current_warehouse_stock) {
+                const wd = selectedProduct.current_warehouse_stock.map((warehouse) => ({
+                    label: warehouse.warehouse_name+" ( stock #"+warehouse.quantity+" )",
+                    value: String(warehouse.warehouse_id),
+                }));
+                setProductWarehouseDropdown(wd);
+            }
+
+            if (selectedProduct.purchase_item_for_sales && isWarehouse === 0) {
+                const pi = selectedProduct.purchase_item_for_sales.map((pItem) => ({
+                    label: "Expire: "+pItem.expired_date+" (stock #"+pItem.remain_quantity+")",
+                    value: String(pItem.id),
+                }));
+                setProductPurchaseItemDropdown(pi);
+            }
+
 
             form.setFieldValue("price", selectedProduct.sales_price);
             form.setFieldValue("sales_price", selectedProduct.sales_price);
-            document.getElementById("quantity").focus();
+
+            if (salesConfig?.is_multi_price) {
+                document.getElementById("multi_price")?.focus();
+            } else {
+                document.getElementById("quantity")?.focus();
+            }
         } else {
             setSelectProductDetails(null);
             form.setFieldValue("price", "");
             form.setFieldValue("sales_price", "");
         }
     }, [form.values.product_id]);
+
+    useEffect(() => {
+        if (form.values.product_warehouse_id) {
+            const storedProducts = localStorage.getItem("core-products");
+            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+            const filteredProducts = localProducts.filter(
+                (product) => product.id === Number(form.values.product_id)
+            );
+            if (filteredProducts[0].purchase_item_for_sales) {
+                const pi = filteredProducts[0].purchase_item_for_sales
+                    .filter(pItem => pItem.warehouse_id == form.values.product_warehouse_id) // filter first
+                    .map(pItem => ({
+                        label: "Expire: " + pItem.expired_date + " (stock #" + pItem.remain_quantity + ")",
+                        value: String(pItem.id),
+                    }));
+
+                setProductPurchaseItemDropdown(pi);
+            }
+        }
+    }, [form.values.product_warehouse_id]);
 
     //selected product group text to show in input
     const inputGroupText = (
@@ -252,36 +322,55 @@ function _UpdateInvoice(props) {
 
     //action when quantity or sales price is changed
     useEffect(() => {
-        const quantity = Number(form.values.quantity);
+        let quantity = 0;
+        const selectedQuantity = selectUnitDetails?.quantity;
+        const unitId = form?.values?.unit_id;
+        const unitQuantity = form?.values?.unit_quantity;
+
+        if (selectedQuantity && unitId) {
+            quantity = selectedQuantity * (unitQuantity || 1);
+            form.setFieldValue("quantity", quantity);
+        } else {
+            quantity = Number(form?.values?.quantity) || 0;
+        }
+
+        if (productPurchaseItemDropdown.length > 0 && productPurchaseItemData ){
+            // extract number inside parentheses after "stock #"
+            const match = productPurchaseItemData.label.match(/\(stock #(\d+)\)/);
+
+            const stockNumber = match ? Number(match[1]) : null;
+            if (quantity > stockNumber){
+                form.setFieldError("quantity", true);
+                form.setFieldValue('quantity','')
+                alert(`Quantity exceeds stock limit (${stockNumber})`);
+                return
+            }
+        }
+
         const salesPrice = Number(form.values.sales_price);
 
-        if (
-            !isNaN(quantity) &&
-            !isNaN(salesPrice) &&
-            quantity > 0 &&
-            salesPrice >= 0
-        ) {
-            if (!isZeroReceiveAllow) {
+        if (!isNaN(quantity) && !isNaN(salesPrice) && quantity > 0 && salesPrice >= 0) {
+            if (!salesConfig?.zero_stock) {
                 showNotificationComponent(t("ZeroQuantityNotAllow"), 'red')
-            } else {
-                setSelectProductDetails((prevDetails) => ({
-                    ...prevDetails,
+            } else if (selectProductDetails) {
+                setSelectProductDetails({
+                    ...selectProductDetails,
                     sub_total: quantity * salesPrice,
                     sales_price: salesPrice,
-                }));
+                });
                 form.setFieldValue("sub_total", quantity * salesPrice);
             }
         }
-    }, [form.values.quantity, form.values.sales_price]);
+    }, [form.values.quantity, form.values.sales_price, form.values.unit_quantity]);
 
     //action when sales percent is changed
     useEffect(() => {
         if (form.values.quantity && form.values.price) {
-            const discountAmount = (form.values.price * form.values.percent) / 100;
-            const salesPrice = form.values.price - discountAmount;
+            const discountAmount = (Number(form.values.price) * Number(form.values.percent)) / 100;
+            const salesPrice = Number(form.values.price) - discountAmount;
 
-            form.setFieldValue("sales_price", salesPrice);
-            form.setFieldValue("sub_total", salesPrice);
+            form.setFieldValue("sales_price", salesPrice.toString());
+            form.setFieldValue("sub_total", (salesPrice * Number(form.values.quantity)).toString());
         }
     }, [form.values.percent]);
 
@@ -304,15 +393,16 @@ function _UpdateInvoice(props) {
                         stock: product.quantity,
                         quantity: values.quantity,
                         uom: product.uom,
+                        measurement_unit: selectUnitDetails,
+                        multi_price_item: selectMultiPriceItemDetails,
                         purchase_price: product.purchase_price,
                         sub_total: selectProductDetails.sub_total,
-                        warehouse_id: values.warehouse_id
-                            ? Number(values.warehouse_id)
-                            : null,
-                        warehouse_name: values.warehouse_id
-                            ? warehouseDropdownData.find(
-                                (warehouse) => warehouse.value === values.warehouse_id
-                            ).label
+                        purchase_item_id: values.purchase_item_id ? Number(values.purchase_item_id) : null,
+                        productPurchaseItemDropdown: productPurchaseItemDropdown ?? null,
+                        product_warehouse_id: values.product_warehouse_id ? Number(values.product_warehouse_id) : null,
+                        productWarehouseDropdown: productWarehouseDropdown ?? null,
+                        warehouse_name: values.product_warehouse_id
+                            ? warehouseDropdownData.find((warehouse) => warehouse.value === values.product_warehouse_id)?.label || null
                             : null,
                         bonus_quantity: values.bonus_quantity,
                     });
@@ -356,12 +446,15 @@ function _UpdateInvoice(props) {
             uom: product.uom,
             purchase_price: product.purchase_price,
             sub_total: product.sales_price,
+            multi_price_item: selectMultiPriceItemDetails,
+            measurement_unit: selectUnitDetails,
             unit_id: product.unit_id,
-            warehouse_id: values.warehouse_id ? Number(values.warehouse_id) : null,
-            warehouse_name: values.warehouse_id
-                ? warehouseDropdownData.find(
-                    (warehouse) => warehouse.value === values.warehouse_id
-                ).label
+            purchase_item_id: values.purchase_item_id ? Number(values.purchase_item_id) : null,
+            productPurchaseItemDropdown: productPurchaseItemDropdown ?? null,
+            productWarehouseDropdown: productWarehouseDropdown ?? null,
+            product_warehouse_id: values.product_warehouse_id ? Number(values.product_warehouse_id) : null,
+            warehouse_name: values.product_warehouse_id
+                ? warehouseDropdownData.find((warehouse) => warehouse.value === values.product_warehouse_id)?.label || null
                 : null,
             bonus_quantity: values.bonus_quantity,
         };
@@ -374,12 +467,14 @@ function _UpdateInvoice(props) {
     const [products, setProducts] = useState([]);
 
     //product filter based on category id and set the dropdown value for product dropdown
+
+
     useEffect(() => {
         const storedProducts = localStorage.getItem("core-products");
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
         const domainProductNature = JSON.parse(salesConfig?.sales_product_nature || '[]');
-        const filteredProducts = localProducts.filter((product) => {
+        let filteredProducts = localProducts.filter((product) => {
             const isAllowedNature = domainProductNature.includes(product.product_nature_id);
 
             if (!isAllowedNature) return false;
@@ -393,15 +488,24 @@ function _UpdateInvoice(props) {
             return true;
         });
 
+
+        if (searchValue) {
+            const searchValueLower = searchValue.toLowerCase();
+            filteredProducts = filteredProducts.filter(product =>
+                product.name?.toString().toLowerCase().includes(searchValueLower) ||
+                product.unit_name?.toString().toLowerCase().includes(searchValueLower) ||
+                product.quantity?.toString().toLowerCase().includes(searchValueLower)
+            );
+        }
+
         setProducts(filteredProducts);
 
-        // Transform product for dropdown
         const transformedProducts = filteredProducts.map((product) => ({
             label: `${product.display_name} [${product.quantity}] ${product.unit_name} - ${currencySymbol}${product.sales_price}`,
             value: String(product.id),
         }));
         setProductDropdown(transformedProducts);
-    }, [categoryData]);
+    }, [categoryData, searchValue]);
 
     //update local storage and reset form values
     function updateLocalStorageAndResetForm(addProducts) {
@@ -409,8 +513,14 @@ function _UpdateInvoice(props) {
         setSearchValue("");
         setWarehouseData(null);
         setProduct(null);
+        setMultiPrice(null);
+        setUnitType(null);
+        setProductPurchaseItemData(null);
+        setProductWarehouseData(null);
+        setProductWarehouseDropdown([]);
+        setProductPurchaseItemDropdown([]);
         form.reset();
-        document.getElementById("product_id").focus();
+        document.getElementById("product_id")?.focus();
     }
 
     //load cart product hook
@@ -596,7 +706,7 @@ function _UpdateInvoice(props) {
                                                         />
                                                     </Box>
                                                 )}
-                                                {domainConfigData?.inventory_config?.sku_warehouse == 1 && salesConfig?.search_by_warehouse === 1 && (
+                                                {isWarehouse === 1 && salesConfig?.search_by_warehouse === 1 && (
                                                     <Box mt={"4"}>
                                                         <SelectForm
                                                             tooltip={t("Warehouse")}
@@ -692,7 +802,7 @@ function _UpdateInvoice(props) {
                                                 </Grid>
                                             </Box>
                                             <Box p={"xs"} className={'boxBackground'}>
-                                                {salesConfig?.is_multi_price == 1 && (
+                                                {salesConfig?.is_multi_price === 1 && (
                                                     <Box>
                                                         <Grid columns={24} gutter={{base: 1}}>
                                                             <Grid.Col span={10} fz="sm" mt={8}>
@@ -754,7 +864,12 @@ function _UpdateInvoice(props) {
                                                                 label=""
                                                                 placeholder={t("SalesPrice")}
                                                                 required={true}
-                                                                nextField={salesConfig?.item_sales_percent === 1 ? "percent" : 'quantity'}
+                                                                nextField={(() => {
+                                                                    if (isWarehouse === 1) return 'product_warehouse_id';
+                                                                    if (productPurchaseItemDropdown) return 'purchase_item_id';
+                                                                    if (salesConfig?.item_sales_percent === 1) return 'percent';
+                                                                    return 'quantity';
+                                                                })()}
                                                                 form={form}
                                                                 name={"sales_price"}
                                                                 id={"sales_price"}
@@ -767,6 +882,68 @@ function _UpdateInvoice(props) {
                                                         </Grid.Col>
                                                     </Grid>
                                                 </Box>
+
+                                                {isWarehouse === 1 && (
+                                                    <Box mt={'4'} className={'boxBackground'}>
+                                                        <Grid columns={24} gutter={{base: 1}}>
+                                                            <Grid.Col span={10} fz="sm" mt={8}>
+                                                                {t("Warehouse")}
+                                                            </Grid.Col>
+                                                            <Grid.Col span={14}>
+                                                                <SelectFormForSalesPurchaseProduct
+                                                                    tooltip={t("ChooseWarehouse")}
+                                                                    label=""
+                                                                    placeholder={t("ChooseWarehouse")}
+                                                                    required={true}
+                                                                    nextField={(() => {
+                                                                        if (productPurchaseItemDropdown) return 'purchase_item_id';
+                                                                        if (salesConfig?.item_sales_percent === 1) return 'percent';
+                                                                        return 'quantity';
+                                                                    })()}
+                                                                    name={"product_warehouse_id"}
+                                                                    form={form}
+                                                                    dropdownValue={productWarehouseDropdown}
+                                                                    id={"product_warehouse_id"}
+                                                                    mt={1}
+                                                                    searchable={true}
+                                                                    value={productWarehouseData}
+                                                                    changeValue={setProductWarehouseData}
+                                                                />
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                )}
+
+                                                {productPurchaseItemDropdown.length > 0 && (
+                                                    <Box mt={'4'} className={'boxBackground'}>
+                                                        <Grid columns={24} gutter={{base: 1}}>
+                                                            <Grid.Col span={10} fz="sm" mt={8}>
+                                                                {t("PurchaseItem")}
+                                                            </Grid.Col>
+                                                            <Grid.Col span={14}>
+                                                                <SelectFormForSalesPurchaseProduct
+                                                                    tooltip={t("ChoosePurchaseItem")}
+                                                                    label=""
+                                                                    placeholder={t("ChoosePurchaseItem")}
+                                                                    required={true}
+                                                                    nextField={(() => {
+                                                                        if (salesConfig?.item_sales_percent === 1) return 'percent';
+                                                                        return 'quantity';
+                                                                    })()}
+                                                                    name={"purchase_item_id"}
+                                                                    form={form}
+                                                                    dropdownValue={productPurchaseItemDropdown}
+                                                                    id={"purchase_item_id"}
+                                                                    mt={1}
+                                                                    searchable={true}
+                                                                    value={productPurchaseItemData}
+                                                                    changeValue={setProductPurchaseItemData}
+                                                                />
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                )}
+
                                                 {salesConfig?.item_sales_percent === 1 && (
                                                     <Box mt={"4"}>
                                                         <Grid columns={24} gutter={{base: 1}}>
@@ -1324,3 +1501,5 @@ function _UpdateInvoice(props) {
 }
 
 export default _UpdateInvoice;
+
+
