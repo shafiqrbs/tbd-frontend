@@ -113,7 +113,7 @@ function StockExpiryTable(props) {
           offset: perPage,
           type: "stock",
           product_nature: activeTab,
-          expiry_duration: true,
+          expiry_duration: 1,
         },
       };
 
