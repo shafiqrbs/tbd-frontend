@@ -100,19 +100,19 @@ function StockMatrixTable(props) {
   useEffect(() => {
     const fetchData = async () => {
       const value = {
-        url: "inventory/product",
+        url: "inventory/stock-item/matrix",
         param: {
           term: searchKeyword,
-          name: productFilterData.name,
-          alternative_name: productFilterData.alternative_name,
-          sku: productFilterData.sku,
-          sales_price: productFilterData.sales_price,
-          product_type_id: productFilterData.product_type_id,
-          category_id: productFilterData.category_id,
+          // name: productFilterData.name,
+          // alternative_name: productFilterData.alternative_name,
+          // sku: productFilterData.sku,
+          // sales_price: productFilterData.sales_price,
+          // product_type_id: productFilterData.product_type_id,
+          // category_id: productFilterData.category_id,
           page: searchKeyword ? 1: page,
           offset: perPage,
-          type: "stock",
-          product_nature: activeTab,
+          // type: "stock",
+          // product_nature: activeTab,
         },
       };
 
@@ -227,7 +227,19 @@ function StockMatrixTable(props) {
   }, [indexData?.data, sortStatus]);
 
 
-  return (
+    const warehouseColumns = Array.isArray(indexData?.warehouses)
+        ? indexData.warehouses.map(wh => ({
+            accessor: `warehouse_${wh.id}`,
+            title: wh.name,
+            textAlign: "center",
+            sortable: true,
+            render: (item) => item.warehouses?.[wh.id]?.quantity ?? 0,
+        }))
+        : [];
+
+
+
+    return (
     <>
       <Box
         pl={`xs`}
@@ -288,81 +300,77 @@ function StockMatrixTable(props) {
         </Grid>
       </Box>
       <Box className={"borderRadiusAll"}>
-        <DataTable
-          classNames={{
-            root: tableCss.root,
-            table: tableCss.table,
-            header: tableCss.header,
-            footer: tableCss.footer,
-            pagination: tableCss.pagination,
-          }}
-          records={sortedRecords}
-          columns={[
-            {
-              accessor: "index",
-              title: t("S/N"),
-              textAlignment: "right",
-              render: (_row, index) => index + 1 + (page - 1) * perPage,
-            },
-            { accessor: "category_name", title: t("Category"),sortable: true },
-            { accessor: "product_name", title: t("Name"),sortable: true },
-            {
-              accessor: 'product_code',
-              title: t('ProductCode'),
-              sortable: true
-            },
-            { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
-            { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
-            { accessor: "color_name", title: t("Color"), hidden: !isColor },
-            { accessor: "size_name", title: t("Size"), hidden: !isSize },
-            { accessor: "model_name", title: t("Model"), hidden: !isModel },
-            {
-              accessor: "unit_name",
-              title: t("Unit"),
-            },
-            { accessor: "rem_quantity", title: t("Narayangonj"), textAlign: "center" },
-            {
-              accessor: "action",
-              title: t("Action"),
-              textAlign: "right",
-              render: (item) => (
-                <Group gap={4} justify="right" wrap="nowrap">
-                  <Button
-                    component="a"
-                    size="compact-xs"
-                    radius="xs"
-                    variant="filled"
-                    fw={"100"}
-                    fz={"12"}
-                    color='var(--theme-primary-color-6)'
-                    mr={"4"}
-                    onClick={() => {
-                      dispatch(showEntityData("inventory/product/" + item.product_id));
-                      setViewModal(true);
-                    }}
-                  >
-                    {" "}
-                    {t("View")}
-                  </Button>
-                </Group>
-              ),
-            },
-          ]}
-          fetching={fetching || downloadStockXLS || fetchingReload}
-          totalRecords={indexData.total}
-          sortStatus={sortStatus}
-          onSortStatusChange={setSortStatus}
-          recordsPerPage={perPage}
-          page={page}
-          onPageChange={(p) => {
-            setPage(p);
-            setFetching(true)
-          }}
-          loaderSize="xs"
-          loaderColor="grape"
-          height={height}
-          scrollAreaProps={{ type: "never" }}
-        />
+
+          <DataTable
+              classNames={{
+                  root: tableCss.root,
+                  table: tableCss.table,
+                  header: tableCss.header,
+                  footer: tableCss.footer,
+                  pagination: tableCss.pagination,
+              }}
+              records={sortedRecords}
+              columns={[
+                  {
+                      accessor: "index",
+                      title: t("S/N"),
+                      textAlignment: "right",
+                      render: (_row, index) => index + 1 + (page - 1) * perPage,
+                  },
+                  { accessor: "category_name", title: t("Category"), sortable: true },
+                  { accessor: "name", title: t("Name"), sortable: true },
+                  { accessor: "unit_name", title: t("Unit") },
+                  { accessor: "barcode", title: t("barcode") },
+                  { accessor: "product_nature", title: t("ProductNature") },
+                  { accessor: "sales_price", title: t("SalesPrice") },
+                  { accessor: "purchase_price", title: t("PurchasePrice") },
+
+                  // ✅ Insert dynamic warehouse columns here
+                  ...(warehouseColumns ?? []),
+                  { accessor: "quantity", title: t("Quantity"),sortable: true },
+
+                  {
+                      accessor: "action",
+                      title: t("Action"),
+                      textAlign: "right",
+                      render: (item) => (
+                          <Group gap={4} justify="right" wrap="nowrap">
+                              <Button
+                                  component="a"
+                                  size="compact-xs"
+                                  radius="xs"
+                                  variant="filled"
+                                  fw={"100"}
+                                  fz={"12"}
+                                  color="var(--theme-primary-color-6)"
+                                  mr={"4"}
+                                  onClick={() => {
+                                      dispatch(showEntityData("inventory/product/" + item.product_id));
+                                      setViewModal(true);
+                                  }}
+                              >
+                                  {t("View")}
+                              </Button>
+                          </Group>
+                      ),
+                  },
+              ]}
+              fetching={fetching || downloadStockXLS || fetchingReload}
+              totalRecords={indexData.total}
+              sortStatus={sortStatus}
+              onSortStatusChange={setSortStatus}
+              recordsPerPage={perPage}
+              page={page}
+              onPageChange={(p) => {
+                  setPage(p);
+                  setFetching(true);
+              }}
+              loaderSize="xs"
+              loaderColor="grape"
+              height={height}
+              scrollAreaProps={{ type: "never" }}
+          />
+
       </Box>
       {viewModal && (
         <OverviewModal viewModal={viewModal} setViewModal={setViewModal} />

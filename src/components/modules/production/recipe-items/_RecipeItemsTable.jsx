@@ -3,13 +3,14 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    Button, LoadingOverlay, ActionIcon, Menu, Text, rem, ScrollArea,
+    Button, LoadingOverlay, ActionIcon, Menu, Text, rem, ScrollArea, Select,
 } from "@mantine/core";
 
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from 'react-i18next';
 import {
+    proItemUpdateStatus,
     setFetching,
 } from "../../../../store/production/crudSlice.js";
 import KeywordSearch from "../common/KeywordSearch.jsx";
@@ -24,11 +25,27 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import {deleteEntityData} from "../../../../store/production/crudSlice";
-import {IconCopy, IconDotsVertical, IconEyeEdit, IconPencil, IconTrashX, IconX} from "@tabler/icons-react";
+import {IconCheck, IconCopy, IconDotsVertical, IconEyeEdit, IconPencil, IconTrashX, IconX} from "@tabler/icons-react";
 import {modals} from "@mantine/modals";
 import dayjs from "dayjs";
+import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
+import axios from "axios";
+import {notifications} from "@mantine/notifications";
+import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import useProductsDataStoreIntoLocalStorage
+    from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 
 function _RecipeItemsTable(props) {
+    // Load and parse config safely
+    let domainConfigData = null;
+    try {
+        const configRaw = localStorage.getItem('domain-config-data');
+        domainConfigData = configRaw ? JSON.parse(configRaw) : null;
+    } catch (e) {
+        console.error('Failed to parse domain-config-data from localStorage', e);
+    }
+
+    const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
     const {fetching,setFetching,layoutLoading,setLayoutLoading} = props
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
@@ -42,6 +59,7 @@ function _RecipeItemsTable(props) {
     const recipeItemFilterData = useSelector((state) => state.productionCrudSlice.recipeItemFilterData)
     const navigate = useNavigate()
 
+    const warehouseDropdown = getCoreWarehouseDropdownData();
     const formatDate = (dateString, format = "DD-MMM-YYYY") => {
         if (!dateString) return "";
         return dayjs(dateString).format(format);
@@ -142,7 +160,54 @@ function _RecipeItemsTable(props) {
                         },
                         { accessor: 'product_name', title: t("Item") },
                         { accessor: 'unit_name', title: t("Uom") },
-                        { accessor: 'warehouse_name', title: t("Warehouse") },
+                        isWarehouse && {
+                            accessor: "warehouse_id",
+                            title: t("Warehouse"),
+                            render: (item) => {
+                                const warehouseValue = String(item.warehouse_id || "");
+                                return (
+                                    <Select
+                                        size="xs"
+                                        placeholder="Select"
+                                        value={warehouseValue}
+                                        data={warehouseDropdown}
+                                        onChange={async (newValue) => {
+                                            try {
+                                                // Create a new copy of indexData
+                                                const updatedData = indexData.data.map((r) =>
+                                                    r.id === item.id ? { ...r, warehouse_id: Number(newValue) } : r
+                                                );
+
+                                                // Update state so the table re-renders immediately
+                                                setIndexData((prev) => ({ ...prev, data: updatedData }));
+
+                                                // Call backend API
+                                                const data = {
+                                                    url: 'production/recipe-items/update-warehouse',
+                                                    data: {
+                                                        id: item.id,
+                                                        warehouse_id: Number(newValue),
+                                                    },
+                                                };
+
+                                                const resultAction = await dispatch(proItemUpdateStatus(data));
+
+                                                if (proItemUpdateStatus.rejected.match(resultAction)) {
+                                                    showNotificationComponent('Fail to update warehouse', 'red');
+
+                                                    // Rollback if backend fails
+                                                    setIndexData((prev) => ({ ...prev, data: indexData.data }));
+                                                }
+                                            } catch (err) {
+                                                console.error(err);
+                                            }
+                                        }}
+
+
+                                    />
+                                );
+                            },
+                        },
                         { accessor: 'license_date', title: t("LicenseDate") },
                         { accessor: 'initiate_date', title: t("InitiateDate") },
                         { accessor: 'waste_percent', title: t("Wastage%"), textAlign: "center" },
@@ -232,8 +297,8 @@ function _RecipeItemsTable(props) {
                             </>
                             ),
                         },
-                    ]
-                    }
+                    ].filter(Boolean)}
+
                     fetching={fetching}
                     totalRecords={indexData.total}
                     recordsPerPage={perPage}

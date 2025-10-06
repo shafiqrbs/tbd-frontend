@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
-import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseData.js";
 import {useParams} from "react-router";
 import {useNavigate} from "react-router-dom";
+import getCoreWarehouseData from "../../../global-hook/dropdown/core/getCoreWarehouseData.js";
 
 function WarehouseStockNav() {
   const { t, i18n } = useTranslation();
@@ -18,7 +18,7 @@ function WarehouseStockNav() {
   const dropdownLoad = useSelector(
     (state) => state.inventoryCrudSlice.dropdownLoad
   );
-  let warehouseDropdownData = getCoreWarehouseDropdownData();
+  let warehouseDropdownData = getCoreWarehouseData();
   const handleWarehouseNavigation = (values) => {
   };
   return (

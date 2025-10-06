@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {coreSettingDropdown} from "../../../../store/core/utilitySlice.js";
 
-const getCoreWarehouseDropdownData = () => {
+const getCoreWarehouseData = () => {
     const dispatch = useDispatch();
     const [settingDropdown, setSettingDropdown] = useState([]);
 
@@ -28,4 +28,4 @@ const getCoreWarehouseDropdownData = () => {
     return settingDropdown;
 };
 
-export default getCoreWarehouseDropdownData;
+export default getCoreWarehouseData;
