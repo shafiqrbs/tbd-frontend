@@ -66,6 +66,7 @@ function _UpdateProduct(props) {
       barcode: "",
       sku: "",
       min_quantity: "",
+      expiry_duration: "",
     },
     validate: {
       product_type_id: isNotEmpty(),
@@ -100,6 +101,9 @@ function _UpdateProduct(props) {
       sku: entityEditData.sku ? entityEditData.sku : "",
       min_quantity: entityEditData.min_quantity
         ? entityEditData.min_quantity
+        : "",
+      expiry_duration: entityEditData.expiry_duration
+        ? entityEditData.expiry_duration
         : "",
 
 
@@ -362,7 +366,7 @@ function _UpdateProduct(props) {
 
               <Box mt={"xs"}>
                 <Grid gutter={{ base: 6 }}>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={4}>
                     <SelectForm
                       tooltip={t("ChooseProductUnit")}
                       label={t("ProductUnit")}
@@ -387,7 +391,7 @@ function _UpdateProduct(props) {
                       }
                     />
                   </Grid.Col>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={4}>
                     <InputForm
                       tooltip={t("MinimumQuantityValidateMessage")}
                       label={t("MinimumQuantity")}
@@ -397,6 +401,18 @@ function _UpdateProduct(props) {
                       name={"min_quantity"}
                       mt={8}
                       id={"min_quantity"}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={4}>
+                    <InputForm
+                      tooltip={t("ExpiryDurationValidateMessage")}
+                      label={t("ExpiryDuration")}
+                      placeholder={t("ExpiryDuration")}
+                      required={false}
+                      form={form}
+                      name={"expiry_duration"}
+                      mt={8}
+                      id={"expiry_duration"}
                     />
                   </Grid.Col>
                 </Grid>

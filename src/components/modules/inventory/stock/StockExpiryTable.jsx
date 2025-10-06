@@ -113,6 +113,7 @@ function StockExpiryTable(props) {
           offset: perPage,
           type: "stock",
           product_nature: activeTab,
+          expiry_duration: true,
         },
       };
 
@@ -315,6 +316,7 @@ function StockExpiryTable(props) {
                   sortable: true
                 },
                 { accessor: "barcode", title: t("Barcode"),sortable: true },
+                { accessor: "expiry_duration", title: t("ExpiryDuration"),sortable: true },
                 { accessor: "rem_quantity", title: t("Quantity"), textAlign: "center" },
                 { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
                 { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
