@@ -94,7 +94,70 @@ export default function _Shortcut(props) {
               {t("Domain")}
             </Flex>
           </Flex>
-
+          <Flex direction={`column`} align={"center"} pt={5}>
+            <Tooltip
+                label={t("B2BDomain")}
+                px={16}
+                py={2}
+                withArrow
+                position={"left"}
+                c={"white"}
+                bg={"lime"}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <Button
+                  bg={"lime"}
+                  size="md"
+                  pl={"12"}
+                  pr={"12"}
+                  variant={"light"}
+                  color={`black`}
+                  radius="xl"
+                  onClick={(e) => {
+                    navigate("/b2b/stock");
+                  }}
+              >
+                <Flex direction={`column`} align={"center"}>
+                  <IconUsers size={16} color={"white"} />
+                </Flex>
+              </Button>
+            </Tooltip>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+              {t("Stock")}
+            </Flex>
+          </Flex>
+          <Flex direction={`column`} align={"center"} pt={5}>
+            <Tooltip
+                label={t("B2BDomain")}
+                px={16}
+                py={2}
+                withArrow
+                position={"left"}
+                c={"white"}
+                bg={"orange"}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <Button
+                  bg={"orange"}
+                  size="md"
+                  pl={"12"}
+                  pr={"12"}
+                  variant={"light"}
+                  color={`black`}
+                  radius="xl"
+                  onClick={(e) => {
+                    navigate("/b2b/stock-price");
+                  }}
+              >
+                <Flex direction={`column`} align={"center"}>
+                  <IconUsers size={16} color={"white"} />
+                </Flex>
+              </Button>
+            </Tooltip>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+              {t("StockPrice")}
+            </Flex>
+          </Flex>
           <Flex direction={`column`} align={"center"} pt={5}>
             <Tooltip
                 label={t("B2BDomain")}

@@ -23,18 +23,18 @@ import _ManageBranchAndFranchise from "../common/_ManageBranchAndFranchise.jsx";
 
 // Sub-components
 const PercentColumn = React.memo(({item}) => (
-    <Group justify="center" gap={4} noWrap mt={10}>
-        <Text w={80} ta="center">{item.percent_mode || "0"}</Text>
-        <Text w={80} ta="center">{item.mrp_percent || "0"}</Text>
-        <Text w={80} ta="center">{item.purchase_percent || "0"}</Text>
+    <Group justify="center" gap={4} noWrap>
+        <Text w={80} fz={'xs'} ta="center">{item.percent_mode || "0"}</Text>
+        <Text w={80} fz={'xs'} ta="center">{item.mrp_percent || "0"}</Text>
+        <Text w={80} fz={'xs'} ta="center">{item.purchase_percent || "0"}</Text>
     </Group>
 ));
 
 const CentralInfoColumn = React.memo(({item}) => (
-    <Group justify="center" gap={4} noWrap mt={10}>
-        <Text w={50} ta="center">{item.center_stock || "0"}</Text>
-        <Text w={50} ta="center">{item.center_purchase_price || "0"}</Text>
-        <Text w={80} ta="center">{item.center_sales_price || "0"}</Text>
+    <Group justify="center" gap={4} noWrap>
+        <Text w={50} fz={'xs'} ta="center">{item?.center_stock || "0"}</Text>
+        <Text w={50} fz={'xs'} ta="center">{item?.center_purchase_price || "0"}</Text>
+        <Text w={80} fz={'xs'} ta="center">{item?.center_sales_price || "0"}</Text>
     </Group>
 ));
 
@@ -62,7 +62,7 @@ const PriceInputCell = React.memo(({item}) => {
     }, [values, item.id, item.b2b_id, dispatch]);
 
     return (
-        <Group justify="center" gap={4} noWrap mt={10}>
+        <Group justify="center" gap={4} noWrap>
             <TextInput
                 w={100}
                 type="number"
@@ -95,7 +95,7 @@ export default function ProductTable({id}) {
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const {mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 120;
+    const height = mainAreaHeight - 90;
     const perPage = 50;
 
     const [state, setState] = useState({
@@ -231,7 +231,6 @@ export default function ProductTable({id}) {
                 overlayProps={{radius: "sm", blur: 2}}
                 loaderProps={{color:"red"}}
             />
-
             <Grid columns={24} gutter={{base: 8}}>
                 <Grid.Col span={4}>
                     <_ManageBranchAndFranchise
@@ -246,11 +245,6 @@ export default function ProductTable({id}) {
                 <Grid.Col span={20}>
                     <Box p={"xs"} bg={"white"} className={"borderRadiusAll"}>
                         <Box
-                            pl={`xs`}
-                            pb={"xs"}
-                            pr={8}
-                            pt={"xs"}
-                            mb={"xs"}
                             className={"boxBackground borderRadiusAll"}
                         >
                             <_Search module={"product"}/>

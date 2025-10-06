@@ -101,6 +101,8 @@ import PurchaseReturnIndex from "./components/modules/inventory/purchase-return/
 import PurchaseReturnEdit from "./components/modules/inventory/purchase-return/PurchaseReturnEdit.jsx";
 import SalesReturnIndex from "./components/modules/inventory/sales-return/SalesReturnIndex.jsx";
 import StockMatrixTable from "./components/modules/inventory/stock/StockMatrixTable";
+import B2bDomainStockIndex from "./components/modules/b2b/domain-stock/B2bDomainStockIndex";
+import B2bDomainStockPriceIndex from "./components/modules/b2b/domain-price/B2bDomainStockPriceIndex";
 
 
 function AppRoute() {
@@ -847,6 +849,16 @@ function AppRoute() {
                         <Route path="domain" element={
                             <ProtectedRoute roles={["role_domain"]}>
                                 <B2bDomainIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="stock" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <B2bDomainStockIndex />
+                            </ProtectedRoute>
+                        } />
+                         <Route path="stock-price" element={
+                            <ProtectedRoute roles={["role_domain"]}>
+                                <B2bDomainStockPriceIndex />
                             </ProtectedRoute>
                         } />
                         <Route path="master-user" element={

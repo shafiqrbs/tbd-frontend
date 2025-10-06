@@ -2,7 +2,7 @@ import React from "react";
 import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack, TextInput,
-    Tooltip
+    Tooltip, Textarea
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
@@ -23,6 +23,7 @@ import {
     setUpdateMeasurementData,
     storeEntityData
 } from "../../../../../store/production/crudSlice.js";
+import InputForm from "../../../../form-builders/InputForm";
 
 function _RecipeForm() {
     const {id} = useParams();
@@ -136,8 +137,7 @@ function _RecipeForm() {
                                     </Grid>
                                 </Box>
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
-
-                                    <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
+                                    <ScrollArea h={height-120} scrollbarSize={2} scrollbars="y" type="never">
                                         {measurementInputData && Object.keys(measurementInputData).length > 0 ? (
                                             Object.keys(measurementInputData).map((key, i) => (
                                                 <div key={i}>
@@ -239,6 +239,13 @@ function _RecipeForm() {
                                             </Grid>
                                         </Box>
                                     </ScrollArea>
+                                    <Box mb={'20'}>
+                                        <Textarea
+                                            label="Remark"
+                                            description="Enter description"
+                                            placeholder="Input placeholder"
+                                        />
+                                    </Box>
                                 </Box>
                             </Box>
                         </Box>
