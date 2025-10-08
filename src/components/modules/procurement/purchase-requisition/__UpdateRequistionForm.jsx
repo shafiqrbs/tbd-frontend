@@ -20,7 +20,7 @@ export default function __UpdateRequistionForm(props) {
         tempCardProducts,
         setLoadCardProducts,
         loadCardProducts,
-        vendorData, vendorObject, vendorsDropdownData, editedData, setTempCardProducts
+        vendorData, vendorObject, vendorsDropdownData, editedData, setTempCardProducts,isWarehouse
     } = props;
 
     //common hooks
@@ -38,10 +38,18 @@ export default function __UpdateRequistionForm(props) {
             invoice_date: editedData.invoice_date ? dayjs(editedData.invoice_date, "DD-MM-YYYY").toDate() : new Date(),
             vendor_id: editedData.vendor_id,
             narration: editedData.remark,
+            warehouse_id : editedData.warehouse_id
         },
         validate: {
             vendor_id: isNotEmpty(),
             expected_date: isNotEmpty(),
+            warehouse_id: (value) => {
+                if (isWarehouse === 1) {
+                    if (!value) {
+                        return true;
+                    }
+                }
+            },
         },
     });
     // requistion
@@ -58,7 +66,6 @@ export default function __UpdateRequistionForm(props) {
                 purchase_price: product.purchase_price,
                 sales_price: product.sales_price,
                 sub_total: product.sub_total,
-                warehouse_id: product.warehouse_id,
             };
         });
 
@@ -76,6 +83,7 @@ export default function __UpdateRequistionForm(props) {
         formValue["items"] = transformedArray ? transformedArray : [];
         formValue["process"] = "Created";
         formValue["vendor_id"] = form.values.vendor_id;
+        formValue["warehouse_id"] = values.warehouse_id;
 
         const value = {
             url: 'inventory/requisition/' + editedData.id,
@@ -227,6 +235,8 @@ export default function __UpdateRequistionForm(props) {
                         vendorData={vendorData}
                         vendorObject={vendorObject}
                         vendorsDropdownData={vendorsDropdownData}
+                        isWarehouse={isWarehouse}
+                        warehouse_id={editedData?.warehouse_id}
                     />
                 </Box>
             </form>

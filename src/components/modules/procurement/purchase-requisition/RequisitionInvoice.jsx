@@ -12,9 +12,10 @@ export default function RequisitionInvoice() {
 
   const domainConfigData = JSON.parse(localStorage.getItem("domain-config-data"));
   const configData = domainConfigData.inventory_config;
+  const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
 
-  
-  return (
+
+    return (
     <>
       {progress !== 100 && (
         <Progress
@@ -40,6 +41,7 @@ export default function RequisitionInvoice() {
                   <_GenericRequisitionForm
                     allowZeroPercentage={configData?.zero_stock}
                     currencySymbol={configData?.currency?.symbol}
+                    isWarehouse={isWarehouse}
                   />
                 )}
               </Box>

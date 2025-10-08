@@ -18,7 +18,7 @@ export default function __RequistionForm(props) {
         tempCardProducts,
         setLoadCardProducts,
         loadCardProducts,
-        vendorData, vendorObject, vendorsDropdownData
+        vendorData, vendorObject, vendorsDropdownData,isWarehouse
     } = props;
 
     //common hooks
@@ -33,11 +33,19 @@ export default function __RequistionForm(props) {
             vendor_id: "",
             order_process: "",
             narration: "",
+            warehouse_id: "",
             expected_date: new Date(),
         },
         validate: {
             vendor_id: isNotEmpty(),
             expected_date: isNotEmpty(),
+            warehouse_id: (value) => {
+                if (isWarehouse === 1) {
+                    if (!value) {
+                        return true;
+                    }
+                }
+            },
         },
     });
     // requistion
@@ -58,7 +66,6 @@ export default function __RequistionForm(props) {
                 purchase_price: product.purchase_price,
                 sales_price: product.sales_price,
                 sub_total: product.sub_total,
-                warehouse_id: product.warehouse_id,
             };
         });
 
@@ -76,12 +83,12 @@ export default function __RequistionForm(props) {
         formValue["items"] = transformedArray ? transformedArray : [];
         formValue["process"] = "Created";
         formValue["vendor_id"] = form.values.vendor_id;
+        formValue["warehouse_id"] = values?.warehouse_id ?? null;
 
         const value = {
             url: "inventory/requisition",
             data: formValue,
         };
-
 
         const resultAction = await dispatch(storeEntityData(value));
 
@@ -260,6 +267,7 @@ export default function __RequistionForm(props) {
                         vendorData={vendorData}
                         vendorObject={vendorObject}
                         vendorsDropdownData={vendorsDropdownData}
+                        isWarehouse={isWarehouse}
                     />
                 </Box>
             </form>

@@ -43,6 +43,9 @@ export default function _RequisitionTable(props) {
     const tableHeight = mainAreaHeight - 106;
     const height = mainAreaHeight - 320;
 
+    const domainConfigData = JSON.parse(localStorage.getItem("domain-config-data"));
+    const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
+
     const perPage = 50;
     const [page, setPage] = useState(1);
     const [printA4, setPrintA4] = useState(false);
@@ -230,6 +233,11 @@ export default function _RequisitionTable(props) {
                                         {
                                             accessor: "expected_date",
                                             title: t("ExpectedDate"),
+                                        },
+                                        {
+                                            accessor: "warehouse_name",
+                                            title: t("Warehouse"),
+                                            hidden: !isWarehouse
                                         },
                                         {
                                             accessor: "invoice",
@@ -504,6 +512,22 @@ export default function _RequisitionTable(props) {
                                                 </Grid>
                                             </Grid.Col>
                                             <Grid.Col span={"6"}>
+                                                {isWarehouse === 1 &&
+                                                    <Grid columns={15} gutter={{base: 4}}>
+                                                        <Grid.Col span={6}>
+                                                            <Text fz="sm" lh="xs">
+                                                                {t("Warehouse")}
+                                                            </Text>
+                                                        </Grid.Col>
+                                                        <Grid.Col span={9}>
+                                                            <Text fz="sm" lh="xs">
+                                                                {requisitionViewData &&
+                                                                    requisitionViewData.warehouse_name &&
+                                                                    requisitionViewData.warehouse_name}
+                                                            </Text>
+                                                        </Grid.Col>
+                                                    </Grid>
+                                                }
                                                 <Grid columns={15} gutter={{base: 4}}>
                                                     <Grid.Col span={6}>
                                                         <Text fz="sm" lh="xs">

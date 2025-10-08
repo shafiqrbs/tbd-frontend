@@ -48,6 +48,7 @@ function _GenericRequisitionForm(props) {
         domainId,
         isSMSActive,
         isZeroReceiveAllow,
+        isWarehouse
     } = props;
 
     //common hooks and variables
@@ -60,8 +61,6 @@ function _GenericRequisitionForm(props) {
     const [productDrawer, setProductDrawer] = useState(false);
     const [loadCardProducts, setLoadCardProducts] = useState(false);
     const [fetchingProductsTable, setFetchingProductsTable] = useState(false);
-    let warehouseDropdownData = getCoreWarehouseDropdownData();
-    const [warehouseData, setWarehouseData] = useState(null);
     const [vendorData, setVendorData] = useState(null);
     const [product, setProduct] = useState(null);
     const [vendorObject, setVendorObject] = useState({});
@@ -251,7 +250,6 @@ function _GenericRequisitionForm(props) {
                     purchase_price: purchasePrice,
                     sub_total: subTotal,
                     sales_price: Number(product.sales_price),
-                    warehouse_id: warehouseData || null
                 }
             ];
         }
@@ -262,7 +260,6 @@ function _GenericRequisitionForm(props) {
     function updateLocalStorageAndResetForm(addProducts, addedType) {
         localStorage.setItem("temp-requisition-products", JSON.stringify(addProducts));
         setSearchValue("");
-        setWarehouseData(null);
         setProduct(null);
         form.reset();
         setLoadCardProducts(true);
@@ -733,30 +730,6 @@ function _GenericRequisitionForm(props) {
                                                             <Box mt={'4'}>
                                                                 <Grid columns={24} gutter={{base: 1}}>
                                                                     <Grid.Col span={10} fz="sm" mt={8}>
-                                                                        {t("Warehouse")}
-                                                                    </Grid.Col>
-                                                                    <Grid.Col span={14}>
-                                                                        <SelectForm
-                                                                            tooltip={t("ChooseWarehouse")}
-                                                                            label=""
-                                                                            placeholder={t("ChooseWarehouse")}
-                                                                            required={false}
-                                                                            nextField={"quantity"}
-                                                                            name={"vendor_id"}
-                                                                            form={form}
-                                                                            dropdownValue={warehouseDropdownData}
-                                                                            id={"vendor_id"}
-                                                                            mt={1}
-                                                                            searchable={true}
-                                                                            value={warehouseData}
-                                                                            changeValue={setWarehouseData}
-                                                                        />
-                                                                    </Grid.Col>
-                                                                </Grid>
-                                                            </Box>
-                                                            <Box mt={'4'}>
-                                                                <Grid columns={24} gutter={{base: 1}}>
-                                                                    <Grid.Col span={10} fz="sm" mt={8}>
                                                                         {t("RequestQuantity")}
                                                                     </Grid.Col>
                                                                     <Grid.Col span={14}>
@@ -1014,6 +987,7 @@ function _GenericRequisitionForm(props) {
                         vendorData={vendorData}
                         vendorObject={vendorObject}
                         vendorsDropdownData={vendorsDropdownData}
+                        isWarehouse={isWarehouse}
                     />
                 </Grid.Col>
             </Grid>

@@ -17,8 +17,9 @@ import {
     IconReceipt,
     IconDeviceFloppy,
 } from "@tabler/icons-react";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
+import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 
 export default function __RequistionInvoiceSection(props) {
     const {
@@ -28,9 +29,15 @@ export default function __RequistionInvoiceSection(props) {
         vendorData,
         setVendorData,
         vendorObject,
-        vendorsDropdownData
+        vendorsDropdownData,
+        isWarehouse
     } = props;
     const {t} = useTranslation();
+
+
+    let warehouseDropdownData = getCoreWarehouseDropdownData();
+    const [warehouseData, setWarehouseData] = useState(null);
+
     useEffect(() => {
         form.setFieldValue("vendor_id", vendorData);
     }, [vendorData])
@@ -40,28 +47,30 @@ export default function __RequistionInvoiceSection(props) {
                 <SimpleGrid cols={{base: 1, md: 3}} mt={'2'} spacing="xs" mb={"xs"}>
                     <Card shadow="md" radius="4" className={`${classes.card} ${genericClass.genericBackground}`}
                           padding="xs">
-                        <Box>
-                            <Grid gutter={{base: 6}} mt={8}>
-                                <Grid.Col span={12}>
-                                    <SelectForm
-                                        tooltip={t("ChooseVendor")}
-                                        label=""
-                                        placeholder={t("ChooseVendor")}
-                                        required={false}
-                                        nextField="invoice_date"
-                                        name="vendor_id"
-                                        form={form}
-                                        dropdownValue={vendorsDropdownData}
-                                        id="vendor_id"
-                                        mt={1}
-                                        searchable={true}
-                                        value={vendorData}
-                                        changeValue={setVendorData}
-                                        disabled={true}
-                                    />
-                                </Grid.Col>
-                            </Grid>
-                        </Box>
+                        {isWarehouse === 1 &&
+                            <Box>
+                                <Grid gutter={{base: 6}} mt={8}>
+                                    <Grid.Col span={12}>
+                                        <SelectForm
+                                            tooltip={t("ChooseVendor")}
+                                            label=""
+                                            placeholder={t("ChooseVendor")}
+                                            required={false}
+                                            nextField="warehouse_id"
+                                            name="vendor_id"
+                                            form={form}
+                                            dropdownValue={vendorsDropdownData}
+                                            id="vendor_id"
+                                            mt={1}
+                                            searchable={true}
+                                            value={vendorData}
+                                            changeValue={setVendorData}
+                                            disabled={true}
+                                        />
+                                    </Grid.Col>
+                                </Grid>
+                            </Box>
+                        }
                         <Box className={"borderRadiusAll"}>
                             <Grid columns={18} gutter={{base: 2}} pt={"xs"}>
                                 <Grid.Col span={8}>
@@ -104,6 +113,27 @@ export default function __RequistionInvoiceSection(props) {
                     <Card shadow="md" radius="4" className={`${classes.card} ${genericClass.genericBackground}`}
                           padding="xs">
                         <Box className={"borderRadiusAll"}>
+                            <Box>
+                                <Grid gutter={{base: 6}} mt={8}>
+                                    <Grid.Col span={12}>
+                                        <SelectForm
+                                            tooltip={t("ChooseWarehouse")}
+                                            label=""
+                                            placeholder={t("ChooseWarehouse")}
+                                            required={false}
+                                            nextField={"invoice_date"}
+                                            name={"warehouse_id"}
+                                            form={form}
+                                            dropdownValue={warehouseDropdownData}
+                                            id={"warehouse_id"}
+                                            mt={1}
+                                            searchable={true}
+                                            value={warehouseData}
+                                            changeValue={setWarehouseData}
+                                        />
+                                    </Grid.Col>
+                                </Grid>
+                            </Box>
                             <Grid columns={18} gutter={{base: 2}} pt={"xs"}>
                                 <Grid.Col span={8} pt={2}>
                                     <Text ta="left" size="xs" pl={"xs"}>

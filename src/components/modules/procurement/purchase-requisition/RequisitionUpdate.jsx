@@ -15,6 +15,7 @@ export default function RequisitionUpdate() {
 
     const domainConfigData = JSON.parse(localStorage.getItem("domain-config-data"));
     const configData = domainConfigData.inventory_config;
+    const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
 
     const {id} = useParams()
     const dispatch = useDispatch()
@@ -70,6 +71,7 @@ export default function RequisitionUpdate() {
                                         allowZeroPercentage={configData?.zero_stock}
                                         currencySymbol={configData?.currency?.symbol}
                                         editedData={editedData}
+                                        isWarehouse={isWarehouse}
                                     />
                                 )}
                             </Box>
