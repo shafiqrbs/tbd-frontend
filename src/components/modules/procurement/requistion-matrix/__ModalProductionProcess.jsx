@@ -55,19 +55,6 @@ export default function __ModalProductionProcess({ boardId }) {
         );
     };
 
-    const handleCheckboxChange = (id, proBatchItemId) => {
-        if (proBatchItemId) {
-            return;
-        }
-        setSelectedIds(prevSelectedIds => {
-            if (prevSelectedIds.includes(id)) {
-                return prevSelectedIds.filter(selectedId => selectedId !== id);
-            } else {
-                return [...prevSelectedIds, id];
-            }
-        });
-    };
-
     const finalItemsToProcess = productionItems.filter(item =>
         item.pro_batch_item_id === null &&
         item.pro_batch_id === null &&
@@ -189,49 +176,113 @@ export default function __ModalProductionProcess({ boardId }) {
         return a.pro_batch_id - b.pro_batch_id;
     });
 
+
+
+    const [activeWarehouse, setActiveWarehouse] = useState(null);
+    const handleCheckboxChange = (id, proBatchItemId, warehouseName) => {
+        if (proBatchItemId) return;
+
+        setSelectedIds((prevSelectedIds) => {
+            let updated;
+            if (prevSelectedIds.includes(id)) {
+                updated = prevSelectedIds.filter((selectedId) => selectedId !== id);
+            } else {
+                updated = [...prevSelectedIds, id];
+            }
+
+            // Determine active warehouse
+            if (updated.length === 0) {
+                setActiveWarehouse(null);
+            } else {
+                // Find the warehouse of the newly selected item
+                setActiveWarehouse(warehouseName);
+            }
+
+            return updated;
+        });
+    };
+
     const rows = sortedItems.map((item, index) => {
-        const isFirstInGroup = index === 0 || sortedItems[index - 1].pro_batch_id !== item.pro_batch_id;
-        const groupSize = sortedItems.filter(p => p.pro_batch_id === item.pro_batch_id).length;
+        // --- Warehouse grouping ---
+        const isFirstInWarehouse =
+            index === 0 || sortedItems[index - 1].warehouse_name !== item.warehouse_name;
+        const warehouseGroupSize = sortedItems.filter(
+            (p) => p.warehouse_name === item.warehouse_name
+        ).length;
+
+        // --- Batch grouping (existing) ---
+        const isFirstInGroup =
+            index === 0 || sortedItems[index - 1].pro_batch_id !== item.pro_batch_id;
+        const groupSize = sortedItems.filter(
+            (p) => p.pro_batch_id === item.pro_batch_id
+        ).length;
 
         return (
             <Table.Tr key={item.id}>
+                {/* Warehouse Name (row-spanned) */}
+                {isFirstInWarehouse && (
+                    <Table.Td
+                        rowSpan={warehouseGroupSize}
+                        style={{ verticalAlign: 'middle', fontWeight: 500 }}
+                    >
+                        {item.warehouse_name}
+                    </Table.Td>
+                )}
+
                 <Table.Td style={{ textAlign: 'center' }}>
                     <input
                         type="checkbox"
                         checked={selectedIds.includes(item.id) || !!item.pro_batch_item_id}
-                        onChange={() => handleCheckboxChange(item.id, item.pro_batch_item_id)}
-                        disabled={!!item.pro_batch_item_id}
+                        onChange={() =>
+                            handleCheckboxChange(item.id, item.pro_batch_item_id, item.warehouse_name)
+                        }
+                        disabled={
+                            !!item.pro_batch_item_id ||
+                            (activeWarehouse && activeWarehouse !== item.warehouse_name)
+                        }
                     />
                 </Table.Td>
+
                 <Table.Td>{item.product_name}</Table.Td>
                 <Table.Td style={{ textAlign: 'center' }}>{item.quantity}</Table.Td>
                 <Table.Td style={{ textAlign: 'center' }}>{item.stock_quantity}</Table.Td>
+
                 <Table.Td style={{ textAlign: 'center' }}>
                     {item.stock_quantity - item.demand_quantity < 0 ? (
-                        <span style={{ color: 'red' }}>({Math.abs(item.stock_quantity - item.demand_quantity)})</span>
+                        <span style={{ color: 'red' }}>
+                        ({Math.abs(item.stock_quantity - item.demand_quantity)})
+                    </span>
                     ) : (
                         item.stock_quantity - item.demand_quantity
                     )}
                 </Table.Td>
+
                 <Table.Td style={{ textAlign: 'center' }}>
-                    {item.process === 'Created' && !item.approved_by_id ?
+                    {item.process === 'Created' && !item.approved_by_id ? (
                         <QuantityInput item={item} onDemandChange={handleDemandChange} />
-                        : item.demand_quantity
-                    }
+                    ) : (
+                        item.demand_quantity
+                    )}
                 </Table.Td>
-                {isFirstInGroup && item.pro_batch_id && item.process === 'Created' && !item.approved_by_id && (
-                    <Table.Td rowSpan={groupSize} style={{ verticalAlign: 'middle', textAlign: 'center' }}>
-                        <Button
-                            onClick={() => handleApprove(item.pro_batch_id)}
-                            size="xs"
+
+                {isFirstInGroup &&
+                    item.pro_batch_id &&
+                    item.process === 'Created' &&
+                    !item.approved_by_id && (
+                        <Table.Td
+                            rowSpan={groupSize}
+                            style={{ verticalAlign: 'middle', textAlign: 'center' }}
                         >
-                            Approve
-                        </Button>
-                    </Table.Td>
-                )}
+                            <Button onClick={() => handleApprove(item.pro_batch_id)} size="xs">
+                                Approve
+                            </Button>
+                        </Table.Td>
+                    )}
             </Table.Tr>
         );
     });
+
+
 
     return fetching ? (
         <Progress
@@ -265,6 +316,7 @@ export default function __ModalProductionProcess({ boardId }) {
                     >
                         <Table.Thead>
                             <Table.Tr>
+                                <Table.Th style={{ textAlign: 'center' }}>{t("Warehouse")}</Table.Th>
                                 <Table.Th style={{ textAlign: 'center' }}>{t("Select")}</Table.Th>
                                 <Table.Th style={{ textAlign: 'center' }}>{t("Product")}</Table.Th>
                                 <Table.Th style={{ textAlign: 'center' }}>{t("Approved")}</Table.Th>

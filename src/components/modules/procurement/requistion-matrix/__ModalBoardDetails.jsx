@@ -72,12 +72,20 @@ export default function __ModalBoardDetails({boardId}) {
                             border={1}
                             scrollViewportRef={leftTableRef}
                             classNames={matrixTable}
-                            columns={[{
+                            columns={[
+                                {
+                                    accessor: "warehouse_name",
+                                    title: t("Warehouse"),
+                                    cellsClassName: matrixTable.idColumnCells,
+                                    width: 100,
+                                },
+                                {
                                 accessor: "product",
                                 title: t("Product"),
                                 cellsClassName: matrixTable.idColumnCells,
                                 width: 100,
-                            }]}
+                            }
+                            ]}
                             records={indexData}
                             totalRecords={indexData.length}
                             loaderSize="xs"

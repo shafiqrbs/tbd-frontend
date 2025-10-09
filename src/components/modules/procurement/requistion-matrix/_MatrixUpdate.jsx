@@ -5,7 +5,7 @@ import {
     Text,
     TextInput,
     Button,
-    Flex, Tooltip
+    Flex, Tooltip, Select
 } from "@mantine/core";
 import {DataTable} from "mantine-datatable";
 import matrixTable from "./Table.module.css";
@@ -23,12 +23,28 @@ import {showNotificationComponent} from "../../../core-component/showNotificatio
 import {modals} from "@mantine/modals";
 import RequisitionNavigation from "../common/RequisitionNavigation";
 import inputCss from "../../../../assets/css/InlineInputField.module.css";
+import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 
 export default function _MatrixUpdate(props) {
     const {id} = useParams()
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const tableHeight = mainAreaHeight - 116;
+
+    // Load and parse config safely
+    let domainConfigData = null;
+    try {
+        const configRaw = localStorage.getItem('domain-config-data');
+        domainConfigData = configRaw ? JSON.parse(configRaw) : null;
+    } catch (e) {
+        console.error('Failed to parse domain-config-data from localStorage', e);
+    }
+    const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
+
+    const [warehouseData, setWarehouseData] = useState(null);
+    const warehouseDropdown = getCoreWarehouseDropdownData();
+
+
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [generateButton, setGenerateButton] = useState(false);
     const leftTableRef = useRef(null);
@@ -129,6 +145,7 @@ export default function _MatrixUpdate(props) {
             const values = {
                 quantity: editedQuantity,
                 id: item[indexKey],
+                type : 'quantity'
             };
             if (editedQuantity === item[shopKey]){
                 return
@@ -361,6 +378,49 @@ export default function _MatrixUpdate(props) {
                                                 {
                                                     accessor: "total_approved_quantity",
                                                     title: t("Approved"),
+                                                },
+                                                isWarehouse && {
+                                                    accessor: "warehouse_id",
+                                                    title: t("Warehouse"),
+                                                    render: (item) => {
+                                                        const [currentWarehouse,setCurrentWarehouse] = useState(String(item.warehouse_id || ""))
+                                                        return (
+                                                            <Select
+                                                                disabled={item.is_production_item == 1}
+                                                                size="xs"
+                                                                placeholder="Select"
+                                                                value={currentWarehouse}
+                                                                data={warehouseDropdown}
+                                                                onChange={async (newValue) => {
+                                                                    setCurrentWarehouse(String(newValue))
+
+                                                                    const values = {
+                                                                        warehouse_id: newValue,
+                                                                        stock_item_id: item.vendor_stock_item_id,
+                                                                        id: item.id,
+                                                                        type : 'warehouse'
+                                                                    };
+
+                                                                    const value = {
+                                                                        url: 'inventory/requisition/matrix/board/quantity-update',
+                                                                        data: values
+                                                                    }
+
+                                                                    const resultAction = await dispatch(storeEntityData(value));
+
+                                                                    if (storeEntityData.rejected.match(resultAction)) {
+                                                                        showNotificationComponent(resultAction.payload.message, 'red', true, 1000, true)
+                                                                    } else if (storeEntityData.fulfilled.match(resultAction)) {
+                                                                        if (resultAction.payload.data.status === 200) {
+                                                                            setFetching(true)
+                                                                        } else {
+                                                                            showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
+                                                                        }
+                                                                    }
+                                                                }}
+                                                            />
+                                                        );
+                                                    },
                                                 },
                                                 {
                                                     accessor: "vendor_stock_quantity",
