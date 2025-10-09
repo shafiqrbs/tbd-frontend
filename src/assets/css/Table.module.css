@@ -20,8 +20,10 @@ th {
 }
 
 .footer {
-    color: #e9ecef;
-    font-size: 13px;
+    color: #000000;
+    font-size: 12px;
+    background-color:var(--theme-primary-color-0)!important;
+
 
 th ,td{
     border-top: 1px solid rgba(226, 194, 194, 0.39);

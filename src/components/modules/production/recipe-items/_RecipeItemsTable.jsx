@@ -231,9 +231,9 @@ function _RecipeItemsTable(props) {
                             title: t("Status"),
                             render: (item) => (
                                 <>
-                                    {item.process == 'created' && 'Created'}
-                                    {item.process == 'checked' && 'Checked'}
-                                    {item.process == 'approved' && 'Approved'}
+                                    {item.process === 'created' && 'Created'}
+                                    {item.process === 'checked' && 'Checked'}
+                                    {item.process === 'approved' && 'Approved'}
                                 </>
                             )
                         },
