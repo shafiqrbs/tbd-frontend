@@ -92,24 +92,25 @@ export default function __RequistionForm(props) {
             data: formValue,
         };
 
-        const resultAction = await dispatch(storeEntityData(value));
+        try {
+            const resultAction = await dispatch(storeEntityData(value));
 
-        if (storeEntityData.rejected.match(resultAction)) {
-            showNotificationComponent(resultAction.payload.message, "red");
-            setIsSubmitting(false)
-        } else if (storeEntityData.fulfilled.match(resultAction)) {
-            if (resultAction.payload.data.status === 200) {
-                showNotificationComponent(resultAction.payload.data.message, "teal");
-                setIsSubmitting(false)
-                setTimeout(() => {
-                    localStorage.removeItem("temp-requisition-products");
-                    form.reset();
-                    setLoadCardProducts(true);
-                }, 700);
-            } else {
-                setIsSubmitting(false)
-                showNotificationComponent(resultAction.payload.data.message, "teal");
+            if (storeEntityData.rejected.match(resultAction)) {
+                showNotificationComponent(resultAction.payload.message, "red");
+            } else if (storeEntityData.fulfilled.match(resultAction)) {
+                if (resultAction.payload.data.status === 200) {
+                    showNotificationComponent(resultAction.payload.data.message, "teal");
+                    setTimeout(() => {
+                        localStorage.removeItem("temp-requisition-products");
+                        form.reset();
+                        setLoadCardProducts(true);
+                    }, 700);
+                } else {
+                    showNotificationComponent(resultAction.payload.data.message, "teal");
+                }
             }
+        } finally {
+            setIsSubmitting(false)
         }
     }
 
