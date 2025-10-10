@@ -62,9 +62,15 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("config-data");
         localStorage.removeItem("accounting-transaction-mode");
         localStorage.removeItem("domain-config-data");
+        localStorage.removeItem("temp-requisition-products");
+        localStorage.removeItem("temp-sales-products");
+        localStorage.removeItem("temp-purchase-products");
         localStorage.removeItem("order-process");
         localStorage.removeItem("core-customers");
         localStorage.removeItem("core-users");
+        localStorage.removeItem("hospital-config");
+        localStorage.removeItem("hospital-user");
+        localStorage.removeItem("particularMode");
         localStorage.removeItem("core-products");
         localStorage.removeItem("core-vendors");
         localStorage.removeItem("i18nextLng");
