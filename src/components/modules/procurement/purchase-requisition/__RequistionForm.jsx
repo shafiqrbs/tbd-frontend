@@ -1,5 +1,5 @@
 import {isNotEmpty, useForm} from "@mantine/form";
-import React from "react";
+import React, {useState} from "react";
 import {Box, Text, ActionIcon, Group, TextInput} from "@mantine/core";
 import {DataTable} from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
@@ -51,7 +51,9 @@ export default function __RequistionForm(props) {
     // requistion
     let purchaseSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const handleFormSubmit = async (values) => {
+        setIsSubmitting(true)
         const tempProducts = localStorage.getItem(
             "temp-requisition-products"
         );
@@ -94,15 +96,18 @@ export default function __RequistionForm(props) {
 
         if (storeEntityData.rejected.match(resultAction)) {
             showNotificationComponent(resultAction.payload.message, "red");
+            setIsSubmitting(false)
         } else if (storeEntityData.fulfilled.match(resultAction)) {
             if (resultAction.payload.data.status === 200) {
                 showNotificationComponent(resultAction.payload.data.message, "teal");
+                setIsSubmitting(false)
                 setTimeout(() => {
                     localStorage.removeItem("temp-requisition-products");
                     form.reset();
                     setLoadCardProducts(true);
                 }, 700);
             } else {
+                setIsSubmitting(false)
                 showNotificationComponent(resultAction.payload.data.message, "teal");
             }
         }
@@ -268,6 +273,7 @@ export default function __RequistionForm(props) {
                         vendorObject={vendorObject}
                         vendorsDropdownData={vendorsDropdownData}
                         isWarehouse={isWarehouse}
+                        isSubmitting={isSubmitting}
                     />
                 </Box>
             </form>

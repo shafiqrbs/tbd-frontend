@@ -30,7 +30,8 @@ export default function __RequistionInvoiceSection(props) {
         setVendorData,
         vendorObject,
         vendorsDropdownData,
-        isWarehouse
+        isWarehouse,
+        isSubmitting
     } = props;
     const {t} = useTranslation();
 
@@ -284,6 +285,7 @@ export default function __RequistionInvoiceSection(props) {
                             className={genericClass.invoiceSave}
                             type={"submit"}
                             onClick={handleClick}
+                            disabled={isSubmitting}
                             name="save"
                             variant="filled"
                             leftSection={<IconDeviceFloppy size={14}/>}
