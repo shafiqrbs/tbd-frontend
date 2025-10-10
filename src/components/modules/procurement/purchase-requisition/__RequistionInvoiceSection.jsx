@@ -113,6 +113,8 @@ export default function __RequistionInvoiceSection(props) {
                     <Card shadow="md" radius="4" className={`${classes.card} ${genericClass.genericBackground}`}
                           padding="xs">
                         <Box className={"borderRadiusAll"}>
+                            {
+                                isWarehouse === 1 &&
                             <Box>
                                 <Grid gutter={{base: 6}} mt={8}>
                                     <Grid.Col span={12}>
@@ -134,6 +136,7 @@ export default function __RequistionInvoiceSection(props) {
                                     </Grid.Col>
                                 </Grid>
                             </Box>
+                            }
                             <Grid columns={18} gutter={{base: 2}} pt={"xs"}>
                                 <Grid.Col span={8} pt={2}>
                                     <Text ta="left" size="xs" pl={"xs"}>
