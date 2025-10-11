@@ -41,7 +41,6 @@ export default function _MatrixUpdate(props) {
     }
     const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
 
-    const [warehouseData, setWarehouseData] = useState(null);
     const warehouseDropdown = getCoreWarehouseDropdownData();
 
 
@@ -173,6 +172,7 @@ export default function _MatrixUpdate(props) {
             <>
                 { (item[shopKey] >= 0 && branchRequestQuantity > 1)  ? (
                     <TextInput
+                        disabled={generateButton}
                         type="number"
                         classNames={inputCss}
                         size="xs"
@@ -430,7 +430,8 @@ export default function _MatrixUpdate(props) {
                                                     accessor: "remaining_quantity",
                                                     title: t("Remaining"),
                                                 },
-                                            ]}
+                                            ].filter(Boolean)
+                                        }
                                             records={indexData}
                                             totalRecords={indexData.length}
                                             loaderSize="xs"
