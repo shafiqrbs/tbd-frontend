@@ -1220,6 +1220,9 @@
   "ChooseReturnType": "Choose return type",
   "PurchaseQuantity": "Purchase Quantity",
   "ProductNature": "Product nature",
+  "AmendmentReason": "Amendment Reason",
+  "Amendment": "Amendment",
+  "AmendmentHistory": "Amendment History",
   "xxxxxx": "xxxxxxx",
   "": ""
 }

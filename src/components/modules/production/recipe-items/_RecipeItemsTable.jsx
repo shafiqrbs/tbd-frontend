@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    Button, LoadingOverlay, ActionIcon, Menu, Text, rem, ScrollArea, Select,
+    Button, LoadingOverlay, ActionIcon, Menu, rem, Select, Modal, Textarea,
 } from "@mantine/core";
 
 import { DataTable } from 'mantine-datatable';
@@ -11,29 +11,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from 'react-i18next';
 import {
     proItemUpdateStatus,
-    setFetching,
 } from "../../../../store/production/crudSlice.js";
 import KeywordSearch from "../common/KeywordSearch.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
 
 import {
-    editEntityData,
     getIndexEntityData,
-    setDeleteMessage,
-    setFormLoading,
-    setInsertType,
 } from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
-import {deleteEntityData} from "../../../../store/production/crudSlice";
-import {IconCheck, IconCopy, IconDotsVertical, IconEyeEdit, IconPencil, IconTrashX, IconX} from "@tabler/icons-react";
-import {modals} from "@mantine/modals";
+import {IconDotsVertical, IconEyeEdit} from "@tabler/icons-react";
 import dayjs from "dayjs";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
-import axios from "axios";
-import {notifications} from "@mantine/notifications";
 import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
-import useProductsDataStoreIntoLocalStorage
-    from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
+import {useDisclosure} from "@mantine/hooks";
+import __AmendmentViewModel from "./__AmendmentViewModel.jsx";
 
 function _RecipeItemsTable(props) {
     // Load and parse config safely
@@ -133,6 +124,48 @@ function _RecipeItemsTable(props) {
             fetchData();
         }
     }, [downloadFinishGoodsXLS, dispatch]);
+
+    const [opened, { open, close }] = useDisclosure(false);
+    const [amendmentId,setAmendmentId] = useState(null)
+    const [amendmentReason, setAmendmentReason] = useState('');
+    const [amendmentReasonError, setAmendmentReasonError] = useState(null);
+
+
+    const [amendmentViewModal, setAmendmentViewModal] = useState(false);
+    const [amendmentViewId,setAmendmentViewId] = useState(null)
+
+    const handleAmendmentProcessSubmit = async (itemId, comment) => {
+        if (!amendmentReason) {
+            setAmendmentReasonError("Enter Amendment Reason")
+            return
+        }
+        setAmendmentReasonError(null)
+
+        const data = {
+            url: `production/production-item-amendments/${itemId}`,
+            data: {
+                id: itemId,
+                comment: comment,
+            },
+        };
+
+        try {
+            const resultAction = await dispatch(storeEntityData(data));
+
+            if (resultAction.payload?.status !== 200) {
+                showNotificationComponent(resultAction.payload?.data?.message || 'Something went wrong', 'red', '', true);
+            }else if (storeEntityData.fulfilled.match(resultAction)) {
+                showNotificationComponent(resultAction.payload?.data?.message, 'teal')
+            }
+        } catch (error) {
+            showNotificationComponent('Request failed. Please try again.', 'red', '', true);
+        } finally {
+            setAmendmentId(null)
+            setAmendmentReason(null)
+            close()
+            setFetching(true)
+        }
+    }
 
 
     return (
@@ -259,9 +292,8 @@ function _RecipeItemsTable(props) {
                                             <Button component="a" size="compact-xs" radius="xs" variant="filled"
                                                     fw={'100'} fz={'12'} color='var(--theme-reset-btn-color)' mr={'4'}
                                                     onClick={() => {
-                                                        {
-                                                            navigate(`/production/recipe-update/${item.id}`)
-                                                        }
+                                                        setAmendmentId(item?.id)
+                                                        open()
                                                     }}
                                             >  {t('Amendment')}</Button>
 
@@ -275,7 +307,24 @@ function _RecipeItemsTable(props) {
                                                 </ActionIcon>
                                             </Menu.Target>
                                             <Menu.Dropdown>
-                                                {item?.item_amendment && item.item_amendment.length > 0 && (
+                                                <Menu.Item
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        setAmendmentViewModal(true)
+                                                        setAmendmentViewId(item.id)
+                                                    }}
+                                                    target="_blank"
+                                                    component="a"
+                                                    w={"200"}
+                                                    leftSection={
+                                                        <IconEyeEdit
+                                                            style={{width: rem(14), height: rem(14)}}
+                                                        />
+                                                    }
+                                                >
+                                                    {t("AmendmentHistory")}
+                                                </Menu.Item>
+                                                {/*{item?.item_amendment && item.item_amendment.length > 0 && (
                                                     item.item_amendment.map((amendment, j) => (
                                                         <Menu.Item
                                                             key={j}
@@ -288,7 +337,7 @@ function _RecipeItemsTable(props) {
                                                             {formatDate(amendment?.created_at)}
                                                         </Menu.Item>
                                                     ))
-                                                )}
+                                                )}*/}
 
                                             </Menu.Dropdown>
                                         </Menu>
@@ -313,6 +362,50 @@ function _RecipeItemsTable(props) {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
+
+            { amendmentId &&
+                <Modal
+                    opened={opened}
+                    onClose={() => {
+                        setAmendmentId(null)
+                        close()
+                    }}
+                    overlayProps={{
+                        backgroundOpacity: 0.55,
+                        blur: 3,
+                    }}
+                    title={t("Amendment")}
+                    centered
+                >
+                    <Textarea
+                        data-autofocus
+                        size="xs"
+                        radius="xs"
+                        placeholder={t("AmendmentReason")}
+                        value={amendmentReason}
+                        error={amendmentReasonError}
+                        onChange={(event) => setAmendmentReason(event.currentTarget.value)}
+                    />
+                    <Button
+                        mt={10}
+                        variant="filled"
+                        onClick={(e) => {
+                            e.preventDefault()
+                            handleAmendmentProcessSubmit(amendmentId,amendmentReason)
+                        }}
+                    >Amendment</Button>
+                </Modal>
+            }
+
+            {
+                amendmentViewId && amendmentViewModal &&
+                    <__AmendmentViewModel
+                        amendmentViewModal={amendmentViewModal}
+                        amendmentViewId={amendmentViewId}
+                        setAmendmentViewModal={setAmendmentViewModal}
+                        setAmendmentViewId={setAmendmentViewId}
+                    />
+            }
         </>
     );
 }
