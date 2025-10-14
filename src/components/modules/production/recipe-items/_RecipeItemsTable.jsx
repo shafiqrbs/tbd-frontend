@@ -311,7 +311,7 @@ function _RecipeItemsTable(props) {
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setAmendmentViewModal(true)
-                                                        setAmendmentViewId(item.id)
+                                                        setAmendmentViewId(item)
                                                     }}
                                                     target="_blank"
                                                     component="a"
