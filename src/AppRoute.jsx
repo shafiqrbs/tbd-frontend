@@ -468,32 +468,9 @@ function AppRoute() {
                                 </ProtectedRoute>
                             }
                         />
-                        <Route
-                            path="stock/:slug"
-                            element={
-                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
-                                    <StockIndex />
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="stock/:warehouse/:slug"
-                            element={
-                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
-                                    <StockIndex />
-                                </ProtectedRoute>
-                            }
-                        />
+
                         <Route
                             path="stock/matrix"
-                            element={
-                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
-                                    <StockMatrixIndex />
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="stock/matrix/:slug"
                             element={
                                 <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager", "role_inventory_stock"]}>
                                     <StockMatrixIndex />

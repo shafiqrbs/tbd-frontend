@@ -19,7 +19,7 @@ const getCoreWarehouseData = () => {
     useEffect(() => {
         if (dropdownData && dropdownData.length > 0) {
             const transformedData = dropdownData.map(type => {
-                return { 'name': type.name, 'id': String(type?.unique_id) }
+                return { 'name': type.name, 'id': String(type?.id) }
             });
             setSettingDropdown(transformedData);
         }

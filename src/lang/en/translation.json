@@ -660,6 +660,9 @@
   "FractionalQuantityAllowed" : "Fractional Quantity Allowed",
   "SettingsDetailsData" : "Settings Details Data",
   "NoUppercaseAllowedMessage" : "No Uppercase Allowed",
+  "averagePrice" : "Average Price",
+  "ProductCode" : "Product Code",
+  "expiryDuration" : "Expiry",
   "RawMaterials" : "Raw Materials",
   "Stockable" : "Stockable",
   "PreProduction" : "Pre Production",
@@ -1223,6 +1226,10 @@
   "AmendmentReason": "Amendment Reason",
   "Amendment": "Amendment",
   "AmendmentHistory": "Amendment History",
+  "WarehouseStock": "Warehouse Stock",
+  "StockMatrix": "Stock Matrix",
+  "ExpiryStock": "Expiry Stock",
+  "AllStocks": "All Stock",
   "xxxxxx": "xxxxxxx",
   "": ""
 }
