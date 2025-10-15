@@ -17,7 +17,7 @@ import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/inventory/crudSlice";
 
 function _InhouseTable(props) {
-    const {setReloadBatchItemTable} = props
+    const {setReloadBatchItemTable,batchId} = props
     const dispatch = useDispatch()
     const {t, i18n} = useTranslation()
     const {isOnline, mainAreaHeight} = useOutletContext()
@@ -152,7 +152,7 @@ function _InhouseTable(props) {
     return (
         <>
             <Box pb={"xs"}>
-                <__InhouseAddItem setReloadBatchItemTable={setReloadBatchItemTable}/>
+                <__InhouseAddItem setReloadBatchItemTable={setReloadBatchItemTable} batchId={batchId}/>
             </Box>
             <Box className={"borderRadiusAll"}>
                 <Paper shadow="sm">

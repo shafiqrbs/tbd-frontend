@@ -107,6 +107,7 @@ function InhouseIndex(props) {
                                 <Box p="xs" className="borderRadiusAll">
                                     <_InhouseTable
                                         setReloadBatchItemTable={setReloadBatchItemTable}
+                                        batchId={id?id:null}
                                     />
 
                                     <Box mt="md">

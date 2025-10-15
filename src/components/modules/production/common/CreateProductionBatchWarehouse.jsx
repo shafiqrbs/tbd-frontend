@@ -16,7 +16,7 @@ import {isNotEmpty, useForm} from "@mantine/form";
 function CreateProductionBatchWarehouse({productionBatchCreateModel,setProductionBatchCreateModel}) {
     const {t} = useTranslation();
     const navigate = useNavigate();
-    
+
     const CallProductionBatchCreateApi = (event,data) => {
         if (event && typeof event.preventDefault === 'function') {
             event.preventDefault();

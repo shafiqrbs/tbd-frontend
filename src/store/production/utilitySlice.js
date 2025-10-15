@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getDataWithoutParam} from "../../services/productionApiService.js";
+import {getDataWithoutParam, getDataWithParam} from "../../services/productionApiService.js";
 
 export const getSettingTypeDropdown = createAsyncThunk("setting-type-dropdown", async (value) => {
     try {
@@ -21,7 +21,7 @@ export const getProConfigDropdown = createAsyncThunk("pro-config-dropdown", asyn
 });
 export const getProItemsDropdownData = createAsyncThunk("pro-item-dropdown", async (value) => {
     try {
-        const response = getDataWithoutParam(value);
+        const response = getDataWithParam(value);
         return response;
     } catch (error) {
         console.log('error', error.message);

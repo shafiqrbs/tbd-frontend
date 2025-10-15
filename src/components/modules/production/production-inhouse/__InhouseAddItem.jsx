@@ -18,15 +18,14 @@ import {storeEntityData} from "../../../../store/production/crudSlice.js";
 import {useDispatch} from "react-redux";
 
 function __InhouseAddItem(props) {
-    const {setReloadBatchItemTable} = props
+    const {setReloadBatchItemTable,batchId} = props
     let { id } = useParams();
     const dispatch = useDispatch()
     const { t, i18n } = useTranslation();
     const { isOnline } = useOutletContext();
 
     const [productionItemData, setProductionItemData] = useState(null);
-    const productionItemDropdown = getProItemDropdownData()
-
+    const productionItemDropdown = getProItemDropdownData(batchId)
 
     const form = useForm({
         initialValues: {
