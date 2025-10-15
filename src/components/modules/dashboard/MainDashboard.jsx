@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {
     rem,
@@ -46,6 +46,7 @@ import production from "../../../assets/images/pos/production.png";
 import useDomainConfig from "../../global-hook/config-data/useDomainConfig.js";
 import getAccessControl from "../../global-hook/access_control/getAccessControl";
 import {useAuth} from "../../context/AuthContext.jsx";
+import NewBoardCreateModel from "../procurement/common/NewBoardCreateModel.jsx";
 
 function MainDashboard(props) {
     const { t, i18n } = useTranslation();
@@ -55,6 +56,9 @@ function MainDashboard(props) {
     const navigate = useNavigate();
     const theme = useMantineTheme();
     const userRole = getAccessControl();
+
+    const [newBoardCreateModel, setNewBoardCreateModel] = useState(false)
+
 
     if (isLoading) {
         return <LoadingOverlay visible={true} />;
@@ -1017,6 +1021,33 @@ function MainDashboard(props) {
 									</Grid>
 									<Box fz="sm" c="dimmed" mt="sm">
 										<List spacing="ms" size="sm" center>
+
+                                            {domainConfig?.modules?.includes("domain") && (
+                                                <List.Item
+                                                    pl={"xs"}
+                                                    icon={
+                                                        <ThemeIcon
+                                                            color="blue.6"
+                                                            size={20}
+                                                            radius="xl"
+                                                            variant="outline"
+                                                        >
+                                                            <IconShoppingBag />
+                                                        </ThemeIcon>
+                                                    }
+                                                >
+                                                    <NavLink
+                                                        pl={"md"}
+                                                        label={t("NewBoard")}
+                                                        component="button"
+                                                        onClick={(e) => {
+                                                            e.preventDefault()
+                                                            setNewBoardCreateModel(true)
+                                                        }}
+                                                    />
+                                                </List.Item>
+                                            )}
+
 											{domainConfig?.modules?.includes("domain") && (
 												<List.Item
 													pl={"xs"}
@@ -1978,6 +2009,11 @@ function MainDashboard(props) {
 					</SimpleGrid>
 				</ScrollArea>
 			</Container>
+
+            {
+                newBoardCreateModel &&
+                <NewBoardCreateModel newBoardCreateModel={newBoardCreateModel} setNewBoardCreateModel = {setNewBoardCreateModel} />
+            }
 		</>
 	);
 }
