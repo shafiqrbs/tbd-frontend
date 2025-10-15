@@ -47,6 +47,8 @@ import useDomainConfig from "../../global-hook/config-data/useDomainConfig.js";
 import getAccessControl from "../../global-hook/access_control/getAccessControl";
 import {useAuth} from "../../context/AuthContext.jsx";
 import NewBoardCreateModel from "../procurement/common/NewBoardCreateModel.jsx";
+import CreateProductionBatchWarehouse from "../production/common/CreateProductionBatchWarehouse.jsx";
+import axios from "axios";
 
 function MainDashboard(props) {
     const { t, i18n } = useTranslation();
@@ -82,6 +84,48 @@ function MainDashboard(props) {
 		const timeoutId = setTimeout(checkDomainConfig, 500);
 		return () => clearTimeout(timeoutId);
 	}, [navigate]);
+
+
+    /*for create production batch start*/
+    const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
+    const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
+    const [productionBatchCreateModel, setProductionBatchCreateModel] = useState(false);
+    const CallProductionBatchCreateApi = (event,data) => {
+        if (event && typeof event.preventDefault === 'function') {
+            event.preventDefault();
+        }
+        axios({
+            method: 'POST',
+            url: `${import.meta.env.VITE_API_GATEWAY_URL + 'production/batch'}`,
+            headers: {
+                "Accept": `application/json`,
+                "Content-Type": `application/json`,
+                "Access-Control-Allow-Origin": '*',
+                "X-Api-Key": import.meta.env.VITE_API_KEY,
+                "X-Api-User": JSON.parse(localStorage.getItem('user')).id
+            },
+            data: data
+        })
+            .then(res => {
+                if (res.data.status === 200) {
+                    navigate('/production/batch/' + res.data.data.id)
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+                alert(error)
+            })
+    }
+
+    const handleProductionBatchCreate = (e) => {
+        e.preventDefault()
+        isWarehouse ?
+            setProductionBatchCreateModel(true)
+            :
+            CallProductionBatchCreateApi(e, { mode: 'in-house' })
+    }
+    /*for create production batch end*/
+
 
 	return (
 		<>
@@ -1781,11 +1825,10 @@ function MainDashboard(props) {
 											>
 												<NavLink
 													pl={"md"}
-													href="/production/batch/new"
 													label={t("NewBatch")}
 													component="button"
 													onClick={(e) => {
-														navigate("/production/batch/new");
+														handleProductionBatchCreate(e)
 													}}
 												/>
 											</List.Item>
@@ -1977,6 +2020,14 @@ function MainDashboard(props) {
             {
                 newBoardCreateModel &&
                 <NewBoardCreateModel newBoardCreateModel={newBoardCreateModel} setNewBoardCreateModel = {setNewBoardCreateModel} />
+            }
+
+            {
+                productionBatchCreateModel && isWarehouse &&
+                <CreateProductionBatchWarehouse
+                    productionBatchCreateModel={productionBatchCreateModel}
+                    setProductionBatchCreateModel={setProductionBatchCreateModel}
+                />
             }
 		</>
 	);
