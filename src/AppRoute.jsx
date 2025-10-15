@@ -64,8 +64,6 @@ import CategoryIndexB2B from "./components/modules/b2b/category/CategoryIndex.js
 import ProductIndexB2B from "./components/modules/b2b/product/ProductIndex.jsx";
 import SettingIndexB2B from "./components/modules/b2b/setting/SettingIndex.jsx";
 import B2bDomainIndex from "./components/modules/b2b/domain/B2bDomainIndex.jsx";
-import GeneralIssueIndex from "./components/modules/production/production-issue/general-issue/GeneralIssueIndex.jsx";
-import BatchIssueIndex from "./components/modules/production/production-issue/batch-issue/BatchIssueIndex.jsx";
 import DiscountUserIndex from "./components/modules/discount/user/DiscountUserIndex";
 import B2bUserIndex from "./components/modules/b2b/master-user/B2bUserIndex";
 import DiscountConfigIndex from "./components/modules/discount/config/DiscountConfigIndex";
@@ -74,7 +72,6 @@ import DiscountDashboard from "./components/modules/discount/dashboard/DiscountD
 import IssueWarehouseIndex from "./components/modules/production/production-issue/warehouse/IssueWarehouseIndex.jsx";
 import ProtectedModule from "./routes/ProtectedModule.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
-import IssueIndex from "./components/modules/production/production-issue/issue-table/issueIndex.jsx";
 import BalanceSheetIndex from "./components/modules/accounting/balance-sheet/BalanceSheetIndex.jsx";
 import BalanceEntryIndex from "./components/modules/accounting/balance-entry/BalanceEntryIndex.jsx";
 import DomainUserIndex from "./components/modules/domain/master-user/DomainUserIndex";
@@ -100,7 +97,6 @@ import PurchaseReturnInvoice from "./components/modules/inventory/purchase-retur
 import PurchaseReturnIndex from "./components/modules/inventory/purchase-return/PurchaseReturnIndex.jsx";
 import PurchaseReturnEdit from "./components/modules/inventory/purchase-return/PurchaseReturnEdit.jsx";
 import SalesReturnIndex from "./components/modules/inventory/sales-return/SalesReturnIndex.jsx";
-import StockMatrixTable from "./components/modules/inventory/stock/StockMatrixTable";
 import B2bDomainStockIndex from "./components/modules/b2b/domain-stock/B2bDomainStockIndex";
 import B2bDomainStockPriceIndex from "./components/modules/b2b/domain-price/B2bDomainStockPriceIndex";
 
@@ -595,21 +591,8 @@ function AppRoute() {
                                 <InhouseIndex />
                             </ProtectedRoute>
                         } />
-                        <Route path="issue-production-general/:id" element={
-                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
-                                <GeneralIssueIndex />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="issue-production/:type" element={
-                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
-                                <IssueIndex />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="issue-production-batch/:id" element={
-                            <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
-                                <BatchIssueIndex />
-                            </ProtectedRoute>
-                        } />
+
+
                         <Route path="user-warehouse" element={
                             <ProtectedRoute roles={["role_domain", "role_production_admin", "role_production_approval"]}>
                                 <IssueWarehouseIndex />

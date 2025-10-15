@@ -181,18 +181,6 @@ const getSpotlightDropdownData = (t, configData) => {
                         description: t("WhereWePresentTheProductionInhouseInformationN"),
                         isShow: true
                     },
-                    {
-                        id: "issue-production-general",
-                        label: t("GeneralProductionIssueN"),
-                        description: t("WhereWePresentTheProductionInhouseInformationN"),
-                        isShow: true
-                    },
-                    {
-                        id: "issue-production-batch",
-                        label: t("BatchProdcutionIssueN"),
-                        description: t("WhereWePresentTheProductionInhouseInformationN"),
-                        isShow: true
-                    },
                 ]
                 : [],
         },

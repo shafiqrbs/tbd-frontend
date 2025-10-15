@@ -30,14 +30,6 @@ const navItems = [
     create:false,
     route:''
   },
-  {
-    labelKey: "GeneralProductionIssue",
-    icon: <IconDashboard size={16} color="white"/>,
-    color: "#F59E0B",
-    path: "/production/issue-production-general",
-    create:true,
-    route:'production/issue'
-  },
 
   {
     labelKey: "BatchIssue",
@@ -47,14 +39,7 @@ const navItems = [
     create:false,
     route:''
   },
-  {
-    labelKey: "BatchProdcutionIssue",
-    icon: <IconDashboard size={16} color="white"/>,
-    color: "#6f1225",
-    path: "/production/issue-production-batch",
-    create: true,
-    route:'production/issue'
-  },
+
   {
     labelKey: "NewBatch",
     icon: <IconCategory size={16} color="white"/>,
@@ -148,12 +133,6 @@ export default function ProductionNavigation() {
         case "/production/batch":
           data = { mode: "in-house" };
           break;
-        case "/production/issue-production-batch":
-          data = { type: "batch" };
-          break;
-        case "/production/issue-production-general":
-          data = { type: "general" };
-          break;
         default:
           data = {};
       }
@@ -178,10 +157,6 @@ export default function ProductionNavigation() {
       // Handle successful response
       if ([200].includes(res.status) && res.data?.id) {
         const navigationMap = {
-          "production/issue": {
-            "/production/issue-production-general": `/production/issue-production-general/${res.data.id}`,
-            "/production/issue-production-batch": `/production/issue-production-batch/${res.data.id}`,
-          },
           "production/batch": `/production/batch/${res.data.id}`,
         };
 

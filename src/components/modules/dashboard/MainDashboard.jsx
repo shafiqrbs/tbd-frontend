@@ -1817,42 +1817,6 @@ function MainDashboard(props) {
 											>
 												<NavLink
 													pl={"md"}
-													href="/production/items"
-													label={t("GeneralProductionIssue")}
-													component="button"
-													onClick={(e) => {
-														navigate("/production/issue-production-general");
-													}}
-												/>
-											</List.Item>
-											<List.Item
-												pl={"xs"}
-												icon={
-													<ThemeIcon color="red.6" size={20} radius="xl" variant="outline">
-														<IconShoppingBag />
-													</ThemeIcon>
-												}
-											>
-												<NavLink
-													pl={"md"}
-													href="/production/items"
-													label={t("BatchProdcutionIssue")}
-													component="button"
-													onClick={(e) => {
-														navigate("/production/issue-production-batch");
-													}}
-												/>
-											</List.Item>
-											<List.Item
-												pl={"xs"}
-												icon={
-													<ThemeIcon color="red.6" size={20} radius="xl" variant="outline">
-														<IconShoppingBag />
-													</ThemeIcon>
-												}
-											>
-												<NavLink
-													pl={"md"}
 													href="/production/setting"
 													label={t("ProductionSetting")}
 													component="button"
