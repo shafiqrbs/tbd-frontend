@@ -44,7 +44,7 @@ function _ProductionReportSearch(props) {
 
     useEffect(() => {
         if (selectMonth) {
-            if (props.isWarehouse===1){
+            if (props.isWarehouse){
                 dispatch(
                     setProductionIssueWarehouseFilterData({
                         ...productionIssueWarehouseFilterData,
@@ -259,7 +259,52 @@ function _ProductionReportSearch(props) {
                     </>
                         :
                         <>
-                            <Grid.Col span="4">
+                            {props.isWarehouse === 1 &&
+                                <Grid.Col span="3">
+
+                                    <Tooltip
+                                        label={t("ChooseWarehouse")}
+                                        opened={warehouseTooltip}
+                                        px={16}
+                                        py={2}
+                                        position="top-end"
+                                        color="var(--theme-primary-color-6)"
+                                        withArrow
+                                        offset={2}
+                                        zIndex={100}
+                                        transitionProps={{
+                                            transition: "pop-bottom-left",
+                                            duration: 5000,
+                                        }}
+                                    >
+                                        <Select
+                                            placeholder={t("ChooseWarehouse")}
+                                            data={warehouseDropdownData}
+                                            required={true}
+                                            withAsterisk
+                                            onChange={(e) => {
+                                                dispatch(
+                                                    setProductionIssueFilterData({
+                                                        ...productionIssueFilterData,
+                                                        ["warehouse_id"]: e,
+                                                    })
+                                                );
+                                                e !== ""
+                                                    ? setWarehouseTooltip(false)
+                                                    : (setWarehouseTooltip(true),
+                                                        setTimeout(() => {
+                                                            setWarehouseTooltip(false);
+                                                        }, 1000));
+                                            }}
+                                            value={productionIssueFilterData.warehouse_id}
+
+                                        />
+
+                                    </Tooltip>
+
+                                </Grid.Col>
+                            }
+                            <Grid.Col span="3">
                                 <Tooltip
                                     label={t("StartDate")}
                                     opened={startDateTooltip}
@@ -278,21 +323,12 @@ function _ProductionReportSearch(props) {
                                     <DateInput
                                         clearable
                                         onChange={(e) => {
-                                            if (props.isWarehouse===1) {
-                                                dispatch(
-                                                    setProductionIssueWarehouseFilterData({
-                                                        ...productionIssueWarehouseFilterData,
-                                                        ["start_date"]: e,
-                                                    })
-                                                );
-                                            }else {
-                                                dispatch(
-                                                    setProductionIssueFilterData({
-                                                        ...productionIssueFilterData,
-                                                        ["start_date"]: e,
-                                                    })
-                                                );
-                                            }
+                                            dispatch(
+                                                setProductionIssueFilterData({
+                                                    ...productionIssueFilterData,
+                                                    ["start_date"]: e,
+                                                })
+                                            );
                                             e !== ""
                                                 ? setStartDateTooltip(false)
                                                 : (setStartDateTooltip(true),
@@ -323,7 +359,7 @@ function _ProductionReportSearch(props) {
                                     />
                                 </Tooltip>
                             </Grid.Col>
-                            <Grid.Col span="4">
+                            <Grid.Col span="3">
                                 <Tooltip
                                     label={t("EndDate")}
                                     opened={startDateTooltip}
@@ -432,6 +468,21 @@ function _ProductionReportSearch(props) {
                             props.setSearchValue(false);
                             setMonthTooltip(true);
                         }
+                    } else if (props.module === 'production-issue'){
+                        if (props.isWarehouse){
+                            if (!productionIssueFilterData.warehouse_id) {
+                                setWarehouseTooltip(true);
+                            }else {
+                                setWarehouseTooltip(false);
+                            }
+                        }
+                        if (!productionIssueFilterData.start_date) {
+                            setStartDateTooltip(true);
+                        }else {
+                            setStartDateTooltip(false);
+                            props.setSearchValue(true);
+                        }
+                        console.log(productionIssueFilterData.start_date)
                     }
                 }}
                                 />

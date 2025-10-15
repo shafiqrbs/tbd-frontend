@@ -28,6 +28,9 @@ export default function ProductionIssueReport() {
     const height = mainAreaHeight - 66;
     const [batchReloadWithUpload, setBatchReloadWithUpload] = useState(false);
 
+    const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
+    const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
+
     const [indexData, setIndexData] = useState([])
     const [searchValue, setSearchValue] = useState(false)
     const fetching = useSelector((state) => state.productionCrudSlice.fetching);
@@ -49,6 +52,7 @@ export default function ProductionIssueReport() {
                 param: {
                     start_date: productionIssueFilterData.start_date && new Date(productionIssueFilterData.start_date).toLocaleDateString("en-CA", options),
                     end_date: productionIssueFilterData.end_date && new Date(productionIssueFilterData.end_date).toLocaleDateString("en-CA", options),
+                    warehouse_id: productionIssueFilterData.warehouse_id ,
                     page: page,
                     offset: perPage
                 }
@@ -71,7 +75,10 @@ export default function ProductionIssueReport() {
                 setSearchValue(false)
             }
         };
-        fetchData();
+
+        if ((isWarehouse && productionIssueFilterData.warehouse_id && productionIssueFilterData.start_date) || (!isWarehouse && productionIssueFilterData.start_date)) {
+            fetchData();
+        }
     }, [dispatch, fetching, reloadBatchData, searchValue]);
     const createTableData = (batches) => {
         const allMaterials = new Map();
@@ -216,6 +223,7 @@ export default function ProductionIssueReport() {
                                             setSearchValue={setSearchValue}
                                             setDownloadFile={setDownloadFile}
                                             setDownloadType={setDownloadType}
+                                            isWarehouse={isWarehouse}
                                         />
                                 </Grid.Col>
                                 </Grid>

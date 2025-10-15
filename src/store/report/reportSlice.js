@@ -31,8 +31,8 @@ export const showEntityData = createAsyncThunk("show", async (value) => {
 const reportSlice = createSlice({
     name: "report",
     initialState: {
-        productionIssueFilterData: { month:'',year:''},
-        productionIssueWarehouseFilterData: { warehouse_id:'',month:'',year:''},
+        productionIssueFilterData: { month:'',year:'',start_date:'',end_date:''},
+        productionIssueWarehouseFilterData: { warehouse_id:'',month:'',year:'',start_date:'',end_date:''},
         inventorySalesFilterData: { month:'',year:''},
         inventorySalesWarehouseFilterData: { warehouse_id:'',month:'',year:''},
     },
@@ -49,11 +49,16 @@ const reportSlice = createSlice({
         setProductionIssueFilterData: (state, action) => {
             state.productionIssueFilterData.month = action.payload.month
             state.productionIssueFilterData.year = action.payload.year
+            state.productionIssueFilterData.start_date = action.payload.start_date
+            state.productionIssueFilterData.end_date = action.payload.end_date
+            state.productionIssueFilterData.warehouse_id = action.payload.warehouse_id
         },
         setProductionIssueWarehouseFilterData: (state, action) => {
             state.productionIssueWarehouseFilterData.month = action.payload.month
             state.productionIssueWarehouseFilterData.year = action.payload.year
             state.productionIssueWarehouseFilterData.warehouse_id = action.payload.warehouse_id
+            state.productionIssueFilterData.start_date = action.payload.start_date
+            state.productionIssueFilterData.end_date = action.payload.end_date
         }
 
     },

@@ -280,9 +280,14 @@ export default function __ModalProductionProcess({ boardId }) {
                                                     type="checkbox"
                                                     checked={selectedIds.includes(item.id) || !!item.pro_batch_item_id}
                                                     onChange={() => handleCheckboxChange(item)}
-                                                    disabled={
+                                                    /*disabled={
                                                         !!item.pro_batch_item_id ||
                                                         (activeWarehouse && activeWarehouse !== warehouse)
+                                                    }*/
+                                                    disabled={
+                                                        !!item.pro_batch_item_id ||
+                                                        (activeWarehouse && activeWarehouse !== warehouse) ||
+                                                        item.demand_quantity < item.stock_quantity
                                                     }
                                                 />
                                             </Table.Td>
@@ -302,7 +307,7 @@ export default function __ModalProductionProcess({ boardId }) {
                                             </Table.Td>
 
                                             <Table.Td style={{ textAlign: 'center' }}>
-                                                {item.process === 'Created' && !item.approved_by_id ? (
+                                                {item.process === 'Created' && !item.approved_by_id && !selectedIds.includes(item.id) ? (
                                                     <QuantityInput item={item} onDemandChange={handleDemandChange} />
                                                 ) : (
                                                     item.demand_quantity
