@@ -94,7 +94,15 @@ export default function ReportNavigation() {
                         <Accordion.Item value="item-4">
                             <Accordion.Control icon={<IconArchive size={18} stroke={1.5} color="var(--mantine-color-green-8)" />}>{t("Inventory")}</Accordion.Control>
                             <Accordion.Panel>
-                                This is the third section content.
+                                <NavLink
+                                    onClick ={(e)=>{
+                                        navigate('/report/inventory/item/stock/history')
+                                    }}
+                                    label={t("ItemStockHistory")}
+                                    rightSection={
+                                        <IconChevronRight size={12} stroke={1} className="mantine-rotate-rtl" />
+                                    }
+                                />
                             </Accordion.Panel>
                         </Accordion.Item>
                         <Accordion.Item value="item-5">

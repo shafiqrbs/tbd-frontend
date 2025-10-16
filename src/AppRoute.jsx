@@ -99,6 +99,7 @@ import PurchaseReturnEdit from "./components/modules/inventory/purchase-return/P
 import SalesReturnIndex from "./components/modules/inventory/sales-return/SalesReturnIndex.jsx";
 import B2bDomainStockIndex from "./components/modules/b2b/domain-stock/B2bDomainStockIndex";
 import B2bDomainStockPriceIndex from "./components/modules/b2b/domain-price/B2bDomainStockPriceIndex";
+import StockItemHistoryReport from "./components/modules/report/inventory/StockItemHistoryReport.jsx";
 
 
 function AppRoute() {
@@ -866,6 +867,12 @@ function AppRoute() {
                             <Route path="daily/sales-warehouse" element={
                                 <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
                                     <DailySalesWarehouseReport />
+                                </ProtectedRoute>
+                            } />
+
+                            <Route path="item/stock/history" element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+                                    <StockItemHistoryReport />
                                 </ProtectedRoute>
                             } />
                         </Route>

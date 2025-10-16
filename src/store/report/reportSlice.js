@@ -33,6 +33,7 @@ const reportSlice = createSlice({
     initialState: {
         productionIssueFilterData: { month:'',year:'',start_date:'',end_date:''},
         productionIssueWarehouseFilterData: { warehouse_id:'',month:'',year:'',start_date:'',end_date:''},
+        inventoryStockItemHistoryFilterData: { warehouse_id:'',start_date:'',end_date:'',stock_item_id:''},
         inventorySalesFilterData: { month:'',year:''},
         inventorySalesWarehouseFilterData: { warehouse_id:'',month:'',year:''},
     },
@@ -45,6 +46,12 @@ const reportSlice = createSlice({
             state.inventorySalesWarehouseFilterData.month = action.payload.month
             state.inventorySalesWarehouseFilterData.year = action.payload.year
             state.inventorySalesWarehouseFilterData.warehouse_id = action.payload.warehouse_id
+        },
+        setInventoryStockItemHistoryFilterData: (state, action) => {
+            state.inventoryStockItemHistoryFilterData.start_date = action.payload.start_date
+            state.inventoryStockItemHistoryFilterData.end_date = action.payload.end_date
+            state.inventoryStockItemHistoryFilterData.warehouse_id = action.payload.warehouse_id
+            state.inventoryStockItemHistoryFilterData.stock_item_id = action.payload.stock_item_id
         },
         setProductionIssueFilterData: (state, action) => {
             state.productionIssueFilterData.month = action.payload.month
@@ -79,6 +86,6 @@ const reportSlice = createSlice({
     }
 })
 
-export const { setProductionIssueFilterData,setProductionIssueWarehouseFilterData,setInventorySalesWarehouseFilterData,setInventorySalesFilterData} = reportSlice.actions
+export const { setProductionIssueFilterData,setProductionIssueWarehouseFilterData,setInventorySalesWarehouseFilterData,setInventorySalesFilterData,setInventoryStockItemHistoryFilterData} = reportSlice.actions
 
 export default reportSlice.reducer;

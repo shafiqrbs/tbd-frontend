@@ -1230,6 +1230,8 @@
   "StockMatrix": "Stock Matrix",
   "ExpiryStock": "Expiry Stock",
   "AllStocks": "All Stock",
+  "ManageReports": "Manage Reports",
+  "ItemStockHistory": "Item Stock History",
   "xxxxxx": "xxxxxxx",
   "": ""
 }

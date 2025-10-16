@@ -17,7 +17,11 @@ import {
     setFetching,
 } from "../../../../store/production/crudSlice.js";
 import {DateInput, MonthPicker, MonthPickerInput} from "@mantine/dates";
-import {setInventorySalesFilterData,setInventorySalesWarehouseFilterData} from "../../../../store/report/reportSlice.js";
+import {
+    setInventorySalesFilterData,
+    setInventorySalesWarehouseFilterData,
+    setInventoryStockItemHistoryFilterData
+} from "../../../../store/report/reportSlice.js";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 import dayjs from 'dayjs';
@@ -31,18 +35,20 @@ function _InventoryReportSearch(props) {
     const [filterDrawer, setFilterDrawer] = useState(false)
     const [startDateTooltip, setStartDateTooltip] = useState(false);
     const [warehouseTooltip, setWarehouseTooltip] = useState(false);
+    const [stockItemsTooltip, setStockItemsTooltip] = useState(false);
     const [monthTooltip, setMonthTooltip] = useState(false);
 
 
     const searchKeyword = useSelector((state) => state.productionCrudSlice.searchKeyword)
     const inventorySalesFilterData = useSelector((state) => state.reportSlice.inventorySalesFilterData);
     const inventorySalesWarehouseFilterData = useSelector((state) => state.reportSlice.inventorySalesWarehouseFilterData);
+    const inventoryStockItemHistoryFilterData = useSelector((state) => state.reportSlice.inventoryStockItemHistoryFilterData);
     let warehouseDropdownData = getCoreWarehouseDropdownData();
     const [warehouseData, setWarehouseData] = useState(null);
     const [selectMonth, setSelectMonth] = useState(null);
 
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (selectMonth) {
             if (props.isWarehouse===1){
                 dispatch(
@@ -62,7 +68,7 @@ function _InventoryReportSearch(props) {
                 );
             }
         }
-    }, [selectMonth]);
+    }, [selectMonth]);*/
 
 
     useHotkeys(
@@ -72,12 +78,24 @@ function _InventoryReportSearch(props) {
         ], []
     );
 
+    const [stockItemsDropdown,setStockItemsDropdown] = useState([])
+    useEffect(() => {
+        const storedProducts = localStorage.getItem("core-products");
+        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+        const transformedProducts = localProducts.map((product) => ({
+            label: `${product.display_name} [${product.quantity}] ${product.unit_name}`,
+            value: String(product.id),
+        }));
+        setStockItemsDropdown(transformedProducts);
+    }, []);
+
 
     return (
         <>
             <Grid justify="space-between" align="stretch" gutter={{base: 2}} grow>
 
-                {
+                {/*{
                     props.module == "inventory-sales" ?
                     <>
                         {props.isWarehouse === 1 &&
@@ -149,10 +167,19 @@ function _InventoryReportSearch(props) {
                     </>
                         :
                         <>
-                            <Grid.Col span="4">
+
+                        </>
+                }*/}
+
+                {
+                    props.module === "inventory" && props.reportName === "stock-item-history" &&
+                    <>
+                        {props.isWarehouse === 1 &&
+                            <Grid.Col span="2">
+
                                 <Tooltip
-                                    label={t("StartDate")}
-                                    opened={startDateTooltip}
+                                    label={t("ChooseWarehouse")}
+                                    opened={warehouseTooltip}
                                     px={16}
                                     py={2}
                                     position="top-end"
@@ -165,110 +192,185 @@ function _InventoryReportSearch(props) {
                                         duration: 5000,
                                     }}
                                 >
-                                    <DateInput
-                                        clearable
-                                        onChange={(e) => {
-                                            if (props.isWarehouse===1) {
-                                                dispatch(
-                                                    setInventorySalesWarehouseFilterData({
-                                                        ...inventorySalesWarehouseFilterData,
-                                                        ["start_date"]: e,
-                                                    })
-                                                );
-                                            }else {
-                                                dispatch(
-                                                    setInventorySalesFilterData({
-                                                        ...inventorySalesFilterData,
-                                                        ["start_date"]: e,
-                                                    })
-                                                );
-                                            }
-                                            e !== ""
-                                                ? setStartDateTooltip(false)
-                                                : (setStartDateTooltip(true),
-                                                    setTimeout(() => {
-                                                        setStartDateTooltip(false);
-                                                    }, 1000));
-                                        }}
-                                        value={inventorySalesFilterData.start_date}
-                                        placeholder={t("StartDate")}
-                                        leftSection={<IconCalendar size={16} opacity={0.5}/>}
-                                        rightSection={
-                                            <Tooltip
-                                                label={t("StartDate")}
-                                                px={16}
-                                                py={2}
-                                                withArrow
-                                                position={"left"}
-                                                c={"black"}
-                                                bg={`gray.1`}
-                                                transitionProps={{
-                                                    transition: "pop-bottom-left",
-                                                    duration: 500,
-                                                }}
-                                            >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
-                                            </Tooltip>
-                                        }
-                                    />
-                                </Tooltip>
-                            </Grid.Col>
-                            <Grid.Col span="4">
-                                <Tooltip
-                                    label={t("EndDate")}
-                                    opened={startDateTooltip}
-                                    px={16}
-                                    py={2}
-                                    position="top-end"
-                                    color="var(--theme-primary-color-6)"
-                                    withArrow
-                                    offset={2}
-                                    zIndex={100}
-                                    transitionProps={{
-                                        transition: "pop-bottom-left",
-                                        duration: 5000,
-                                    }}
-                                >
-                                    <DateInput
-                                        clearable
+                                    <Select
+                                        placeholder={t("ChooseWarehouse")}
+                                        data={warehouseDropdownData}
                                         onChange={(e) => {
                                             dispatch(
-                                                setInventorySalesFilterData({
-                                                    ...inventorySalesFilterData,
-                                                    ["end_date"]: e,
+                                                setInventoryStockItemHistoryFilterData({
+                                                    ...inventoryStockItemHistoryFilterData,
+                                                    ["warehouse_id"]: e,
                                                 })
                                             );
                                             e !== ""
-                                                ? setStartDateTooltip(false)
-                                                : (setStartDateTooltip(true),
+                                                ? setWarehouseTooltip(false)
+                                                : (setWarehouseTooltip(true),
                                                     setTimeout(() => {
-                                                        setStartDateTooltip(false);
+                                                        setWarehouseTooltip(false);
                                                     }, 1000));
                                         }}
-                                        value={inventorySalesFilterData.end_date}
-                                        placeholder={t("EndDate")}
-                                        leftSection={<IconCalendar size={16} opacity={0.5}/>}
-                                        rightSection={
-                                            <Tooltip
-                                                label={t("EndDate")}
-                                                px={16}
-                                                py={2}
-                                                withArrow
-                                                position={"left"}
-                                                c={"black"}
-                                                bg={`gray.1`}
-                                                transitionProps={{
-                                                    transition: "pop-bottom-left",
-                                                    duration: 500,
-                                                }}
-                                            >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
-                                            </Tooltip>
-                                        }
+                                        value={inventoryStockItemHistoryFilterData.warehouse_id}
+
                                     />
+
                                 </Tooltip>
+
                             </Grid.Col>
-                        </>
+                        }
+
+                        <Grid.Col span="2">
+                            <Tooltip
+                                label={t("ChooseItems")}
+                                opened={stockItemsTooltip}
+                                px={16}
+                                py={2}
+                                position="top-end"
+                                color="var(--theme-primary-color-6)"
+                                withArrow
+                                offset={2}
+                                zIndex={100}
+                                transitionProps={{
+                                    transition: "pop-bottom-left",
+                                    duration: 5000,
+                                }}
+                            >
+                                <Select
+                                    searchable
+                                    placeholder={t("ChooseItems")}
+                                    data={stockItemsDropdown}
+                                    onChange={(e) => {
+                                        dispatch(
+                                            setInventoryStockItemHistoryFilterData({
+                                                ...inventoryStockItemHistoryFilterData,
+                                                ["stock_item_id"]: e,
+                                            })
+                                        );
+                                        e !== ""
+                                            ? setStockItemsTooltip(false)
+                                            : (setStockItemsTooltip(true),
+                                                setTimeout(() => {
+                                                    setStockItemsTooltip(false);
+                                                }, 1000));
+                                    }}
+                                    value={inventoryStockItemHistoryFilterData.stock_item_id}
+
+                                />
+
+                            </Tooltip>
+
+                        </Grid.Col>
+
+                        <Grid.Col span="3">
+                            <Tooltip
+                                label={t("StartDate")}
+                                opened={startDateTooltip}
+                                px={16}
+                                py={2}
+                                position="top-end"
+                                color="var(--theme-primary-color-6)"
+                                withArrow
+                                offset={2}
+                                zIndex={100}
+                                transitionProps={{
+                                    transition: "pop-bottom-left",
+                                    duration: 5000,
+                                }}
+                            >
+                                <DateInput
+                                    clearable
+                                    onChange={(e) => {
+                                        dispatch(
+                                            setInventoryStockItemHistoryFilterData({
+                                                ...inventoryStockItemHistoryFilterData,
+                                                ["start_date"]: e,
+                                            })
+                                        );
+                                        e !== ""
+                                            ? setStartDateTooltip(false)
+                                            : (setStartDateTooltip(true),
+                                                setTimeout(() => {
+                                                    setStartDateTooltip(false);
+                                                }, 1000));
+                                    }}
+                                    value={inventoryStockItemHistoryFilterData.start_date}
+                                    placeholder={t("StartDate")}
+                                    leftSection={<IconCalendar size={16} opacity={0.5}/>}
+                                    rightSection={
+                                        <Tooltip
+                                            label={t("StartDate")}
+                                            px={16}
+                                            py={2}
+                                            withArrow
+                                            position={"left"}
+                                            c={"black"}
+                                            bg={`gray.1`}
+                                            transitionProps={{
+                                                transition: "pop-bottom-left",
+                                                duration: 500,
+                                            }}
+                                        >
+                                            <IconInfoCircle size={16} opacity={0.5}/>
+                                        </Tooltip>
+                                    }
+                                />
+                            </Tooltip>
+                        </Grid.Col>
+                        <Grid.Col span="3">
+                            <Tooltip
+                                label={t("EndDate")}
+                                opened={startDateTooltip}
+                                px={16}
+                                py={2}
+                                position="top-end"
+                                color="var(--theme-primary-color-6)"
+                                withArrow
+                                offset={2}
+                                zIndex={100}
+                                transitionProps={{
+                                    transition: "pop-bottom-left",
+                                    duration: 5000,
+                                }}
+                            >
+                                <DateInput
+                                    clearable
+                                    onChange={(e) => {
+                                        dispatch(
+                                            setInventoryStockItemHistoryFilterData({
+                                                ...inventoryStockItemHistoryFilterData,
+                                                ["end_date"]: e,
+                                            })
+                                        );
+                                        e !== ""
+                                            ? setStartDateTooltip(false)
+                                            : (setStartDateTooltip(true),
+                                                setTimeout(() => {
+                                                    setStartDateTooltip(false);
+                                                }, 1000));
+                                    }}
+                                    value={inventoryStockItemHistoryFilterData.end_date}
+                                    placeholder={t("EndDate")}
+                                    leftSection={<IconCalendar size={16} opacity={0.5}/>}
+                                    rightSection={
+                                        <Tooltip
+                                            label={t("EndDate")}
+                                            px={16}
+                                            py={2}
+                                            withArrow
+                                            position={"left"}
+                                            c={"black"}
+                                            bg={`gray.1`}
+                                            transitionProps={{
+                                                transition: "pop-bottom-left",
+                                                duration: 500,
+                                            }}
+                                        >
+                                            <IconInfoCircle size={16} opacity={0.5}/>
+                                        </Tooltip>
+                                    }
+                                />
+                            </Tooltip>
+                        </Grid.Col>
+                    </>
                 }
 
 
@@ -300,7 +402,7 @@ function _InventoryReportSearch(props) {
                             >
                                 <IconSearch style={{width: rem(18)}} stroke={1.5}
                 onClick={(e)=>{
-                    if (props.module === 'inventory-sales' && props.isWarehouse === 1) {
+                    /*if (props.module === 'inventory-sales' && props.isWarehouse === 1) {
                         if (inventorySalesWarehouseFilterData.year && inventorySalesWarehouseFilterData.month && inventorySalesWarehouseFilterData.warehouse_id) {
                             props.setSearchValue(true);
                             setWarehouseTooltip(false);
@@ -322,7 +424,63 @@ function _InventoryReportSearch(props) {
                             props.setSearchValue(false);
                             setMonthTooltip(true);
                         }
+                    }*/
+
+                    if (props.module === 'inventory') {
+                        if (props.reportName === 'stock-item-history') {
+                            let isValid = true;
+
+                            if (props.isWarehouse) {
+                                // Check warehouse
+                                if (inventoryStockItemHistoryFilterData.warehouse_id) {
+                                    setWarehouseTooltip(false);
+                                } else {
+                                    isValid = false;
+                                    setWarehouseTooltip(true);
+                                }
+
+                                // check stock item
+                                if (inventoryStockItemHistoryFilterData.stock_item_id) {
+                                    setStockItemsTooltip(false);
+                                } else {
+                                    isValid = false;
+                                    setStockItemsTooltip(true);
+                                }
+
+                                // Check start_date
+                                if (inventoryStockItemHistoryFilterData.start_date) {
+                                    setStartDateTooltip(false);
+                                } else {
+                                    isValid = false;
+                                    setStartDateTooltip(true);
+                                }
+
+                            } else {
+                                // check stock item
+                                if (inventoryStockItemHistoryFilterData.stock_item_id) {
+                                    setStockItemsTooltip(false);
+                                } else {
+                                    isValid = false;
+                                    setStockItemsTooltip(true);
+                                }
+
+                                // No warehouse — only check start_date
+                                if (inventoryStockItemHistoryFilterData.start_date) {
+                                    setStartDateTooltip(false);
+                                } else {
+                                    isValid = false;
+                                    setStartDateTooltip(true);
+                                }
+                            }
+
+                            // ✅ Only update once
+                            props.setSearchValue(isValid);
+
+                        } else if (props.reportName === 'daily-sales') {
+                            // add logic later if needed
+                        }
                     }
+
                 }}
                                 />
                             </Tooltip>

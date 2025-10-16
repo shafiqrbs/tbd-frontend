@@ -1934,6 +1934,25 @@ function MainDashboard(props) {
 									<Box fz="sm" c="dimmed" mt="sm">
 										<List spacing="ms" size="sm" center>
 
+                                            <List.Item
+                                                pl={"xs"}
+                                                icon={
+                                                    <ThemeIcon color="red.6" size={20} radius="xl" variant="outline">
+                                                        <IconShoppingBag />
+                                                    </ThemeIcon>
+                                                }
+                                            >
+                                                <NavLink
+                                                    pl={"md"}
+                                                    href="/report/inventory/item/stock/history"
+                                                    label={t("ItemStockHistory")}
+                                                    component="button"
+                                                    onClick={(e) => {
+                                                        navigate("/report/inventory/item/stock/history");
+                                                    }}
+                                                />
+                                            </List.Item>
+
 											<List.Item
 												pl={"xs"}
 												icon={
