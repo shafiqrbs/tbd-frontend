@@ -9,6 +9,7 @@ export default function WarehouseIssueIndex() {
   const progress = getLoadingProgress();
 
   const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
+    const isWarehouse = domainConfigData?.inventory_config?.sku_warehouse;
 
   return (
     <>
@@ -33,7 +34,10 @@ export default function WarehouseIssueIndex() {
                   currencySymbol={domainConfigData?.currency?.symbol}
               />
               <Box p={"8"}>
-                <WarehouseIssueForm domainConfigData={domainConfigData} />
+                  {
+                      isWarehouse && <WarehouseIssueForm domainConfigData={domainConfigData} isWarehouse={isWarehouse} />
+                  }
+
               </Box>
             </>
           )}

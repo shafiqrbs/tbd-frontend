@@ -1229,30 +1229,33 @@ function MainDashboard(props) {
 												</List.Item>
 											)}
 
-											<List.Item
-												pl={"xs"}
-												icon={
-													<ThemeIcon color="yellow.6" size={20} radius="xl" variant="outline">
-														<IconListDetails />
-													</ThemeIcon>
-												}
-											>
-												<NavLink
-													pl={"md"}
-													href="/inventory/warehouse-issue"
-													label={t("WarehouseIssue")}
-													component="button"
-													onClick={(e) => {
-														navigate("inventory/warehouse-issue");
-													}}
-													onAuxClick={(e) => {
-														// Handle middle mouse button click for browsers that support it
-														if (e.button === 1) {
-															window.open("/inventory/warehouse-issue", "_blank");
-														}
-													}}
-												/>
-											</List.Item>
+                                            {
+                                                isWarehouse == 1 &&
+                                                <List.Item
+                                                    pl={"xs"}
+                                                    icon={
+                                                        <ThemeIcon color="yellow.6" size={20} radius="xl" variant="outline">
+                                                            <IconListDetails />
+                                                        </ThemeIcon>
+                                                    }
+                                                >
+                                                    <NavLink
+                                                        pl={"md"}
+                                                        href="/inventory/warehouse-issue"
+                                                        label={t("StockTransfer")}
+                                                        component="button"
+                                                        onClick={(e) => {
+                                                            navigate("inventory/warehouse-issue");
+                                                        }}
+                                                        onAuxClick={(e) => {
+                                                            // Handle middle mouse button click for browsers that support it
+                                                            if (e.button === 1) {
+                                                                window.open("/inventory/warehouse-issue", "_blank");
+                                                            }
+                                                        }}
+                                                    />
+                                                </List.Item>
+                                            }
 
 											<List.Item
 												pl={"xs"}
