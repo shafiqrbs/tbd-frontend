@@ -7,6 +7,7 @@ import {Button, Flex, Text, Tooltip, ScrollArea} from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import NewBoardCreateModel from "./NewBoardCreateModel.jsx";
+import NewWarehouseBoardCreateModel from "./NewWarehouseBoardCreateModel.jsx";
 
 export default function RequisitionNavigation(props) {
   const { module, id } = props;
@@ -15,6 +16,7 @@ export default function RequisitionNavigation(props) {
   const height = mainAreaHeight - 18;
   const navigate = useNavigate();
   const [newBoardCreateModel, setNewBoardCreateModel] = useState(false)
+  const [newWarehouseBoardCreateModel, setNewWarehouseBoardCreateModel] = useState(false)
 
     return (
     <>
@@ -217,6 +219,54 @@ export default function RequisitionNavigation(props) {
                 </Flex>
             </Flex>
 
+            <Flex direction={`column`} align={"center"}>
+                <Tooltip
+                    label={t("NewBoard")}
+                    px={16}
+                    py={2}
+                    withArrow
+                    position={"left"}
+                    c={"white"}
+                    bg={"#E53935"}
+                    transitionProps={{
+                        transition: "pop-bottom-left",
+                        duration: 500,
+                    }}
+                >
+                    <Button
+                        bg={"#4b99f8"}
+                        size="md"
+                        pl={"12"}
+                        pr={"12"}
+                        variant={"light"}
+                        color={`black`}
+                        radius="xl"
+                        onClick={(e) => {
+                            setNewWarehouseBoardCreateModel(true)
+                        }}
+                    >
+                        <Flex direction={`column`} align={"center"}>
+                            <IconCategory size={16} color={"white"} />
+                        </Flex>
+                    </Button>
+                </Tooltip>
+                <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+                    <Text
+                        size="xs"
+                        fz={"10"}
+                        c="black"
+                        ta="center"
+                        w={56}
+                        style={{
+                            wordBreak: "break-word",
+                            hyphens: "auto",
+                        }}
+                    >
+                        {t("NewWarehouseBoard")}
+                    </Text>
+                </Flex>
+            </Flex>
+
 
         </Flex>
       </ScrollArea>
@@ -224,6 +274,11 @@ export default function RequisitionNavigation(props) {
         {
             newBoardCreateModel &&
             <NewBoardCreateModel newBoardCreateModel={newBoardCreateModel} setNewBoardCreateModel = {setNewBoardCreateModel} />
+        }
+
+        {
+            newWarehouseBoardCreateModel &&
+            <NewWarehouseBoardCreateModel newWarehouseBoardCreateModel={newWarehouseBoardCreateModel} setNewWarehouseBoardCreateModel = {setNewWarehouseBoardCreateModel} />
         }
     </>
   );

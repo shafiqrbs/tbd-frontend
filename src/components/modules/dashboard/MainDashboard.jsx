@@ -49,6 +49,7 @@ import {useAuth} from "../../context/AuthContext.jsx";
 import NewBoardCreateModel from "../procurement/common/NewBoardCreateModel.jsx";
 import CreateProductionBatchWarehouse from "../production/common/CreateProductionBatchWarehouse.jsx";
 import axios from "axios";
+import NewWarehouseBoardCreateModel from "../procurement/common/NewWarehouseBoardCreateModel.jsx";
 
 function MainDashboard(props) {
     const { t, i18n } = useTranslation();
@@ -60,6 +61,7 @@ function MainDashboard(props) {
     const userRole = getAccessControl();
 
     const [newBoardCreateModel, setNewBoardCreateModel] = useState(false)
+    const [newWarehouseBoardCreateModel, setNewWarehouseBoardCreateModel] = useState(false)
 
 
     if (isLoading) {
@@ -1067,6 +1069,7 @@ function MainDashboard(props) {
 										<List spacing="ms" size="sm" center>
 
                                             {domainConfig?.modules?.includes("domain") && (
+                                                <>
                                                 <List.Item
                                                     pl={"xs"}
                                                     icon={
@@ -1090,6 +1093,31 @@ function MainDashboard(props) {
                                                         }}
                                                     />
                                                 </List.Item>
+
+                                                <List.Item
+                                                pl={"xs"}
+                                            icon={
+                                                <ThemeIcon
+                                                    color="blue.6"
+                                                    size={20}
+                                                    radius="xl"
+                                                    variant="outline"
+                                                >
+                                                    <IconShoppingBag />
+                                                </ThemeIcon>
+                                            }
+                                        >
+                                            <NavLink
+                                                pl={"md"}
+                                                label={t("NewWarehouseBoard")}
+                                                component="button"
+                                                onClick={(e) => {
+                                                    e.preventDefault()
+                                                    setNewWarehouseBoardCreateModel(true)
+                                                }}
+                                            />
+                                        </List.Item>
+                                                </>
                                             )}
 
 											{domainConfig?.modules?.includes("domain") && (
@@ -2042,6 +2070,11 @@ function MainDashboard(props) {
             {
                 newBoardCreateModel &&
                 <NewBoardCreateModel newBoardCreateModel={newBoardCreateModel} setNewBoardCreateModel = {setNewBoardCreateModel} />
+            }
+
+            {
+                newWarehouseBoardCreateModel &&
+                <NewWarehouseBoardCreateModel newWarehouseBoardCreateModel={newWarehouseBoardCreateModel} setNewWarehouseBoardCreateModel = {setNewWarehouseBoardCreateModel} />
             }
 
             {
