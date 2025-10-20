@@ -730,7 +730,8 @@
   "SuretoProcessMatrixData" : "Sure to process matrix data",
   "NoDataAvailable" : "No Data Available",
   "Requisition" : "Requisition",
-  "AllRequisition" : "Requisition Board",
+  "AllRequisition" : "Domain Board List",
+  "AllRequisitionWarehouse" : "Warehouse Board List",
   "Procurement" : "Procurement",
   "Generate" : "Generate",
   "BranchName" : "Branch Name",
@@ -1234,6 +1235,7 @@
   "ItemStockHistory": "Item Stock History",
   "NewWarehouseBoard": "New Warehouse Board",
   "ChooseDomain": "Choose Domain",
+  "NewDomainBoard": "New Domain Board",
   "xxxxxx": "xxxxxxx",
   "": ""
 }

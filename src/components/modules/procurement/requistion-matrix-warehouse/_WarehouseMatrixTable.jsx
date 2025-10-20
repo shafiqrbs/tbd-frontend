@@ -23,10 +23,10 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import _ShortcutTable from "../../shortcut/_ShortcutTable.jsx";
 import {PrintNormal} from "../requisition-print/PrintNormal.jsx";
 import {InvoiceBatchPrintPos} from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintPos.jsx";
-import __RequisitionMatrixSearch from "./__RequisitionMatrixSearch.jsx";
-import _ProductionProcessModal from "./_ProductionProcessModal.jsx";
+import __WarehouseRequisitionMatrixSearch from "./__WarehouseRequisitionMatrixSearch.jsx";
+import _WarehouseProductionProcessModal from "./_WarehouseProductionProcessModal.jsx";
 
-export default function _MatrixTable() {
+export default function _WarehouseMatrixTable() {
     const printRef = useRef();
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -68,7 +68,7 @@ export default function _MatrixTable() {
                 vendor_id: requisitionFilterData.vendor_id,
                 start_date: requisitionFilterData.start_date && new Date(requisitionFilterData.start_date).toLocaleDateString("en-CA", options),
                 end_date: requisitionFilterData.end_date && new Date(requisitionFilterData.end_date).toLocaleDateString("en-CA", options),
-                is_warehouse_board: 0,
+                is_warehouse_board: 1,
                 page: page,
                 offset: perPage
             }
@@ -161,7 +161,7 @@ export default function _MatrixTable() {
             }
 
             const value = {
-                url: 'inventory/requisition/matrix/board/batch-generate/' + id,
+                url: 'inventory/requisition/matrix/board/warehouse/batch-generate/' + id,
                 data: values
             }
 
@@ -202,7 +202,7 @@ export default function _MatrixTable() {
                     </Grid.Col>
                     <Grid.Col span={14}>
                         <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                            <__RequisitionMatrixSearch checkList={1} customerId={1} setFetching={setFetching}/>
+                            <__WarehouseRequisitionMatrixSearch checkList={1} customerId={1} setFetching={setFetching}/>
                         </Box>
                         <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                             <DataTable
@@ -330,7 +330,7 @@ export default function _MatrixTable() {
                                                             data.process === 'Created' &&
                                                             <Menu.Item
                                                                 onClick={() => {
-                                                                    navigate(`/procurement/requisition-board/${data.id}`)
+                                                                    navigate(`/procurement/warehouse/requisition-board/${data.id}`)
                                                                 }}
                                                                 component="a"
                                                                 w={'200'}
@@ -592,7 +592,7 @@ export default function _MatrixTable() {
                                     {t("Pos")}
                                 </Button>
 
-                                {
+                                {/*{
                                     requisitionMatrixViewData?.process === 'Created' &&
                                     <Button
                                         href={`/procurement/requisition/edit/${requisitionMatrixViewData?.id}`}
@@ -607,7 +607,7 @@ export default function _MatrixTable() {
                                     >
                                         {t("Edit")}
                                     </Button>
-                                }
+                                }*/}
                             </Button.Group>
                         </Box>
                     </Grid.Col>
@@ -641,7 +641,7 @@ export default function _MatrixTable() {
             )}
 
             {productionProcessModal && (
-                <_ProductionProcessModal
+                <_WarehouseProductionProcessModal
                     productionProcessModal={productionProcessModal}
                     setProductionProcessModal={setProductionProcessModal}
                     boardId={boardId}

@@ -1085,7 +1085,7 @@ function MainDashboard(props) {
                                                 >
                                                     <NavLink
                                                         pl={"md"}
-                                                        label={t("NewBoard")}
+                                                        label={t("NewDomainBoard")}
                                                         component="button"
                                                         onClick={(e) => {
                                                             e.preventDefault()
@@ -1093,6 +1093,38 @@ function MainDashboard(props) {
                                                         }}
                                                     />
                                                 </List.Item>
+
+                                                    {domainConfig?.modules?.includes("domain") && (
+                                                        <List.Item
+                                                            pl={"xs"}
+                                                            icon={
+                                                                <ThemeIcon
+                                                                    color="blue.6"
+                                                                    size={20}
+                                                                    radius="xl"
+                                                                    variant="outline"
+                                                                >
+                                                                    <IconShoppingBag />
+                                                                </ThemeIcon>
+                                                            }
+                                                        >
+                                                            <NavLink
+                                                                pl={"md"}
+                                                                href="/procurement/requisition-board"
+                                                                label={t("AllRequisition")}
+                                                                component="button"
+                                                                onClick={(e) => {
+                                                                    navigate("/procurement/requisition-board");
+                                                                }}
+                                                                onAuxClick={(e) => {
+                                                                    // Handle middle mouse button click for browsers that support it
+                                                                    if (e.button === 1) {
+                                                                        window.open("/procurement/requisition-board", "_blank");
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </List.Item>
+                                                    )}
 
                                                 <List.Item
                                                 pl={"xs"}
@@ -1136,16 +1168,16 @@ function MainDashboard(props) {
 												>
 													<NavLink
 														pl={"md"}
-														href="/procurement/requisition-board"
-														label={t("AllRequisition")}
+														href="/procurement/warehouse/requisition-board"
+														label={t("AllRequisitionWarehouse")}
 														component="button"
 														onClick={(e) => {
-															navigate("/procurement/requisition-board");
+															navigate("/procurement/warehouse/requisition-board");
 														}}
 														onAuxClick={(e) => {
 															// Handle middle mouse button click for browsers that support it
 															if (e.button === 1) {
-																window.open("/procurement/requisition-board", "_blank");
+																window.open("/procurement/warehouse/requisition-board", "_blank");
 															}
 														}}
 													/>

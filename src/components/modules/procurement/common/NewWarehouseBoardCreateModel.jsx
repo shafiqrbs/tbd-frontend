@@ -47,7 +47,6 @@ export default function NewWarehouseBoardCreateModel({ newWarehouseBoardCreateMo
             } catch (err) {
                 console.error("Unexpected error:", err);
             } finally {
-                // console.log(childDomainData)
             }
         };
 
@@ -76,14 +75,11 @@ export default function NewWarehouseBoardCreateModel({ newWarehouseBoardCreateMo
         }
 
         const value = {
-            url: 'inventory/requisition/matrix/board/create',
+            url: 'inventory/requisition/matrix/board/warehouse/create',
             data: values
         }
 
-
-        console.log(value)
-
-        /*const resultAction = await dispatch(storeEntityData(value));
+        const resultAction = await dispatch(storeEntityData(value));
 
         if (storeEntityData.rejected.match(resultAction)) {
             showNotificationComponent(resultAction.payload.message, 'red', true, 1000, true)
@@ -92,12 +88,12 @@ export default function NewWarehouseBoardCreateModel({ newWarehouseBoardCreateMo
                 showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
                 setTimeout(() => {
                     setNewWarehouseBoardCreateModel(false)
-                    navigate("/procurement/requisition-board/"+resultAction?.payload?.data?.data?.id);
+                    navigate("/procurement/warehouse/requisition-board/"+resultAction?.payload?.data?.data?.id);
                 },1000)
             } else {
                 showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
             }
-        }*/
+        }
     }
 
     const handleModelClose = () => {

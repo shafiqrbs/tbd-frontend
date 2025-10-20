@@ -100,6 +100,12 @@ import SalesReturnIndex from "./components/modules/inventory/sales-return/SalesR
 import B2bDomainStockIndex from "./components/modules/b2b/domain-stock/B2bDomainStockIndex";
 import B2bDomainStockPriceIndex from "./components/modules/b2b/domain-price/B2bDomainStockPriceIndex";
 import StockItemHistoryReport from "./components/modules/report/inventory/StockItemHistoryReport.jsx";
+import WarehouseMatrixIndex
+    from "./components/modules/procurement/requistion-matrix-warehouse/WarehouseMatrixIndex.jsx";
+import _WarehouseMatrixTable
+    from "./components/modules/procurement/requistion-matrix-warehouse/_WarehouseMatrixTable.jsx";
+import _WarehouseMatrixUpdate
+    from "./components/modules/procurement/requistion-matrix-warehouse/_WarehouseMatrixUpdate.jsx";
 
 
 function AppRoute() {
@@ -776,6 +782,19 @@ function AppRoute() {
                                 <_MatrixUpdate />
                             </ProtectedRoute>
                         } />
+
+
+                        <Route path="warehouse/requisition-board" element={
+                            <ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
+                                <WarehouseMatrixIndex />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="warehouse/requisition-board/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
+                                <_WarehouseMatrixUpdate />
+                            </ProtectedRoute>
+                        } />
+
                         <Route path="inout" element={
                             <ProtectedRoute roles={["role_domain", "role_procurement_admin", "role_procurement_approval"]}>
                                 <InoutIndex />
