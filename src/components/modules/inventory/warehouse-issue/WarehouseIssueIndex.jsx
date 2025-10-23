@@ -35,7 +35,7 @@ export default function WarehouseIssueIndex() {
               />
               <Box p={"8"}>
                   {
-                      isWarehouse && <WarehouseIssueForm domainConfigData={domainConfigData} isWarehouse={isWarehouse} />
+                      isWarehouse==1 && <WarehouseIssueForm domainConfigData={domainConfigData} isWarehouse={isWarehouse} />
                   }
 
               </Box>

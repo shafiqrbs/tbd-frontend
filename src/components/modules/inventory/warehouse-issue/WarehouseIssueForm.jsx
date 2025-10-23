@@ -19,7 +19,7 @@ import {
     IconDeviceFloppy,
     IconSearch,
     IconX,
-    IconInfoCircle,
+    IconInfoCircle, IconSortAscendingNumbers,
 } from "@tabler/icons-react";
 import {DataTable} from "mantine-datatable";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
@@ -36,6 +36,7 @@ import Navigation from "../common/Navigation.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 import SelectFormForSalesPurchaseProduct from "../../../form-builders/SelectFormForSalesPurchaseProduct.jsx";
+import InputButtonForm from "../../../form-builders/InputButtonForm.jsx";
 
 // ➤ Debounce hook
 function useDebouncedValue(value, delay) {
@@ -85,6 +86,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
     const [searchValue, setSearchValue] = useState("");
     const [productQuantities, setProductQuantities] = useState({});
     const [warehouseIssueItems, setWarehouseIssueItems] = useState([]);
+    console.log(warehouseIssueItems)
     const [warehousesIssueData, setWarehousesIssueData] = useState({});
 
     // Cache user data & core products using memo
@@ -99,12 +101,22 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
     const [productPurchaseItemData, setProductPurchaseItemData] = useState(null);
     const [productPurchaseItemDropdown, setProductPurchaseItemDropdown] = useState([]);
 
+// Input group components
+    /*const inputGroupCurrency = (
+        <Text style={{textAlign: "right", width: "100%", paddingRight: 16}} fz={'xs'} color={"gray"}>
+            {currencySymbol}
+        </Text>
+    );*/
 
+    /*const inputGroupText = (
+        <Text style={{textAlign: "right", width: "100%", paddingRight: 16}} fz={'xs'} color={"gray"}>
+            {selectUnitDetails?.unit_name ? selectUnitDetails.unit_name : selectProductDetails?.unit_name}
+        </Text>
+    );*/
 
     // When warehouse changes
     useEffect(() => {
         if (form.values.warehouse_id){
-
             const selected = allItems.find(
                 (w) => w.warehouse_id.toString() === form.values.warehouse_id
             );
@@ -120,7 +132,6 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
     // When items changes
     useEffect(() => {
         if (form.values.stock_item_id){
-
             const selected = filteredItemsByWarehouse.find(
                 (w) => w.stock_item_id.toString() === form.values.stock_item_id
             );
@@ -159,7 +170,94 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
         fetchData();
     }, [dispatch]);
 
-    // Load warehouse dropdown data
+    useEffect(() => {
+
+    }, [form.values.quantity]);
+
+
+
+    const handleFormSubmit = () => {
+        if (!form.values.warehouse_id){
+            form.setFieldError("warehouse_id", true);
+            return
+        }
+        if (!form.values.stock_item_id){
+            form.setFieldError("stock_item_id", true);
+        }
+        if (productPurchaseItemDropdown && productPurchaseItemDropdown.length >0 && !form.values.purchase_item_id){
+            form.setFieldError("purchase_item_id", true);
+        }
+
+        if (!form.values.quantity){
+            form.setFieldError("quantity", true);
+        }
+
+        const selectedWarehouseProduct = allItems.find(
+            (w) => w.warehouse_id.toString() === form.values.warehouse_id
+        );
+        const selectedStockItem = selectedWarehouseProduct?.items.find((p) => p.stock_item_id.toString() === form.values.stock_item_id);
+
+        if (productPurchaseItemDropdown && productPurchaseItemDropdown.length > 0 && productPurchaseItemData){
+            const selectedPurchaseItem = selectedStockItem.purchase_items.find((p) => p.id.toString() === productPurchaseItemData);
+
+            if (selectedPurchaseItem.remain_quantity <= form.values.quantity ){
+                form.setFieldError("quantity", true);
+                showNotificationComponent("Quantity must be less than or equal purchase item quantity", "red", null, false, 1000);
+                return;
+            }
+        } else {
+            if (selectedStockItem.total_quantity <= form.values.quantity ){
+                form.setFieldError("quantity", true);
+                showNotificationComponent("Quantity must be less than or equal stock item quantity", "red", null, false, 1000);
+                return;
+            }
+        }
+
+        // Update state-based product list
+        setWarehouseIssueItems((prevItems) => {
+            const updatedItems = [...prevItems];
+
+            const productToAdd = {
+                id: selectedStockItem.id,
+                stock_item_id: selectedStockItem.stock_item_id,
+                display_name: selectedStockItem.stock_item_name,
+                quantity: Number(form.values.quantity),
+                unit_name: selectedStockItem.uom,
+                purchase_price: selectedStockItem.purchase_price,
+                sales_price: selectedStockItem.sales_price,
+                form_warehouse_id:  form.values.warehouse_id,
+                sub_total: (Number(form.values.quantity) * (selectedStockItem.purchase_price ? selectedStockItem.purchase_price:0)) ,
+            };
+
+            const existingIndex = updatedItems.findIndex(
+                (item) => String(item.stock_item_id) === String(selectedStockItem.stock_item_id)
+            );
+
+            if (existingIndex !== -1) {
+                updatedItems[existingIndex] = {
+                    ...updatedItems[existingIndex],
+                    ...productToAdd,
+                };
+            } else {
+                updatedItems.push(productToAdd);
+            }
+            return updatedItems;
+        });
+        // setProductQuantities({})
+        showNotificationComponent(t("ProductAddedSuccessfully"), 'green')
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /*// Load warehouse dropdown data
     useEffect(() => {
         if (isWarehouse && userData?.user_warehouse?.length > 0) {
             const transformed = userData.user_warehouse.map((wh) => ({
@@ -209,60 +307,9 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
         return filteredProducts.filter((product) =>
             (product.display_name || product.item_name || product.name || "").toLowerCase().includes(lower)
         );
-    }, [filteredProducts, debouncedSearchValue]);
+    }, [filteredProducts, debouncedSearchValue]);*/
 
-    const handleFormSubmit = () => {
-        const productsToAdd = filteredTableProducts.filter(
-            (data) =>
-                productQuantities[data.id] &&
-                Number(productQuantities[data.id]) > 0
-        );
 
-        if (productsToAdd.length === 0) {
-            showNotificationComponent(t("WeNotifyYouThat"), 'red')
-            return;
-        }
-
-        // Update state-based product list
-        setWarehouseIssueItems((prevItems) => {
-            const updatedItems = [...prevItems];
-
-            productsToAdd.forEach((data) => {
-                const quantity = Number(productQuantities[data.id]);
-
-                const productToAdd = {
-                    id: data.id,
-                    stock_item_id: isWarehouse ? data.stock_item_id : data.stock_id,
-                    display_name: isWarehouse ? data.item_name : data.display_name,
-                    quantity: Number(quantity),
-                    unit_name: isWarehouse ? data.uom : data.unit_name,
-                    purchase_price: data.purchase_price,
-                    sales_price: data.sales_price,
-                    stock_quantity: isWarehouse ? data.stock_quantity : data.quantity,
-                    warehouse_id: isWarehouse ? data.warehouse_id : null,
-                    sub_total: (Number(quantity) * (data.purchase_price ? data.purchase_price:0)) ,
-                    type: 'general_issue',
-                };
-
-                const existingIndex = updatedItems.findIndex(
-                    (item) => String(item.stock_item_id) === String(productToAdd.stock_item_id)
-                );
-
-                if (existingIndex !== -1) {
-                    updatedItems[existingIndex] = {
-                        ...updatedItems[existingIndex],
-                        ...productToAdd,
-                    };
-                } else {
-                    updatedItems.push(productToAdd);
-                }
-            });
-
-            return updatedItems;
-        });
-        setProductQuantities({})
-        showNotificationComponent(t("ProductAddedSuccessfully"), 'green')
-    }
 
     return (
         <>
@@ -327,7 +374,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                                     label={""}
                                                     placeholder={t("Warehouse")}
                                                     required={true}
-                                                    nextField={"product_id"}
+                                                    nextField={"stock_item_id"}
                                                     name={"warehouse_id"}
                                                     form={form}
                                                     dropdownValue={warehouseDropdownData}
@@ -344,7 +391,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                                     label={""}
                                                     placeholder={t("ChooseProduct")}
                                                     required={true}
-                                                    nextField={"sales_price"}
+                                                    nextField={ (productPurchaseItemDropdown && productPurchaseItemDropdown.length > 0) ? "purchase_item_id" : "quantity"}
                                                     name={"stock_item_id"}
                                                     form={form}
                                                     dropdownValue={filteredItemsDropdownData}
@@ -355,13 +402,16 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                                     comboboxProps={{withinPortal: false}}
                                                 />
                                             </Box>
+
+                                        {
+                                            (productPurchaseItemDropdown && productPurchaseItemDropdown.length > 0) &&
                                             <Box mt={"4"}>
                                                 <SelectForm
                                                     tooltip={t("ChoosePurchaseItem")}
                                                     label={""}
                                                     placeholder={t("ChoosePurchaseItem")}
                                                     required={true}
-                                                    nextField={"purchase_item_id"}
+                                                    nextField={"quantity"}
                                                     name={"purchase_item_id"}
                                                     form={form}
                                                     dropdownValue={productPurchaseItemDropdown}
@@ -371,10 +421,41 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                                     changeValue={(val) => setProductPurchaseItemData(val)}
                                                     comboboxProps={{withinPortal: false}}
                                                 />
-
                                             </Box>
+                                        }
+
+
+                                        <Box mt={"4"}>
+                                            <Grid columns={24} gutter={{base: 1}}>
+                                                <Grid.Col span={10} fz="sm" mt={8}>
+                                                    {t("Quantity")}
+                                                </Grid.Col>
+                                                <Grid.Col span={14}>
+                                                    <InputButtonForm
+                                                        type="number"
+                                                        tooltip={t("PercentValidateMessage")}
+                                                        label=""
+                                                        placeholder={t("Quantity")}
+                                                        required={true}
+                                                        nextField={"EntityFormSubmit"}
+                                                        form={form}
+                                                        name={"quantity"}
+                                                        id={"quantity"}
+                                                        leftSection={
+                                                            <IconSortAscendingNumbers
+                                                                size={16}
+                                                                opacity={0.5}
+                                                            />
+                                                        }
+                                                        // rightSection={inputGroupText}
+                                                        rightSectionWidth={50}
+                                                    />
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+
                                         <Box mt={"xs"}>
-                                            <DataTable
+                                            {/*<DataTable
                                                 classNames={{
                                                     root: tableCss.root,
                                                     table: tableCss.table,
@@ -576,7 +657,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                                 loaderSize="xs"
                                                 loaderColor="grape"
                                                 height={isWarehouse ? height + 90 : height + 135}
-                                            />
+                                            />*/}
 
                                         </Box>
                                         <Box
@@ -586,7 +667,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                             ml={"-xs"}
                                             mr={-8}
                                         >
-                                            <Grid gutter={{base: 6}}>
+                                            {/*<Grid gutter={{base: 6}}>
                                                 <Grid.Col span={12}>
                                                     <Box>
                                                         <Tooltip
@@ -646,7 +727,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                                         </Tooltip>
                                                     </Box>
                                                 </Grid.Col>
-                                            </Grid>
+                                            </Grid>*/}
                                         </Box>
                                     </Box>
                                 </Box>
@@ -678,6 +759,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                             <Box pr={"xs"}>
                                                 <Button
                                                     size="sm"
+                                                    id="EntityFormSubmit"
                                                     className={genericClass.invoiceAdd}
                                                     type="submit"
                                                     mt={0}

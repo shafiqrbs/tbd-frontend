@@ -60,24 +60,6 @@ export default function WarehouseIssueSubmitForm(props) {
         },
     });
 
-    /*useEffect(() => {
-        if (warehousesIssueData) {
-            setIssueType(String(warehousesIssueData.issue_type) || null);
-            setWarehouseId(String(warehousesIssueData.warehouse_id) || null);
-            setIssuedById(String(warehousesIssueData.created_by_id) || null);
-
-            form.setValues({
-                invoice_date: warehousesIssueData.invoice_date
-                    ? dayjs(warehousesIssueData.invoice_date, 'DD-MM-YYYY').toDate()
-                    : new Date(),
-                // issued_to_type: warehousesIssueData.issued_to_type || '',
-                // vendor_id: warehousesIssueData.vendor_id || '',
-                warehouse_id: warehousesIssueData.warehouse_id || '',
-                created_by_id: warehousesIssueData.created_by_id || '',
-                remark: warehousesIssueData.remark || '',
-            });
-        }
-    }, [warehousesIssueData]);*/
 
     // sales by user hook
     const [salesByDropdownData, setSalesByDropdownData] = useState(null);
@@ -143,7 +125,7 @@ export default function WarehouseIssueSubmitForm(props) {
                     setWarehouseIssueItems((prevItems) =>
                         prevItems.map((product) =>
                             product.stock_item_id === item.stock_item_id
-                                ? {...product, quantity: newQuantity,sub_total:item.purchase_price*newQuantity}
+                                ? {...product, quantity: newQuantity, sub_total: item.purchase_price * newQuantity}
                                 : product
                         )
                     );
