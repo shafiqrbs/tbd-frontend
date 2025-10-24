@@ -1301,16 +1301,16 @@ function MainDashboard(props) {
                                                 >
                                                     <NavLink
                                                         pl={"md"}
-                                                        href="/inventory/warehouse-issue"
+                                                        href="/inventory/stock-transfer"
                                                         label={t("StockTransfer")}
                                                         component="button"
                                                         onClick={(e) => {
-                                                            navigate("inventory/warehouse-issue");
+                                                            navigate("inventory/stock-transfer");
                                                         }}
                                                         onAuxClick={(e) => {
                                                             // Handle middle mouse button click for browsers that support it
                                                             if (e.button === 1) {
-                                                                window.open("/inventory/warehouse-issue", "_blank");
+                                                                window.open("/inventory/stock-transfer", "_blank");
                                                             }
                                                         }}
                                                     />
@@ -1389,7 +1389,7 @@ function MainDashboard(props) {
 													}}
 												/>
 											</List.Item>
-											<List.Item
+											{/*<List.Item
 												pl={"xs"}
 												icon={
 													<ThemeIcon color="yellow.6" size={20} radius="xl" variant="outline">
@@ -1412,7 +1412,7 @@ function MainDashboard(props) {
 														}
 													}}
 												/>
-											</List.Item>
+											</List.Item>*/}
 											<List.Item
 												pl={"xs"}
 												icon={

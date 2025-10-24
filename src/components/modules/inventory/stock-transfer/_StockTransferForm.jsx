@@ -28,7 +28,7 @@ import {useTranslation} from "react-i18next";
 import {useOutletContext, useParams} from "react-router-dom";
 import React, {useEffect, useState, useMemo} from "react";
 import genericClass from "../../../../assets/css/Generic.module.css";
-import WarehouseIssueSubmitForm from "./WarehouseIssueSubmitForm.jsx";
+import __StockTransferSubmitForm from "./__StockTransferSubmitForm.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import {useDispatch} from "react-redux";
 import {showEntityData} from "../../../../store/core/crudSlice.js";
@@ -69,7 +69,7 @@ const getCoreProducts = () => {
     }
 };
 
-export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
+export default function _StockTransferForm({domainConfigData,isWarehouse}) {
     const {id} = useParams();
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
@@ -85,8 +85,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
     const [warehouseData, setWarehouseData] = useState(null);
     const [searchValue, setSearchValue] = useState("");
     const [productQuantities, setProductQuantities] = useState({});
-    const [warehouseIssueItems, setWarehouseIssueItems] = useState([]);
-    console.log(warehouseIssueItems)
+    const [stockTransferItems, setStockTransferItems] = useState([]);
     const [warehousesIssueData, setWarehousesIssueData] = useState({});
 
     // Cache user data & core products using memo
@@ -100,20 +99,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
     const [product, setProduct] = useState(null);
     const [productPurchaseItemData, setProductPurchaseItemData] = useState(null);
     const [productPurchaseItemDropdown, setProductPurchaseItemDropdown] = useState([]);
-
-// Input group components
-    /*const inputGroupCurrency = (
-        <Text style={{textAlign: "right", width: "100%", paddingRight: 16}} fz={'xs'} color={"gray"}>
-            {currencySymbol}
-        </Text>
-    );*/
-
-    /*const inputGroupText = (
-        <Text style={{textAlign: "right", width: "100%", paddingRight: 16}} fz={'xs'} color={"gray"}>
-            {selectUnitDetails?.unit_name ? selectUnitDetails.unit_name : selectProductDetails?.unit_name}
-        </Text>
-    );*/
-
+    const [isWarehouseDropdownDisable,setIsWarehouseDropdownDisable] = useState(false)
     // When warehouse changes
     useEffect(() => {
         if (form.values.warehouse_id){
@@ -126,6 +112,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
             }));
             setFilteredItemsByWarehouse(selected ? selected.items : []);
             setFilteredItemsDropdownData(transformed)
+            setIsWarehouseDropdownDisable(true)
         }
     }, [form.values.warehouse_id]);
 
@@ -156,8 +143,6 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                     const result = await dispatch(showEntityData(`inventory/stock/transfer/items`)).unwrap();
                     if (result.data.status === 200) {
                         setAllItems(result.data.items)
-                        // setWarehousesIssueData(result.data.data);
-                        // setWarehouseIssueItems(result.data.data.issue_items);
                     } else {
                         showNotificationComponent(t("FailedToFetchData"), "red", null, false, 1000);
                     }
@@ -196,9 +181,9 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
             (w) => w.warehouse_id.toString() === form.values.warehouse_id
         );
         const selectedStockItem = selectedWarehouseProduct?.items.find((p) => p.stock_item_id.toString() === form.values.stock_item_id);
-
+        let selectedPurchaseItem = null
         if (productPurchaseItemDropdown && productPurchaseItemDropdown.length > 0 && productPurchaseItemData){
-            const selectedPurchaseItem = selectedStockItem.purchase_items.find((p) => p.id.toString() === productPurchaseItemData);
+            selectedPurchaseItem = selectedStockItem.purchase_items.find((p) => p.id.toString() === productPurchaseItemData);
 
             if (selectedPurchaseItem.remain_quantity <= form.values.quantity ){
                 form.setFieldError("quantity", true);
@@ -213,102 +198,50 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
             }
         }
 
-        // Update state-based product list
-        setWarehouseIssueItems((prevItems) => {
-            const updatedItems = [...prevItems];
+        if (form.values.quantity && form.values.quantity > 0) {
+            // Update state-based product list
+            setStockTransferItems((prevItems) => {
+                const updatedItems = [...prevItems];
 
-            const productToAdd = {
-                id: selectedStockItem.id,
-                stock_item_id: selectedStockItem.stock_item_id,
-                display_name: selectedStockItem.stock_item_name,
-                quantity: Number(form.values.quantity),
-                unit_name: selectedStockItem.uom,
-                purchase_price: selectedStockItem.purchase_price,
-                sales_price: selectedStockItem.sales_price,
-                form_warehouse_id:  form.values.warehouse_id,
-                sub_total: (Number(form.values.quantity) * (selectedStockItem.purchase_price ? selectedStockItem.purchase_price:0)) ,
-            };
-
-            const existingIndex = updatedItems.findIndex(
-                (item) => String(item.stock_item_id) === String(selectedStockItem.stock_item_id)
-            );
-
-            if (existingIndex !== -1) {
-                updatedItems[existingIndex] = {
-                    ...updatedItems[existingIndex],
-                    ...productToAdd,
+                const productToAdd = {
+                    id: selectedStockItem.id,
+                    stock_item_id: selectedStockItem.stock_item_id,
+                    display_name: selectedStockItem.stock_item_name,
+                    quantity: Number(form.values.quantity),
+                    stock_quantity: (productPurchaseItemDropdown && selectedPurchaseItem) ? selectedPurchaseItem.remain_quantity : selectedStockItem.total_quantity,
+                    unit_name: selectedStockItem.uom,
+                    purchase_price: selectedStockItem.purchase_price,
+                    sales_price: selectedStockItem.sales_price,
+                    form_warehouse_id: form.values.warehouse_id,
+                    purchase_item_id: productPurchaseItemData,
+                    sub_total: (Number(form.values.quantity) * (selectedStockItem.purchase_price ? selectedStockItem.purchase_price : 0)),
                 };
-            } else {
-                updatedItems.push(productToAdd);
+
+                const existingIndex = updatedItems.findIndex(
+                    (item) => String(item.stock_item_id) === String(selectedStockItem.stock_item_id)
+                );
+
+                if (existingIndex !== -1) {
+                    updatedItems[existingIndex] = {
+                        ...updatedItems[existingIndex],
+                        ...productToAdd,
+                    };
+                } else {
+                    updatedItems.push(productToAdd);
+                }
+                return updatedItems;
+            });
+            showNotificationComponent(t("ProductAddedSuccessfully"), 'green')
+            setProduct(null)
+            setProductPurchaseItemData(null)
+            setProductPurchaseItemDropdown([])
+            form.setFieldValue("quantity", null)
+            const nextElement = document.getElementById("stock_item_id");
+            if (nextElement) {
+                nextElement.focus();
             }
-            return updatedItems;
-        });
-        // setProductQuantities({})
-        showNotificationComponent(t("ProductAddedSuccessfully"), 'green')
+        }
     }
-
-
-
-
-
-
-
-
-
-
-
-    /*// Load warehouse dropdown data
-    useEffect(() => {
-        if (isWarehouse && userData?.user_warehouse?.length > 0) {
-            const transformed = userData.user_warehouse.map((wh) => ({
-                label: `${wh.warehouse_name} [${wh.warehouse_location}]`,
-                value: String(wh.id),
-            }));
-            // setWarehouseDataDropdown(transformed);
-            setWarehouseData(userData.user_warehouse[0].id);
-        }
-    }, [isWarehouse, userData]);
-
-    // ➤ Memoized filtered products
-    const filteredProducts = useMemo(() => {
-        let filtered = [];
-
-        if (isWarehouse) {
-            const warehouseId = warehouseData || userData?.user_warehouse?.[0]?.id;
-            const prodItems = userData?.production_item || [];
-
-            filtered = prodItems.filter((product) => product.user_warehouse_id === Number(warehouseId));
-
-            if (debouncedSearchValue) {
-                const search = debouncedSearchValue.toLowerCase();
-                filtered = filtered.filter((product) =>
-                    `${product.item_name} ${product.uom} ${product.closing_quantity}`
-                        .toLowerCase()
-                        .includes(search)
-                );
-            }
-        } else {
-            filtered = coreProducts.filter((product) => product.product_nature === "raw-materials");
-
-            if (debouncedSearchValue) {
-                const search = debouncedSearchValue.toLowerCase();
-                filtered = filtered.filter((product) =>
-                    `${product.name} ${product.unit_name} ${product.quantity}`.toLowerCase().includes(search)
-                );
-            }
-        }
-
-        return filtered;
-    }, [isWarehouse, warehouseData, debouncedSearchValue, userData, coreProducts]);
-
-    // ➤ Filter table products by name/display_name (optional)
-    const filteredTableProducts = useMemo(() => {
-        const lower = debouncedSearchValue.toLowerCase();
-        return filteredProducts.filter((product) =>
-            (product.display_name || product.item_name || product.name || "").toLowerCase().includes(lower)
-        );
-    }, [filteredProducts, debouncedSearchValue]);*/
-
 
 
     return (
@@ -326,7 +259,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                         <Grid columns={12} gutter={{base: 2}}>
                                             <Grid.Col span={7}>
                                                 <Text fz="md" fw={500} className={classes.cardTitle}>
-                                                    {t("WarehouseIssue")}
+                                                    {t("StockTransfer")}
                                                 </Text>
                                             </Grid.Col>
                                             <Grid.Col span={5} align="center">
@@ -374,15 +307,16 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                                     label={""}
                                                     placeholder={t("Warehouse")}
                                                     required={true}
-                                                    nextField={"stock_item_id"}
+                                                    nextField={ "stock_item_id" }
                                                     name={"warehouse_id"}
                                                     form={form}
                                                     dropdownValue={warehouseDropdownData}
                                                     id={"warehouse_id"}
                                                     searchable={true}
-                                                    value={String(warehouseData)}
+                                                    value={warehouseData}
                                                     changeValue={(val) => setWarehouseData(val)}
                                                     comboboxProps={{withinPortal: false}}
+                                                    disabled={isWarehouseDropdownDisable}
                                                 />
                                             </Box>
                                             <Box mt={"4"}>
@@ -447,7 +381,6 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                                                 opacity={0.5}
                                                             />
                                                         }
-                                                        // rightSection={inputGroupText}
                                                         rightSectionWidth={50}
                                                     />
                                                 </Grid.Col>
@@ -622,7 +555,7 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                                                                                 sub_total: (Number(quantity) * (data.purchase_price ? data.purchase_price:0)),
                                                                             };
 
-                                                                            setWarehouseIssueItems(prevItems => {
+                                                                            setStockTransferItems(prevItems => {
                                                                                 const existingIndex = prevItems.findIndex(
                                                                                     item => String(item.stock_item_id) === String(productToAdd.stock_item_id)
                                                                                 );
@@ -781,10 +714,11 @@ export default function WarehouseIssueForm({domainConfigData,isWarehouse}) {
                         </form>
                     </Grid.Col>
                     <Grid.Col span={15}>
-                        <WarehouseIssueSubmitForm
-                            warehouseIssueItems={warehouseIssueItems}
-                            setWarehouseIssueItems={setWarehouseIssueItems}
+                        <__StockTransferSubmitForm
+                            stockTransferItems={stockTransferItems}
+                            setStockTransferItems={setStockTransferItems}
                             warehousesIssueData={warehousesIssueData}
+                            formWarehouseData={warehouseData}
                         />
                     </Grid.Col>
                 </Grid>

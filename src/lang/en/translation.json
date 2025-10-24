@@ -429,7 +429,6 @@
   "InvoiceBatchInformation": "Invoice Batch Information",
   "TransactionNumber": "Transaction Number",
   "CreatedBy": "Created By",
-  "ApprovedBy": "Approved By",
   "VoucherDetails": "Voucher Details",
   "CustomerN": "Customer",
   "WhereWePresentTheCustomerInformationN": "Create, Manage & Track Customer Information.",
@@ -1236,6 +1235,10 @@
   "NewWarehouseBoard": "New Warehouse Board",
   "ChooseDomain": "Choose Domain",
   "NewDomainBoard": "New Domain Board",
+  "NewStockTransfer": "New Stock Transfer",
+  "fromWarehouse": "From Warehouse",
+  "toWarehouse": "To Warehouse",
+  "ApprovedBy": "Approved By",
   "xxxxxx": "xxxxxxx",
   "": ""
 }

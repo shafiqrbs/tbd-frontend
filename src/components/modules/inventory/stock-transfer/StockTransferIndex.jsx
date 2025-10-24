@@ -1,10 +1,11 @@
 import React from "react";
 import { Box, Progress } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import WarehouseIssueForm from "./WarehouseIssueForm.jsx";
+import _StockTransferForm from "./_StockTransferForm.jsx";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
-export default function WarehouseIssueIndex() {
+import _StockTransferTable from "./_StockTransferTable.jsx";
+export default function StockTransferIndex() {
   const { t, i18n } = useTranslation();
   const progress = getLoadingProgress();
 
@@ -28,14 +29,14 @@ export default function WarehouseIssueIndex() {
           {domainConfigData && (
             <>
               <_SalesPurchaseHeaderNavbar
-                  pageTitle={t("WarehouseIssue")}
+                  pageTitle={t("StockTransfer")}
                   roles={t("Roles")}
                   allowZeroPercentage={domainConfigData?.zero_stock}
                   currencySymbol={domainConfigData?.currency?.symbol}
               />
               <Box p={"8"}>
                   {
-                      isWarehouse==1 && <WarehouseIssueForm domainConfigData={domainConfigData} isWarehouse={isWarehouse} />
+                      isWarehouse==1 && <_StockTransferTable domainConfigData={domainConfigData} isWarehouse={isWarehouse} />
                   }
 
               </Box>

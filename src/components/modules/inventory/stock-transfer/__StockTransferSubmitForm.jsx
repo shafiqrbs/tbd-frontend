@@ -31,12 +31,14 @@ import inputCss from "../../../../assets/css/InputField.module.css";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import dayjs from "dayjs";
 import {storeEntityData, updateEntityData} from "../../../../store/core/crudSlice.js";
+import {data} from "../../accounting/balance-entry/BalanceBarChart.jsx";
 
-export default function WarehouseIssueSubmitForm(props) {
+export default function __StockTransferSubmitForm(props) {
     const {
-        warehouseIssueItems,
+        stockTransferItems,
         warehousesIssueData,
-        setWarehouseIssueItems
+        setStockTransferItems,
+        formWarehouseData
     } = props;
 
     const {id} = useParams();
@@ -49,7 +51,7 @@ export default function WarehouseIssueSubmitForm(props) {
 
     const form = useForm({
         initialValues: {
-            invoice_date: '',
+            invoice_date: new Date(),
             warehouse_id: '',
             created_by_id: '',
             remark: '',
@@ -79,6 +81,9 @@ export default function WarehouseIssueSubmitForm(props) {
     }, []);
 
     let warehouseDropdownData = getCoreWarehouseDropdownData();
+    // Remove the object where value = "2"
+    warehouseDropdownData = warehouseDropdownData.filter(store => store.value !== formWarehouseData);
+
     const [issueType, setIssueType] = useState("");
     const [warehouseId, setWarehouseId] = useState("");
     const [issuedById, setIssuedById] = useState("");
@@ -89,7 +94,7 @@ export default function WarehouseIssueSubmitForm(props) {
             title: t("S/N"),
             textAlignment: "right",
             width: "50px",
-            render: (item) => warehouseIssueItems.indexOf(item) + 1,
+            render: (item) => stockTransferItems.indexOf(item) + 1,
         },
         {
             accessor: "display_name",
@@ -99,7 +104,7 @@ export default function WarehouseIssueSubmitForm(props) {
                 <Group spacing="xs">
                     <IconSum size="1.25em"/>
                     <Text mb={-2}>
-                        {warehouseIssueItems.length} {t("Items")}
+                        {stockTransferItems.length} {t("Items")}
                     </Text>
                 </Group>
             ),
@@ -122,13 +127,19 @@ export default function WarehouseIssueSubmitForm(props) {
             render: (item) => {
                 const handleQuantityChange = (e) => {
                     const newQuantity = Number(e.currentTarget.value);
-                    setWarehouseIssueItems((prevItems) =>
-                        prevItems.map((product) =>
-                            product.stock_item_id === item.stock_item_id
-                                ? {...product, quantity: newQuantity, sub_total: item.purchase_price * newQuantity}
-                                : product
-                        )
-                    );
+
+                    if (item.stock_quantity <=  newQuantity){
+                        showNotificationComponent("Quantity must be less than or equal stock quantity", "red", null, false, 1000);
+                        return;
+                    } else {
+                        setStockTransferItems((prevItems) =>
+                            prevItems.map((product) =>
+                                product.stock_item_id === item.stock_item_id
+                                    ? {...product, quantity: newQuantity, sub_total: item.purchase_price * newQuantity}
+                                    : product
+                            )
+                        );
+                    }
                 };
 
                 return (
@@ -159,8 +170,8 @@ export default function WarehouseIssueSubmitForm(props) {
                         radius="xl"
                         color='var(--theme-primary-color-6)'
                         onClick={() => {
-                            const filteredItems = warehouseIssueItems.filter(i => i.id !== item.id);
-                            setWarehouseIssueItems(filteredItems);
+                            const filteredItems = stockTransferItems.filter(i => i.id !== item.id);
+                            setStockTransferItems(filteredItems);
                         }}
                     >
                         <IconX
@@ -172,34 +183,37 @@ export default function WarehouseIssueSubmitForm(props) {
                 </Group>
             ),
         },
-    ], [warehouseIssueItems, setWarehouseIssueItems]);
+    ], [stockTransferItems, setStockTransferItems]);
 
     const handleFormSubmit = async (values) => {
-        const transformedArray = warehouseIssueItems.map((product) => ({
+        const transformedArray = stockTransferItems.map((product) => ({
             stock_item_id: product.stock_item_id,
-            product_warehouse_id: product?.warehouse_id || null,
             display_name: product.display_name,
+            purchase_item_id: product.purchase_item_id,
             quantity: product.quantity,
-            batch_quantity: product?.total_quantity || null,
+            stock_quantity: product.stock_quantity,
             unit_name: product.unit_name,
             purchase_price: product.purchase_price,
-            sub_total: product.quantity * product.purchase_price,
             sales_price: product.sales_price,
+            from_warehouse_id: product.from_warehouse_id,
+            to_warehouse_id: values.warehouse_id,
+            sub_total: product.sub_total,
         }));
         const options = {year: "numeric", month: "2-digit", day: "2-digit"};
         const formValue = {};
         formValue["invoice_date"] = values.invoice_date
             ? new Date(values.invoice_date).toLocaleDateString("en-CA", options)
             : new Date().toLocaleDateString("en-CA");
-        formValue["created_by_id"] = form.values.created_by_id;
-        formValue["warehouse_id"] = form.values.warehouse_id;
+        formValue["created_by_id"] = values.created_by_id;
+        formValue["from_warehouse_id"] = formWarehouseData;
+        formValue["to_warehouse_id"] = values.warehouse_id;
         formValue["items"] = transformedArray;
-        formValue["remark"] = form.values.remark;
+        formValue["notes"] = values.remark;
 
         formValue["items"] = transformedArray;
 
         const value = {
-            url: 'inventory/warehouse-issue',
+            url: 'inventory/stock/transfer',
             data: formValue
         }
 
@@ -222,7 +236,7 @@ export default function WarehouseIssueSubmitForm(props) {
             setTimeout(() => {
                 setWarehouseId(null)
                 setIssuedById(null)
-                setWarehouseIssueItems([])
+                setStockTransferItems([])
                 form.reset();
             }, 700)
         }
@@ -242,7 +256,7 @@ export default function WarehouseIssueSubmitForm(props) {
                                 footer: tableCss.footer,
                                 pagination: tableCss.pagination,
                             }}
-                            records={warehouseIssueItems}
+                            records={stockTransferItems}
                             columns={columns}
                             fetching={fetching}
                             totalRecords={100}
