@@ -23,7 +23,6 @@ import {
     setUpdateMeasurementData,
     storeEntityData
 } from "../../../../../store/production/crudSlice.js";
-import InputForm from "../../../../form-builders/InputForm";
 
 function _RecipeForm() {
     const {id} = useParams();

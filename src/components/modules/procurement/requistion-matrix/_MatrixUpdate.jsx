@@ -12,7 +12,7 @@ import matrixTable from "./Table.module.css";
 import {useDispatch} from "react-redux";
 import React, {useRef, useState, useEffect} from "react";
 import {useTranslation} from "react-i18next";
-import {useOutletContext, useParams} from "react-router-dom";
+import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import {
     IconDeviceFloppy,
 } from "@tabler/icons-react";
@@ -30,6 +30,7 @@ export default function _MatrixUpdate(props) {
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const tableHeight = mainAreaHeight - 116;
+    const navigate = useNavigate();
 
     // Load and parse config safely
     let domainConfigData = null;
@@ -58,16 +59,11 @@ export default function _MatrixUpdate(props) {
     const [customers, setCustomers] = useState([])
     const [boardId, setBoardId] = useState(null)
 
-    const options = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-    };
     const fetchData = async () => {
         setGenerateButton(false)
 
         const value = {
-            url: 'inventory/requisition/matrix/board/'+id,
+            url: 'inventory/requisition/matrix/board/' + id,
             param: {}
         }
 
@@ -93,7 +89,7 @@ export default function _MatrixUpdate(props) {
 
     useEffect(() => {
         fetchData();
-    }, [fetching,id]);
+    }, [fetching, id]);
 
 
     useEffect(() => {
@@ -144,9 +140,9 @@ export default function _MatrixUpdate(props) {
             const values = {
                 quantity: editedQuantity,
                 id: item[indexKey],
-                type : 'quantity'
+                type: 'quantity'
             };
-            if (editedQuantity === item[shopKey]){
+            if (editedQuantity === item[shopKey]) {
                 return
             }
 
@@ -170,7 +166,7 @@ export default function _MatrixUpdate(props) {
 
         return (
             <>
-                { (item[shopKey] >= 0 && branchRequestQuantity > 1)  ? (
+                {(item[shopKey] != null && branchRequestQuantity != null) ? (
                     <TextInput
                         disabled={generateButton}
                         type="number"
@@ -185,11 +181,11 @@ export default function _MatrixUpdate(props) {
                     <Text/>
                 )}
 
-        </>
+            </>
         );
     };
 
-    const handleGenerateMatrixBatch = async () => {
+    const handleGenerateMatrixBatchApprove = async () => {
         const options = {
             year: 'numeric',
             month: '2-digit',
@@ -202,7 +198,7 @@ export default function _MatrixUpdate(props) {
         }
 
         const value = {
-            url: 'inventory/requisition/matrix/board/batch-generate/'+boardId,
+            url: 'inventory/requisition/matrix/board/batch-generate/' + boardId,
             data: values
         }
 
@@ -224,6 +220,9 @@ export default function _MatrixUpdate(props) {
                     1000,
                     true
                 );
+                setTimeout(() => {
+                    navigate("/procurement/requisition-board");
+                }, 1000)
             } else {
                 showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
             }
@@ -287,7 +286,7 @@ export default function _MatrixUpdate(props) {
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
                     <Grid.Col span={1}>
-                        <RequisitionNavigation module={'requisition'} />
+                        <RequisitionNavigation module={'requisition'}/>
                     </Grid.Col>
                     <Grid.Col span={23}>
                         <Box bg={"white"} p={"xs"} className="borderRadiusAll">
@@ -383,7 +382,7 @@ export default function _MatrixUpdate(props) {
                                                     accessor: "warehouse_id",
                                                     title: t("Warehouse"),
                                                     render: (item) => {
-                                                        const [currentWarehouse,setCurrentWarehouse] = useState(String(item.warehouse_id || ""))
+                                                        const [currentWarehouse, setCurrentWarehouse] = useState(String(item.warehouse_id || ""))
                                                         return (
                                                             <Select
                                                                 disabled={item.is_production_item == 1}
@@ -398,7 +397,7 @@ export default function _MatrixUpdate(props) {
                                                                         warehouse_id: newValue,
                                                                         stock_item_id: item.vendor_stock_item_id,
                                                                         id: item.id,
-                                                                        type : 'warehouse'
+                                                                        type: 'warehouse'
                                                                     };
 
                                                                     const value = {
@@ -431,7 +430,7 @@ export default function _MatrixUpdate(props) {
                                                     title: t("Remaining"),
                                                 },
                                             ].filter(Boolean)
-                                        }
+                                            }
                                             records={indexData}
                                             totalRecords={indexData.length}
                                             loaderSize="xs"
@@ -461,13 +460,15 @@ export default function _MatrixUpdate(props) {
                                                         disabled={generateButton}
                                                         onClick={async () => {
                                                             modals.openConfirmModal({
-                                                                title: (<Text size="md"> {t("SuretoProcessMatrixData")}</Text>),
+                                                                title: (<Text
+                                                                    size="md"> {t("SuretoProcessMatrixData")}</Text>),
                                                                 children: (
-                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                    <Text
+                                                                        size="sm"> {t("FormConfirmationMessage")}</Text>),
                                                                 labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                                 onCancel: () => console.log('Cancel'),
                                                                 onConfirm: () => {
-                                                                    handleGenerateMatrixBatch()
+                                                                    handleGenerateMatrixBatchApprove()
                                                                 },
                                                             });
                                                         }}

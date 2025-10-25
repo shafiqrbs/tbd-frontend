@@ -11,7 +11,7 @@ import {
     IconX, IconPercentage
 } from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {
     deleteEntityData, storeEntityData, inlineUpdateEntityData
 } from "../../../../../store/production/crudSlice.js";
@@ -31,8 +31,8 @@ function _RecipeTable() {
     const perPage = 50;
     const [page, setPage] = useState(1);
 
-    const [fetching,setFetching] = useState(true)
-    const [indexData,setIndexData] = useState([])
+    const [fetching, setFetching] = useState(true)
+    const [indexData, setIndexData] = useState([])
 
     let totalQuantity = indexData.data?.reduce((total, item) => {
         if (item.status === 1) {
@@ -69,7 +69,7 @@ function _RecipeTable() {
                 param: {
                     page: page,
                     offset: perPage,
-                    pro_item_id : id
+                    pro_item_id: id
                 }
             }
 
@@ -89,8 +89,7 @@ function _RecipeTable() {
         };
 
         fetchData();
-    }, [dispatch,fetching]);
-
+    }, [dispatch, fetching]);
 
 
     return (
@@ -119,7 +118,7 @@ function _RecipeTable() {
                             accessor: 'product_name',
                             title: t("Item"),
                             footer: (
-                                <Group spacing="xs" >
+                                <Group spacing="xs">
                                     <Text fz={'md'} fw={'600'}>{t('Total')}</Text>
                                 </Group>
                             ),
@@ -163,15 +162,15 @@ function _RecipeTable() {
                                         onChange={handleQuantityChange}
                                         rightSection={
                                             editedQuantity === '' ?
-                                                <>{item.quantity}<IconPercentage size={16} opacity={0.5} /></>
+                                                <>{item.quantity}<IconPercentage size={16} opacity={0.5}/></>
                                                 :
-                                                <IconPercentage size={16} opacity={0.5} />
+                                                <IconPercentage size={16} opacity={0.5}/>
                                         }
                                     />
                                 );
                             },
                             footer: (
-                                <Group spacing="xs" >
+                                <Group spacing="xs">
                                     <Text fz={'md'} fw={'600'}>{totalQuantity}</Text>
                                 </Group>
                             ),
@@ -215,9 +214,9 @@ function _RecipeTable() {
                                         onChange={handlePriceChange}
                                         rightSection={
                                             editedPrice === '' ?
-                                                <>{item.price}<IconPercentage size={16} opacity={0.5} /></>
+                                                <>{item.price}<IconPercentage size={16} opacity={0.5}/></>
                                                 :
-                                                <IconPercentage size={16} opacity={0.5} />
+                                                <IconPercentage size={16} opacity={0.5}/>
                                         }
                                     />
                                 );
@@ -273,9 +272,9 @@ function _RecipeTable() {
                                         onChange={handlePercentChange}
                                         rightSection={
                                             editedPercent === '' ?
-                                                <>{item.wastage_percent}<IconPercentage size={16} opacity={0.5} /></>
+                                                <>{item.wastage_percent}<IconPercentage size={16} opacity={0.5}/></>
                                                 :
-                                                <IconPercentage size={16} opacity={0.5} />
+                                                <IconPercentage size={16} opacity={0.5}/>
                                         }
                                     />
                                 );
@@ -287,7 +286,7 @@ function _RecipeTable() {
                             title: t("WastageQuantity"),
                             textAlign: 'center',
                             footer: (
-                                <Group spacing="xs" >
+                                <Group spacing="xs">
                                     <Text fz={'md'} fw={'600'}>{Number(totalWastageQuantity).toFixed(2)}</Text>
                                 </Group>
                             ),
@@ -297,7 +296,7 @@ function _RecipeTable() {
                             title: t("WastageAmount"),
                             textAlign: 'center',
                             footer: (
-                                <Group spacing="xs" >
+                                <Group spacing="xs">
                                     <Text fz={'md'} fw={'600'}>{Number(totalWastageAmount).toFixed(2)}</Text>
                                 </Group>
                             ),
@@ -308,18 +307,18 @@ function _RecipeTable() {
                             render: (item) => (
                                 <>
                                     <Switch
-                                        defaultChecked={item.status==1?true:false}
+                                        defaultChecked={item.status == 1 ? true : false}
                                         color='var(--theme-primary-color-6)'
                                         radius="xs"
                                         size="md"
                                         onLabel="Enable"
                                         offLabel="Disable"
                                         onChange={(event) => {
-                                            const value ={
-                                                url:'production/inline-update-element-status',
-                                                data:{
-                                                    status : event.currentTarget.checked,
-                                                    id : item.id
+                                            const value = {
+                                                url: 'production/inline-update-element-status',
+                                                data: {
+                                                    status: event.currentTarget.checked,
+                                                    id: item.id
                                                 }
                                             }
                                             dispatch(inlineUpdateEntityData(value))
@@ -341,12 +340,12 @@ function _RecipeTable() {
                                         variant="subtle"
                                         color='var( --theme-remove-color)'
                                         onClick={() => {
-                                            dispatch(deleteEntityData('production/recipe/'+data.id))
+                                            dispatch(deleteEntityData('production/recipe/' + data.id))
                                             dispatch(setFetching(true))
                                         }}
                                     >
-                                        <IconX size={16} style={{ width: '70%', height: '70%' }}
-                                               stroke={1.5} />
+                                        <IconX size={16} style={{width: '70%', height: '70%'}}
+                                               stroke={1.5}/>
                                     </ActionIcon>
                                 </Group>
                             ),

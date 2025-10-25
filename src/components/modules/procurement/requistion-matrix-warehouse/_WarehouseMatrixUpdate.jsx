@@ -12,7 +12,7 @@ import matrixTable from "./Table.module.css";
 import {useDispatch} from "react-redux";
 import React, {useRef, useState, useEffect} from "react";
 import {useTranslation} from "react-i18next";
-import {useOutletContext, useParams} from "react-router-dom";
+import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import {
     IconDeviceFloppy, IconInfoCircle,
 } from "@tabler/icons-react";
@@ -28,6 +28,7 @@ import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/get
 export default function _WarehouseMatrixUpdate(props) {
     const {id} = useParams()
     const {t} = useTranslation();
+    const navigate = useNavigate()
     const {isOnline, mainAreaHeight} = useOutletContext();
     const tableHeight = mainAreaHeight - 140;
 
@@ -166,7 +167,7 @@ export default function _WarehouseMatrixUpdate(props) {
 
         return (
             <>
-                {(item[shopKey] >= 0 && branchRequestQuantity > 1) ? (
+                {(item[shopKey] != null && branchRequestQuantity != null) ? (
                     <TextInput
                         disabled={generateButton}
                         type="number"
@@ -185,7 +186,7 @@ export default function _WarehouseMatrixUpdate(props) {
         );
     };
 
-    const handleGenerateMatrixBatch = async () => {
+    const handleWarehouseMatrixBatchApprove = async () => {
         const options = {
             year: 'numeric',
             month: '2-digit',
@@ -220,12 +221,16 @@ export default function _WarehouseMatrixUpdate(props) {
                     1000,
                     true
                 );
+
+                setTimeout(() => {
+                    navigate("/procurement/warehouse/requisition-board");
+                }, 1000)
+
             } else {
                 showNotificationComponent(resultAction.payload.data.message, 'teal', true, 1000, true)
             }
         }
     }
-    const icon = <IconInfoCircle/>;
 
     return (
         <>
@@ -470,7 +475,7 @@ export default function _WarehouseMatrixUpdate(props) {
                                                                 labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                                 onCancel: () => console.log('Cancel'),
                                                                 onConfirm: () => {
-                                                                    handleGenerateMatrixBatch()
+                                                                    handleWarehouseMatrixBatchApprove()
                                                                 },
                                                             });
                                                         }}

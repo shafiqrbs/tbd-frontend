@@ -32,7 +32,6 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import {DataTable} from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
-import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
 import __RequistionForm from "./__RequistionForm";

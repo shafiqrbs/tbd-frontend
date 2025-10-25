@@ -353,5 +353,10 @@ input[type=radio]:checked + label>img {
     padding-left: 16px;
 }
 
+.m_82577fc2[data-position='right']{
+    width: auto;
+    padding-right: 5px;
+ }
+
 
 

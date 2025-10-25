@@ -4,18 +4,18 @@ import {
     Grid,
     Progress,
 } from "@mantine/core";
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 import _RecipeTable from "./_RecipeTable.jsx";
 import _RecipeForm from "./_RecipeForm.jsx";
-import { getLoadingProgress } from "../../../../global-hook/loading-progress/getLoadingProgress.js";
+import {getLoadingProgress} from "../../../../global-hook/loading-progress/getLoadingProgress.js";
 import ProductionHeaderNavbar from "../../common/ProductionHeaderNavbar.jsx";
 import {storeAndUpdateProductionItem} from "../../../../../store/production/crudSlice.js";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 
 function RecipeIndex() {
-    const { t, i18n } = useTranslation();
+    const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {id} = useParams();
     const progress = getLoadingProgress()
@@ -26,7 +26,7 @@ function RecipeIndex() {
         const value = {
             url: 'production/recipe-items',
             data: {
-                pro_item_id : id
+                pro_item_id: id
             }
         }
         dispatch(storeAndUpdateProductionItem(value))
@@ -36,7 +36,8 @@ function RecipeIndex() {
         <>
 
             {progress !== 100 &&
-                <Progress color='var(--theme-primary-color-6)' size={"sm"} striped animated value={progress} transitionDuration={200} />}
+                <Progress color='var(--theme-primary-color-6)' size={"sm"} striped animated value={progress}
+                          transitionDuration={200}/>}
             {progress === 100 &&
                 <>
                     <ProductionHeaderNavbar
@@ -45,15 +46,15 @@ function RecipeIndex() {
                         allowZeroPercentage={''}
                         currencySymbol={''}
                     />
-                    <Box p={'8'} >
-                        <Grid columns={24} gutter={{ base: 8 }}>
-                            <Grid.Col span={15} >
+                    <Box p={'8'}>
+                        <Grid columns={24} gutter={{base: 8}}>
+                            <Grid.Col span={15}>
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
-                                    <_RecipeTable />
+                                    <_RecipeTable/>
                                 </Box>
                             </Grid.Col>
-                            <Grid.Col span={9} >
-                                <_RecipeForm />
+                            <Grid.Col span={9}>
+                                <_RecipeForm/>
                             </Grid.Col>
                         </Grid>
                     </Box>

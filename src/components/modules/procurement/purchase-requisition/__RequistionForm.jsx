@@ -5,7 +5,7 @@ import {DataTable} from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
 import {useTranslation} from "react-i18next";
 import {IconSum, IconX} from "@tabler/icons-react";
-import {useOutletContext} from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
 import __RequistionInvoiceoSection from "./__RequistionInvoiceSection.jsx";
@@ -18,11 +18,12 @@ export default function __RequistionForm(props) {
         tempCardProducts,
         setLoadCardProducts,
         loadCardProducts,
-        vendorData, vendorObject, vendorsDropdownData,isWarehouse
+        vendorData, vendorObject, vendorsDropdownData, isWarehouse
     } = props;
 
     //common hooks
     const {t} = useTranslation();
+    const navigate = useNavigate();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 170;
     const dispatch = useDispatch();
@@ -104,6 +105,7 @@ export default function __RequistionForm(props) {
                         localStorage.removeItem("temp-requisition-products");
                         form.reset();
                         setLoadCardProducts(true);
+                        navigate("/procurement/requisition")
                     }, 700);
                 } else {
                     showNotificationComponent(resultAction.payload.data.message, "teal");

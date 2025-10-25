@@ -56,7 +56,6 @@ import BakeryIndex from "./components/modules/pos/bakery/BakeryIndex.jsx";
 import ReportIndex from "./components/modules/reporting/reports/ReportIndex.jsx";
 import RequisitionUpdate from "./components/modules/procurement/purchase-requisition/RequisitionUpdate.jsx";
 import ReconciliationIndex from "./components/modules/inventory/stock-reconciliation/ReconciliationIndex.jsx";
-import TransferIndex from "./components/modules/inventory/stock-transfer-bk/TransferIndex.jsx";
 import CouponIndex from "./components/modules/inventory/coupon-code/CouponIndex.jsx";
 import BarcodePrintIndex from "./components/modules/inventory/barcode-print/BarcodePrintIndex.jsx";
 import DashboardIndexB2B from "./components/modules/b2b/dashboard/DashboardIndex.jsx";
@@ -506,22 +505,7 @@ function AppRoute() {
                                 </ProtectedRoute>
                             }
                         />
-                        {/*<Route
-                            path="stock-transfer-bk"
-                            element={
-                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-                                    <TransferIndex />
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="stock-transfer-bk/:id"
-                            element={
-                                <ProtectedRoute roles={["role_domain", "role_inventory_admin", "role_inventory_manager"]}>
-                                    <TransferIndex />
-                                </ProtectedRoute>
-                            }
-                        />*/}
+
                         <Route
                             path="coupon-code"
                             element={
