@@ -11,7 +11,6 @@ import {
     Button,
     ScrollArea,
     Table,
-    Loader,
     Menu,
     rem,
     LoadingOverlay, Badge,
@@ -22,31 +21,19 @@ import {
     IconPrinter,
     IconReceipt,
     IconDotsVertical,
-    IconPencil,
     IconEyeEdit,
     IconTrashX,
-    IconCheck, IconChevronsRight, IconX, IconCopy,
 } from "@tabler/icons-react";
 import {DataTable} from "mantine-datatable";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    getIndexEntityData,
-    setDeleteMessage,
-    setFetching, setValidationData, showInstantEntityData, updateEntityData,
-} from "../../../../store/inventory/crudSlice.js";
+import {getIndexEntityData, setFetching, showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
 import ShortcutTable from "../../shortcut/ShortcutTable";
-import {notifications} from "@mantine/notifications";
-import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
-import Navigation from "../common/Navigation.jsx";
 import _StockTransferSearch from "./_StockTransferSearch.jsx";
 
-function _StockTransferTable() {
-    const {configData} = useConfigData()
-    let isWarehouse = configData?.sku_warehouse
-
+function _StockTransferTable({domainConfigData}) {
     const printRef = useRef();
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
@@ -62,12 +49,7 @@ function _StockTransferTable() {
     const [selectedRow, setSelectedRow] = useState("");
     const [indexData, setIndexData] = useState([])
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching);
-    const purchaseFilterData = useSelector(
-        (state) => state.inventoryCrudSlice.purchaseFilterData
-    );
-    const entityDataDelete = useSelector(
-        (state) => state.inventoryCrudSlice.entityDataDelete
-    );
+    const stockTransferFilterData = useSelector((state) => state.inventoryCrudSlice.stockTransferFilterData);
 
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -76,14 +58,14 @@ function _StockTransferTable() {
         }, 500);
     }, [loading]);
 
-    const [stockTransferViewData, setPurchaseViewData] = useState({});
+    const [stockTransferViewData, setStockTransferViewData] = useState({});
 
     useEffect(() => {
-        setPurchaseViewData(
+        setStockTransferViewData(
             indexData.data && indexData.data[0] && indexData.data[0]
         );
         setSelectedRow(
-            indexData.data && indexData.data[0] && indexData.data[0].invoice
+            indexData.data && indexData.data[0] && indexData.data[0].id
         );
     }, [indexData.data]);
 
@@ -120,14 +102,15 @@ function _StockTransferTable() {
         const value = {
             url: "inventory/stock/transfer",
             param: {
-                term: purchaseFilterData.searchKeyword,
-                vendor_id: purchaseFilterData.vendor_id,
+                term: stockTransferFilterData.searchKeyword,
+                from_warehouse_id: stockTransferFilterData.from_warehouse_id,
+                to_warehouse_id: stockTransferFilterData.to_warehouse_id,
                 start_date:
-                    purchaseFilterData.start_date &&
-                    new Date(purchaseFilterData.start_date).toLocaleDateString("en-CA", options),
+                    stockTransferFilterData.start_date &&
+                    new Date(stockTransferFilterData.start_date).toLocaleDateString("en-CA", options),
                 end_date:
-                    purchaseFilterData.end_date &&
-                    new Date(purchaseFilterData.end_date).toLocaleDateString("en-CA", options),
+                    stockTransferFilterData.end_date &&
+                    new Date(stockTransferFilterData.end_date).toLocaleDateString("en-CA", options),
                 page: page,
                 offset: perPage,
             },
@@ -143,7 +126,7 @@ function _StockTransferTable() {
             }
         } catch (err) {
             console.error('Unexpected error:', err);
-        }finally {
+        } finally {
             setFetching(false)
         }
     };
@@ -151,28 +134,9 @@ function _StockTransferTable() {
 // useEffect now only calls fetchData based on dependencies
     useEffect(() => {
         fetchData();
-    }, [purchaseFilterData, page, fetching]);
+    }, [stockTransferFilterData, page, fetching]);
 
-
-    useEffect(() => {
-        dispatch(setDeleteMessage(""));
-        if (entityDataDelete === "success") {
-            notifications.show({
-                color: "red",
-                title: t("DeleteSuccessfully"),
-                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                loading: false,
-                autoClose: 700,
-                style: {backgroundColor: "lightgray"},
-            });
-
-            setTimeout(() => {
-                dispatch(setFetching(true));
-            }, 700);
-        }
-    }, [entityDataDelete]);
-
-    const handlePurchaseApprove = (id) => {
+    const handleStockTransferApprove = (id) => {
         // Open confirmation modal
         modals.openConfirmModal({
             title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
@@ -183,53 +147,51 @@ function _StockTransferTable() {
                 console.log("Cancel");
             },
             onConfirm: () => {
-                handleConfirmPurchaseApprove(id)
+                handleConfirmStockTransferApprove(id)
             }, // Separate function for "onConfirm"
         });
     };
 
-    const handleConfirmPurchaseApprove = async (id) => {
+    const handleConfirmStockTransferApprove = async (id) => {
         try {
-            const resultAction = await dispatch(showInstantEntityData('inventory/purchase/approve/' + id));
+            const resultAction = await dispatch(showInstantEntityData('inventory/stock/transfer/approve/' + id));
 
             if (showInstantEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
-                    showNotificationComponent(t("ApprovedSuccessfully"),"teal",'',true,1000,true,"lightgray")
+                    showNotificationComponent(t("ApprovedSuccessfully"), "teal", '', true, 1000, true, "lightgray")
                 }
             }
         } catch (error) {
-            showNotificationComponent(t("UpdateFailed"),"red",'',true,1000,true,"lightgray")
+            showNotificationComponent(t("UpdateFailed"), "red", '', true, 1000, true, "lightgray")
         } finally {
             fetchData();
         }
     };
 
-    const handlePurchaseCopy = async (id) => {
+    const handleStockTransferDelete = async (id) => {
         try {
-            let resultAction = await dispatch(showInstantEntityData('inventory/purchase/copy/' + id));
-            if (showInstantEntityData.fulfilled.match(resultAction)) {
+            let resultAction = await dispatch(deleteEntityData('inventory/stock/transfer/' + id));
+            if (deleteEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
-                    showNotificationComponent(t("CopyPurchaseSuccessfully"), 'teal', null, false, 1000, true)
-                }else{
+                    showNotificationComponent(resultAction.payload.data.message, 'teal', null, false, 1000, true)
+                } else {
                     showNotificationComponent('Failed to process', 'red', null, false, 1000, true)
                 }
             }
         } catch (error) {
             console.error("Error updating entity:", error);
             showNotificationComponent('Failed to process', 'red', null, false, 1000, true)
-        }finally {
+        } finally {
             fetchData();
         }
-
-    };
-
+    }
 
     return (
         <>
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
                     <Grid.Col span={24}>
-                        <Box pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} className={'boxBackground borderRadiusAll'} >
+                        <Box pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} className={'boxBackground borderRadiusAll'}>
                             <Grid>
                                 <Grid.Col>
                                     <Stack>
@@ -275,7 +237,7 @@ function _StockTransferTable() {
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setLoading(true);
-                                                        setPurchaseViewData(item);
+                                                        setStockTransferViewData(item);
                                                         setSelectedRow(item.id);
                                                     }}
                                                     style={{cursor: "pointer"}}
@@ -290,7 +252,7 @@ function _StockTransferTable() {
                                         {
                                             accessor: "process",
                                             title: t("Status"),
-                                            width : "130px",
+                                            width: "130px",
                                             render: (item) => {
                                                 const colorMap = {
                                                     Created: "blue",
@@ -306,7 +268,7 @@ function _StockTransferTable() {
                                             accessor: "action",
                                             title: "Action",
                                             textAlign: "right",
-                                            /*render: (data) => (
+                                            render: (data) => (
                                                 <Group gap={4} justify="right" wrap="nowrap">
                                                     {
                                                         !data.approved_by_id &&
@@ -316,7 +278,7 @@ function _StockTransferTable() {
                                                                 mr={'4'}
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
-                                                                    handlePurchaseApprove(data.id)
+                                                                    handleStockTransferApprove(data.id)
                                                                 }}
                                                         >{t('Approve')}
                                                         </Button>
@@ -345,39 +307,11 @@ function _StockTransferTable() {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
-
-                                                            {
-                                                                <Menu.Item
-                                                                    onClick={()=>{
-                                                                        modals.openConfirmModal({
-                                                                            title: (<Text size="md"> {t("CopyPurchase")}</Text>),
-                                                                            children: (
-                                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
-                                                                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                                                                            onCancel: () => console.log('Cancel'),
-                                                                            onConfirm: () => {
-                                                                                handlePurchaseCopy(data.id)
-                                                                            },
-                                                                        });
-                                                                    }}
-                                                                    component="a"
-                                                                    leftSection={
-                                                                        <IconCopy
-                                                                            style={{
-                                                                                width: rem(14),
-                                                                                height: rem(14)
-                                                                            }}/>
-                                                                    }
-                                                                    w={'200'}
-                                                                >
-                                                                    {t("Copy")}
-                                                                </Menu.Item>
-                                                            }
                                                             <Menu.Item
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
                                                                     setLoading(true);
-                                                                    setPurchaseViewData(data);
+                                                                    setStockTransferViewData(data);
                                                                     setSelectedRow(data.invoice);
                                                                 }}
                                                                 target="_blank"
@@ -393,79 +327,54 @@ function _StockTransferTable() {
                                                             </Menu.Item>
 
                                                             {
-                                                                !data.approved_by_id && data.is_requisition !== 1 &&
+                                                                !data.approved_by_id &&
                                                                 <>
-                                                                <Menu.Item
-                                                                    onClick={() => {
-                                                                        navigate(
-                                                                            `/inventory/purchase/edit/${data.id}`
-                                                                        );
-                                                                    }}
-                                                                    target="_blank"
-                                                                    component="a"
-                                                                    w={"200"}
-                                                                    leftSection={
-                                                                        <IconPencil
-                                                                            style={{
-                                                                                width: rem(14),
-                                                                                height: rem(14)
-                                                                            }}
-                                                                        />
-                                                                    }
-                                                                >
-                                                                    {t("Edit")}
-                                                                </Menu.Item>
-                                                                <Menu.Item
-                                                                    target="_blank"
-                                                                    component="a"
-                                                                    bg={"red.1"}
-                                                                    c={"red.6"}
-                                                                    onClick={() => {
-                                                                        modals.openConfirmModal({
-                                                                            title: (
-                                                                                <Text size="md">
-                                                                                    {" "}
-                                                                                    {t("FormConfirmationTitle")}
-                                                                                </Text>
-                                                                            ),
-                                                                            children: (
-                                                                                <Text size="sm">
-                                                                                    {" "}
-                                                                                    {t("FormConfirmationMessage")}
-                                                                                </Text>
-                                                                            ),
-                                                                            labels: {
-                                                                                confirm: "Confirm",
-                                                                                cancel: "Cancel",
-                                                                            },
-                                                                            confirmProps: {color: "red.6"},
-                                                                            onCancel: () => console.log("Cancel"),
-                                                                            onConfirm: () => {
-                                                                                {
-                                                                                    dispatch(
-                                                                                        deleteEntityData(
-                                                                                            "inventory/purchase/" + data.id
-                                                                                        )
-                                                                                    );
-                                                                                }
-                                                                            },
-                                                                        });
-                                                                    }}
-                                                                    w={"200"}
-                                                                    leftSection={
-                                                                        <IconTrashX
-                                                                            style={{width: rem(14), height: rem(14)}}
-                                                                        />
-                                                                    }
-                                                                > {t("Delete")}
-                                                                </Menu.Item>
+                                                                    <Menu.Item
+                                                                        target="_blank"
+                                                                        component="a"
+                                                                        bg={"red.1"}
+                                                                        c={"red.6"}
+                                                                        onClick={() => {
+                                                                            modals.openConfirmModal({
+                                                                                title: (
+                                                                                    <Text size="md">
+                                                                                        {" "}
+                                                                                        {t("FormConfirmationTitle")}
+                                                                                    </Text>
+                                                                                ),
+                                                                                children: (
+                                                                                    <Text size="sm">
+                                                                                        {" "}
+                                                                                        {t("FormConfirmationMessage")}
+                                                                                    </Text>
+                                                                                ),
+                                                                                labels: {
+                                                                                    confirm: "Confirm",
+                                                                                    cancel: "Cancel",
+                                                                                },
+                                                                                confirmProps: {color: "red.6"},
+                                                                                onCancel: () => console.log("Cancel"),
+                                                                                onConfirm: () => handleStockTransferDelete(data.id),
+                                                                            });
+                                                                        }}
+                                                                        w={"200"}
+                                                                        leftSection={
+                                                                            <IconTrashX
+                                                                                style={{
+                                                                                    width: rem(14),
+                                                                                    height: rem(14)
+                                                                                }}
+                                                                            />
+                                                                        }
+                                                                    > {t("Delete")}
+                                                                    </Menu.Item>
                                                                 </>
                                                             }
 
                                                         </Menu.Dropdown>
                                                     </Menu>
                                                 </Group>
-                                            ),*/
+                                            ),
                                         },
                                     ]}
                                     fetching={fetching}
@@ -500,7 +409,8 @@ function _StockTransferTable() {
                                     loaderProps={{color: "red"}}
                                 />
                             )}
-                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
+                            <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'}
+                                 className={'boxBackground textColor borderRadiusAll'}>
                                 {t("Invoice")}:{" "}
                                 {stockTransferViewData &&
                                     stockTransferViewData.invoice &&
@@ -508,100 +418,101 @@ function _StockTransferTable() {
                             </Box>
                             <Box className={"borderRadiusAll"} fz={"sm"}>
                                 <ScrollArea h={122} type="never">
-                                <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
-                                    <Grid gutter={{base: 4}}>
-                                        <Grid.Col span={"6"}>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {t("fromWarehouse")}
-                                                    </Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {stockTransferViewData &&
-                                                            stockTransferViewData.from_warehouse &&
-                                                            stockTransferViewData.from_warehouse}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {t("toWarehouse")}
-                                                    </Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {stockTransferViewData &&
-                                                            stockTransferViewData.to_warehouse &&
-                                                            stockTransferViewData.to_warehouse}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
+                                    <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'}
+                                         className={'boxBackground textColor'}>
+                                        <Grid gutter={{base: 4}}>
+                                            <Grid.Col span={"6"}>
+                                                <Grid columns={15} gutter={{base: 4}}>
+                                                    <Grid.Col span={6}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {t("fromWarehouse")}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {stockTransferViewData &&
+                                                                stockTransferViewData.from_warehouse &&
+                                                                stockTransferViewData.from_warehouse}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{base: 4}}>
+                                                    <Grid.Col span={6}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {t("toWarehouse")}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {stockTransferViewData &&
+                                                                stockTransferViewData.to_warehouse &&
+                                                                stockTransferViewData.to_warehouse}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
 
-                                        </Grid.Col>
-                                        <Grid.Col span={"6"}>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {t("Created")}
-                                                    </Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {stockTransferViewData &&
-                                                            stockTransferViewData.created &&
-                                                            stockTransferViewData.created}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {t("CreatedBy")}
-                                                    </Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {stockTransferViewData &&
-                                                            stockTransferViewData.created_by &&
-                                                            stockTransferViewData.created_by}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {t("ApprovedBy")}
-                                                    </Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {stockTransferViewData &&
-                                                            stockTransferViewData.approved_by &&
-                                                            stockTransferViewData.approved_by}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
+                                            </Grid.Col>
+                                            <Grid.Col span={"6"}>
+                                                <Grid columns={15} gutter={{base: 4}}>
+                                                    <Grid.Col span={6}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {t("Created")}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {stockTransferViewData &&
+                                                                stockTransferViewData.created &&
+                                                                stockTransferViewData.created}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{base: 4}}>
+                                                    <Grid.Col span={6}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {t("CreatedBy")}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {stockTransferViewData &&
+                                                                stockTransferViewData.created_by &&
+                                                                stockTransferViewData.created_by}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{base: 4}}>
+                                                    <Grid.Col span={6}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {t("ApprovedBy")}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {stockTransferViewData &&
+                                                                stockTransferViewData.approved_by &&
+                                                                stockTransferViewData.approved_by}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
 
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {t("Process")}
-                                                    </Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {stockTransferViewData &&
-                                                            stockTransferViewData.process &&
-                                                            stockTransferViewData.process}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
+                                                <Grid columns={15} gutter={{base: 4}}>
+                                                    <Grid.Col span={6}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {t("Process")}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text fz="sm" lh="xs">
+                                                            {stockTransferViewData &&
+                                                                stockTransferViewData.process &&
+                                                                stockTransferViewData.process}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
                                 </ScrollArea>
                                 <ScrollArea h={height} scrollbarSize={2} type="never">
                                     <Box>
@@ -684,22 +595,6 @@ function _StockTransferTable() {
                     </Grid.Col>
                 </Grid>
             </Box>
-            {/*{printA4 && (
-                <div style={{display: "none"}}>
-                    <PurchasePrintNormal
-                        setPrintA4={setPrintA4}
-                        stockTransferViewData={stockTransferViewData}
-                    />
-                </div>
-            )}
-            {printPos && (
-                <div style={{display: "none"}}>
-                    <PurchasePrintPos
-                        stockTransferViewData={stockTransferViewData}
-                        setPrintPos={setPrintPos}
-                    />
-                </div>
-            )}*/}
         </>
     );
 }

@@ -7,26 +7,17 @@ import {
     Group,
     Button,
     Flex,
-    Input,
-    TextInput,
 } from "@mantine/core";
 
 import {useForm} from "@mantine/form";
 import {
     IconDotsVertical,
     IconRefresh,
-    IconShoppingBag,
-    IconDeviceFloppy,
-    IconSearch,
-    IconX,
-    IconInfoCircle, IconSortAscendingNumbers,
+    IconDeviceFloppy, IconSortAscendingNumbers,
 } from "@tabler/icons-react";
-import {DataTable} from "mantine-datatable";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
-import tableCss from "../../../../assets/css/Table.module.css";
 import {useTranslation} from "react-i18next";
-import {useOutletContext, useParams} from "react-router-dom";
-import React, {useEffect, useState, useMemo} from "react";
+import React, {useEffect, useState} from "react";
 import genericClass from "../../../../assets/css/Generic.module.css";
 import __StockTransferSubmitForm from "./__StockTransferSubmitForm.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
@@ -35,74 +26,28 @@ import {showEntityData} from "../../../../store/core/crudSlice.js";
 import Navigation from "../common/Navigation.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
-import SelectFormForSalesPurchaseProduct from "../../../form-builders/SelectFormForSalesPurchaseProduct.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm.jsx";
 
-// ➤ Debounce hook
-function useDebouncedValue(value, delay) {
-    const [debounced, setDebounced] = useState(value);
-
-    useEffect(() => {
-        const timer = setTimeout(() => setDebounced(value), delay);
-        return () => clearTimeout(timer);
-    }, [value, delay]);
-
-    return debounced;
-}
-
-// ➤ Helper functions
-const getUserData = () => {
-    try {
-        return JSON.parse(localStorage.getItem("user") || "{}");
-    } catch (e) {
-        console.error("Error parsing localStorage user:", e);
-        return {};
-    }
-};
-
-const getCoreProducts = () => {
-    try {
-        return JSON.parse(localStorage.getItem("core-products") || "[]");
-    } catch (e) {
-        console.error("Error parsing core-products:", e);
-        return [];
-    }
-};
-
-export default function _StockTransferForm({domainConfigData,isWarehouse}) {
-    const {id} = useParams();
+export default function _StockTransferForm({domainConfigData, isWarehouse}) {
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
-    const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 360;
     const form = useForm({
         initialValues: {},
     });
     let warehouseDropdownData = getCoreWarehouseDropdownData();
-
-
-    // const [warehouseDropdownData, setWarehouseDataDropdown] = useState([]);
     const [warehouseData, setWarehouseData] = useState(null);
-    const [searchValue, setSearchValue] = useState("");
-    const [productQuantities, setProductQuantities] = useState({});
     const [stockTransferItems, setStockTransferItems] = useState([]);
-    const [warehousesIssueData, setWarehousesIssueData] = useState({});
-
-    // Cache user data & core products using memo
-    const userData = useMemo(() => getUserData(), []);
-    const coreProducts = useMemo(() => getCoreProducts(), []);
-    const debouncedSearchValue = useDebouncedValue(searchValue, 250);
-
-    const [allItems , setAllItems] = useState([])
+    const [allItems, setAllItems] = useState([])
     const [filteredItemsByWarehouse, setFilteredItemsByWarehouse] = useState([]);
     const [filteredItemsDropdownData, setFilteredItemsDropdownData] = useState([]);
     const [product, setProduct] = useState(null);
     const [productPurchaseItemData, setProductPurchaseItemData] = useState(null);
     const [productPurchaseItemDropdown, setProductPurchaseItemDropdown] = useState([]);
-    const [isWarehouseDropdownDisable,setIsWarehouseDropdownDisable] = useState(false)
+    const [isWarehouseDropdownDisable, setIsWarehouseDropdownDisable] = useState(false)
+
     // When warehouse changes
     useEffect(() => {
-        if (form.values.warehouse_id){
+        if (form.values.warehouse_id) {
             const selected = allItems.find(
                 (w) => w.warehouse_id.toString() === form.values.warehouse_id
             );
@@ -118,13 +63,13 @@ export default function _StockTransferForm({domainConfigData,isWarehouse}) {
 
     // When items changes
     useEffect(() => {
-        if (form.values.stock_item_id){
+        if (form.values.stock_item_id) {
             const selected = filteredItemsByWarehouse.find(
                 (w) => w.stock_item_id.toString() === form.values.stock_item_id
             );
-            if (selected.is_purchase_item){
+            if (selected.is_purchase_item) {
                 const pi = selected.purchase_items.map((pItem) => ({
-                    label: "Expire: "+pItem.expired_date+" (stock #"+pItem.remain_quantity+")",
+                    label: "Expire: " + pItem.expired_date + " (stock #" + pItem.remain_quantity + ")",
                     value: String(pItem.id),
                 }));
                 setProductPurchaseItemDropdown(pi);
@@ -134,46 +79,38 @@ export default function _StockTransferForm({domainConfigData,isWarehouse}) {
         }
     }, [form.values.stock_item_id]);
 
-    // console.log(filteredItemsByWarehouse,filteredItemsDropdownData)
     // Load issue data from API
     useEffect(() => {
         const fetchData = async () => {
-            // if (id) {
-                try {
-                    const result = await dispatch(showEntityData(`inventory/stock/transfer/items`)).unwrap();
-                    if (result.data.status === 200) {
-                        setAllItems(result.data.items)
-                    } else {
-                        showNotificationComponent(t("FailedToFetchData"), "red", null, false, 1000);
-                    }
-                } catch (error) {
-                    console.error("Fetch issue data error:", error);
+            try {
+                const result = await dispatch(showEntityData(`inventory/stock/transfer/items`)).unwrap();
+                if (result.data.status === 200) {
+                    setAllItems(result.data.items)
+                } else {
+                    showNotificationComponent(t("FailedToFetchData"), "red", null, false, 1000);
                 }
-            // }
+            } catch (error) {
+                console.error("Fetch issue data error:", error);
+            }
         };
 
         fetchData();
     }, [dispatch]);
 
-    useEffect(() => {
-
-    }, [form.values.quantity]);
-
-
 
     const handleFormSubmit = () => {
-        if (!form.values.warehouse_id){
+        if (!form.values.warehouse_id) {
             form.setFieldError("warehouse_id", true);
             return
         }
-        if (!form.values.stock_item_id){
+        if (!form.values.stock_item_id) {
             form.setFieldError("stock_item_id", true);
         }
-        if (productPurchaseItemDropdown && productPurchaseItemDropdown.length >0 && !form.values.purchase_item_id){
+        if (productPurchaseItemDropdown && productPurchaseItemDropdown.length > 0 && !form.values.purchase_item_id) {
             form.setFieldError("purchase_item_id", true);
         }
 
-        if (!form.values.quantity){
+        if (!form.values.quantity) {
             form.setFieldError("quantity", true);
         }
 
@@ -182,16 +119,16 @@ export default function _StockTransferForm({domainConfigData,isWarehouse}) {
         );
         const selectedStockItem = selectedWarehouseProduct?.items.find((p) => p.stock_item_id.toString() === form.values.stock_item_id);
         let selectedPurchaseItem = null
-        if (productPurchaseItemDropdown && productPurchaseItemDropdown.length > 0 && productPurchaseItemData){
+        if (productPurchaseItemDropdown && productPurchaseItemDropdown.length > 0 && productPurchaseItemData) {
             selectedPurchaseItem = selectedStockItem.purchase_items.find((p) => p.id.toString() === productPurchaseItemData);
 
-            if (selectedPurchaseItem.remain_quantity <= form.values.quantity ){
+            if (selectedPurchaseItem.remain_quantity <= form.values.quantity) {
                 form.setFieldError("quantity", true);
                 showNotificationComponent("Quantity must be less than or equal purchase item quantity", "red", null, false, 1000);
                 return;
             }
         } else {
-            if (selectedStockItem.total_quantity <= form.values.quantity ){
+            if (selectedStockItem.total_quantity <= form.values.quantity) {
                 form.setFieldError("quantity", true);
                 showNotificationComponent("Quantity must be less than or equal stock item quantity", "red", null, false, 1000);
                 return;
@@ -301,41 +238,41 @@ export default function _StockTransferForm({domainConfigData,isWarehouse}) {
                                         className={"boxBackground borderRadiusAll"}
                                     >
                                         <Box mt={"8"}></Box>
-                                            <Box mt={"4"}>
-                                                <SelectForm
-                                                    tooltip={t("Warehouse")}
-                                                    label={""}
-                                                    placeholder={t("Warehouse")}
-                                                    required={true}
-                                                    nextField={ "stock_item_id" }
-                                                    name={"warehouse_id"}
-                                                    form={form}
-                                                    dropdownValue={warehouseDropdownData}
-                                                    id={"warehouse_id"}
-                                                    searchable={true}
-                                                    value={warehouseData}
-                                                    changeValue={(val) => setWarehouseData(val)}
-                                                    comboboxProps={{withinPortal: false}}
-                                                    disabled={isWarehouseDropdownDisable}
-                                                />
-                                            </Box>
-                                            <Box mt={"4"}>
-                                                <SelectForm
-                                                    tooltip={t("ChooseProduct")}
-                                                    label={""}
-                                                    placeholder={t("ChooseProduct")}
-                                                    required={true}
-                                                    nextField={ (productPurchaseItemDropdown && productPurchaseItemDropdown.length > 0) ? "purchase_item_id" : "quantity"}
-                                                    name={"stock_item_id"}
-                                                    form={form}
-                                                    dropdownValue={filteredItemsDropdownData}
-                                                    id={"stock_item_id"}
-                                                    searchable={true}
-                                                    value={product}
-                                                    changeValue={(val) => setProduct(val)}
-                                                    comboboxProps={{withinPortal: false}}
-                                                />
-                                            </Box>
+                                        <Box mt={"4"}>
+                                            <SelectForm
+                                                tooltip={t("Warehouse")}
+                                                label={""}
+                                                placeholder={t("Warehouse")}
+                                                required={true}
+                                                nextField={"stock_item_id"}
+                                                name={"warehouse_id"}
+                                                form={form}
+                                                dropdownValue={warehouseDropdownData}
+                                                id={"warehouse_id"}
+                                                searchable={true}
+                                                value={warehouseData}
+                                                changeValue={(val) => setWarehouseData(val)}
+                                                comboboxProps={{withinPortal: false}}
+                                                disabled={isWarehouseDropdownDisable}
+                                            />
+                                        </Box>
+                                        <Box mt={"4"}>
+                                            <SelectForm
+                                                tooltip={t("ChooseProduct")}
+                                                label={""}
+                                                placeholder={t("ChooseProduct")}
+                                                required={true}
+                                                nextField={(productPurchaseItemDropdown && productPurchaseItemDropdown.length > 0) ? "purchase_item_id" : "quantity"}
+                                                name={"stock_item_id"}
+                                                form={form}
+                                                dropdownValue={filteredItemsDropdownData}
+                                                id={"stock_item_id"}
+                                                searchable={true}
+                                                value={product}
+                                                changeValue={(val) => setProduct(val)}
+                                                comboboxProps={{withinPortal: false}}
+                                            />
+                                        </Box>
 
                                         {
                                             (productPurchaseItemDropdown && productPurchaseItemDropdown.length > 0) &&
@@ -717,7 +654,6 @@ export default function _StockTransferForm({domainConfigData,isWarehouse}) {
                         <__StockTransferSubmitForm
                             stockTransferItems={stockTransferItems}
                             setStockTransferItems={setStockTransferItems}
-                            warehousesIssueData={warehousesIssueData}
                             formWarehouseData={warehouseData}
                         />
                     </Grid.Col>

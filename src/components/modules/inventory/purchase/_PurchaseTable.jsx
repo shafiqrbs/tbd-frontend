@@ -11,7 +11,6 @@ import {
     Button,
     ScrollArea,
     Table,
-    Loader,
     Menu,
     rem,
     LoadingOverlay, Badge,
@@ -25,14 +24,14 @@ import {
     IconPencil,
     IconEyeEdit,
     IconTrashX,
-    IconCheck, IconChevronsRight, IconX, IconCopy,
+    IconCheck, IconCopy,
 } from "@tabler/icons-react";
 import {DataTable} from "mantine-datatable";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getIndexEntityData,
     setDeleteMessage,
-    setFetching, setValidationData, showInstantEntityData, updateEntityData,
+    setFetching, showInstantEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
@@ -43,7 +42,6 @@ import {PurchasePrintPos} from "./print-component/PurchasePrintPos.jsx";
 import {notifications} from "@mantine/notifications";
 import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
-import Navigation from "../common/Navigation.jsx";
 
 function _PurchaseTable() {
     const {configData} = useConfigData()

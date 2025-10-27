@@ -18,7 +18,7 @@ import {
     IconPrinter,
     IconDeviceFloppy
 } from "@tabler/icons-react";
-import {useOutletContext, useParams} from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {IconCalendar} from "@tabler/icons-react";
 import genericClass from "../../../../assets/css/Generic.module.css";
@@ -29,20 +29,16 @@ import classes from "../../../../assets/css/FeaturesCards.module.css";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import inputCss from "../../../../assets/css/InputField.module.css";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
-import dayjs from "dayjs";
-import {storeEntityData, updateEntityData} from "../../../../store/core/crudSlice.js";
-import {data} from "../../accounting/balance-entry/BalanceBarChart.jsx";
+import {storeEntityData} from "../../../../store/core/crudSlice.js";
 
 export default function __StockTransferSubmitForm(props) {
     const {
         stockTransferItems,
-        warehousesIssueData,
         setStockTransferItems,
         formWarehouseData
     } = props;
 
-    const {id} = useParams();
-
+    const navigate = useNavigate()
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 170;
@@ -84,7 +80,6 @@ export default function __StockTransferSubmitForm(props) {
     // Remove the object where value = "2"
     warehouseDropdownData = warehouseDropdownData.filter(store => store.value !== formWarehouseData);
 
-    const [issueType, setIssueType] = useState("");
     const [warehouseId, setWarehouseId] = useState("");
     const [issuedById, setIssuedById] = useState("");
 
@@ -128,9 +123,9 @@ export default function __StockTransferSubmitForm(props) {
                 const handleQuantityChange = (e) => {
                     const newQuantity = Number(e.currentTarget.value);
 
-                    if (item.stock_quantity <=  newQuantity){
+                    if (item.stock_quantity <= newQuantity) {
                         showNotificationComponent("Quantity must be less than or equal stock quantity", "red", null, false, 1000);
-                        return;
+
                     } else {
                         setStockTransferItems((prevItems) =>
                             prevItems.map((product) =>
@@ -238,10 +233,10 @@ export default function __StockTransferSubmitForm(props) {
                 setIssuedById(null)
                 setStockTransferItems([])
                 form.reset();
+                navigate("/inventory/stock-transfer")
             }, 700)
         }
     }
-
 
     return (
         <>

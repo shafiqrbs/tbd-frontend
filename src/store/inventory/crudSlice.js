@@ -195,6 +195,7 @@ const crudSlice = createSlice({
         invoiceBatchFilterData: { customer_id: '',start_date:'',end_date:'',searchKeyword:''},
         purchaseItemsFilterData: { start_date:'',end_date:'',searchKeyword:''},
         purchaseFilterData: { vendor_id: '',start_date:'',end_date:'',searchKeyword:''},
+        stockTransferFilterData: { from_warehouse_id: '',to_warehouse_id:'',start_date:'',end_date:'',searchKeyword:''},
         purchaseReturnFilterData: { vendor_id: '',start_date:'',end_date:'',searchKeyword:''}
 
     },
@@ -263,6 +264,13 @@ const crudSlice = createSlice({
             state.purchaseFilterData.start_date = action.payload.start_date
             state.purchaseFilterData.end_date = action.payload.end_date
             state.purchaseFilterData.searchKeyword = action.payload.searchKeyword
+        },
+        setStockTransferFilterData: (state, action) => {
+            state.stockTransferFilterData.from_warehouse_id = action.payload.from_warehouse_id
+            state.stockTransferFilterData.to_warehouse_id = action.payload.to_warehouse_id
+            state.stockTransferFilterData.start_date = action.payload.start_date
+            state.stockTransferFilterData.end_date = action.payload.end_date
+            state.stockTransferFilterData.searchKeyword = action.payload.searchKeyword
         },
         setPurchaseReturnFilterData: (state, action) => {
             state.purchaseReturnFilterData.vendor_id = action.payload.vendor_id
@@ -397,6 +405,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData, setValidationMessage, setCategoryFilterData ,setProductFilterData,setSalesFilterData,setPurchaseFilterData,setPurchaseItemsFilterData,setInvoiceBatchFilterData,setInventoryShowDataEmpty,setPurchaseReturnFilterData} = crudSlice.actions
+export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData, setValidationMessage, setCategoryFilterData ,setProductFilterData,setSalesFilterData,setPurchaseFilterData,setPurchaseItemsFilterData,setInvoiceBatchFilterData,setInventoryShowDataEmpty,setPurchaseReturnFilterData,setStockTransferFilterData} = crudSlice.actions
 
 export default crudSlice.reducer;
