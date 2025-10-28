@@ -22,7 +22,7 @@ import {
     IconReceipt,
     IconDotsVertical,
     IconEyeEdit,
-    IconTrashX,
+    IconTrashX, IconPencil,
 } from "@tabler/icons-react";
 import {DataTable} from "mantine-datatable";
 import {useDispatch, useSelector} from "react-redux";
@@ -307,6 +307,31 @@ function _StockTransferTable({domainConfigData}) {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
+
+                                                            {
+                                                                !data.approved_by_id && data.process == "Created" &&
+                                                                <Menu.Item
+                                                                    onClick={() => {
+                                                                        navigate(
+                                                                            `/inventory/stock-transfer/edit/${data.id}`
+                                                                        );
+                                                                    }}
+                                                                    target="_blank"
+                                                                    component="a"
+                                                                    w={"200"}
+                                                                    leftSection={
+                                                                        <IconPencil
+                                                                            style={{
+                                                                                width: rem(14),
+                                                                                height: rem(14)
+                                                                            }}
+                                                                        />
+                                                                    }
+                                                                >
+                                                                    {t("Edit")}
+                                                                </Menu.Item>
+                                                            }
+
                                                             <Menu.Item
                                                                 onClick={(e) => {
                                                                     e.preventDefault();

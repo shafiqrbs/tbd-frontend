@@ -61,6 +61,7 @@ import BarcodePrintIndex from "./components/modules/inventory/barcode-print/Barc
 import DashboardIndexB2B from "./components/modules/b2b/dashboard/DashboardIndex.jsx";
 import CategoryIndexB2B from "./components/modules/b2b/category/CategoryIndex.jsx";
 import ProductIndexB2B from "./components/modules/b2b/product/ProductIndex.jsx";
+import StockIndexB2B from "./components/modules/b2b/stock/StockIndex.jsx";
 import SettingIndexB2B from "./components/modules/b2b/setting/SettingIndex.jsx";
 import B2bDomainIndex from "./components/modules/b2b/domain/B2bDomainIndex.jsx";
 import DiscountUserIndex from "./components/modules/discount/user/DiscountUserIndex";
@@ -106,6 +107,8 @@ import _WarehouseMatrixTable
 import _WarehouseMatrixUpdate
     from "./components/modules/procurement/requistion-matrix-warehouse/_WarehouseMatrixUpdate.jsx";
 import StockTransferIndex from "./components/modules/inventory/stock-transfer/StockTransferIndex.jsx";
+import _StockTransferUpdateForm from "./components/modules/inventory/stock-transfer/_StockTransferUpdateForm.jsx";
+import StockTransferEdit from "./components/modules/inventory/stock-transfer/StockTransferEdit.jsx";
 
 
 function AppRoute() {
@@ -251,6 +254,16 @@ function AppRoute() {
                                 </ProtectedRoute>
                             }
                         />
+
+                        <Route
+                            path="stock-transfer/edit/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+                                    <StockTransferEdit />
+                                </ProtectedRoute>
+                            }
+                        />
+
                         <Route
                             path="sales/edit/:id"
                             element={
@@ -848,6 +861,11 @@ function AppRoute() {
                         <Route path="sub-domain/product/:id" element={
                             <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
                                 <ProductIndexB2B />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="sub-domain/stock/:id" element={
+                            <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+                                <StockIndexB2B />
                             </ProtectedRoute>
                         } />
                         <Route path="sub-domain/setting/:id" element={
