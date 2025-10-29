@@ -153,74 +153,11 @@ export default function StockTable({id}) {
             textAlignment: "right",
             render: (item) => state.indexData.data.indexOf(item) + 1,
         },
-        {accessor: "name", title: t("Name"),width:'25%'},
-        {accessor: "category_name", title: t("Category"),width:'10%'},
-        {
-            accessor: "category_percent",
-            title: (
-                <Box>
-                    <Text fw={500} ta={"center"} mb={5}>
-                        {t("Percent(%)")}
-                    </Text>
-                    <Group justify="center" gap={4} noWrap>
-                        <Text fz="xs" c="dimmed" w={80} ta="center">
-                            {t("Mode")}
-                        </Text>
-                        <Text fz="xs" c="dimmed" w={80} ta="center">
-                            {t("MRP")}
-                        </Text>
-                        <Text fz="xs" c="dimmed" w={80} ta="center">
-                            {t("Purchase")}
-                        </Text>
-                    </Group>
-                </Box>
-            ),
-            textAlign: "center",
-            render: (item) => <PercentColumn item={item}/>,
-        },
-        {
-            accessor: "central",
-            title: (
-                <Box>
-                    <Text fw={500} mb={5}>
-                        {t("Central")}
-                    </Text>
-                    <Group justify="center" gap={4} noWrap>
-                        <Text fz="xs" c="dimmed" w={50} ta="center">
-                            {t("Stock")}
-                        </Text>
-                        <Text fz="xs" c="dimmed" w={50} ta="center">
-                            {t("Purchase")}
-                        </Text>
-                        <Text fz="xs" c="dimmed" w={80} ta="center">
-                            {t("Sales")}
-                        </Text>
-                    </Group>
-                </Box>
-            ),
-            textAlign: "center",
-            render: (item) => <CentralInfoColumn item={item}/>,
-        },
-        {
-            accessor: "category_id",
-            title: (
-                <Box>
-                    <Text fw={500} mb={5}>
-                        {t("Domain")}
-                    </Text>
-                    <Group justify="center" gap={4} noWrap>
-                        <Text fz="xs" c="dimmed" w={100} ta="center">
-                            {t("Purchase")}
-                        </Text>
-                        <Text fz="xs" c="dimmed" w={100} ta="center">
-                            {t("Sales")}
-                        </Text>
-                    </Group>
-                </Box>
-            ),
-            textAlign: "center",
-            render: (item) => <PriceInputCell item={item}/>,
-        },
+        {accessor: "name", title: t("Name")},
+        {accessor: "category_name", title: t("Category")},
+        {accessor: "center_stock", title: t("MyStock"),textAlignment: "right"},
+        {accessor: "sub_domain_stock", title: t("ChildStock"),textAlignment: "right"},
+
     ];
 
     return (

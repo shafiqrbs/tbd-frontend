@@ -235,7 +235,7 @@ export default function _Shortcut(props) {
                                 </Flex>
                             </Flex>
 
-                            {/*<Flex direction={`column`} align={"center"} mb={"8"}>
+                            <Flex direction={`column`} align={"center"} mb={"8"}>
                 <Tooltip
                   label={t("B2BProductStock")}
                   px={16}
@@ -274,7 +274,7 @@ export default function _Shortcut(props) {
                 >
                   {t("Stock")}
                 </Flex>
-              </Flex>*/}
+              </Flex>
 
 
                             <Flex direction={`column`} align={"center"} mb={"8"}>
