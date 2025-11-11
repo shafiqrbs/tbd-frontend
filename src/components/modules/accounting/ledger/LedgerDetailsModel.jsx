@@ -339,8 +339,20 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                                     <Grid.Col span={3}><Box>{t("AccountHead")} : <strong> {journalItems.mode}</strong></Box></Grid.Col>
                                     <Grid.Col span={6}><Box><strong>{ledgerDetails?.parent_name}</strong></Box></Grid.Col>
                                     <Grid.Col span={3}><Box>{t("Balance")}</Box></Grid.Col>
-                                    <Grid.Col span={3}><Box><strong>{Math.abs(journalItems?.ledger_amount).toFixed(2) || 0}</strong></Box></Grid.Col>
-                                </Grid>
+                                    <Grid.Col span={3}>
+                                        <Box>
+                                            <strong>
+                                                {typeof journalItems?.ledger_amount === "number" ? (
+                                                    journalItems.ledger_amount < 0
+                                                        ? `(${Math.abs(journalItems.ledger_amount).toFixed(2)})`
+                                                        : journalItems.ledger_amount.toFixed(2)
+                                                ) : (
+                                                    "0.00"
+                                                )}
+                                            </strong>
+                                        </Box>
+                                    </Grid.Col>
+                                    </Grid>
                             </Box>
 
                             {/* Filters */}

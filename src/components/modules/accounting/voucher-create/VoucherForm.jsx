@@ -61,12 +61,12 @@ function VoucherForm(props) {
       status: 1,
       mode: "",
       voucher_type_id: "",
-      ledger_account_head_id: "",
+    //  ledger_account_head_id: "",
     },
     validate: {
       name: isNotEmpty(),
       voucher_type_id : isNotEmpty(),
-      ledger_account_head_id : isNotEmpty(),
+     // ledger_account_head_id : isNotEmpty(),
       short_code : isNotEmpty()
     },
   });
@@ -205,7 +205,7 @@ function VoucherForm(props) {
                               label={t("VoucherType")}
                               placeholder={t("ChooseVoucherType")}
                               required={true}
-                              nextField={"ledger_account_head_id"}
+                              nextField={"name"}
                               name={"voucher_type_id"}
                               form={form}
                               dropdownValue={voucherDropdown}
@@ -216,7 +216,7 @@ function VoucherForm(props) {
                               changeValue={setVoucherType}
                             />
                           </Box>
-                          <Box mt={"8"}>
+                          {/*<Box mt={"8"}>
                             <SelectForm
                                 tooltip={t("ChooseVoucherType")}
                                 label={t("AccountLedgerHead")}
@@ -232,7 +232,7 @@ function VoucherForm(props) {
                                 value={accountHeadData}
                                 changeValue={setAccountHeadData}
                             />
-                          </Box>
+                          </Box>*/}
                           <Box mt={"xs"}>
                             <InputForm
                               tooltip={t("NameValidateMessage")}

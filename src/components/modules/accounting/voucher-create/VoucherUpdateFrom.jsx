@@ -66,7 +66,7 @@ function VoucherUpdateFrom(props) {
 
   useEffect(() => {
     setVoucherType(entityEditData?.voucher_type_id?.toString())
-    setAccountHeadData(entityEditData?.ledger_account_head_id?.toString())
+  //  setAccountHeadData(entityEditData?.ledger_account_head_id?.toString())
     setMode(entityEditData?.mode?.toString() || 'credit')
   }, [entityEditData]);
 
@@ -79,11 +79,11 @@ function VoucherUpdateFrom(props) {
       short_code: entityEditData?.short_code || "",
       mode: entityEditData?.mode || "",
       voucher_type_id: entityEditData?.voucher_type_id || "",
-      ledger_account_head_id: entityEditData?.ledger_account_head_id || "",
+    //  ledger_account_head_id: entityEditData?.ledger_account_head_id || "",
     },
     validate: {
       voucher_type_id: isNotEmpty(),
-      ledger_account_head_id: isNotEmpty(),
+   //   ledger_account_head_id: isNotEmpty(),
       name: isNotEmpty(),
       short_name: isNotEmpty(),
       short_code: isNotEmpty(),
@@ -98,7 +98,7 @@ function VoucherUpdateFrom(props) {
         short_code: entityEditData?.short_code || "",
         mode: entityEditData?.mode || "debit",
         voucher_type_id: entityEditData?.voucher_type_id || "",
-        ledger_account_head_id: entityEditData?.ledger_account_head_id || "",
+      //  ledger_account_head_id: entityEditData?.ledger_account_head_id || "",
       });
     }
     dispatch(setFormLoading(false));
@@ -245,7 +245,7 @@ function VoucherUpdateFrom(props) {
                                 label={t("VoucherType")}
                                 placeholder={t("ChooseVoucherType")}
                                 required={true}
-                                nextField={"ledger_account_head_id"}
+                                nextField={"name"}
                                 name={"voucher_type_id"}
                                 form={form}
                                 dropdownValue={voucherDropdown}
@@ -256,7 +256,7 @@ function VoucherUpdateFrom(props) {
                                 changeValue={setVoucherType}
                             />
                           </Box>
-                          <Box mt={"8"}>
+                          {/*<Box mt={"8"}>
                             <SelectForm
                                 tooltip={t("ChooseAccountLedgerHead")}
                                 label={t("AccountLedgerHead")}
@@ -272,7 +272,7 @@ function VoucherUpdateFrom(props) {
                                 value={accountHeadData}
                                 changeValue={setAccountHeadData}
                             />
-                          </Box>
+                          </Box>*/}
                           <Box mt={"xs"}>
                             <InputForm
                               tooltip={t("NameValidateMessage")}

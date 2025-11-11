@@ -31,7 +31,7 @@ export default function CustomerVoucherForm(props) {
 
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 174;
+    const height = mainAreaHeight - 140;
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [ledgerHeadObject, setLedgerHeadObject] = useState(null);

@@ -36,7 +36,7 @@ export default function VoucherNavigation({
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const {mainAreaHeight} = useOutletContext();
-    const height = useMemo(() => mainAreaHeight - 184, [mainAreaHeight]);
+    const height = useMemo(() => mainAreaHeight - 150, [mainAreaHeight]);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

@@ -38,7 +38,7 @@ function VoucherFormIndex({currencySymbol}) {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const {mainAreaHeight, isOnline} = useOutletContext();
-    const height = mainAreaHeight - 196;
+    const height = mainAreaHeight - 162;
 
     const [activeVoucher, setActiveVoucher] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -509,6 +509,7 @@ function VoucherFormIndex({currencySymbol}) {
                                                     render: (record, index) => (<NumberInput
                                                             disabled={record.mode === "credit"}
                                                             hideControls
+                                                            size={'xs'}
                                                             ta={"right"}
                                                             value={record.debit}
                                                             onChange={(val) => handleInputChange(index, "debit", val)}
@@ -528,6 +529,7 @@ function VoucherFormIndex({currencySymbol}) {
                                                             disabled={record.mode === "debit"}
                                                             hideControls
                                                             ta={"right"}
+                                                            size={'xs'}
                                                             value={record.credit}
                                                             onChange={(val) => handleInputChange(index, "credit", val)}
                                                         />),
@@ -751,7 +753,6 @@ function VoucherFormIndex({currencySymbol}) {
                             </Grid.Col>
                         </Grid>
                     </Grid.Col>
-
                     <Grid.Col span={1}>
                         <Box className={"borderRadiusAll"} pt={"16"} bg={"white"}>
                             <ShortcutVoucher
