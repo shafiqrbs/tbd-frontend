@@ -90,7 +90,7 @@ function MainDashboard(props) {
 
     /*for create production batch start*/
     const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
-    const isWarehouse = domainConfigData?.inventory_config.sku_warehouse
+    const isWarehouse = domainConfigData?.inventory_config?.sku_warehouse
     const [productionBatchCreateModel, setProductionBatchCreateModel] = useState(false);
     const CallProductionBatchCreateApi = (event,data) => {
         if (event && typeof event.preventDefault === 'function') {
