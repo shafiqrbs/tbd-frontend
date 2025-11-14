@@ -109,6 +109,7 @@ import _WarehouseMatrixUpdate
 import StockTransferIndex from "./components/modules/inventory/stock-transfer/StockTransferIndex.jsx";
 import _StockTransferUpdateForm from "./components/modules/inventory/stock-transfer/_StockTransferUpdateForm.jsx";
 import StockTransferEdit from "./components/modules/inventory/stock-transfer/StockTransferEdit.jsx";
+import LoginJwt from "./components/LoginJwt.jsx";
 
 
 function AppRoute() {
@@ -116,6 +117,7 @@ function AppRoute() {
         <AuthProvider>
             <Routes>
                 <Route path="/login" element={<Login />} />
+                {/*<Route path="/login" element={<LoginJwt />} />*/}
                 <Route path="/" element={<Layout />}>
                     <Route index element={<MainDashboard />} />
                     <Route path="/sample/">

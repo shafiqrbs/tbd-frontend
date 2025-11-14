@@ -39,6 +39,7 @@
     "i18next": "^23.8.2",
     "i18next-browser-languagedetector": "^7.2.0",
     "i18next-http-backend": "^2.4.2",
+    "jwt-decode": "^4.0.0",
     "mantine-datatable": "^7.5.0",
     "mantine-react-table": "^2.0.0-alpha.17",
     "react": "^18.2.0",
