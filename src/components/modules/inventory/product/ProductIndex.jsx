@@ -40,7 +40,6 @@ function ProductIndex() {
 
     // Determine if we are in edit mode
     const isEditMode = typeof id != "undefined" && id != null;
-
     // Load entity data if edit mode
     useEffect(() => {
         if (isEditMode) {

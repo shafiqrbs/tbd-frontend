@@ -157,7 +157,6 @@ function _UpdateInvoice(props) {
             product_id: (value, values) => {
                 if (value && value!= '') {
                     const isDigitsOnly = /^\d+$/.test(value);
-                    console.log(isDigitsOnly, values.product_id)
                     if (!isDigitsOnly && values.product_id) {
                         return true;
                     }

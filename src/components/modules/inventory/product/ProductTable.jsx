@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useMemo} from "react";
+import React, {useEffect, useState, useRef, useMemo, useCallback} from "react";
 import {Link, useNavigate, useOutletContext} from "react-router-dom";
 import {
     Group,
@@ -11,7 +11,7 @@ import {
     Flex,
     Image,
     Modal,
-    Button, Paper, Grid, Tabs,
+    Button, Paper, Grid, Tabs, TextInput,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {IconCheck, IconDotsVertical, IconList, IconListCheck, IconListDetails, IconTrashX} from "@tabler/icons-react";
@@ -24,7 +24,7 @@ import {
     showEntityData,
     setInsertType,
     setFormLoading,
-    getStatusInlineUpdateData,
+    getStatusInlineUpdateData, storeEntityData,
 } from "../../../../store/core/crudSlice.js";
 import _ProductSearch from "./_ProductSearch";
 import {modals} from "@mantine/modals";
@@ -40,6 +40,7 @@ import __DrawerAddon from "./__DrawerAddon";
 import {data} from "../../accounting/balance-entry/BalanceBarChart.jsx";
 import {useParams} from "react-router";
 import classes from "../../../../assets/css/TabCustomize.module.css";
+import {getHotkeyHandler} from "@mantine/hooks";
 
 function ProductTable({categoryDropdown}) {
     const dispatch = useDispatch();
@@ -199,6 +200,40 @@ function ProductTable({categoryDropdown}) {
         });
     }, [indexData?.data, sortStatus]);
 
+    const PriceInputCell = React.memo(({item}) => {
+        const [values, setValues] = useState(item?.expiry_duration);
+        const dispatch = useDispatch();
+
+        const handleChange = useCallback((value) => {
+            setValues(value);
+        }, []);
+
+        const handleBlur = useCallback((value) => {
+                dispatch(storeEntityData({
+                url: 'inventory/product/inline-update/'+ item.product_id,
+                data: {
+                    field_name: 'expiry_duration',
+                    value: value
+                },
+            }));
+        }, [values,item.id]);
+
+        return (
+            <Group justify="center" gap={4} noWrap>
+                <TextInput
+                    w={100}
+                    type="text"
+                    size="xs"
+                    value={Number(values)}
+                    onChange={(e) => handleChange(e.target.value)}
+                    onBlur={(e) => handleBlur(e.target.value)}
+                    id={`expire-duration-input-${item.id}`}
+                />
+            </Group>
+        );
+    });
+
+
 
     return (
         <>
@@ -345,6 +380,12 @@ function ProductTable({categoryDropdown}) {
                             }
                         },
                         {
+                            accessor: "expire",
+                            title: "Expire",
+                            textAlign: "center",
+                            render: (item) => <PriceInputCell item={item}/>,
+                        },
+                        {
                             accessor: 'status',
                             title: t('Status'),
                             textAlign: 'center',
@@ -397,7 +438,7 @@ function ProductTable({categoryDropdown}) {
                                                             dispatch(setInsertType('update'));
                                                             dispatch(editEntityData(`inventory/product/${item.product_id}`));
                                                             dispatch(setFormLoading(true));
-                                                            navigate(`/inventory/product/${item.product_id}`);
+                                                            navigate(`/inventory/product/update/${item.product_id}`);
                                                         }}
                                                     >
                                                         {t('Edit')}

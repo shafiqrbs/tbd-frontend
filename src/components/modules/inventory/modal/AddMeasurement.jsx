@@ -185,7 +185,7 @@ function AddMeasurement(props) {
     dispatch(setFetching(true));
     props.setMeasurementDrawer(false);
   };
-  console.log(measurementData);
+
   return (
     <Drawer.Root
       opened={props.measurementDrawer}
