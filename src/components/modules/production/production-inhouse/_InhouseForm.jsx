@@ -21,6 +21,7 @@ import {storeEntityData, updateEntityData} from "../../../../store/core/crudSlic
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import inputCss from "../../../../assets/css/InputField.module.css";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import {t} from "i18next";
 
 // Utility functions
 const formatDateForAPI = (date) => {
@@ -30,7 +31,6 @@ const formatDateForAPI = (date) => {
 };
 
 const useConfirmModal = (title, message, onConfirm, confirmText = 'Submit') => {
-    const {t} = useTranslation();
     return () => {
         modals.openConfirmModal({
             title: <Text size="md">{title}</Text>,
