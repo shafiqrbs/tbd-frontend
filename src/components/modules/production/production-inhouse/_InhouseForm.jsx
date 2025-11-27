@@ -10,7 +10,7 @@ import {
 } from "@tabler/icons-react";
 import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
 import {useDispatch} from "react-redux";
-import {isNotEmpty, isDate, useForm} from "@mantine/form";
+import {isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 
 // Local imports
@@ -108,8 +108,8 @@ function InhouseForm({batchData}) {
         },
         validate: {
             invoice: isNotEmpty(),
-            issue_date: isDate(t('InvalidDate')),
-            receive_date: isDate(t('InvalidDate')),
+         //   issue_date: isDate(t('InvalidDate')),
+         //   receive_date: isDate(t('InvalidDate')),
             process: isNotEmpty()
         }
     });
