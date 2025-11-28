@@ -32,18 +32,11 @@ function __RecipeAddItem(props) {
     const form = useForm({
         initialValues: {
             inv_stock_id: '',
-            price: '',
             quantity: '',
             percent: '',
         },
         validate: {
             inv_stock_id: isNotEmpty(),
-            price: (value) => {
-                const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
-                if (!isNumberOrFractional) {
-                    return true;
-                }
-            },
             quantity: (value) => {
                 const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                 if (!isNumberOrFractional) {
@@ -55,7 +48,7 @@ function __RecipeAddItem(props) {
     })
 
 
-    useEffect(() => {
+    /*useEffect(() => {
         const storedProducts = localStorage.getItem('core-products');
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
@@ -68,7 +61,7 @@ function __RecipeAddItem(props) {
         } else {
             form.setFieldValue('price', '');
         }
-    }, [form.values.inv_stock_id]);
+    }, [form.values.inv_stock_id]);*/
 
 
     useHotkeys(
@@ -133,13 +126,13 @@ function __RecipeAddItem(props) {
                                                 dropdownValue={productMaterialDropdown}
                                                 mt={0}
                                                 id={'inv_stock_id'}
-                                                nextField={'price'}
+                                                nextField={'quantity'}
                                                 searchable={true}
                                                 value={productData}
                                                 changeValue={setProductData}
                                             />
                                         </Grid.Col>
-                                        <Grid.Col span={3}>
+                                       {/* <Grid.Col span={3}>
                                             <Box>
                                                 <InputForm
                                                     tooltip={t('Price')}
@@ -151,8 +144,8 @@ function __RecipeAddItem(props) {
                                                     id={'price'}
                                                 />
                                             </Box>
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
+                                        </Grid.Col>*/}
+                                        <Grid.Col span={5}>
                                             <Box>
                                                 <InputForm
                                                     tooltip={t('Quantity')}
@@ -166,7 +159,7 @@ function __RecipeAddItem(props) {
 
                                             </Box>
                                         </Grid.Col>
-                                        <Grid.Col span={3}>
+                                        <Grid.Col span={4}>
                                             <Box>
                                                 <InputForm
                                                     tooltip={t('Percent')}

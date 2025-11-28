@@ -210,6 +210,7 @@ function _RecipeTable() {
                                         type="number"
                                         label=""
                                         size="xs"
+                                        disabled
                                         value={editedPrice}
                                         onChange={handlePriceChange}
                                         rightSection={
