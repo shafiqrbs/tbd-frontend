@@ -2,10 +2,9 @@ import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {useOutletContext} from "react-router-dom";
-import {Grid, Box, Text, Card, ScrollArea, Loader, Center, TextInput, Tooltip} from "@mantine/core";
+import {Box, Text, Card, ScrollArea, Loader, Center, TextInput, Tooltip} from "@mantine/core";
 import {getIndexEntityData} from "../../../../store/core/crudSlice.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
-import genericClass from "../../../../assets/css/Generic.module.css";
 import {IconInfoCircle, IconSearch, IconX} from "@tabler/icons-react";
 
 function useDebouncedValue(value, delay) {
@@ -31,7 +30,8 @@ export default function VoucherNavigation({
                                               setSecondaryLedgerHeadDropdownData,
                                               setPrimaryLedgerDropdownData,
                                               setSecondaryLedgerHead,
-                                              setPrimaryLedgerDropdownEnable
+                                              setPrimaryLedgerDropdownEnable,
+                                              setLastVoucherDate
                                           }) {
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -63,16 +63,34 @@ export default function VoucherNavigation({
             setError(null);
 
             try {
-                const result = await dispatch(getIndexEntityData({
-                    url: "accounting/voucher/wise-ledger-details",
-                    param: {},
-                }));
+                //  Fetch voucher list
+                const result = await dispatch(
+                    getIndexEntityData({
+                        url: "accounting/voucher/wise-ledger-details",
+                        param: {},
+                    })
+                );
 
                 if (getIndexEntityData.fulfilled.match(result)) {
                     setAllVoucherList(result.payload?.data || []);
                 } else {
                     setError(t("FailedToFetchVouchers"));
                 }
+
+                // Fetch last voucher date
+                const lastDate = await dispatch(
+                    getIndexEntityData({
+                        url: "accounting/voucher/last-date",
+                        param: {},
+                    })
+                );
+
+                if (getIndexEntityData.fulfilled.match(lastDate)) {
+                    setLastVoucherDate(lastDate.payload?.data || null);
+                } else {
+                    setError(t("FailedToFetchVouchers"));
+                }
+
             } catch (err) {
                 setError(t("UnexpectedError"));
             } finally {
@@ -83,6 +101,7 @@ export default function VoucherNavigation({
 
         fetchData();
     }, [dispatch, reloadList]);
+
 
     const handleActiveVoucher = (item) => {
         const transformGroups = (groups) =>
@@ -128,8 +147,8 @@ export default function VoucherNavigation({
 
     return (
         <Box>
-            <Card shadow="md" radius="4" className={classes.card}  >
-                <Box  bg='var(--theme-primary-color-4)' mb={'xs'} p={'4'} ml={'-md'} mr={'-md'}>
+            <Card shadow="md" radius="4" className={classes.card}>
+                <Box bg='var(--theme-primary-color-4)' mb={'xs'} p={'4'} ml={'-md'} mr={'-md'}>
                     <Tooltip
                         label={t("EnterSearchAnyKeyword")}
                         px={8}
@@ -187,19 +206,19 @@ export default function VoucherNavigation({
                         />
                     </Tooltip>
                 </Box>
-               <box>
-                   <ScrollArea h={height + 30} scrollbarSize={2} scrollbars="y" type="never">
-                       {loading ? (
-                           <Center><Loader size="sm"/></Center>
-                       ) : error ? (
-                           <Center><Text color='var(--theme-primary-color-6)'>{error}</Text></Center>
-                       ) : voucherListItems?.length ? (
-                           voucherListItems
-                       ) : (
-                           <Center><Text>{t("NoVouchersFound")}</Text></Center>
-                       )}
-                   </ScrollArea>
-               </box>
+                <box>
+                    <ScrollArea h={height + 30} scrollbarSize={2} scrollbars="y" type="never">
+                        {loading ? (
+                            <Center><Loader size="sm"/></Center>
+                        ) : error ? (
+                            <Center><Text color='var(--theme-primary-color-6)'>{error}</Text></Center>
+                        ) : voucherListItems?.length ? (
+                            voucherListItems
+                        ) : (
+                            <Center><Text>{t("NoVouchersFound")}</Text></Center>
+                        )}
+                    </ScrollArea>
+                </box>
             </Card>
         </Box>
     );
