@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
     Box,
     Grid,
@@ -13,12 +13,12 @@ import {
     ActionIcon,
     Tooltip,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { useForm } from "@mantine/form";
+import {useDisclosure} from "@mantine/hooks";
+import {useForm} from "@mantine/form";
 import dayjs from "dayjs";
-import { useDispatch, useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
-import { useOutletContext } from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {useTranslation} from "react-i18next";
+import {useOutletContext} from "react-router-dom";
 
 import {
     IconSearch,
@@ -29,21 +29,21 @@ import {
     IconFilter,
 } from "@tabler/icons-react";
 
-import { getIndexEntityData } from "../../../../store/accounting/crudSlice.js";
-import { getIndexEntityData as downloadSlice } from "../../../../store/report/reportSlice.js";
-import { showInstantEntityData } from "../../../../store/inventory/crudSlice.js";
+import {getIndexEntityData} from "../../../../store/accounting/crudSlice.js";
+import {getIndexEntityData as downloadSlice} from "../../../../store/report/reportSlice.js";
+import {showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
 
-import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import DatePickerForm from "../../../form-builders/DatePicker";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 
-function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
+function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
     const dispatch = useDispatch();
-    const { t } = useTranslation();
-    const { mainAreaHeight } = useOutletContext();
+    const {t} = useTranslation();
+    const {mainAreaHeight} = useOutletContext();
 
     const height = mainAreaHeight - 72;
-    const [opened, { open, close }] = useDisclosure(true);
+    const [opened, {open, close}] = useDisclosure(true);
     const [page] = useState(1);
     const perPage = 50;
     const fetching = useSelector((state) => state.crudSlice.fetching);
@@ -59,7 +59,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
     const getInitialDateRange = () => {
         const start = dayjs().startOf("month").format("YYYY-MM-DD");
         const end = dayjs().endOf("month").format("YYYY-MM-DD");
-        return { startDate: start, endDate: end };
+        return {startDate: start, endDate: end};
     };
 
     const [dateRange, setDateRange] = useState(getInitialDateRange());
@@ -99,7 +99,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
         const fetchLedgerAccounts = async () => {
             const value = {
                 url: "accounting/account-head",
-                param: { group: "ledger", page, offset: perPage },
+                param: {group: "ledger", page, offset: perPage},
             };
             try {
                 const result = await dispatch(getIndexEntityData(value));
@@ -145,12 +145,12 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
         if (!downloadFile || !ledgerDetails?.id) return;
 
         const fetchDownload = async () => {
-            const { startDate, endDate } = dateRange;
+            const {startDate, endDate} = dateRange;
             const route = `accounting/account-ledger-wise/journal/generate/file/${ledgerDetails.id}/${downloadType}`;
             const url = `${route}?start_date=${startDate}&end_date=${endDate}`;
 
             try {
-                const result = await dispatch(downloadSlice({ url, param: {} }));
+                const result = await dispatch(downloadSlice({url, param: {}}));
                 if (downloadSlice.fulfilled.match(result) && result.payload.status === 200) {
                     const href = import.meta.env.VITE_API_GATEWAY_URL + "ledger-report/download/" + result.payload.filename;
                     const a = document.createElement("a");
@@ -181,7 +181,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
 
     const grouped = groupByParentName(indexData?.data || []);
     const entries = Object.entries(grouped);
-    const [previousOpening,setPreviousOpening] = useState(0)
+    const [previousOpening, setPreviousOpening] = useState(0)
 
     const formatCumulativeRows = (items) => {
         if (!items || items.length === 0) return [];
@@ -189,7 +189,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
         const result = [];
 
         for (let i = 0; i < items.length; i++) {
-            const row = { ...items[i] };
+            const row = {...items[i]};
 
             if (i === 0) {
                 const open = parseFloat(row.opening_amount) || 0;
@@ -215,14 +215,14 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
 
     const cumulativeRows = formatCumulativeRows(journalItems?.ledgerItems);
 
-    const { totalDebit, totalCredit } = cumulativeRows.reduce(
+    const {totalDebit, totalCredit} = cumulativeRows.reduce(
         (acc, row) => {
             const amount = parseFloat(row.amount) || 0;
             if (row.mode === "Debit") acc.totalDebit += amount;
             else acc.totalCredit += amount;
             return acc;
         },
-        { totalDebit: 0, totalCredit: 0 }
+        {totalDebit: 0, totalCredit: 0}
     );
 
     useEffect(() => {
@@ -234,12 +234,12 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
 
     const PreviousOpeningBalanceRow = () => {
         return (
-            <Table.Tr key="previous-opening-balance-row" style={{ background: "#fff67a" }}>
+            <Table.Tr key="previous-opening-balance-row" style={{background: "#fff67a"}}>
                 <Table.Td colSpan={7}>
                     <span id="previous-opening-label"> <strong>{t('previousOpeningBalance')}</strong></span>
                 </Table.Td>
                 <Table.Td
-                    style={{ textAlign: "right" }}
+                    style={{textAlign: "right"}}
                 >
                     <strong>{Math.abs(previousOpening).toFixed(2)}</strong>
                 </Table.Td>
@@ -255,18 +255,20 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
             <Table.Td>{row.invoice_no}</Table.Td>
             <Table.Td>{row.voucher_name}</Table.Td>
             <Table.Td>{row.ledger_name}</Table.Td>
-            <Table.Td style={{ textAlign: "right" }}>{row.mode === "Debit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
-            <Table.Td style={{ textAlign: "right" }}>{row.mode === "Credit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
-            <Table.Td style={{ textAlign: "right" }}>{Math.abs(row.closing_amount).toFixed(2)}</Table.Td>
+            <Table.Td
+                style={{textAlign: "right"}}>{row.mode === "Debit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
+            <Table.Td
+                style={{textAlign: "right"}}>{row.mode === "Credit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
+            <Table.Td style={{textAlign: "right"}}>{Math.abs(row.closing_amount).toFixed(2)}</Table.Td>
         </Table.Tr>
     ));
 
     const summaryRow = (
         <Table.Tr>
             <Table.Td colSpan={5}><strong>Total</strong></Table.Td>
-            <Table.Td style={{ textAlign: "right" }}><strong>{Math.abs(totalDebit).toFixed(2)}</strong></Table.Td>
-            <Table.Td style={{ textAlign: "right" }}><strong>{Math.abs(totalCredit).toFixed(2)}</strong></Table.Td>
-            <Table.Td style={{ textAlign: "right" }}>
+            <Table.Td style={{textAlign: "right"}}><strong>{Math.abs(totalDebit).toFixed(2)}</strong></Table.Td>
+            <Table.Td style={{textAlign: "right"}}><strong>{Math.abs(totalCredit).toFixed(2)}</strong></Table.Td>
+            <Table.Td style={{textAlign: "right"}}>
                 <strong>
                     {(totalDebit - totalCredit) < 0
                         ? `(${Math.abs(totalDebit - totalCredit).toFixed(2)})`
@@ -284,7 +286,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                 close();
             }}
             title={ledgerDetails?.name || "Ledger Details"}
-            overlayProps={{ opacity: 0.55, blur: 4 }}
+            overlayProps={{opacity: 0.55, blur: 4}}
             fullScreen
         >
             <LoadingOverlay
@@ -292,7 +294,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                 overlayColor="#f0f0f0"
                 overlayOpacity={0.8}
                 overlayBlur={1}
-                loaderProps={{ size: 20, color: '#8a0e0e', type: 'oval' }}
+                loaderProps={{size: 20, color: '#8a0e0e', type: 'oval'}}
             />
 
             <Box p="8">
@@ -335,9 +337,12 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                             <Box mb="xs" p="xs" className="boxBackground borderRadiusAll">
                                 <Grid columns={24} gutter={8} grow>
                                     <Grid.Col span={3}><Box>{t("LedgerName")}</Box></Grid.Col>
-                                    <Grid.Col span={6}><Box><strong>{ledgerDetails?.name || "Ledger Details"}</strong></Box></Grid.Col>
-                                    <Grid.Col span={3}><Box>{t("AccountHead")} : <strong> {journalItems.mode}</strong></Box></Grid.Col>
-                                    <Grid.Col span={6}><Box><strong>{ledgerDetails?.parent_name}</strong></Box></Grid.Col>
+                                    <Grid.Col
+                                        span={6}><Box><strong>{ledgerDetails?.name || "Ledger Details"}</strong></Box></Grid.Col>
+                                    <Grid.Col
+                                        span={3}><Box>{t("AccountHead")} : <strong> {journalItems.mode}</strong></Box></Grid.Col>
+                                    <Grid.Col
+                                        span={6}><Box><strong>{ledgerDetails?.parent_name}</strong></Box></Grid.Col>
                                     <Grid.Col span={3}><Box>{t("Balance")}</Box></Grid.Col>
                                     <Grid.Col span={3}>
                                         <Box>
@@ -352,7 +357,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                                             </strong>
                                         </Box>
                                     </Grid.Col>
-                                    </Grid>
+                                </Grid>
                             </Box>
 
                             {/* Filters */}
@@ -362,7 +367,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                                         placeholder="Start Date"
                                         name="financial_start_date"
                                         id="financial_start_date"
-                                        leftSection={<IconCalendar size={16} />}
+                                        leftSection={<IconCalendar size={16}/>}
                                         form={form}
                                         closeIcon
                                     />
@@ -372,7 +377,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                                         placeholder="End Date"
                                         name="financial_end_date"
                                         id="financial_end_date"
-                                        leftSection={<IconCalendar size={16} />}
+                                        leftSection={<IconCalendar size={16}/>}
                                         form={form}
                                         closeIcon
                                     />
@@ -380,25 +385,27 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                                 <Grid.Col span="auto">
                                     <ActionIcon.Group mt="1">
                                         <ActionIcon variant="default" size="lg" c="red.4" onClick={handleSearch}>
-                                            <Tooltip label="Search" withArrow><IconSearch size={18} /></Tooltip>
+                                            <Tooltip label="Search" withArrow><IconSearch size={18}/></Tooltip>
                                         </ActionIcon>
                                         <ActionIcon variant="default" size="lg" c="gray.6" onClick={handleReset}>
-                                            <Tooltip label={t("ResetButton")} withArrow><IconRestore size={18} /></Tooltip>
+                                            <Tooltip label={t("ResetButton")} withArrow><IconRestore
+                                                size={18}/></Tooltip>
                                         </ActionIcon>
                                         <ActionIcon variant="default" size="lg" c="gray.6">
-                                            <Tooltip label={t("FilterButton")} withArrow><IconFilter size={18} /></Tooltip>
+                                            <Tooltip label={t("FilterButton")} withArrow><IconFilter
+                                                size={18}/></Tooltip>
                                         </ActionIcon>
                                         <ActionIcon variant="default" size="lg" c="green.8" onClick={() => {
                                             setDownloadType("pdf");
                                             setDownloadFile(true);
                                         }}>
-                                            <Tooltip label="PDF" withArrow><IconPdf size={18} /></Tooltip>
+                                            <Tooltip label="PDF" withArrow><IconPdf size={18}/></Tooltip>
                                         </ActionIcon>
                                         <ActionIcon variant="default" size="lg" c="green.8" onClick={() => {
                                             setDownloadType("xlsx");
                                             setDownloadFile(true);
                                         }}>
-                                            <Tooltip label="Excel" withArrow><IconFileTypeXls size={18} /></Tooltip>
+                                            <Tooltip label="Excel" withArrow><IconFileTypeXls size={18}/></Tooltip>
                                         </ActionIcon>
                                     </ActionIcon.Group>
                                 </Grid.Col>
@@ -409,7 +416,7 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                                     visible={isLoadingTable}
                                     overlayColor="#f0f0f0"
                                     overlayOpacity={0.8}
-                                    loaderProps={{ size: 20, color: '#8a0e0e', type: 'oval' }}
+                                    loaderProps={{size: 20, color: '#8a0e0e', type: 'oval'}}
                                 />
 
                                 <Table.ScrollContainer height={height - 190}>
@@ -421,13 +428,13 @@ function LedgerDetailsModel({ ledgerDetails, setLedgerDetails }) {
                                                 <Table.Th>{t("JVNo")}</Table.Th>
                                                 <Table.Th>{t("VoucherType")}</Table.Th>
                                                 <Table.Th>{t("Ledger Name")}</Table.Th>
-                                                <Table.Th style={{ textAlign: "right" }}>{t("Debit")}</Table.Th>
-                                                <Table.Th style={{ textAlign: "right" }}>{t("Credit")}</Table.Th>
-                                                <Table.Th style={{ textAlign: "right" }}>{t("Closing")}</Table.Th>
+                                                <Table.Th style={{textAlign: "right"}}>{t("Debit")}</Table.Th>
+                                                <Table.Th style={{textAlign: "right"}}>{t("Credit")}</Table.Th>
+                                                <Table.Th style={{textAlign: "right"}}>{t("Closing")}</Table.Th>
                                             </Table.Tr>
                                         </Table.Thead>
                                         <Table.Tbody>
-                                            <PreviousOpeningBalanceRow />
+                                            <PreviousOpeningBalanceRow/>
                                             {records}
                                             {summaryRow}
                                         </Table.Tbody>

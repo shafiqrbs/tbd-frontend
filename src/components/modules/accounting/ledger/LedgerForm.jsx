@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import {
-    Button,
-    rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, SimpleGrid, Image, Tooltip
-} from "@mantine/core";
-import { useTranslation } from 'react-i18next';
-import {
-    IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,
-} from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
-import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
+import React, {useState} from "react";
+import {useOutletContext} from "react-router-dom";
+import {Button, Flex, Grid, Box, ScrollArea, Text, Title, Stack} from "@mantine/core";
+import {useTranslation} from 'react-i18next';
+import {IconDeviceFloppy} from "@tabler/icons-react";
+import {useHotkeys} from "@mantine/hooks";
+import {useDispatch} from "react-redux";
+import {hasLength, isNotEmpty, useForm} from "@mantine/form";
+import {modals} from "@mantine/modals";
 import {
     setFetching,
     setValidationData,
@@ -28,10 +20,9 @@ import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/ge
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function LedgerForm(props) {
-    const {accountDropdown} = props;
-    const { t, i18n } = useTranslation();
+    const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
-    const { isOnline, mainAreaHeight } = useOutletContext();
+    const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -42,13 +33,13 @@ function LedgerForm(props) {
 
 
     const form = useForm({
-        initialValues: {    
-            parent_id: '', name: '', code: '', status: true, head_group : 'ledger'
+        initialValues: {
+            parent_id: '', name: '', code: '', status: true, head_group: 'ledger'
         },
         validate: {
             parent_id: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 }),
-            code : isNotEmpty()
+            name: hasLength({min: 2, max: 20}),
+            code: isNotEmpty()
         }
     });
 
@@ -76,7 +67,7 @@ function LedgerForm(props) {
                     children: (
                         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                     ),
-                    labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'red' },
+                    labels: {confirm: 'Confirm', cancel: 'Cancel'}, confirmProps: {color: 'red'},
                     onCancel: () => console.log('Cancel'),
                     onConfirm: async () => {
                         setSaveCreateLoading(true)
@@ -106,13 +97,14 @@ function LedgerForm(props) {
                     },
                 });
             })}>
-                <Grid columns={9} gutter={{ base: 8 }}>
-                    <Grid.Col span={8} >
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                <Grid columns={9} gutter={{base: 8}}>
+                    <Grid.Col span={8}>
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
                             <Box bg={'white'}>
-                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
+                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'}
+                                     className={'boxBackground borderRadiusAll'}>
                                     <Grid>
-                                        <Grid.Col span={6} >
+                                        <Grid.Col span={6}>
                                             <Title order={6} pt={'6'}>{t('CreateLedger')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
@@ -125,7 +117,7 @@ function LedgerForm(props) {
                                                             className={'btnPrimaryBg'}
                                                             type="submit"
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16} />}>
+                                                            leftSection={<IconDeviceFloppy size={16}/>}>
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={14} fw={400}>
                                                                     {t("CreateAndSave")}
@@ -133,15 +125,16 @@ function LedgerForm(props) {
                                                             </Flex>
                                                         </Button>
                                                     }
-                                                </></Stack>
+                                                </>
+                                            </Stack>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <Grid columns={24}>
-                                        <Grid.Col span={'auto'} >
+                                        <Grid.Col span={'auto'}>
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
-                                                <Box >
+                                                <Box>
                                                     <Box mt={'8'}>
                                                         <SelectForm
                                                             tooltip={t('ChooseHeadGroup')}
@@ -184,8 +177,8 @@ function LedgerForm(props) {
                                                             nextField={'status'}
                                                         />
                                                     </Box>
-                                                    <Box mt={'xs'} >
-                                                        <Grid gutter={{ base: 1 }}>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
                                                             <Grid.Col span={2}>
                                                                 <SwitchForm
                                                                     tooltip={t('Status')}
@@ -199,7 +192,8 @@ function LedgerForm(props) {
                                                                     defaultChecked={1}
                                                                 />
                                                             </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('Status')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
                                                 </Box>
@@ -213,7 +207,7 @@ function LedgerForm(props) {
 
 
                     </Grid.Col>
-                    <Grid.Col span={1} >
+                    <Grid.Col span={1}>
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                             <Shortcut
                                 form={form}
@@ -225,7 +219,8 @@ function LedgerForm(props) {
                     </Grid.Col>
                 </Grid>
             </form>
-        </Box >
+        </Box>
     );
 }
+
 export default LedgerForm;

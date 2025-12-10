@@ -1,28 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useOutletContext, useParams} from "react-router-dom";
 import {
     Button,
     rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, Tooltip, SimpleGrid, Image,
-    LoadingOverlay,
+    Grid, Box, ScrollArea, Text, Title, Stack
 } from "@mantine/core";
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,
+    IconDeviceFloppy
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
-import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
+import {useHotkeys} from "@mantine/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {hasLength, isNotEmpty, useForm} from "@mantine/form";
+import {modals} from "@mantine/modals";
+import {notifications} from "@mantine/notifications";
 import {
     setEditEntityData,
-    setEntityNewData,
     setFetching,
     setFormLoading,
-    setValidationData,
-    storeEntityData,
     updateEntityData
 } from "../../../../store/accounting/crudSlice.js";
 
@@ -33,15 +29,13 @@ import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/getAccountHeadAllDropdownData";
 
 function LedgerUpdateFrom(props) {
-    const { t, i18n } = useTranslation();
+    const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
-    const { isOnline, mainAreaHeight } = useOutletContext();
+    const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
     const [formLoad, setFormLoad] = useState('')
-    const [motherData, setMotherData] = useState(null);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
@@ -57,17 +51,15 @@ function LedgerUpdateFrom(props) {
         setParentHead(entityEditData?.parent_id?.toString())
         setFormLoad(true)
         setFormDataForUpdate(true)
-    }, [dispatch, formLoading,entityEditData])
-
-
+    }, [dispatch, formLoading, entityEditData])
 
     const form = useForm({
         initialValues: {
-            parent_id: '', name: '', code: '', status: true, head_group : 'ledger'
+            parent_id: '', name: '', code: '', status: true, head_group: 'ledger'
         },
         validate: {
             parent_id: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 })
+            name: hasLength({min: 2, max: 20})
         }
     });
 
@@ -75,9 +67,6 @@ function LedgerUpdateFrom(props) {
         setFormLoad(true)
         setFormDataForUpdate(true)
     }, [dispatch, formLoading])
-
-    const { ledgerId } = useParams();
-
 
     const handleReset = () => {
         form.setValues({
@@ -102,8 +91,6 @@ function LedgerUpdateFrom(props) {
 
     }, [dispatch, setFormData, entityEditData])
 
-
-
     useHotkeys([['alt+n', () => {
         document.getElementById('parent_id').click()
     }]], []);
@@ -127,7 +114,7 @@ function LedgerUpdateFrom(props) {
                     children: (
                         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                     ),
-                    labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red' },
+                    labels: {confirm: 'Submit', cancel: 'Cancel'}, confirmProps: {color: 'red'},
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         setSaveCreateLoading(true)
@@ -139,10 +126,10 @@ function LedgerUpdateFrom(props) {
                         notifications.show({
                             color: 'teal',
                             title: t('UpdateSuccessfully'),
-                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
                             loading: false,
                             autoClose: 700,
-                            style: { backgroundColor: 'lightgray' },
+                            style: {backgroundColor: 'lightgray'},
                         });
 
                         setTimeout(() => {
@@ -151,19 +138,20 @@ function LedgerUpdateFrom(props) {
                             dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
                             setSaveCreateLoading(false)
-                            navigate('/accounting/ledger', { replace: true })
+                            navigate('/accounting/ledger', {replace: true})
                         }, 700)
                     },
                 });
             })}>
 
-                <Grid columns={9} gutter={{ base: 8 }}>
-                    <Grid.Col span={8} >
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                <Grid columns={9} gutter={{base: 8}}>
+                    <Grid.Col span={8}>
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
                             <Box bg={'white'}>
-                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
+                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'}
+                                     className={'boxBackground borderRadiusAll'}>
                                     <Grid>
-                                        <Grid.Col span={6} >
+                                        <Grid.Col span={6}>
                                             <Title order={6} pt={'6'}>{t('UpdateLedger')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
@@ -176,7 +164,7 @@ function LedgerUpdateFrom(props) {
                                                             className={'btnPrimaryBg'}
                                                             type="submit"
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16} />}>
+                                                            leftSection={<IconDeviceFloppy size={16}/>}>
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={14} fw={400}>
                                                                     {t("CreateAndSave")}
@@ -184,15 +172,16 @@ function LedgerUpdateFrom(props) {
                                                             </Flex>
                                                         </Button>
                                                     }
-                                                </></Stack>
+                                                </>
+                                            </Stack>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <Grid columns={24}>
-                                        <Grid.Col span={'auto'} >
+                                        <Grid.Col span={'auto'}>
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
-                                                <Box >
+                                                <Box>
                                                     <Box mt={'8'}>
                                                         <SelectForm
                                                             tooltip={t('ChooseHeadGroup')}
@@ -235,8 +224,8 @@ function LedgerUpdateFrom(props) {
                                                             nextField={'status'}
                                                         />
                                                     </Box>
-                                                    <Box mt={'xs'} >
-                                                        <Grid gutter={{ base: 1 }}>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
                                                             <Grid.Col span={2}>
                                                                 <SwitchForm
                                                                     tooltip={t('Status')}
@@ -250,7 +239,8 @@ function LedgerUpdateFrom(props) {
                                                                     defaultChecked={1}
                                                                 />
                                                             </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('Status')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
                                                 </Box>
@@ -264,7 +254,7 @@ function LedgerUpdateFrom(props) {
 
 
                     </Grid.Col>
-                    <Grid.Col span={1} >
+                    <Grid.Col span={1}>
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                             <Shortcut
                                 form={form}
@@ -280,4 +270,5 @@ function LedgerUpdateFrom(props) {
 
     );
 }
+
 export default LedgerUpdateFrom;

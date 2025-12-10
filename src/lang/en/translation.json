@@ -1239,7 +1239,13 @@
   "fromWarehouse": "From Warehouse",
   "toWarehouse": "To Warehouse",
   "ApprovedBy": "Approved By",
-  "xxxxxx": "xxxxxxx",
   "B2BProductStock": "B2B Product Stock",
+  "BranchVoucherEntry": "Branch Voucher Entry",
+  "BranchEntry": "B. Entry",
+  "ManageBranchVoucher": "Manage Branch Voucher",
+  "ChooseBranch": "Choose Branch",
+  "AccountNumber": "Account Number",
+  "BEntryList": "B. Entry List",
+  "xxxxxx": "xxxxxxx",
   "": ""
 }

@@ -110,6 +110,7 @@ import StockTransferIndex from "./components/modules/inventory/stock-transfer/St
 import _StockTransferUpdateForm from "./components/modules/inventory/stock-transfer/_StockTransferUpdateForm.jsx";
 import StockTransferEdit from "./components/modules/inventory/stock-transfer/StockTransferEdit.jsx";
 import LoginJwt from "./components/LoginJwt.jsx";
+import BranchVoucherIndex from "./components/modules/accounting/branch-voucher-entry/BranchVoucherIndex.jsx";
 
 
 function AppRoute() {
@@ -685,9 +686,19 @@ function AppRoute() {
                                 <VoucherIndex type={'index'}/>
                             </ProtectedRoute>
                         } />
+                        <Route path="branch/entry" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+                                <BranchVoucherIndex type={'index'}/>
+                            </ProtectedRoute>
+                        } />
                         <Route path="voucher-entry" element={
                             <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
                                 <VoucherIndex type={'create'}/>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="branch/voucher-entry" element={
+                            <ProtectedRoute roles={["role_domain", "role_accounting_admin", "role_accounting_voucher_entry"]}>
+                                <BranchVoucherIndex type={'create'}/>
                             </ProtectedRoute>
                         } />
                         <Route path="ledger" element={
