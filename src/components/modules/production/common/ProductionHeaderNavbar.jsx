@@ -73,7 +73,7 @@ function ProductionHeaderNavbar(props) {
 
 
     const links = [
-        {link: '/report/production/issue', label: t('ProductionIssueReport'), show: true},
+        {link: '/report/production/issue', label: t('AccountingSummeryReport'), show: true},
         {
             link: '',
             label: t('NewBatch'),

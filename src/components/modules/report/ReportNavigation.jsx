@@ -108,7 +108,15 @@ export default function ReportNavigation() {
                         <Accordion.Item value="item-5">
                             <Accordion.Control icon={<IconReportMoney size={18} stroke={1.5} color="var(--mantine-color-green-8)" />}>{t("Accounting")}</Accordion.Control>
                             <Accordion.Panel>
-                                This is the third section content.
+                                <NavLink
+                                    onClick ={(e)=>{
+                                        navigate('/report/accounting/summery-report')
+                                    }}
+                                    label={t("Summery")}
+                                    rightSection={
+                                        <IconChevronRight size={12} stroke={1} className="mantine-rotate-rtl" />
+                                    }
+                                />
                             </Accordion.Panel>
                         </Accordion.Item>
                         <Accordion.Item value="item-6">
