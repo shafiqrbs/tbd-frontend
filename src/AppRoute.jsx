@@ -111,7 +111,7 @@ import _StockTransferUpdateForm from "./components/modules/inventory/stock-trans
 import StockTransferEdit from "./components/modules/inventory/stock-transfer/StockTransferEdit.jsx";
 import LoginJwt from "./components/LoginJwt.jsx";
 import BranchVoucherIndex from "./components/modules/accounting/branch-voucher-entry/BranchVoucherIndex.jsx";
-import AccountingSummeryReport from "./components/modules/report/accounting/AccountingSummeryReport.jsx";
+import AccountingIncomeExpenseReport from "./components/modules/report/accounting/AccountingIncomeExpenseReport.jsx";
 
 
 function AppRoute() {
@@ -893,9 +893,9 @@ function AppRoute() {
                     <Route path="report" element={<ProtectedModule modules={["accounting", "sales-purchase", "inventory", "production"]} />}>
 
                         <Route path="accounting" element={<ProtectedModule modules={["accounting"]} />}>
-                            <Route path="summery-report" element={
+                            <Route path="income-expense" element={
                                 <ProtectedRoute roles={["role_production_admin"]}>
-                                    <AccountingSummeryReport />
+                                    <AccountingIncomeExpenseReport />
                                 </ProtectedRoute>
                             } />
                         </Route>

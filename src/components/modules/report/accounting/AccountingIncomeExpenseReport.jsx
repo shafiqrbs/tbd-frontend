@@ -20,7 +20,7 @@ import batchTableCss from "../../../../assets/css/ProductBatchTable.module.css";
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent";
 import _AccountingReportSearch from "./_AccountingReportSearch.jsx";
 
-export default function ProductionAccountingReport() {
+export default function AccountingIncomeExpenseReport() {
 
     const progress = getLoadingProgress();
     const dispatch = useDispatch();
@@ -40,17 +40,25 @@ export default function ProductionAccountingReport() {
     const accountingFilterData = useSelector(
         (state) => state.reportSlice.productionIssueFilterData
     );
+    const productionIssueFilterData = useSelector((state) => state.reportSlice.productionIssueFilterData);
+
 
     /* ============================
        Fetch Accounting Report Data
     ============================ */
+
+    // Safely destructure accounts and outletSales
+    const accounts = indexData?.receive?.accounts || [];
+    const outletSales = indexData?.receive?.outletSales || [];
+
+
     useEffect(() => {
         const fetchData = async () => {
             const value = {
-                url: "accounting/report/daily",
+                url: "accounting/report/income-expense",
                 param: {
-                    start_date: accountingFilterData.start_date,
-                    end_date: accountingFilterData.end_date,
+                    start_date: productionIssueFilterData.start_date,
+                    end_date: productionIssueFilterData.end_date,
                     page: page,
                     offset: perPage
                 }
@@ -60,7 +68,7 @@ export default function ProductionAccountingReport() {
                 const resultAction = await dispatch(getIndexEntityData(value));
 
                 if (getIndexEntityData.fulfilled.match(resultAction)) {
-                    setIndexData(resultAction.payload);
+                    setIndexData(resultAction?.payload?.data);
                 } else {
                     console.error(resultAction);
                 }
@@ -71,10 +79,11 @@ export default function ProductionAccountingReport() {
             }
         };
 
-        if (accountingFilterData.start_date) {
+        if (productionIssueFilterData.start_date) {
             fetchData();
         }
-    }, [dispatch, fetching, searchValue, page]);
+    }, [dispatch, productionIssueFilterData.start_date, page, perPage, searchValue]);
+
 
     /* ============================
        XLSX / PDF Download
@@ -117,26 +126,26 @@ export default function ProductionAccountingReport() {
     /* ============================
        Totals (XLSX Style)
     ============================ */
-    const totals = indexData?.data?.reduce(
+    /*const totals = indexData?.data?.reduce(
         (acc, row) => {
             acc.debit += Number(row.debit || 0);
             acc.credit += Number(row.credit || 0);
             return acc;
         },
         { debit: 0, credit: 0 }
-    );
+    );*/
 
     /* ================= DEMO DATA ================= */
 
     const bankTransfers = [
-        { date: "10.11.25", desc: "Bank Transfer Prime Bank AC:17266", amount: 47102 },
-        { date: "10.11.25", desc: "Bank Transfer Prime Bank AC:17266", amount: 45664 },
-        { date: "10.11.25", desc: "Withdrawn From Dhaka Bank", amount: 29500 },
-        { date: "10.11.25", desc: "Withdrawn From Brac Bank", amount: 10500 },
-        { date: "10.11.25", desc: "Cheque Withdraw Prime Bank (Sadek Vai)", amount: 100000 }
+        { date: "10.11.25", desc: "Bank Transfer Prime Bank AC:17266",opening:5000,received:3000,payment:2000, amount: 6000 },
+        { date: "10.11.25", desc: "Bank Transfer Prime Bank AC:17266", opening:5000,received:3000,payment:2000, amount: 6000 },
+        { date: "10.11.25", desc: "Withdrawn From Dhaka Bank", opening:5000,received:3000,payment:2000, amount: 6000 },
+        { date: "10.11.25", desc: "Withdrawn From Brac Bank", opening:5000,received:3000,payment:2000, amount: 6000 },
+        { date: "10.11.25", desc: "Cheque Withdraw Prime Bank (Sadek Vai)", opening:5000,received:3000,payment:2000, amount: 6000 }
     ];
 
-    const outletSales = [
+    const outletSales1 = [
         {
             date: "10.11.25",
             outlet: "E Block Banasree Outlet",
@@ -169,11 +178,13 @@ export default function ProductionAccountingReport() {
         { date: "10.11.25", desc: "Director Current A/C Expense", amount: 6000 }
     ];
 
-    const bankTotal = bankTransfers.reduce((s, i) => s + i.amount, 0);
-    const salesTotal = outletSales.reduce((s, i) => s + i.total, 0);
-    const expenseTotal = expenses.reduce((s, i) => s + i.amount, 0);
+    // const bankTotal = bankTransfers.reduce((s, i) => s + i.amount, 0);
+    const bankTotal = 0;
+    const totalSales = outletSales.reduce((sum, row) => sum + (row.total || 0), 0);
+    // const expenseTotal = expenses.reduce((s, i) => s + i.amount, 0);
+    const expenseTotal = 0;
 
-    const grandTotal = bankTotal + salesTotal;
+    const grandTotal = bankTotal + totalSales;
     const netBalance = grandTotal - expenseTotal;
 
 
@@ -215,7 +226,7 @@ export default function ProductionAccountingReport() {
 
                                         <Grid.Col span={16}>
                                             <_AccountingReportSearch
-                                                module="accounting"
+                                                module="production-issue"
                                                 setSearchValue={setSearchValue}
                                                 setDownloadFile={setDownloadFile}
                                                 setDownloadType={setDownloadType}
@@ -248,23 +259,27 @@ export default function ProductionAccountingReport() {
                                             <Table withTableBorder withColumnBorders striped>
                                                 <Table.Thead>
                                                     <Table.Tr>
-                                                        <Table.Th>Date</Table.Th>
                                                         <Table.Th>Description</Table.Th>
-                                                        <Table.Th ta="right">Amount</Table.Th>
+                                                        <Table.Th ta="right">Opening</Table.Th>
+                                                        <Table.Th ta="right">Received</Table.Th>
+                                                        <Table.Th ta="right">Payment</Table.Th>
+                                                        <Table.Th ta="right">Closing</Table.Th>
                                                     </Table.Tr>
                                                 </Table.Thead>
 
                                                 <Table.Tbody>
                                                     {bankTransfers.map((row, i) => (
                                                         <Table.Tr key={i}>
-                                                            <Table.Td>{row.date}</Table.Td>
                                                             <Table.Td>{row.desc}</Table.Td>
+                                                            <Table.Td ta="right">{row.opening.toLocaleString()}</Table.Td>
+                                                            <Table.Td ta="right">{row.received.toLocaleString()}</Table.Td>
+                                                            <Table.Td ta="right">{row.payment.toLocaleString()}</Table.Td>
                                                             <Table.Td ta="right">{row.amount.toLocaleString()}</Table.Td>
                                                         </Table.Tr>
                                                     ))}
 
                                                     <Table.Tr className={batchTableCss.highlightedRow}>
-                                                        <Table.Td colSpan={2} ta="right"><b>Total</b></Table.Td>
+                                                        <Table.Td colSpan={4} ta="right"><b>Total</b></Table.Td>
                                                         <Table.Td ta="right"><b>{bankTotal.toLocaleString()}</b></Table.Td>
                                                     </Table.Tr>
                                                 </Table.Tbody>
@@ -273,42 +288,49 @@ export default function ProductionAccountingReport() {
                                             {/* ================= OUTLET SALES ================= */}
                                             <Text fw={700} mt="xl">Cash Received from Outlet Sales</Text>
 
-                                            <Table withTableBorder withColumnBorders striped>
-                                                <Table.Thead>
-                                                    <Table.Tr>
-                                                        <Table.Th>Date</Table.Th>
-                                                        <Table.Th>Description</Table.Th>
-                                                        <Table.Th ta="right">Foodpanda</Table.Th>
-                                                        <Table.Th ta="right">Card</Table.Th>
-                                                        <Table.Th ta="right">Bkash</Table.Th>
-                                                        <Table.Th ta="right">Excess</Table.Th>
-                                                        <Table.Th ta="right">Cash Sale</Table.Th>
-                                                        <Table.Th ta="right">Net Cash</Table.Th>
-                                                        <Table.Th ta="right">Total</Table.Th>
-                                                    </Table.Tr>
-                                                </Table.Thead>
-
-                                                <Table.Tbody>
-                                                    {outletSales.map((row, i) => (
-                                                        <Table.Tr key={i}>
-                                                            <Table.Td>{row.date}</Table.Td>
-                                                            <Table.Td>{row.outlet}</Table.Td>
-                                                            <Table.Td ta="right">{row.foodpanda}</Table.Td>
-                                                            <Table.Td ta="right">{row.card}</Table.Td>
-                                                            <Table.Td ta="right">{row.bkash}</Table.Td>
-                                                            <Table.Td ta="right">{row.excess}</Table.Td>
-                                                            <Table.Td ta="right">{row.cashSale}</Table.Td>
-                                                            <Table.Td ta="right">{row.netCash}</Table.Td>
-                                                            <Table.Td ta="right">{row.total}</Table.Td>
-                                                        </Table.Tr>
+                                        <Table withTableBorder withColumnBorders striped>
+                                            <Table.Thead>
+                                                <Table.Tr>
+                                                    <Table.Th>Description</Table.Th>
+                                                    {accounts.map(acc => (
+                                                        <Table.Th key={acc.id} ta="right">{acc.display_name}</Table.Th>
                                                     ))}
+                                                    <Table.Th ta="right">Total</Table.Th>
+                                                </Table.Tr>
+                                            </Table.Thead>
 
-                                                    <Table.Tr className={batchTableCss.highlightedRow}>
-                                                        <Table.Td colSpan={8} ta="right"><b>Total Sales</b></Table.Td>
-                                                        <Table.Td ta="right"><b>{salesTotal.toLocaleString()}</b></Table.Td>
+                                            <Table.Tbody>
+                                                {outletSales.map((row, i) => (
+                                                    <Table.Tr key={i}>
+                                                        <Table.Td>{row.outlet}</Table.Td>
+
+                                                        {accounts.map(acc => (
+                                                            <Table.Td key={acc.id} ta="right">
+                                                                {row[acc.id]?.toLocaleString() || "0"}
+                                                            </Table.Td>
+                                                        ))}
+
+                                                        <Table.Td ta="right">{row.total?.toLocaleString() || "0"}</Table.Td>
                                                     </Table.Tr>
-                                                </Table.Tbody>
-                                            </Table>
+                                                ))}
+
+                                                {/* Optional: Grand Total Row */}
+                                                {outletSales.length > 0 && (
+                                                    <Table.Tr style={{ fontWeight: "bold" }}>
+                                                        <Table.Td colSpan={1} ta="right">Grand Total</Table.Td>
+                                                        {accounts.map(acc => {
+                                                            const sum = outletSales.reduce((total, row) => total + (row[acc.id] || 0), 0);
+                                                            return (
+                                                                <Table.Td key={acc.id} ta="right">{sum.toLocaleString()}</Table.Td>
+                                                            );
+                                                        })}
+                                                        <Table.Td ta="right">
+                                                            {outletSales.reduce((total, row) => total + (row.total || 0), 0).toLocaleString()}
+                                                        </Table.Td>
+                                                    </Table.Tr>
+                                                )}
+                                            </Table.Tbody>
+                                        </Table>
 
                                             {/* ================= GRAND TOTAL ================= */}
                                             <Divider my="md" />
@@ -316,8 +338,8 @@ export default function ProductionAccountingReport() {
                                             <Text fw={700}>
                                                 Grand Total (Bank + Total Sales)
                                                 <span style={{ float: "right" }}>
-                    {grandTotal.toLocaleString()}
-                </span>
+                                                    {grandTotal.toLocaleString()}
+                                                </span>
                                             </Text>
 
                                             {/* ================= EXPENSES ================= */}
@@ -326,7 +348,6 @@ export default function ProductionAccountingReport() {
                                             <Table withTableBorder withColumnBorders striped>
                                                 <Table.Thead>
                                                     <Table.Tr>
-                                                        <Table.Th>Date</Table.Th>
                                                         <Table.Th>Description</Table.Th>
                                                         <Table.Th ta="right">Amount</Table.Th>
                                                     </Table.Tr>
@@ -335,7 +356,6 @@ export default function ProductionAccountingReport() {
                                                 <Table.Tbody>
                                                     {expenses.map((row, i) => (
                                                         <Table.Tr key={i}>
-                                                            <Table.Td>{row.date}</Table.Td>
                                                             <Table.Td>{row.desc}</Table.Td>
                                                             <Table.Td ta="right">{row.amount.toLocaleString()}</Table.Td>
                                                         </Table.Tr>

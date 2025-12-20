@@ -110,9 +110,9 @@ export default function ReportNavigation() {
                             <Accordion.Panel>
                                 <NavLink
                                     onClick ={(e)=>{
-                                        navigate('/report/accounting/summery-report')
+                                        navigate('/report/accounting/income-expense')
                                     }}
-                                    label={t("Summery")}
+                                    label={t("Income Expense")}
                                     rightSection={
                                         <IconChevronRight size={12} stroke={1} className="mantine-rotate-rtl" />
                                     }
