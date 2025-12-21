@@ -247,7 +247,7 @@ export default function DashBoardTable() {
                                             bg={"red"}
                                             onClick={() => handleSyncProduct(data.sub_domain_id)}
                                         >
-                                            {t("SyncProduct")}
+                                            {t("B2bPriceUpdate")}
                                         </Button>
                                         <Button
                                             component="a"

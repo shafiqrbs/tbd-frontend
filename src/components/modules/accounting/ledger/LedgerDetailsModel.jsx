@@ -255,11 +255,14 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
             <Table.Td>{row.invoice_no}</Table.Td>
             <Table.Td>{row.voucher_name}</Table.Td>
             <Table.Td>{row.ledger_name}</Table.Td>
-            <Table.Td
-                style={{textAlign: "right"}}>{row.mode === "Debit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
-            <Table.Td
-                style={{textAlign: "right"}}>{row.mode === "Credit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
-            <Table.Td style={{textAlign: "right"}}>{Math.abs(row.closing_amount).toFixed(2)}</Table.Td>
+            <Table.Td style={{textAlign: "right"}}>{row.mode === "Debit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
+            <Table.Td style={{textAlign: "right"}}>{row.mode === "Credit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
+            {/*<Table.Td style={{textAlign: "right"}}>{Math.abs(row.closing_amount).toFixed(2)}</Table.Td>*/}
+            <Table.Td style={{textAlign: "right"}}>
+                {(row.closing_amount) < 0
+                    ? `(${Math.abs(row.closing_amount).toFixed(2)})`
+                    : (row.closing_amount).toFixed(2)}
+            </Table.Td>
         </Table.Tr>
     ));
 
@@ -436,7 +439,7 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
                                         <Table.Tbody>
                                             <PreviousOpeningBalanceRow/>
                                             {records}
-                                            {summaryRow}
+                                            {/*{summaryRow}*/}
                                         </Table.Tbody>
                                     </Table>
                                 </Table.ScrollContainer>

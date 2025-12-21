@@ -252,7 +252,7 @@ function SubDomainSettingForm(props) {
                                     } else if (storeEntityData.fulfilled.match(resultAction)) {
                                         notifications.show({
                                             color: 'teal',
-                                            title: t('CreateSuccessfully'),
+                                            title: t('ProductSyncSuccessfull'),
                                             icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
                                             loading: false,
                                             autoClose: 700,
@@ -428,7 +428,7 @@ function SubDomainSettingForm(props) {
                                                 >
                                                     <Flex direction={`column`} gap={0}>
                                                         <Text fz={14} fw={400}>
-                                                            {t("CreateAndSave")}
+                                                            {t("SyncProduct")}
                                                         </Text>
                                                     </Flex>
                                                 </Button>
