@@ -1,33 +1,24 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
-import {
-    Group, Box, ActionIcon, Text, rem, Menu, Button
-} from "@mantine/core";
+import {Group, Box, ActionIcon, Text, rem, Menu, Button} from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {IconDotsVertical, IconTrashX} from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
-import {
-    editEntityData,
-    getIndexEntityData,
-    setFetching, setFormLoading,
-    setInsertType,
-    deleteEntityData
-} from "../../../../store/accounting/crudSlice.js";
+import {editEntityData, getIndexEntityData, setFetching, setFormLoading, setInsertType, deleteEntityData} from "../../../../store/accounting/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
 import LedgerViewDrawer from "./LedgerViewDrawer.jsx";
 import LedgerDetailsModel from "./LedgerDetailsModel.jsx";
 
-function LedgerTable(props) {
+function LedgerTable() {
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 98; //TabList height 104
     const perPage = 50;
     const [page, setPage] = useState(1);
-
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
@@ -67,7 +58,6 @@ function LedgerTable(props) {
     const [ledgerViewDrawer, setLedgerViewDrawer] = useState(false)
 
     return (
-
         <>
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'}>
                 <KeywordSearch module={'ledger'}/>
@@ -178,7 +168,6 @@ function LedgerTable(props) {
                                                         {t('Delete')}
                                                     </Menu.Item>
                                                 )}
-
                                             </Menu.Dropdown>
                                         </Menu>
                                     </Group>

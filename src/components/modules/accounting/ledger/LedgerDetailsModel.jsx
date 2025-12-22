@@ -1,18 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {
-    Box,
-    Grid,
-    Card,
-    Accordion,
-    NavLink,
-    ScrollArea,
-    Table,
-    Text,
-    Modal,
-    LoadingOverlay,
-    ActionIcon,
-    Tooltip,
-} from "@mantine/core";
+import {Box, Grid, Card, Accordion, NavLink, ScrollArea, Table, Text, Modal, LoadingOverlay, ActionIcon, Tooltip} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 import {useForm} from "@mantine/form";
 import dayjs from "dayjs";
@@ -20,14 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {useOutletContext} from "react-router-dom";
 
-import {
-    IconSearch,
-    IconCalendar,
-    IconPdf,
-    IconFileTypeXls,
-    IconRestore,
-    IconFilter,
-} from "@tabler/icons-react";
+import {IconSearch, IconCalendar, IconPdf, IconFileTypeXls, IconRestore, IconFilter} from "@tabler/icons-react";
 
 import {getIndexEntityData} from "../../../../store/accounting/crudSlice.js";
 import {getIndexEntityData as downloadSlice} from "../../../../store/report/reportSlice.js";
@@ -192,7 +172,7 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
             const row = {...items[i]};
 
             if (i === 0) {
-                const open = parseFloat(row.opening_amount) || 0;
+                const open = parseFloat(previousOpening) || 0;
                 const amount = parseFloat(row.amount) || 0;
                 const close = row.mode === 'Debit' ? open + amount : open - amount;
                 row.opening_amount = open;
@@ -212,7 +192,6 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
         return result;
     };
 
-
     const cumulativeRows = formatCumulativeRows(journalItems?.ledgerItems);
 
     const {totalDebit, totalCredit} = cumulativeRows.reduce(
@@ -226,17 +205,15 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
     );
 
     useEffect(() => {
-        if (cumulativeRows.length > 0) {
-            setPreviousOpening(cumulativeRows[0].opening_amount || 0);
-        }
+        setPreviousOpening(journalItems?.opening_info?.opening_balance || 0);
     }, [cumulativeRows]);
-
 
     const PreviousOpeningBalanceRow = () => {
         return (
             <Table.Tr key="previous-opening-balance-row" style={{background: "#fff67a"}}>
                 <Table.Td colSpan={7}>
-                    <span id="previous-opening-label"> <strong>{t('previousOpeningBalance')}</strong></span>
+                    <span
+                        id="previous-opening-label"> <strong>{t('previousOpeningBalance')} {journalItems?.opening_info?.opening_date}</strong></span>
                 </Table.Td>
                 <Table.Td
                     style={{textAlign: "right"}}
@@ -247,7 +224,6 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
         );
     };
 
-
     const records = cumulativeRows.map((row, idx) => (
         <Table.Tr key={row.id}>
             <Table.Td>{idx + 1}</Table.Td>
@@ -255,9 +231,10 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
             <Table.Td>{row.invoice_no}</Table.Td>
             <Table.Td>{row.voucher_name}</Table.Td>
             <Table.Td>{row.ledger_name}</Table.Td>
-            <Table.Td style={{textAlign: "right"}}>{row.mode === "Debit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
-            <Table.Td style={{textAlign: "right"}}>{row.mode === "Credit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
-            {/*<Table.Td style={{textAlign: "right"}}>{Math.abs(row.closing_amount).toFixed(2)}</Table.Td>*/}
+            <Table.Td
+                style={{textAlign: "right"}}>{row.mode === "Debit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
+            <Table.Td
+                style={{textAlign: "right"}}>{row.mode === "Credit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
             <Table.Td style={{textAlign: "right"}}>
                 {(row.closing_amount) < 0
                     ? `(${Math.abs(row.closing_amount).toFixed(2)})`
@@ -265,21 +242,6 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
             </Table.Td>
         </Table.Tr>
     ));
-
-    const summaryRow = (
-        <Table.Tr>
-            <Table.Td colSpan={5}><strong>Total</strong></Table.Td>
-            <Table.Td style={{textAlign: "right"}}><strong>{Math.abs(totalDebit).toFixed(2)}</strong></Table.Td>
-            <Table.Td style={{textAlign: "right"}}><strong>{Math.abs(totalCredit).toFixed(2)}</strong></Table.Td>
-            <Table.Td style={{textAlign: "right"}}>
-                <strong>
-                    {(totalDebit - totalCredit) < 0
-                        ? `(${Math.abs(totalDebit - totalCredit).toFixed(2)})`
-                        : (totalDebit - totalCredit).toFixed(2)}
-                </strong>
-            </Table.Td>
-        </Table.Tr>
-    );
 
     return (
         <Modal
@@ -439,7 +401,6 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
                                         <Table.Tbody>
                                             <PreviousOpeningBalanceRow/>
                                             {records}
-                                            {/*{summaryRow}*/}
                                         </Table.Tbody>
                                     </Table>
                                 </Table.ScrollContainer>

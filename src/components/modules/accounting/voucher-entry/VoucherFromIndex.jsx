@@ -450,7 +450,7 @@ function VoucherFormIndex({currencySymbol}) {
                                 <Grid.Col span={6}>
                                     <Text ta="left" size="sm">
                                         {" "}
-                                        {currencySymbol} {primaryLedgerHeadObject?.show_amount && primaryLedgerHeadObject?.amount}
+                                        {currencySymbol} {Number(primaryLedgerHeadObject?.opening_balance || 0).toFixed(2)}
                                     </Text>
                                 </Grid.Col>
                                 <Grid.Col span={3} mt={2}>

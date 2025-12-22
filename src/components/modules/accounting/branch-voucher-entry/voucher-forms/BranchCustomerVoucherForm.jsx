@@ -155,7 +155,7 @@ export default function BranchCustomerVoucherForm(props) {
         let isFormSubmit = false;
 
         if (parentLedgerSlug === "bank-account") {
-            if (bankInfo && typeof bankInfo === "object" && Object.keys(bankInfo).length > 0) {
+            if (bankInfo && typeof bankInfo === "object" && Object.keys(bankInfo || {}).length > 0) {
                 isFormSubmit = true;
             } else {
                 showNotificationComponent("Bank information is empty", "red");
@@ -185,7 +185,7 @@ export default function BranchCustomerVoucherForm(props) {
         if (existingIndex !== -1) {
             items[existingIndex].debit = mode === "debit" ? amount : 0;
             items[existingIndex].credit = mode === "credit" ? amount : 0;
-            if (Object.keys(bankInfo).length > 0) {
+            if (Object.keys(bankInfo || {}).length > 0) {
                 items[existingIndex].bankInfo = {
                     ...(items[existingIndex].bankInfo || {}),
                     ...bankInfo,
@@ -200,7 +200,7 @@ export default function BranchCustomerVoucherForm(props) {
                 debit: mode === "debit" ? amount : 0,
                 credit: mode === "credit" ? amount : 0,
                 type,
-                ...(Object.keys(bankInfo).length > 0 ? {bankInfo} : {}),
+                ...(Object.keys(bankInfo || {}).length > 0 ? {bankInfo} : {}),
             });
         }
 
