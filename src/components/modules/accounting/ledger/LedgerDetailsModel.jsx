@@ -211,7 +211,7 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
     const PreviousOpeningBalanceRow = () => {
         return (
             <Table.Tr key="previous-opening-balance-row" style={{background: "#fff67a"}}>
-                <Table.Td colSpan={7}>
+                <Table.Td colSpan={8}>
                     <span
                         id="previous-opening-label"> <strong>{t('previousOpeningBalance')} {journalItems?.opening_info?.opening_date}</strong></span>
                 </Table.Td>
@@ -228,6 +228,7 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
         <Table.Tr key={row.id}>
             <Table.Td>{idx + 1}</Table.Td>
             <Table.Td>{row.created_date}</Table.Td>
+            <Table.Td>{row.issue_date}</Table.Td>
             <Table.Td>{row.invoice_no}</Table.Td>
             <Table.Td>{row.voucher_name}</Table.Td>
             <Table.Td>{row.ledger_name}</Table.Td>
@@ -389,7 +390,8 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
                                         <Table.Thead>
                                             <Table.Tr bg="var(--theme-primary-color-5)" c="white">
                                                 <Table.Th>{t("S/N")}</Table.Th>
-                                                <Table.Th>{t("Date")}</Table.Th>
+                                                <Table.Th>{t("CreatedDate")}</Table.Th>
+                                                <Table.Th>{t("IssueDate")}</Table.Th>
                                                 <Table.Th>{t("JVNo")}</Table.Th>
                                                 <Table.Th>{t("VoucherType")}</Table.Th>
                                                 <Table.Th>{t("Ledger Name")}</Table.Th>

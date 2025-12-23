@@ -182,7 +182,7 @@ function _BranchVoucherTable(props) {
                                             render: (data) => (
                                                 <Group gap={4} justify="right" wrap="nowrap">
                                                     {
-                                                        data.process === 'Created' &&
+                                                        data.process === 'Created' && data.can_approve &&
                                                         <Button
                                                             size="compact-xs"
                                                             radius="xs"
