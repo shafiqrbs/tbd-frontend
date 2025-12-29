@@ -9,6 +9,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import __StockSearch from "./__StockSearch.jsx";
 import OverviewModal from "../product-overview/OverviewModal.jsx";
 import {IconListDetails, IconListCheck, IconList} from "@tabler/icons-react";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function StockMatrixTable({categoryDropdown}) {
     const dispatch = useDispatch();
@@ -68,6 +69,46 @@ function StockMatrixTable({categoryDropdown}) {
         fetchData();
     }, [activeTab, searchKeyword, page]);
 
+    const [downloadStockXLS, setDownloadStockXls] = useState(false);
+    /*useEffect(() => {
+        if (downloadStockXLS) {
+            const fetchData = async () => {
+                const value = {
+                    url: "inventory/generate/stock-item/xlsx",
+                    param: {},
+                };
+
+                try {
+                    const resultAction = await dispatch(getIndexEntityData(value));
+                    if (getIndexEntityData.rejected.match(resultAction)) {
+                        console.error("Error:", resultAction);
+                    } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                        if (resultAction.payload.status === 200) {
+                            const href = `${
+                                import.meta.env.VITE_API_GATEWAY_URL + "stock-item/download"
+                            }`;
+
+                            const anchorElement = document.createElement("a");
+                            anchorElement.href = href;
+                            document.body.appendChild(anchorElement);
+                            anchorElement.click();
+                            document.body.removeChild(anchorElement);
+                        } else {
+                            showNotificationComponent(resultAction.payload.error, "red");
+                        }
+                    }
+                } catch (err) {
+                    console.error("Unexpected error:", err);
+                } finally {
+                    setDownloadStockXls(false);
+                }
+            };
+
+            fetchData();
+        }
+    }, [downloadStockXLS, dispatch]);*/
+
+
     // Sorting logic
     const [sortStatus, setSortStatus] = useState({columnAccessor: "product_name", direction: "asc"});
     const sortedRecords = useMemo(() => {
@@ -114,7 +155,9 @@ function StockMatrixTable({categoryDropdown}) {
                         </Tabs>
                     </Grid.Col>
                     <Grid.Col span={12}>
-                        <__StockSearch module="stock" categoryDropdown={categoryDropdown}/>
+                        <__StockSearch module="stock"
+                                       categoryDropdown={categoryDropdown}
+                                       setDownloadStockXls={setDownloadStockXls}/>
                     </Grid.Col>
                 </Grid>
             </Box>

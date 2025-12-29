@@ -40,6 +40,7 @@ import AddProductDrawer from "../../inventory/sales/drawer-form/AddProductDrawer
 import SettingDrawer from "../../inventory/common/SettingDrawer.jsx";
 import RequisitionNavigation from "../common/RequisitionNavigation";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 
 function _GenericRequisitionForm(props) {
     const {
@@ -70,6 +71,8 @@ function _GenericRequisitionForm(props) {
     const [productQuantities, setProductQuantities] = useState({});
     const [products, setProducts] = useState([]);
     const [tempCardProducts, setTempCardProducts] = useState([]);
+    const categoryDropDownData = getSettingCategoryDropdownData();
+    const [categoryData, setCategoryData] = useState(null);
 
     // get local product
     const localProducts = useMemo(() => {
@@ -125,6 +128,12 @@ function _GenericRequisitionForm(props) {
             product.purchase_price > 0
         );
 
+        if (categoryData) {
+            filteredProducts = localProducts.filter(product =>
+                product.category_id === Number(categoryData)
+            );
+        }
+
         // Apply search filter
         filteredProducts = filterProductsBySearch(filteredProducts, searchValue);
 
@@ -142,7 +151,7 @@ function _GenericRequisitionForm(props) {
         setVendorObject(foundVendor || null);
         setFetchingProductsTable(false)
 
-    }, [vendorData, searchValue, localProducts, coreVendors, filterProductsBySearch, currencySymbol, fetchingProductsTable]);
+    }, [vendorData, searchValue, localProducts, coreVendors, filterProductsBySearch, currencySymbol, fetchingProductsTable,categoryData]);
 
     // form initialization
     const form = useForm({
@@ -372,7 +381,7 @@ function _GenericRequisitionForm(props) {
                                                 {t("NewRequisition")}
                                             </Text>
                                         </Grid.Col>
-                                        <Grid.Col span={5} align="center">
+                                        {/*<Grid.Col span={5} align="center">
                                             <Group justify="flex-end" align="center" gap={4}>
 
                                                 <SegmentedControl
@@ -440,7 +449,7 @@ function _GenericRequisitionForm(props) {
                                                     </ActionIcon>
                                                 </Tooltip>
                                             </Group>
-                                        </Grid.Col>
+                                        </Grid.Col>*/}
                                     </Grid>
                                 </Box>
                                 <Box
@@ -648,9 +657,8 @@ function _GenericRequisitionForm(props) {
                                         <>
                                             <Box className="boxBackground">
                                                 <Box pt={'0'}>
-                                                    <ScrollArea h={itemFormHeight} scrollbarSize={2} scrollbars="y"
-                                                                type="never">
-                                                        <Box
+                                                    <ScrollArea h={itemFormHeight} scrollbarSize={2} scrollbars="y" type="never">
+                                                        {/*<Box
                                                             p={"xs"}
                                                             mt={"4"}
                                                             className={genericClass.genericHighlightedBox}
@@ -667,13 +675,32 @@ function _GenericRequisitionForm(props) {
                                                                 id={"barcode"}
                                                                 leftSection={<IconBarcode size={16} opacity={0.5}/>}
                                                             />
-                                                        </Box>
+                                                        </Box>*/}
                                                         <Box
                                                             p={"xs"}
                                                             mt={"4"}
                                                             className={genericClass.genericHighlightedBox}>
                                                             <Grid gutter={{base: 6}}>
-                                                                <Grid.Col span={11}>
+                                                                <Grid.Col span={12}>
+                                                                    <Box>
+                                                                        <SelectForm
+                                                                            tooltip={t("ChooseCategory")}
+                                                                            label={""}
+                                                                            placeholder={t("ChooseCategory")}
+                                                                            required={true}
+                                                                            nextField={"product_id"}
+                                                                            name={"category_id"}
+                                                                            form={form}
+                                                                            dropdownValue={categoryDropDownData}
+                                                                            id={"category_id"}
+                                                                            searchable={true}
+                                                                            value={categoryData}
+                                                                            changeValue={setCategoryData}
+                                                                            comboboxProps={{withinPortal: false}}
+                                                                        />
+                                                                    </Box>
+                                                                </Grid.Col>
+                                                                <Grid.Col span={12}>
                                                                     <Box>
                                                                         <SelectForm
                                                                             disabled={!vendorData}
@@ -695,7 +722,7 @@ function _GenericRequisitionForm(props) {
                                                                         />
                                                                     </Box>
                                                                 </Grid.Col>
-                                                                <Grid.Col span={1}>
+                                                                {/*<Grid.Col span={1}>
                                                                     <Box>
                                                                         <Tooltip
                                                                             multiline
@@ -722,7 +749,7 @@ function _GenericRequisitionForm(props) {
                                                                             </ActionIcon>
                                                                         </Tooltip>
                                                                     </Box>
-                                                                </Grid.Col>
+                                                                </Grid.Col>*/}
                                                             </Grid>
                                                         </Box>
                                                         <Box p={"xs"} className={'boxBackground'}>
