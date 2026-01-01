@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {useOutletContext} from "react-router-dom";
-import {Group, Box, Button, Grid, Tabs} from "@mantine/core";
+import {Group, Box, Button, Grid, Tabs, LoadingOverlay} from "@mantine/core";
 import {DataTable} from "mantine-datatable";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
@@ -9,6 +9,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import __StockSearch from "./__StockSearch.jsx";
 import OverviewModal from "../product-overview/OverviewModal.jsx";
 import {IconListDetails, IconListCheck, IconList} from "@tabler/icons-react";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function StockMatrixTable({categoryDropdown}) {
     const dispatch = useDispatch();
@@ -54,6 +55,64 @@ function StockMatrixTable({categoryDropdown}) {
         };
         fetchData();
     }, [activeTab, searchKeyword, page]);
+
+
+    const [downloadStockXLS, setDownloadStockXls] = useState(false);
+    const [downloadStockPdf, setDownloadStockPdf] = useState(false);
+
+    useEffect(() => {
+        if (!downloadStockXLS && !downloadStockPdf) return;
+
+        const fetchData = async () => {
+            const fileType = downloadStockXLS ? 'xlsx' : 'pdf';
+
+            const value = {
+                url: `inventory/stock-item/matrix/${fileType}/generate`,
+                param: {
+                    report_format: 'stock-matrix',
+                    product_nature: activeTab,
+                },
+            };
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error("Error:", resultAction);
+                    return;
+                }
+
+                if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    if (resultAction.payload?.status === 200) {
+                        const fileName = resultAction.payload.file_name;
+
+                        const href =
+                            import.meta.env.VITE_API_GATEWAY_URL +
+                            `stock-item/download?file_name=${encodeURIComponent(fileName)}`;
+
+                        const anchor = document.createElement("a");
+                        anchor.href = href;
+                        anchor.target = "_self";
+                        document.body.appendChild(anchor);
+                        anchor.click();
+                        document.body.removeChild(anchor);
+                    } else {
+                        showNotificationComponent(
+                            resultAction.payload?.error || "Download failed",
+                            "red"
+                        );
+                    }
+                }
+            } catch (err) {
+                console.error("Unexpected error:", err);
+            } finally {
+                setDownloadStockXls(false);
+                setDownloadStockPdf(false);
+            }
+        };
+
+        fetchData();
+    }, [downloadStockXLS, downloadStockPdf, dispatch]);
 
     // Sorting logic
     const [sortStatus, setSortStatus] = useState({columnAccessor: "product_name", direction: "asc"});
@@ -115,7 +174,13 @@ function StockMatrixTable({categoryDropdown}) {
                         </Tabs>
                     </Grid.Col>
                     <Grid.Col span={12}>
-                        <__StockSearch module="stock" categoryDropdown={categoryDropdown}/>
+                        <LoadingOverlay visible={downloadStockPdf || downloadStockXLS} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+                        <__StockSearch
+                            module="stock"
+                            categoryDropdown={categoryDropdown}
+                            setDownloadStockXls={setDownloadStockXls}
+                            setDownloadStockPdf={setDownloadStockPdf}
+                        />
                     </Grid.Col>
                 </Grid>
             </Box>

@@ -282,13 +282,9 @@ function __StockSearch(props) {
               size="lg"
               aria-label="Filter"
               onClick={() => {
-                searchKeyword.length > 0
-                  ? (dispatch(setFetching(true)),
-                    setSearchKeywordTooltip(false))
-                  : (setSearchKeywordTooltip(true),
-                    setTimeout(() => {
-                      setSearchKeywordTooltip(false);
-                    }, 1500));
+                  if (props.module === "stock") {
+                      props.setDownloadStockPdf(true);
+                  }
               }}
             >
               <Tooltip
