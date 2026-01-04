@@ -53,10 +53,11 @@ export default function CategoryTable({id}) {
     const [selectedDomainId, setSelectedDomainId] = useState(id);
     const [subDomainCategoryData, setSubDomainCategoryData] = useState(null);
     const [modeMap, setModeMap] = useState({});
+    const [purchaseModeMap, setPurchaseModeMap] = useState({});
     const [percentValues, setPercentValues] = useState({});
     const [modifiedRows, setModifiedRows] = useState(new Set());
 
-    const form = useForm({initialValues: {mode_id: ""}});
+    const form = useForm({initialValues: {mode_id: "",purchase_mode_id: ""}});
 
     useEffect(() => {
         dispatch(getCategoryDropdown({
@@ -79,11 +80,19 @@ export default function CategoryTable({id}) {
                 const payload = resultAction.payload.data;
                 setSubDomainCategoryData(payload);
 
+                console.log(payload.sub_domain_category)
+
                 const initialModes = {};
                 payload?.sub_domain_category?.forEach((item) => {
                     initialModes[item.id] = item.percent_mode || null;
                 });
                 setModeMap(initialModes);
+
+                const initialPurchaseModes = {};
+                payload?.sub_domain_category?.forEach((item) => {
+                    initialPurchaseModes[item.id] = item.purchase_mode || null;
+                });
+                setPurchaseModeMap(initialPurchaseModes);
             }
         } catch (err) {
             console.error("Fetching error:", err);
@@ -93,6 +102,8 @@ export default function CategoryTable({id}) {
             setOnlyReloadSetting(false);
         }
     }, [dispatch, selectedDomainId]);
+
+    console.log(purchaseModeMap)
 
     useEffect(() => {
         if (reloadList || onlyReloadSetting) {
@@ -119,6 +130,7 @@ export default function CategoryTable({id}) {
 
         const isModified =
             changedMode !== original.percent_mode ||
+            changedMode !== original.purchase_mode ||
             changedPercents.purchase_percent !== original.purchase_percent ||
             changedPercents.mrp_percent !== original.mrp_percent ||
             changedPercents.bonus_percent !== original.bonus_percent;
@@ -127,6 +139,15 @@ export default function CategoryTable({id}) {
             const next = new Set(prev);
             isModified ? next.add(id) : next.delete(id);
             return next;
+        });
+    };
+
+    const handlePurchaseModeChange = (id, value) => {
+        const original = subDomainCategoryData?.sub_domain_category.find((item) => item.id === id);
+        setPurchaseModeMap((prev) => {
+            const updated = {...prev, [id]: value};
+            updateModifiedTracking(id, updated[id], percentValues[id] || {}, original);
+            return updated;
         });
     };
 
@@ -158,11 +179,13 @@ export default function CategoryTable({id}) {
             onCancel: () => console.log('Cancel'),
             onConfirm: async () => {
                 const mode = modeMap[item.id];
+                const purchaseMode = purchaseModeMap[item.id];
                 const inputValues = percentValues[item.id];
 
                 const payload = {
                     id: item.id,
                     percent_mode: mode,
+                    purchase_mode: purchaseMode,
                     ...inputValues,
                 };
 
@@ -242,22 +265,22 @@ export default function CategoryTable({id}) {
                                         title: t("Category"),
                                     },
                                     {
-                                        accessor: "percent_mode",
-                                        title: t("Mode"),
+                                        accessor: "purchase_mode",
+                                        title: t("PurchaseMode"),
                                         width: "220px",
                                         textAlign: "center",
                                         render: (item) => (
                                             <SelectForm
-                                                tooltip={t("ChooseMode")}
-                                                placeholder={t("ChooseMode")}
+                                                tooltip={t("ChoosePurchaseMode")}
+                                                placeholder={t("ChoosePurchaseMode")}
                                                 required
-                                                name="percent_mode"
+                                                name="purchase_mode"
                                                 form={form}
                                                 dropdownValue={["Increase", "Decrease"]}
-                                                id={`percent_mode_${item.id}`}
+                                                id={`purchase_mode_${item.id}`}
                                                 searchable
-                                                value={modeMap[item.id] || item.percent_mode}
-                                                changeValue={(value) => handleModeChange(item.id, value)}
+                                                value={purchaseModeMap[item.id] || item.purchase_mode}
+                                                changeValue={(value) => handlePurchaseModeChange(item.id, value)}
                                             />
                                         ),
                                     },
@@ -287,6 +310,26 @@ export default function CategoryTable({id}) {
                                                         },
                                                     ],
                                                 ])}
+                                            />
+                                        ),
+                                    },
+                                    {
+                                        accessor: "percent_mode",
+                                        title: t("MrpMode"),
+                                        width: "220px",
+                                        textAlign: "center",
+                                        render: (item) => (
+                                            <SelectForm
+                                                tooltip={t("ChooseMrpMode")}
+                                                placeholder={t("ChooseMrpMode")}
+                                                required
+                                                name="percent_mode"
+                                                form={form}
+                                                dropdownValue={["Increase", "Decrease"]}
+                                                id={`percent_mode_${item.id}`}
+                                                searchable
+                                                value={modeMap[item.id] || item.percent_mode}
+                                                changeValue={(value) => handleModeChange(item.id, value)}
                                             />
                                         ),
                                     },

@@ -23,7 +23,7 @@ import {
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {useForm} from "@mantine/form";
+import {isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
@@ -62,6 +62,7 @@ function SubDomainSettingForm(props) {
     const [fetching, setFetching] = useState(false);
 
     const [percentMode, setPercentMode] = useState("Increase");
+    const [purchaseMode, setPurchaseMode] = useState("Increase");
 
     const [subDomainCategoryData, setSubDomainCategoryData] = useState(null)
     useEffect(() => {
@@ -93,8 +94,10 @@ function SubDomainSettingForm(props) {
         if (subDomainCategoryData?.sub_domain_category) {
             const ids = subDomainCategoryData.sub_domain_category.map(item => item.domain_category_id);
             subDomainCategoryData.percent_mode && setPercentMode(String(subDomainCategoryData?.percent_mode))
+            subDomainCategoryData.purchase_mode && setPurchaseMode(String(subDomainCategoryData?.purchase_mode))
             form.setValues({
                 percent_mode: subDomainCategoryData.percent_mode || 'Increase',
+                purchase_mode: subDomainCategoryData.purchase_mode || 'Increase',
                 mrp_percent: subDomainCategoryData?.mrp_percent || '',
                 purchase_percent: subDomainCategoryData?.purchase_percent || '',
                 bonus_percent: subDomainCategoryData?.bonus_percent || '',
@@ -121,6 +124,7 @@ function SubDomainSettingForm(props) {
     const form = useForm({
         initialValues: {
             percent_mode: subDomainCategoryData?.percent_mode || 'Increase',
+            purchase_mode: subDomainCategoryData?.purchase_mode || 'Increase',
             mrp_percent: subDomainCategoryData?.mrp_percent,
             purchase_percent: subDomainCategoryData?.purchase_percent,
             bonus_percent: subDomainCategoryData?.bonus_percent,
@@ -128,6 +132,8 @@ function SubDomainSettingForm(props) {
             categories: subDomainCategoryData?.sub_domain_category.map(item => item.domain_category_id),
         },
         validate: {
+            percent_mode : isNotEmpty(),
+            purchase_mode : isNotEmpty(),
             purchase_percent: (value) => {
                 if (value !== undefined && value !== null && value !== '') {
                     const isNumber = !isNaN(value);
@@ -311,9 +317,9 @@ function SubDomainSettingForm(props) {
                                                 >
                                                     <Box mt={"xs"}>
                                                         <SelectForm
-                                                            label={t("ChooseMode")}
-                                                            tooltip={t("ChooseMode")}
-                                                            placeholder={t("ChooseMode")}
+                                                            label={t("ChooseMrpMode")}
+                                                            tooltip={t("ChooseMrpMode")}
+                                                            placeholder={t("ChooseMrpMode")}
                                                             required={false}
                                                             name={"percent_mode"}
                                                             form={form}
@@ -331,7 +337,7 @@ function SubDomainSettingForm(props) {
                                                             label={t("MRPPercent")}
                                                             placeholder={t("MRPPercent")}
                                                             required={true}
-                                                            nextField={"purchase_percent"}
+                                                            nextField={"purchase_mode"}
                                                             form={form}
                                                             name={"mrp_percent"}
                                                             mt={8}
@@ -342,6 +348,24 @@ function SubDomainSettingForm(props) {
                                                             }
                                                         />
                                                     </Box>
+
+                                                    <Box mt={"xs"}>
+                                                        <SelectForm
+                                                            label={t("ChoosePurchaseMode")}
+                                                            tooltip={t("ChoosePurchaseMode")}
+                                                            placeholder={t("ChoosePurchaseMode")}
+                                                            required={false}
+                                                            name={"purchase_mode"}
+                                                            form={form}
+                                                            nextField={"purchase_percent"}
+                                                            dropdownValue={["Increase", "Decrease"]}
+                                                            id={"purchase_mode"}
+                                                            searchable={true}
+                                                            value={purchaseMode}
+                                                            changeValue={setPurchaseMode}
+                                                        />
+                                                    </Box>
+
                                                     <Box mt={"xs"}>
                                                         <InputForm
                                                             tooltip={t("PurchasePercent")}

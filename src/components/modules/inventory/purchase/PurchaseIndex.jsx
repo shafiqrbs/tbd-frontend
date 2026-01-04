@@ -3,13 +3,10 @@ import {
     Box, Grid, Progress
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
 import _PurchaseTable from "./_PurchaseTable.jsx";
 import Navigation from "../common/Navigation";
-import _GenericInvoiceForm from "./_GenericInvoiceForm";
 
 function PurchaseIndex() {
     const { t, i18n } = useTranslation();

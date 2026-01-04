@@ -15,14 +15,13 @@ import {
     rem,
     Checkbox,
     Tooltip,
-    LoadingOverlay, List, Badge
+    LoadingOverlay, Badge
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
     IconEdit,
     IconPrinter,
-    IconReceipt, IconDotsVertical, IconTrashX,
-    IconCheck, IconChevronsRight, IconEyeEdit, IconPencil, IconCopy
+    IconReceipt, IconDotsVertical, IconTrashX, IconEyeEdit, IconPencil, IconCopy
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
@@ -41,9 +40,7 @@ import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import { SalesPrintA4 } from "./print-component/SalesPrintA4.jsx";
 import { SalesPrintPos } from "./print-component/SalesPrintPos.jsx";
 import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
-import Navigation from "../common/Navigation.jsx";
 import {formatDate, parseDate} from "../../../../utils";
 
 function _SalesTable(props) {
@@ -97,7 +94,7 @@ function _SalesTable(props) {
                 isWarehouse === 1 &&
                 <Table.Td ta="center" fz="xs" width={'60'}>{element.warehouse}</Table.Td>
             }
-            <Table.Td ta="center" fz="xs" width={'60'}>{element.bonus_quantity}</Table.Td>
+            {/*<Table.Td ta="center" fz="xs" width={'60'}>{element.bonus_quantity}</Table.Td>*/}
             <Table.Td ta="center" fz="xs" width={'60'}>{element.quantity}</Table.Td>
             <Table.Td ta="right" fz="xs" width={'80'}>{element.uom}</Table.Td>
             <Table.Td ta="right" fz="xs" width={'80'}>{element.sales_price}</Table.Td>
@@ -226,7 +223,7 @@ function _SalesTable(props) {
 
 
     const current_date = formatDate(new Date());
-    console.log(current_date)
+
     return (
         <>
             <Box>
@@ -656,9 +653,9 @@ function _SalesTable(props) {
                                                             {t("Warehouse")}
                                                         </Table.Th>
                                                     }
-                                                    <Table.Th fz="xs" ta="center" w={"60"}>
+                                                    {/*<Table.Th fz="xs" ta="center" w={"60"}>
                                                         {t("BonusQuantityTable")}
-                                                    </Table.Th>
+                                                    </Table.Th>*/}
                                                     <Table.Th fz="xs" ta="center" w={'60'}>{t('QTY')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'80'}>{t('UOM')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'80'}>{t('Price')}</Table.Th>
@@ -668,31 +665,31 @@ function _SalesTable(props) {
                                             <Table.Tbody>{rows}</Table.Tbody>
                                             <Table.Tfoot>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={isWarehouse?'7':'6'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
+                                                    <Table.Th colSpan={isWarehouse?'6':'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.sub_total && Number(salesViewData.sub_total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={isWarehouse?'7':'6'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
+                                                    <Table.Th colSpan={isWarehouse?'6':'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.discount && Number(salesViewData.discount).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={isWarehouse?'7':'6'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
+                                                    <Table.Th colSpan={isWarehouse?'6':'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.total && Number(salesViewData.total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={isWarehouse?'7':'6'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
+                                                    <Table.Th colSpan={isWarehouse?'6':'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.payment && Number(salesViewData.payment).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={isWarehouse?'7':'6'} ta="right" fz="xs" w={'100'}>{t('Due')}</Table.Th>
+                                                    <Table.Th colSpan={isWarehouse?'6':'7'} ta="right" fz="xs" w={'100'}>{t('Due')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.total && (Number(salesViewData.total) - Number(salesViewData.payment)).toFixed(2)}
                                                     </Table.Th>

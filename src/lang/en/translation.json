@@ -1248,6 +1248,9 @@
   "ChooseBranch": "Choose Branch",
   "AccountNumber": "Account Number",
   "BEntryList": "B. Entry List",
+  "ChooseMrpMode": "Choose mrp mode",
+  "MrpMode": "Mrp mode",
+  "PurchaseMode": "Purchase Mode",
   "xxxxxx": "xxxxxxx",
   "": ""
 }
