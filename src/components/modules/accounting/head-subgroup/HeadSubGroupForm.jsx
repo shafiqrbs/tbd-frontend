@@ -51,7 +51,7 @@ function HeadSubGroupForm(props) {
         validate: {
             parent_id: isNotEmpty(),
             name: isNotEmpty(),
-            code : isNotEmpty()
+           // code : isNotEmpty()
         }
     });
 
@@ -167,7 +167,7 @@ function HeadSubGroupForm(props) {
                                                             tooltip={t('NameValidateMessage')}
                                                             label={t('Name')}
                                                             placeholder={t('Name')}
-                                                            required={true}
+                                                            required={false}
                                                             nextField={'code'}
                                                             name={'name'}
                                                             form={form}

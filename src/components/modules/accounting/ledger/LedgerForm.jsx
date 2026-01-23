@@ -39,7 +39,7 @@ function LedgerForm(props) {
         validate: {
             parent_id: isNotEmpty(),
             name: hasLength({min: 2, max: 20}),
-            code: isNotEmpty()
+           // code: isNotEmpty()
         }
     });
 
@@ -170,7 +170,7 @@ function LedgerForm(props) {
                                                             tooltip={t('AccountCodeValidateMessage')}
                                                             label={t('AccountCode')}
                                                             placeholder={t('AccountCode')}
-                                                            required={true}
+                                                            required={false}
                                                             name={'code'}
                                                             form={form}
                                                             id={'code'}
