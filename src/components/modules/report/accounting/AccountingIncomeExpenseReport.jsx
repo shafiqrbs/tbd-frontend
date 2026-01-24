@@ -6,7 +6,8 @@ import {
     Table,
     Text,
     Progress,
-    LoadingOverlay, Divider
+    LoadingOverlay,
+    Divider, Button
 } from "@mantine/core";
 import { useDispatch, useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
@@ -15,13 +16,13 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import { getIndexEntityData } from "../../../../store/report/reportSlice";
 
 import ReportNavigation from "../ReportNavigation";
-
 import batchTableCss from "../../../../assets/css/ProductBatchTable.module.css";
-import { showNotificationComponent } from "../../../core-component/showNotificationComponent";
 import _AccountingReportSearch from "./_AccountingReportSearch.jsx";
 
-export default function AccountingIncomeExpenseReport() {
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
+export default function AccountingIncomeExpenseReport() {
     const progress = getLoadingProgress();
     const dispatch = useDispatch();
     const { t } = useTranslation();
@@ -33,25 +34,39 @@ export default function AccountingIncomeExpenseReport() {
     const [indexData, setIndexData] = useState([]);
     const [page, setPage] = useState(1);
     const [searchValue, setSearchValue] = useState(false);
-    const [downloadFile, setDownloadFile] = useState(false);
-    const [downloadType, setDownloadType] = useState("xlsx");
 
-    const fetching = useSelector((state) => state.productionCrudSlice.fetching);
-    const accountingFilterData = useSelector(
+    const productionIssueFilterData = useSelector(
         (state) => state.reportSlice.productionIssueFilterData
     );
-    const productionIssueFilterData = useSelector((state) => state.reportSlice.productionIssueFilterData);
 
+    const ledgers = indexData?.ledgers || [];
+    const receives = indexData?.receives || [];
+    const expenses = indexData?.expenses || [];
+    const summary = indexData?.summary || [];
 
-    /* ============================
-       Fetch Accounting Report Data
-    ============================ */
+    const bankTotal = summary.reduce((s, i) => s + (i.amount || 0), 0);
+    const totalSales = receives.reduce((sum, row) => sum + (row.total || 0), 0);
+    const expenseTotal = expenses.reduce((s, i) => s + (i.amount || 0), 0);
 
-    // Safely destructure accounts and outletSales
-    const accounts = indexData?.receive?.accounts || [];
-    const outletSales = indexData?.receive?.outletSales || [];
+    const grandTotal = bankTotal + totalSales;
+    const netBalance = grandTotal - expenseTotal;
 
+    // Safe date formatter
+    const formatDateOnly = (value) => {
+        if (!value) return "";
+        if (value instanceof Date) {
+            const y = value.getFullYear();
+            const m = String(value.getMonth() + 1).padStart(2, "0");
+            const d = String(value.getDate()).padStart(2, "0");
+            return `${d}-${m}-${y}`;
+        }
+        if (typeof value === "string") {
+            return value.split("-").reverse().join("-");
+        }
+        return "";
+    };
 
+    // Fetch data only when both dates exist
     useEffect(() => {
         const fetchData = async () => {
             const value = {
@@ -59,14 +74,13 @@ export default function AccountingIncomeExpenseReport() {
                 param: {
                     start_date: productionIssueFilterData.start_date,
                     end_date: productionIssueFilterData.end_date,
-                    page: page,
+                    page,
                     offset: perPage
                 }
             };
 
             try {
                 const resultAction = await dispatch(getIndexEntityData(value));
-
                 if (getIndexEntityData.fulfilled.match(resultAction)) {
                     setIndexData(resultAction?.payload?.data);
                 } else {
@@ -79,113 +93,163 @@ export default function AccountingIncomeExpenseReport() {
             }
         };
 
-        if (productionIssueFilterData.start_date) {
+        if (
+            productionIssueFilterData.start_date &&
+            productionIssueFilterData.end_date
+        ) {
             fetchData();
         }
-    }, [dispatch, productionIssueFilterData.start_date, page, perPage, searchValue]);
+    }, [
+        dispatch,
+        productionIssueFilterData.start_date,
+        productionIssueFilterData.end_date,
+        page,
+        perPage,
+        searchValue
+    ]);
 
+    const exportToExcel = () => {
+        if (!indexData) return;
 
-    /* ============================
-       XLSX / PDF Download
-    ============================ */
-    useEffect(() => {
-        if (!downloadFile) return;
+        const rows = [];
 
-        const downloadReport = async () => {
-            let route = downloadType === "pdf"
-                ? "accounting/report/daily-pdf"
-                : "accounting/report/daily-xlsx";
+        // ================= REPORT HEADER =================
+        rows.push(["Sandra Foods International Limited"]);
+        rows.push(["Daily Income & Expense Details"]);
+        rows.push([
+            "Period:",
+            `${formatDateOnly(productionIssueFilterData.start_date)} TO ${formatDateOnly(productionIssueFilterData.end_date)}`
+        ]);
+        rows.push([]); // empty row
 
-            try {
-                const result = await dispatch(
-                    getIndexEntityData({ url: route, param: {} })
-                );
+        // ================= BANK =================
+        rows.push(["Bank Purpose Received"]);
+        rows.push(["Description", "Opening", "Received", "Payment", "Closing"]);
 
-                if (getIndexEntityData.fulfilled.match(result)) {
-                    if (result.payload.status === 200) {
-                        const href = `${import.meta.env.VITE_API_GATEWAY_URL}accounting/download/${downloadType}`;
-                        const a = document.createElement("a");
-                        a.href = href;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    } else {
-                        showNotificationComponent(result.payload.error, "red");
-                    }
+        summary.forEach(row => {
+            rows.push([
+                row.desc,
+                row.opening || 0,
+                row.received || 0,
+                row.payment || 0,
+                row.amount || 0
+            ]);
+        });
+
+        rows.push(["Total", "", "", "", bankTotal]);
+        rows.push([]); // spacing
+
+        // ================= OUTLET SALES =================
+        rows.push(["Cash Received from Outlet Sales"]);
+        const ledgerHeaders = ledgers.map(l => l.display_name);
+        rows.push(["Description", ...ledgerHeaders, "Total"]);
+
+        receives.forEach(row => {
+            const r = [row.outlet];
+            ledgers.forEach(l => r.push(row[l.id] || 0));
+            r.push(row.total || 0);
+            rows.push(r);
+        });
+
+        const grandTotalRow = ["Grand Total"];
+        ledgers.forEach(l => {
+            const sum = receives.reduce((s, r) => s + (r[l.id] || 0), 0);
+            grandTotalRow.push(sum);
+        });
+        grandTotalRow.push(receives.reduce((s, r) => s + (r.total || 0), 0));
+        rows.push(grandTotalRow);
+        rows.push([]); // spacing
+
+        // ================= EXPENSES =================
+        rows.push(["Expenses (Account)"]);
+        rows.push(["Description", "Amount"]);
+
+        expenses.forEach(row => {
+            rows.push([row.sub_head_name, row.amount]);
+        });
+
+        rows.push(["Total Expense", expenseTotal]);
+        rows.push([]); // spacing
+
+        // ================= NET BALANCE =================
+        rows.push(["Grand Total (Bank + Sales)", grandTotal]);
+        rows.push(["Total Expense", expenseTotal]);
+        rows.push(["Net Balance", netBalance]);
+
+        // ================= CREATE SHEET =================
+        const ws = XLSX.utils.aoa_to_sheet(rows);
+
+        // ================= MERGES =================
+        ws["!merges"] = [
+            { s: { r: 0, c: 0 }, e: { r: 0, c: Math.max(ledgers.length + 1, 4) } }, // company
+            { s: { r: 1, c: 0 }, e: { r: 1, c: Math.max(ledgers.length + 1, 4) } }, // report title
+            { s: { r: 2, c: 1 }, e: { r: 2, c: Math.max(ledgers.length + 1, 4) } }  // period text
+        ];
+
+        // ================= STYLING =================
+        const range = XLSX.utils.decode_range(ws["!ref"]);
+
+        for (let R = 0; R <= range.e.r; ++R) {
+            for (let C = 0; C <= range.e.c; ++C) {
+                const cell_address = XLSX.utils.encode_cell({ r: R, c: C });
+                const cell = ws[cell_address];
+                if (!cell) continue;
+
+                if (!cell.s) cell.s = { font: {}, alignment: {} };
+
+                // Report header bold & center
+                if (R <= 1) {
+                    cell.s.font.bold = true;
+                    cell.s.alignment = { horizontal: "center" };
                 }
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setDownloadFile(false);
+
+                // Table headers bold
+                if (
+                    [5, 6, 8 + summary.length, 9 + summary.length + receives.length, 11 + summary.length + receives.length + expenses.length].includes(R)
+                ) {
+                    cell.s.font.bold = true;
+                }
+
+                // Totals bold
+                if (
+                    R === 5 + summary.length || // Bank total
+                    R === 9 + summary.length + receives.length || // Outlet Grand total
+                    R === 11 + summary.length + receives.length + expenses.length // Expense total
+                ) {
+                    cell.s.font.bold = true;
+                    cell.s.fill = { fgColor: { rgb: "FFFF00" } }; // optional yellow fill
+                }
+
+                // Right-align numeric columns
+                if (C > 0) {
+                    cell.s.alignment.horizontal = "right";
+                }
+
+                // Table background colors
+                if (R >= 5 && R <= 5 + summary.length) {
+                    cell.s.fill = { fgColor: { rgb: "DDEBF7" } }; // Bank table: light blue
+                }
+                if (R >= 8 + summary.length && R <= 9 + summary.length + receives.length) {
+                    cell.s.fill = { fgColor: { rgb: "E2EFDA" } }; // Outlet Sales: light green
+                }
+                if (R >= 11 + summary.length + receives.length && R <= 11 + summary.length + receives.length + expenses.length) {
+                    cell.s.fill = { fgColor: { rgb: "FCE4D6" } }; // Expenses: light orange
+                }
             }
-        };
-
-        downloadReport();
-    }, [downloadFile]);
-
-    /* ============================
-       Totals (XLSX Style)
-    ============================ */
-    /*const totals = indexData?.data?.reduce(
-        (acc, row) => {
-            acc.debit += Number(row.debit || 0);
-            acc.credit += Number(row.credit || 0);
-            return acc;
-        },
-        { debit: 0, credit: 0 }
-    );*/
-
-    /* ================= DEMO DATA ================= */
-
-    const bankTransfers = [
-        { date: "10.11.25", desc: "Bank Transfer Prime Bank AC:17266",opening:5000,received:3000,payment:2000, amount: 6000 },
-        { date: "10.11.25", desc: "Bank Transfer Prime Bank AC:17266", opening:5000,received:3000,payment:2000, amount: 6000 },
-        { date: "10.11.25", desc: "Withdrawn From Dhaka Bank", opening:5000,received:3000,payment:2000, amount: 6000 },
-        { date: "10.11.25", desc: "Withdrawn From Brac Bank", opening:5000,received:3000,payment:2000, amount: 6000 },
-        { date: "10.11.25", desc: "Cheque Withdraw Prime Bank (Sadek Vai)", opening:5000,received:3000,payment:2000, amount: 6000 }
-    ];
-
-    const outletSales1 = [
-        {
-            date: "10.11.25",
-            outlet: "E Block Banasree Outlet",
-            foodpanda: 800,
-            card: 19000,
-            bkash: 7625,
-            excess: 30,
-            cashSale: 86796,
-            netCash: 86826,
-            total: 114221
-        },
-        {
-            date: "10.11.25",
-            outlet: "E Block Banashree Tea Shop",
-            foodpanda: 3365,
-            card: 10315,
-            bkash: 1185,
-            excess: 116,
-            cashSale: 100775,
-            netCash: 100891,
-            total: 115640
         }
-    ];
 
-    const expenses = [
-        { date: "10.11.25", desc: "Outlet Rent Basundhara Nov 25", amount: 50000 },
-        { date: "10.11.25", desc: "Electricity Bill Oct 25 Basundhara", amount: 5778 },
-        { date: "10.11.25", desc: "Raw Materials Purchase", amount: 7585 },
-        { date: "10.11.25", desc: "Staff Food Bill", amount: 4560 },
-        { date: "10.11.25", desc: "Director Current A/C Expense", amount: 6000 }
-    ];
+        // ================= COLUMN WIDTH =================
+        const maxCols = Math.max(ledgers.length + 2, 5);
+        ws["!cols"] = Array(maxCols).fill({ wch: 20 });
 
-    // const bankTotal = bankTransfers.reduce((s, i) => s + i.amount, 0);
-    const bankTotal = 0;
-    const totalSales = outletSales.reduce((sum, row) => sum + (row.total || 0), 0);
-    // const expenseTotal = expenses.reduce((s, i) => s + i.amount, 0);
-    const expenseTotal = 0;
+        // ================= EXPORT =================
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Income & Expense Report");
 
-    const grandTotal = bankTotal + totalSales;
-    const netBalance = grandTotal - expenseTotal;
+        const start = formatDateOnly(productionIssueFilterData.start_date);
+        const end = formatDateOnly(productionIssueFilterData.end_date);
+        XLSX.writeFile(wb, `Income_Expense_Report_${start}_to_${end}.xlsx`);
+    };
 
 
     return (
@@ -203,7 +267,7 @@ export default function AccountingIncomeExpenseReport() {
             {progress === 100 && (
                 <Box>
                     <LoadingOverlay
-                        visible={searchValue || downloadFile}
+                        visible={searchValue}
                         zIndex={1000}
                         overlayProps={{ radius: "sm", blur: 2 }}
                     />
@@ -215,21 +279,24 @@ export default function AccountingIncomeExpenseReport() {
                             </Grid.Col>
 
                             <Grid.Col span={20}>
+                                {/*<Button
+                                    color="blue"
+                                    onClick={exportToExcel}
+                                    style={{ marginBottom: "10px" }}
+                                >
+                                    Export to Excel
+                                </Button>*/}
                                 {/* Header */}
                                 <Box className="boxBackground borderRadiusAll">
                                     <Grid columns={24}>
                                         <Grid.Col span={8}>
-                                            <Text p="md">
-                                                {t("Daily Income & Expense Report")}
-                                            </Text>
+                                            <Text p="md">{t("Daily Income & Expense Report")}</Text>
                                         </Grid.Col>
 
                                         <Grid.Col span={16}>
                                             <_AccountingReportSearch
                                                 module="production-issue"
                                                 setSearchValue={setSearchValue}
-                                                setDownloadFile={setDownloadFile}
-                                                setDownloadType={setDownloadType}
                                             />
                                         </Grid.Col>
                                     </Grid>
@@ -241,58 +308,65 @@ export default function AccountingIncomeExpenseReport() {
                                         className={batchTableCss.responsiveTableWrapper}
                                         style={{ height, overflow: "auto" }}
                                     >
-
-                                            {/* ================= HEADER ================= */}
-                                            <Text ta="center" fw={700} size="lg">
-                                                Sandra Foods International Limited
+                                        {/* ================= HEADER ================= */}
+                                        <Text ta="center" fw={700} size="lg">
+                                            Sandra Foods International Limited
+                                        </Text>
+                                        <Text ta="center" fw={600}>
+                                            Daily Income & Expense Details
+                                        </Text>
+                                        <Text ta="center" mb="md">
+                                            <Text span c="gray.6">
+                                                {formatDateOnly(productionIssueFilterData.start_date)}
                                             </Text>
-                                            <Text ta="center" fw={600}>
-                                                Daily Income & Expense Details
+                                            {" TO "}
+                                            <Text span c="gray.6">
+                                                {formatDateOnly(productionIssueFilterData.end_date)}
                                             </Text>
-                                            <Text ta="center" mb="md">
-                                                10.11.2025
-                                            </Text>
+                                        </Text>
 
-                                            {/* ================= BANK TRANSFER ================= */}
-                                            <Text fw={700} mt="md">Bank Purpose Received</Text>
+                                        {/* ================= BANK TRANSFER ================= */}
+                                        <Text fw={700} mt="md">
+                                            Bank Purpose Received
+                                        </Text>
+                                        <Table withTableBorder withColumnBorders striped>
+                                            <Table.Thead>
+                                                <Table.Tr>
+                                                    <Table.Th>Description</Table.Th>
+                                                    <Table.Th ta="right">Opening</Table.Th>
+                                                    <Table.Th ta="right">Received</Table.Th>
+                                                    <Table.Th ta="right">Payment</Table.Th>
+                                                    <Table.Th ta="right">Closing</Table.Th>
+                                                </Table.Tr>
+                                            </Table.Thead>
 
-                                            <Table withTableBorder withColumnBorders striped>
-                                                <Table.Thead>
-                                                    <Table.Tr>
-                                                        <Table.Th>Description</Table.Th>
-                                                        <Table.Th ta="right">Opening</Table.Th>
-                                                        <Table.Th ta="right">Received</Table.Th>
-                                                        <Table.Th ta="right">Payment</Table.Th>
-                                                        <Table.Th ta="right">Closing</Table.Th>
+                                            <Table.Tbody>
+                                                {summary.map((row, i) => (
+                                                    <Table.Tr key={i}>
+                                                        <Table.Td>{row.desc}</Table.Td>
+                                                        <Table.Td ta="right">{row?.opening?.toLocaleString()}</Table.Td>
+                                                        <Table.Td ta="right">{row?.received?.toLocaleString()}</Table.Td>
+                                                        <Table.Td ta="right">{row?.payment?.toLocaleString()}</Table.Td>
+                                                        <Table.Td ta="right">{row?.amount?.toLocaleString()}</Table.Td>
                                                     </Table.Tr>
-                                                </Table.Thead>
+                                                ))}
 
-                                                <Table.Tbody>
-                                                    {bankTransfers.map((row, i) => (
-                                                        <Table.Tr key={i}>
-                                                            <Table.Td>{row.desc}</Table.Td>
-                                                            <Table.Td ta="right">{row.opening.toLocaleString()}</Table.Td>
-                                                            <Table.Td ta="right">{row.received.toLocaleString()}</Table.Td>
-                                                            <Table.Td ta="right">{row.payment.toLocaleString()}</Table.Td>
-                                                            <Table.Td ta="right">{row.amount.toLocaleString()}</Table.Td>
-                                                        </Table.Tr>
-                                                    ))}
+                                                <Table.Tr className={batchTableCss.highlightedRow}>
+                                                    <Table.Td colSpan={4} ta="right"><b>Total</b></Table.Td>
+                                                    <Table.Td ta="right"><b>{bankTotal.toLocaleString()}</b></Table.Td>
+                                                </Table.Tr>
+                                            </Table.Tbody>
+                                        </Table>
 
-                                                    <Table.Tr className={batchTableCss.highlightedRow}>
-                                                        <Table.Td colSpan={4} ta="right"><b>Total</b></Table.Td>
-                                                        <Table.Td ta="right"><b>{bankTotal.toLocaleString()}</b></Table.Td>
-                                                    </Table.Tr>
-                                                </Table.Tbody>
-                                            </Table>
-
-                                            {/* ================= OUTLET SALES ================= */}
-                                            <Text fw={700} mt="xl">Cash Received from Outlet Sales</Text>
+                                        {/* ================= OUTLET SALES ================= */}
+                                        <Text fw={700} mt="xl">Cash Received from Outlet Sales</Text>
+                                        <div style={{ overflowX: "auto", width: "100%" }}>
 
                                         <Table withTableBorder withColumnBorders striped>
                                             <Table.Thead>
                                                 <Table.Tr>
                                                     <Table.Th>Description</Table.Th>
-                                                    {accounts.map(acc => (
+                                                    {ledgers.map(acc => (
                                                         <Table.Th key={acc.id} ta="right">{acc.display_name}</Table.Th>
                                                     ))}
                                                     <Table.Th ta="right">Total</Table.Th>
@@ -300,84 +374,74 @@ export default function AccountingIncomeExpenseReport() {
                                             </Table.Thead>
 
                                             <Table.Tbody>
-                                                {outletSales.map((row, i) => (
+                                                {receives.map((row, i) => (
                                                     <Table.Tr key={i}>
                                                         <Table.Td>{row.outlet}</Table.Td>
-
-                                                        {accounts.map(acc => (
+                                                        {ledgers.map(acc => (
                                                             <Table.Td key={acc.id} ta="right">
                                                                 {row[acc.id]?.toLocaleString() || "0"}
                                                             </Table.Td>
                                                         ))}
-
                                                         <Table.Td ta="right">{row.total?.toLocaleString() || "0"}</Table.Td>
                                                     </Table.Tr>
                                                 ))}
 
-                                                {/* Optional: Grand Total Row */}
-                                                {outletSales.length > 0 && (
+                                                {receives.length > 0 && (
                                                     <Table.Tr style={{ fontWeight: "bold" }}>
                                                         <Table.Td colSpan={1} ta="right">Grand Total</Table.Td>
-                                                        {accounts.map(acc => {
-                                                            const sum = outletSales.reduce((total, row) => total + (row[acc.id] || 0), 0);
-                                                            return (
-                                                                <Table.Td key={acc.id} ta="right">{sum.toLocaleString()}</Table.Td>
-                                                            );
+                                                        {ledgers.map(acc => {
+                                                            const sum = receives.reduce((total, row) => total + (row[acc.id] || 0), 0);
+                                                            return <Table.Td key={acc.id} ta="right">{sum.toLocaleString()}</Table.Td>;
                                                         })}
-                                                        <Table.Td ta="right">
-                                                            {outletSales.reduce((total, row) => total + (row.total || 0), 0).toLocaleString()}
-                                                        </Table.Td>
+                                                        <Table.Td ta="right">{receives.reduce((total, row) => total + (row.total || 0), 0).toLocaleString()}</Table.Td>
                                                     </Table.Tr>
                                                 )}
                                             </Table.Tbody>
                                         </Table>
+                                        </div>
 
-                                            {/* ================= GRAND TOTAL ================= */}
-                                            <Divider my="md" />
+                                        {/* ================= GRAND TOTAL ================= */}
+                                        <Divider my="md" />
+                                        <Text fw={700}>
+                                            Grand Total (Bank + Total Sales)
+                                            <span style={{ float: "right" }}>
+                                                {grandTotal.toLocaleString()}
+                                            </span>
+                                        </Text>
 
-                                            <Text fw={700}>
-                                                Grand Total (Bank + Total Sales)
-                                                <span style={{ float: "right" }}>
-                                                    {grandTotal.toLocaleString()}
-                                                </span>
-                                            </Text>
+                                        {/* ================= EXPENSES ================= */}
+                                        <Text fw={700} mt="md">Expenses (Account)</Text>
+                                        <Table withTableBorder withColumnBorders striped>
+                                            <Table.Thead>
+                                                <Table.Tr>
+                                                    <Table.Th>Description</Table.Th>
+                                                    <Table.Th ta="right">Amount</Table.Th>
+                                                </Table.Tr>
+                                            </Table.Thead>
 
-                                            {/* ================= EXPENSES ================= */}
-                                            <Text fw={700} mt="md">Expenses (Account)</Text>
-
-                                            <Table withTableBorder withColumnBorders striped>
-                                                <Table.Thead>
-                                                    <Table.Tr>
-                                                        <Table.Th>Description</Table.Th>
-                                                        <Table.Th ta="right">Amount</Table.Th>
+                                            <Table.Tbody>
+                                                {expenses.map((row, i) => (
+                                                    <Table.Tr key={i}>
+                                                        <Table.Td>{row.sub_head_name}</Table.Td>
+                                                        <Table.Td ta="right">{row.amount.toLocaleString()}</Table.Td>
                                                     </Table.Tr>
-                                                </Table.Thead>
+                                                ))}
 
-                                                <Table.Tbody>
-                                                    {expenses.map((row, i) => (
-                                                        <Table.Tr key={i}>
-                                                            <Table.Td>{row.desc}</Table.Td>
-                                                            <Table.Td ta="right">{row.amount.toLocaleString()}</Table.Td>
-                                                        </Table.Tr>
-                                                    ))}
+                                                <Table.Tr className={batchTableCss.errorBackground}>
+                                                    <Table.Td colSpan={2} ta="right"><b>Total Expense</b></Table.Td>
+                                                    <Table.Td ta="right"><b>{expenseTotal.toLocaleString()}</b></Table.Td>
+                                                </Table.Tr>
+                                            </Table.Tbody>
+                                        </Table>
 
-                                                    <Table.Tr className={batchTableCss.errorBackground}>
-                                                        <Table.Td colSpan={2} ta="right"><b>Total Expense</b></Table.Td>
-                                                        <Table.Td ta="right"><b>{expenseTotal.toLocaleString()}</b></Table.Td>
-                                                    </Table.Tr>
-                                                </Table.Tbody>
-                                            </Table>
-
-                                            {/* ================= NET BALANCE ================= */}
-                                            <Divider my="md" />
-
-                                            <Text fw={800} size="lg">
-                                                Net Balance
-                                                <span style={{ float: "right" }}>
-                    {netBalance.toLocaleString()}
-                </span>
-                                            </Text>
-
+                                        {/* ================= NET BALANCE ================= */}
+                                        <Divider my="md" />
+                                        <Text fw={800} size="lg">
+                                            Net Balance
+                                            <span style={{ float: "right" }}>
+                                                {netBalance.toLocaleString()}
+                                            </span>
+                                        </Text>
                                     </div>
                                 </Box>
                             </Grid.Col>
