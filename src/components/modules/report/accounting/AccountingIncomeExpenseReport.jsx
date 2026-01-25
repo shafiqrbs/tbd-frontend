@@ -41,6 +41,11 @@ export default function AccountingIncomeExpenseReport() {
 
     const ledgers = indexData?.ledgers || [];
     const receives = indexData?.receives || [];
+
+    // remove 0 value from receive
+    const visibleLedgers = ledgers.filter(acc =>
+        receives.some(row => (row[acc.id] || 0) !== 0)
+    );
     const expenses = indexData?.expenses || [];
     const summary = indexData?.summary || [];
 
@@ -341,15 +346,23 @@ export default function AccountingIncomeExpenseReport() {
                                             </Table.Thead>
 
                                             <Table.Tbody>
-                                                {summary.map((row, i) => (
-                                                    <Table.Tr key={i}>
-                                                        <Table.Td>{row.desc}</Table.Td>
-                                                        <Table.Td ta="right">{row?.opening?.toLocaleString()}</Table.Td>
-                                                        <Table.Td ta="right">{row?.received?.toLocaleString()}</Table.Td>
-                                                        <Table.Td ta="right">{row?.payment?.toLocaleString()}</Table.Td>
-                                                        <Table.Td ta="right">{row?.amount?.toLocaleString()}</Table.Td>
-                                                    </Table.Tr>
-                                                ))}
+                                                {summary
+                                                    .filter(row =>
+                                                        (row.opening || 0) !== 0 ||
+                                                        (row.received || 0) !== 0 ||
+                                                        (row.payment || 0) !== 0 ||
+                                                        (row.amount || 0) !== 0
+                                                    )
+                                                    .map((row, i) => (
+                                                        <Table.Tr key={i}>
+                                                            <Table.Td>{row.desc}</Table.Td>
+                                                            <Table.Td ta="right">{(row.opening || 0).toLocaleString()}</Table.Td>
+                                                            <Table.Td ta="right">{(row.received || 0).toLocaleString()}</Table.Td>
+                                                            <Table.Td ta="right">{(row.payment || 0).toLocaleString()}</Table.Td>
+                                                            <Table.Td ta="right">{(row.amount || 0).toLocaleString()}</Table.Td>
+                                                        </Table.Tr>
+                                                    ))}
+
 
                                                 <Table.Tr className={batchTableCss.highlightedRow}>
                                                     <Table.Td colSpan={4} ta="right"><b>Total</b></Table.Td>
@@ -362,7 +375,8 @@ export default function AccountingIncomeExpenseReport() {
                                         <Text fw={700} mt="xl">Cash Received from Outlet Sales</Text>
                                         <div style={{ overflowX: "auto", width: "100%" }}>
 
-                                        <Table withTableBorder withColumnBorders striped>
+                                        {/*with 0 value receive*/}
+                                        {/*<Table withTableBorder withColumnBorders striped>
                                             <Table.Thead>
                                                 <Table.Tr>
                                                     <Table.Th>Description</Table.Th>
@@ -397,7 +411,69 @@ export default function AccountingIncomeExpenseReport() {
                                                     </Table.Tr>
                                                 )}
                                             </Table.Tbody>
-                                        </Table>
+                                        </Table>*/}
+
+                                            {/*without 0 value receive*/}
+
+                                            <Table withTableBorder withColumnBorders striped>
+                                                <Table.Thead>
+                                                    <Table.Tr>
+                                                        <Table.Th>Description</Table.Th>
+
+                                                        {visibleLedgers.map(acc => (
+                                                            <Table.Th key={acc.id} ta="right">
+                                                                {acc.display_name}
+                                                            </Table.Th>
+                                                        ))}
+
+                                                        <Table.Th ta="right">Total</Table.Th>
+                                                    </Table.Tr>
+                                                </Table.Thead>
+
+                                                <Table.Tbody>
+                                                    {receives.map((row, i) => (
+                                                        <Table.Tr key={i}>
+                                                            <Table.Td>{row.outlet}</Table.Td>
+
+                                                            {visibleLedgers.map(acc => (
+                                                                <Table.Td key={acc.id} ta="right">
+                                                                    {(row[acc.id] || 0).toLocaleString()}
+                                                                </Table.Td>
+                                                            ))}
+
+                                                            <Table.Td ta="right">
+                                                                {(row.total || 0).toLocaleString()}
+                                                            </Table.Td>
+                                                        </Table.Tr>
+                                                    ))}
+
+                                                    {receives.length > 0 && (
+                                                        <Table.Tr style={{ fontWeight: "bold" }}>
+                                                            <Table.Td ta="right">Grand Total</Table.Td>
+
+                                                            {visibleLedgers.map(acc => {
+                                                                const sum = receives.reduce(
+                                                                    (total, row) => total + (row[acc.id] || 0),
+                                                                    0
+                                                                );
+
+                                                                return (
+                                                                    <Table.Td key={acc.id} ta="right">
+                                                                        {sum.toLocaleString()}
+                                                                    </Table.Td>
+                                                                );
+                                                            })}
+
+                                                            <Table.Td ta="right">
+                                                                {receives
+                                                                    .reduce((total, row) => total + (row.total || 0), 0)
+                                                                    .toLocaleString()}
+                                                            </Table.Td>
+                                                        </Table.Tr>
+                                                    )}
+                                                </Table.Tbody>
+                                            </Table>
+
                                         </div>
 
                                         {/* ================= GRAND TOTAL ================= */}
@@ -428,7 +504,7 @@ export default function AccountingIncomeExpenseReport() {
                                                 ))}
 
                                                 <Table.Tr className={batchTableCss.errorBackground}>
-                                                    <Table.Td colSpan={2} ta="right"><b>Total Expense</b></Table.Td>
+                                                    <Table.Td ta="right"><b>Total Expense</b></Table.Td>
                                                     <Table.Td ta="right"><b>{expenseTotal.toLocaleString()}</b></Table.Td>
                                                 </Table.Tr>
                                             </Table.Tbody>
