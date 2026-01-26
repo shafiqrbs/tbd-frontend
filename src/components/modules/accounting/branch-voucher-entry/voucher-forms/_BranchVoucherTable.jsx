@@ -8,7 +8,7 @@ import {
     Button,
     LoadingOverlay,
     ScrollArea,
-    Table
+    Table, Modal
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {IconPrinter} from "@tabler/icons-react";
@@ -24,6 +24,8 @@ import tableCss from "../../../../../assets/css/Table.module.css";
 import Navigation from "../../common/Navigation.jsx";
 import {showInstantEntityData} from "../../../../../store/inventory/crudSlice.js";
 import {showNotificationComponent} from "../../../../core-component/showNotificationComponent.jsx";
+import {useDisclosure} from "@mantine/hooks";
+import ReconciliationModal from "../../common/ReconciliationModal.jsx";
 
 function _BranchVoucherTable(props) {
 
@@ -116,8 +118,11 @@ function _BranchVoucherTable(props) {
         }
     };
 
+    const [opened, { open, close }] = useDisclosure(false);
+
 
     return (
+        <>
         <Box pt={6} bg={"#f0f1f9"}>
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
@@ -126,7 +131,7 @@ function _BranchVoucherTable(props) {
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
                             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'}
                                  className={'boxBackground borderRadiusAll border-bottom-none'}>
-                                <KeywordSearch module={'customer'}/>
+                                <KeywordSearch module={'voucher-entry'} open={open}/>
                             </Box>
                             <Box className={'borderRadiusAll'}>
                                 <DataTable
@@ -394,6 +399,8 @@ function _BranchVoucherTable(props) {
             </Box>
         </Box>
 
+            {opened && <ReconciliationModal open={open} opened={opened} close={close}/>}
+        </>
     );
 }
 

@@ -347,6 +347,20 @@ function KeywordSearch(props) {
                                 {t('Sync')}
                             </ActionIcon.GroupSection>
                         )}
+                        {props.module === 'voucher-entry' &&(
+                            <ActionIcon.GroupSection
+                                onClick={props.open}
+                                variant="default"
+                                c="white"
+                                size="lg"
+                                bg="var(--theme-primary-color-6)"
+                                miw={60}
+                                style={{ cursor: "pointer" }}
+                            >
+                                {t('Reconciliation')}
+                            </ActionIcon.GroupSection>
+
+                        )}
                     </ActionIcon.Group>
                 </Grid.Col>
             </Grid>
