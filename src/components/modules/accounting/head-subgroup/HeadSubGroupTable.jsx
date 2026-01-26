@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box, Grid,
-    ActionIcon, Text, Title, Stack, rem, Menu
+    ActionIcon, Text, Title, Stack, rem, Menu, Flex, Switch
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconEye, IconEdit, IconTrash, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
@@ -35,7 +35,16 @@ function HeadSubGroupTable(props) {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const navigate = useNavigate()
+    const [switchEnable, setSwitchEnable] = useState({});
 
+    const handleSwitch = (event, item) => {
+        setSwitchEnable((prev) => ({ ...prev, [item.id]: true }));
+        dispatch(
+            editEntityData(
+                `accounting/account-head/status-update/${item.id}`
+            )
+        );
+    };
 
     useEffect(() => {
         const value = {
@@ -76,7 +85,33 @@ function HeadSubGroupTable(props) {
                         { accessor: 'parent_name', title: t('AccountHead') },
                         { accessor: 'name', title: t('Name') },
                         { accessor: 'code', title: t('AccountCode') },
-                        { accessor: 'amount', title: t('Amount') },
+                        {
+                            accessor: 'amount',
+                            title: t('Amount'),
+                            render: (item) => Math.round(item.amount),
+                        },
+                        {
+                            accessor: "status",
+                            title: t("Status"),
+                            textAlign: "center",
+                            render: (data) => (
+                                <>
+                                    <Flex justify="center" align="center">
+                                        <Switch
+                                            defaultChecked={data.status == 1 ? true : false}
+                                            color='var(--theme-primary-color-6)'
+                                            radius="xs"
+                                            size="md"
+                                            onLabel="Enable"
+                                            offLabel="Disable"
+                                            onChange={(event) => {
+                                                handleSwitch(event.currentTarget.checked, data);
+                                            }}
+                                        />
+                                    </Flex>
+                                </>
+                            ),
+                        },
                         {
                             accessor: "action",
                             title: t("Action"),

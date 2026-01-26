@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
-    Group, Box, ActionIcon, Text, rem, Menu
+    Group, Box, ActionIcon, Text, rem, Menu, Flex, Switch
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconDotsVertical, IconTrashX } from "@tabler/icons-react";
@@ -25,7 +25,7 @@ function HeadGroupTable() {
     const [page, setPage] = useState(1);
     const [headGroupDrawer, setHeadGroupDrawer] = useState(false);
     const navigate = useNavigate();
-
+    const [switchEnable, setSwitchEnable] = useState({});
     const fetching = useSelector((state) => state.crudSlice.fetching);
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
 
@@ -35,6 +35,16 @@ function HeadGroupTable() {
         loading: true,
         error: null
     });
+
+
+    const handleSwitch = (event, item) => {
+        setSwitchEnable((prev) => ({ ...prev, [item.id]: true }));
+        dispatch(
+            editEntityData(
+                `accounting/account-head/status-update/${item.id}`
+            )
+        );
+    };
 
     const fetchData = useCallback(async () => {
         setIndexData(prev => ({ ...prev, loading: true, error: null }));
@@ -117,6 +127,28 @@ function HeadGroupTable() {
         { accessor: 'mother_name', title: t('NatureOfGroup') },
         { accessor: 'code', title: t('AccountCode') },
         { accessor: 'amount', title: t('Amount') },
+        {
+            accessor: "status",
+            title: t("Status"),
+            textAlign: "center",
+            render: (data) => (
+                <>
+                    <Flex justify="center" align="center">
+                        <Switch
+                            defaultChecked={data.status == 1 ? true : false}
+                            color='var(--theme-primary-color-6)'
+                            radius="xs"
+                            size="md"
+                            onLabel="Enable"
+                            offLabel="Disable"
+                            onChange={(event) => {
+                                handleSwitch(event.currentTarget.checked, data);
+                            }}
+                        />
+                    </Flex>
+                </>
+            ),
+        },
         {
             accessor: "action",
             title: t("Action"),

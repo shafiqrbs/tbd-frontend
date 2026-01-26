@@ -6,7 +6,7 @@ import {
     ActionIcon, Text, Menu, rem
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconTrashX, IconDotsVertical } from "@tabler/icons-react";
+import {IconTrashX, IconDotsVertical, IconCheck} from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -22,6 +22,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import CustomerViewModel from "../../core/customer/CustomerViewModel.jsx";
 import useTransactionModeDataStoreIntoLocalStorage
     from "../../../global-hook/local-storage/useTransactionModeDataStoreIntoLocalStorage.js";
+import {notifications} from "@mantine/notifications";
 
 function TransactionModeTable(props) {
 
@@ -95,14 +96,15 @@ function TransactionModeTable(props) {
                             accessor: 'path',
                             title: t('Image'),
                             width:"100px",
-                            render: (item) => (
-                                <Image
-                                    radius="md"
-                                    w="70%"
-                                    src={isOnline ? item.path : '/images/transaction-mode-offline.jpg'}
-                                    alt={item.method_name}
-                                />
-                            )
+                            render: (item) =>
+                                item?.path ? (
+                                    <Image
+                                        radius="md"
+                                        w="70%"
+                                        src={isOnline ? item.path : '/images/transaction-mode-offline.jpg'}
+                                        alt={item.method_name}
+                                    />
+                                ) : null,
                         },
 
                         {
@@ -129,6 +131,35 @@ function TransactionModeTable(props) {
                                                         }}
                                                     >
                                                         {t('Edit')}
+                                                    </Menu.Item>
+                                                    <Menu.Item
+                                                        onClick={() => {
+                                                            modals.openConfirmModal({
+                                                                title: (
+                                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                ),
+                                                                children: (
+                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                ),
+                                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                confirmProps: {color: 'red.6'},
+                                                                onCancel: () => console.log('Cancel'),
+                                                                onConfirm: () => {
+                                                                    dispatch(deleteEntityData('accounting/transaction-mode/' + data.id))
+                                                                    notifications.show({
+                                                                        color: 'red',
+                                                                        title: t('DeleteSuccessfully'),
+                                                                        icon: <IconCheck
+                                                                            style={{width: rem(18), height: rem(18)}}/>,
+                                                                        loading: false,
+                                                                        autoClose: 700,
+                                                                        style: {backgroundColor: 'lightgray'},
+                                                                    });
+                                                                },
+                                                            });
+                                                        }}
+                                                    >
+                                                        {t('Delete')}
                                                     </Menu.Item>
 
                                                     <Menu.Item

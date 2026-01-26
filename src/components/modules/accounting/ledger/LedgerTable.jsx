@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
-import {Group, Box, ActionIcon, Text, rem, Menu, Button} from "@mantine/core";
+import {Group, Box, ActionIcon, Text, rem, Menu, Button, Flex, Switch} from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {IconDotsVertical, IconTrashX} from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
@@ -24,6 +24,7 @@ function LedgerTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const [indexData, setIndexData] = useState([])
     const [ledgerDetails, setLedgerDetails] = useState(null)
+    const [switchEnable, setSwitchEnable] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,6 +55,16 @@ function LedgerTable() {
     }, [fetching]);
 
 
+    const handleSwitch = (event, item) => {
+        setSwitchEnable((prev) => ({ ...prev, [item.id]: true }));
+        dispatch(
+            editEntityData(
+                `accounting/account-head/status-update/${item.id}`
+            )
+        );
+    };
+
+
     const navigate = useNavigate()
     const [ledgerViewDrawer, setLedgerViewDrawer] = useState(false)
 
@@ -82,7 +93,33 @@ function LedgerTable() {
                         {accessor: 'parent_name', title: t('ParentHead')},
                         {accessor: 'name', title: t('Name')},
                         {accessor: 'code', title: t('AccountCode')},
-                        {accessor: 'amount', title: t('Amount')},
+                        {
+                            accessor: 'amount',
+                            title: t('Amount'),
+                            render: (item) => Math.round(item.amount),
+                        },
+                        {
+                            accessor: "status",
+                            title: t("Status"),
+                            textAlign: "center",
+                            render: (data) => (
+                                <>
+                                    <Flex justify="center" align="center">
+                                        <Switch
+                                            defaultChecked={data.status == 1 ? true : false}
+                                            color='var(--theme-primary-color-6)'
+                                            radius="xs"
+                                            size="md"
+                                            onLabel="Enable"
+                                            offLabel="Disable"
+                                            onChange={(event) => {
+                                                handleSwitch(event.currentTarget.checked, data);
+                                            }}
+                                        />
+                                    </Flex>
+                                </>
+                            ),
+                        },
                         {
                             accessor: "action",
                             title: t("Action"),
@@ -95,7 +132,7 @@ function LedgerTable() {
                                             size="compact-xs"
                                             radius="xs"
                                             variant="filled"
-                                            fw={'100'} fz={'12'} color='var(--theme-primary-color-6)' mr={'4'}
+                                            fw={'100'} fz={'12'} color='var(--theme-secondary-color-6)' mr={'4'}
                                             onClick={(e) => {
                                                 e.preventDefault()
                                                 setLedgerDetails(data)
