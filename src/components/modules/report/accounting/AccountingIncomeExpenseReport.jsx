@@ -77,13 +77,13 @@ export default function AccountingIncomeExpenseReport() {
             const value = {
                 url: "accounting/report/income-expense",
                 param: {
-                    start_date: productionIssueFilterData.start_date,
-                    end_date: productionIssueFilterData.end_date,
+                    start_date: formatDateOnly(productionIssueFilterData.start_date),
+                    end_date: formatDateOnly(productionIssueFilterData.end_date),
                     page,
                     offset: perPage
                 }
             };
-
+            
             try {
                 const resultAction = await dispatch(getIndexEntityData(value));
                 if (getIndexEntityData.fulfilled.match(resultAction)) {
