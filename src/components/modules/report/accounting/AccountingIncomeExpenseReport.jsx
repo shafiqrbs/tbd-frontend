@@ -477,13 +477,13 @@ export default function AccountingIncomeExpenseReport() {
                                         </div>
 
                                         {/* ================= GRAND TOTAL ================= */}
-                                        <Divider my="md" />
+                                        {/*<Divider my="md" />
                                         <Text fw={700}>
                                             Grand Total (Bank + Total Sales)
                                             <span style={{ float: "right" }}>
                                                 {grandTotal.toLocaleString()}
                                             </span>
-                                        </Text>
+                                        </Text>*/}
 
                                         {/* ================= EXPENSES ================= */}
                                         <Text fw={700} mt="md">Expenses (Account)</Text>
@@ -511,13 +511,13 @@ export default function AccountingIncomeExpenseReport() {
                                         </Table>
 
                                         {/* ================= NET BALANCE ================= */}
-                                        <Divider my="md" />
+                                        {/*<Divider my="md" />
                                         <Text fw={800} size="lg">
                                             Net Balance
                                             <span style={{ float: "right" }}>
                                                 {netBalance.toLocaleString()}
                                             </span>
-                                        </Text>
+                                        </Text>*/}
                                     </div>
                                 </Box>
                             </Grid.Col>
