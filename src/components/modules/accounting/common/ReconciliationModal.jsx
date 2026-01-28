@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
     Modal,
     Box,
@@ -11,18 +11,21 @@ import {
     Loader,
     Text,
 } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
-import { useOutletContext } from "react-router-dom";
+import {DateInput} from "@mantine/dates";
+import {useOutletContext} from "react-router-dom";
 import {getIndexEntityData} from "../../../../store/accounting/crudSlice.js";
 import {useDispatch} from "react-redux";
 import {storeEntityData} from "../../../../store/core/crudSlice.js";
 import {modals} from "@mantine/modals";
 import {t} from "i18next";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import {useDisclosure} from "@mantine/hooks";
+import JournalViewModal from "./JournalViewModal.jsx";
 
-function ReconciliationModal({ opened, close }) {
-    const { mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 250;
+function ReconciliationModal({opened, close}) {
+    const {mainAreaHeight} = useOutletContext();
+    const [height] = useState(mainAreaHeight - 250);
+
     const dispatch = useDispatch();
 
     const [filters, setFilters] = useState({
@@ -42,6 +45,52 @@ function ReconciliationModal({ opened, close }) {
         const d = new Date(date);
         return d.toLocaleDateString('en-CA');
     };
+
+    /* ---------------- FETCH BRANCH  ---------------- */
+    const [branchDropdown, setBranchDropdown] = useState([])
+    const [accountHeadDropdown, setAccountHeadDropdown] = useState([])
+
+    useEffect(() => {
+        const fetchDropdowns = async () => {
+            // Fetch branch list
+            const branchList = await dispatch(
+                getIndexEntityData({
+                    url: "domain/b2b/sub-domain",
+                    param: {},
+                })
+            );
+
+            if (getIndexEntityData.fulfilled.match(branchList)) {
+                const data = branchList.payload?.data || [];
+                setBranchDropdown(
+                    data.map(type => ({
+                        label: type.name,
+                        value: String(type.sub_domain_id),
+                    }))
+                );
+            }
+
+            // Fetch account head list
+            const accountHeadList = await dispatch(
+                getIndexEntityData({
+                    url: "accounting/select/head-for-reconciliation",
+                    param: {},
+                })
+            );
+
+            if (getIndexEntityData.fulfilled.match(accountHeadList)) {
+                const data = accountHeadList.payload?.data || [];
+                setAccountHeadDropdown(
+                    data.map(type => ({
+                        label: type.head_name,
+                        value: String(type.id),
+                    }))
+                );
+            }
+        };
+
+        fetchDropdowns();
+    }, [dispatch]);
 
     /* ---------------- FETCH LIST ---------------- */
     const fetchData = async () => {
@@ -72,7 +121,8 @@ function ReconciliationModal({ opened, close }) {
     /* Fetch when modal opens or filters change */
     useEffect(() => {
         if (opened) fetchData();
-    }, [opened, filters]);
+    }, [opened]);
+
 
     /* ---------------- UPDATE AMOUNT ---------------- */
 
@@ -103,7 +153,8 @@ function ReconciliationModal({ opened, close }) {
             children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
             labels: {confirm: t("Submit"), cancel: t("Cancel")},
             confirmProps: {color: "red"},
-            onCancel: () => {},
+            onCancel: () => {
+            },
             onConfirm: () => confirmApproved(),
         });
     };
@@ -113,13 +164,13 @@ function ReconciliationModal({ opened, close }) {
         try {
             const resultAction = await dispatch(storeEntityData({
                 url: 'accounting/voucher-entry/reconciliation/approve',
-                data: { ids: journalIds },
+                data: {ids: journalIds},
             }));
 
             if (storeEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
                     setRows(prevRows =>
-                        prevRows.map(r => ({ ...r, approved_by_id: true }))
+                        prevRows.map(r => ({...r, approved_by_id: true}))
                     );
 
                     showNotificationComponent(
@@ -142,149 +193,157 @@ function ReconciliationModal({ opened, close }) {
         }
     };
 
+    const [journalViewOpened, journalView] = useDisclosure(false);
+    const [salesViewData, setSalesViewData] = useState(null)
 
-
-    const totalDebit = rows.reduce((s, r) => s + Number(r.debit || 0), 0);
-    const totalCredit = rows.reduce((s, r) => s + Number(r.credit || 0), 0);
 
     return (
-        <Modal opened={opened} onClose={close} title="Voucher Reconciliation" size="70%">
+        <>
+            <Modal opened={opened} onClose={close} title="Voucher Reconciliation" size="70%">
 
-            <Box
-                bg="white"
-                pos="sticky"
-                top={0}
-                p="sm"
-                style={{ zIndex: 10, borderBottom: '1px solid #e9ecef' }}
-            >
-                <Group>
-                    <DateInput
-                        value={filters.start_date}
-                        onChange={(v) => setFilters({ ...filters, start_date: v })}
-                        placeholder="Date"
-                        clearable
-                    />
+                <Box
+                    bg="white"
+                    pos="sticky"
+                    top={0}
+                    p="sm"
+                    style={{zIndex: 10, borderBottom: '1px solid #e9ecef'}}
+                >
+                    <Group>
+                        <DateInput
+                            value={filters.start_date}
+                            onChange={(v) => setFilters({...filters, start_date: v})}
+                            placeholder="Date"
+                            clearable
+                        />
 
-                    <Select
-                        placeholder="Branch"
-                        data={[
-                            { value: "1", label: "Main Branch" },
-                            { value: "2", label: "Dhaka Branch" },
-                        ]}
-                        value={filters.branch_id}
-                        onChange={(v) => setFilters({ ...filters, branch_id: v })}
-                        clearable
-                    />
+                        <Select
+                            placeholder="Branch"
+                            data={branchDropdown}
+                            value={filters.branch_id}
+                            onChange={(v) => setFilters({...filters, branch_id: v})}
+                            clearable
+                        />
 
-                    <Select
-                        placeholder="Account Head"
-                        data={[
-                            { value: "10", label: "Sales" },
-                            { value: "11", label: "Expense" },
-                        ]}
-                        value={filters.head_id}
-                        onChange={(v) => setFilters({ ...filters, head_id: v })}
-                        clearable
-                    />
+                        <Select
+                            placeholder="Account Head"
+                            data={accountHeadDropdown}
+                            value={filters.head_id}
+                            onChange={(v) => setFilters({...filters, head_id: v})}
+                            clearable
+                        />
 
-                    <Button onClick={fetchData}>Search</Button>
-                </Group>
-            </Box>
-
-            {/* SCROLLABLE TABLE ONLY */}
-            <ScrollArea h={height}>
-                {loading ? (
-                    <Group justify="center" mt="lg">
-                        <Loader />
+                        <Button onClick={fetchData}>Search</Button>
                     </Group>
-                ) : rows.length === 0 ? (
-                    <Text ta="center" c="dimmed" mt="lg">
-                        No reconciliation items found
-                    </Text>
-                ) : (
-                    <Table striped stickyHeader>
-                        <Table.Thead>
-                            <Table.Tr>
-                                <Table.Th>#</Table.Th>
-                                <Table.Th>Head</Table.Th>
-                                <Table.Th>Ledger</Table.Th>
-                                <Table.Th ta="right">Debit</Table.Th>
-                                <Table.Th ta="right">Credit</Table.Th>
-                            </Table.Tr>
-                        </Table.Thead>
+                </Box>
 
-                        <Table.Tbody>
-                            {rows.map((row, i) => (
-                                <Table.Tr
-                                    key={row.id}
-                                    bg={row.approved_by_id ? 'green.1' : undefined}
-                                >
-                                    <Table.Td>{i + 1}</Table.Td>
-                                    <Table.Td>{row.head_name}</Table.Td>
-                                    <Table.Td>{row.sub_head_name}</Table.Td>
-
-                                    <Table.Td ta="right">
-                                        {row.mode === 'debit' && (
-                                            <NumberInput
-                                                size="xs"
-                                                value={row.amount}
-                                                onChange={(v) =>
-                                                    updateAmount(i, "credit", v)
-                                                }
-                                                onBlur={() => updateAmountIntoDB(rows[i])}
-                                                disabled={!!row.approved_by_id}
-                                            />
-                                        )}
-                                    </Table.Td>
-
-                                    <Table.Td ta="right">
-                                        {row.mode === 'credit' && (
-                                            <NumberInput
-                                                size="xs"
-                                                value={row.amount}
-                                                onChange={(v) =>
-                                                    updateAmount(i, "debit", v)
-                                                }
-                                                onBlur={() => updateAmountIntoDB(rows[i])}
-                                                disabled={!!row.approved_by_id}
-                                            />
-                                        )}
-                                    </Table.Td>
+                {/* SCROLLABLE TABLE ONLY */}
+                <ScrollArea h={height}>
+                    {loading ? (
+                        <Group justify="center" mt="lg">
+                            <Loader/>
+                        </Group>
+                    ) : rows.length === 0 ? (
+                        <Text ta="center" c="dimmed" mt="lg">
+                            No reconciliation items found
+                        </Text>
+                    ) : (
+                        <Table striped stickyHeader>
+                            <Table.Thead>
+                                <Table.Tr>
+                                    <Table.Th>#</Table.Th>
+                                    <Table.Th>Journal No</Table.Th>
+                                    <Table.Th>Head</Table.Th>
+                                    <Table.Th>Ledger</Table.Th>
+                                    <Table.Th ta="right">Debit</Table.Th>
+                                    <Table.Th ta="right">Credit</Table.Th>
                                 </Table.Tr>
-                            ))}
-                        </Table.Tbody>
+                            </Table.Thead>
 
-                        <Table.Tfoot>
-                            <Table.Tr>
-                                {/*<Table.Th colSpan={3} ta="right">Total</Table.Th>*/}
-                                {/*<Table.Th ta="right">{totalDebit.toFixed(2)}</Table.Th>*/}
-                                {/*<Table.Th ta="right">{totalCredit.toFixed(2)}</Table.Th>*/}
-                            </Table.Tr>
-                        </Table.Tfoot>
-                    </Table>
-                )}
-            </ScrollArea>
+                            <Table.Tbody>
+                                {rows.map((row, i) => (
+                                    <Table.Tr
+                                        key={row.id}
+                                        bg={row.approved_by_id ? 'green.1' : undefined}
+                                    >
+                                        <Table.Td>{i + 1}</Table.Td>
+                                        <Table.Td>
+                                            <Text
+                                                component="a"
+                                                size="sm"
+                                                variant="subtle"
+                                                c='var(--theme-primary-color-6)'
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setSalesViewData(row.journal_id)
+                                                    journalView.open();
+                                                }}
+                                                style={{cursor: "pointer"}}
+                                            >
+                                                {row.invoice_no}
+                                            </Text>
+                                        </Table.Td>
+                                        <Table.Td>{row.head_name}</Table.Td>
+                                        <Table.Td>{row.sub_head_name}</Table.Td>
 
-            <Box
-                pos="sticky"
-                bottom={0}
-                bg="white"
-                p="sm"
-                style={{ borderTop: '1px solid #e9ecef' }}
-            >
-                <Group justify="flex-end">
-                    <Button
-                        color="green"
-                        onClick={handleAllJournalApproved}
-                        disabled={rows.length === 0 || allRowsApproved}
-                    >
-                        Approve
-                    </Button>
-                </Group>
-            </Box>
+                                        <Table.Td ta="right">
+                                            {row.mode === 'debit' && (
+                                                <NumberInput
+                                                    size="xs"
+                                                    value={row.amount}
+                                                    onChange={(v) =>
+                                                        updateAmount(i, "credit", v)
+                                                    }
+                                                    onBlur={() => updateAmountIntoDB(rows[i])}
+                                                    disabled={!!row.approved_by_id}
+                                                />
+                                            )}
+                                        </Table.Td>
 
-        </Modal>
+                                        <Table.Td ta="right">
+                                            {row.mode === 'credit' && (
+                                                <NumberInput
+                                                    size="xs"
+                                                    value={row.amount}
+                                                    onChange={(v) =>
+                                                        updateAmount(i, "debit", v)
+                                                    }
+                                                    onBlur={() => updateAmountIntoDB(rows[i])}
+                                                    disabled={!!row.approved_by_id}
+                                                />
+                                            )}
+                                        </Table.Td>
+                                    </Table.Tr>
+                                ))}
+                            </Table.Tbody>
+                        </Table>
+                    )}
+                </ScrollArea>
 
+                <Box
+                    pos="sticky"
+                    bottom={0}
+                    bg="white"
+                    p="sm"
+                    style={{borderTop: '1px solid #e9ecef'}}
+                >
+                    <Group justify="flex-end">
+                        <Button
+                            color="green"
+                            onClick={handleAllJournalApproved}
+                            disabled={rows.length === 0 || allRowsApproved}
+                        >
+                            Approve
+                        </Button>
+                    </Group>
+                </Box>
+
+            </Modal>
+            <JournalViewModal
+                opened={journalViewOpened}
+                close={journalView.close}
+                id={salesViewData}
+            />
+        </>
     );
 }
 

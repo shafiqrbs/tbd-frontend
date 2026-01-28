@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import {useOutletContext} from "react-router-dom";
 import {
     Group,
     Box,
@@ -8,14 +8,11 @@ import {
     Text,
     rem,
     Menu,
-    Button,
-    LoadingOverlay,
-    ScrollArea,
-    Table
+    Button
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
-    IconDotsVertical, IconChevronsRight, IconPrinter, IconReceipt, IconTrashX
+    IconDotsVertical, IconTrashX
 } from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
@@ -29,9 +26,12 @@ import tableCss from "../../../../../assets/css/Table.module.css";
 import Navigation from "../../common/Navigation.jsx";
 import {showInstantEntityData} from "../../../../../store/inventory/crudSlice.js";
 import {showNotificationComponent} from "../../../../core-component/showNotificationComponent.jsx";
+import ReconciliationModal from "../../common/ReconciliationModal.jsx";
+import JournalViewModal from "../../common/JournalViewModal.jsx";
+import {useDisclosure} from "@mantine/hooks";
+import {deleteEntityData} from "../../../../../store/core/crudSlice.js";
 
-
-function _VoucherTable(props) {
+function _VoucherTable() {
 
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
@@ -39,7 +39,6 @@ function _VoucherTable(props) {
     const [page, setPage] = useState(1);
     const {isOnline, mainAreaHeight} = useOutletContext();
     const tableHeight = mainAreaHeight - 70; //TabList height 104
-    const height = mainAreaHeight - 304; //TabList height 104
     const [loading, setLoading] = useState(true);
     const [selectedRow, setSelectedRow] = useState('');
 
@@ -92,19 +91,6 @@ function _VoucherTable(props) {
         fetchData();
     }, [dispatch, fetching, reloadData]);
 
-    const navigate = useNavigate()
-    const [ledgerViewDrawer, setLedgerViewDrawer] = useState(false)
-
-    const rows = salesViewData && salesViewData.journal_items && salesViewData.journal_items.map((element, index) => (
-        <Table.Tr key={element.name}>
-            <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
-            <Table.Td ta="left" fz="xs" width={'300'}>{element.head_name}</Table.Td>
-            <Table.Td ta="left" fz="xs" width={'300'}>{element.ledger_name}</Table.Td>
-            <Table.Td ta="center" fz="xs" width={'60'}>{element.debit}</Table.Td>
-            <Table.Td ta="right" fz="xs" width={'80'}>{element.credit}</Table.Td>
-        </Table.Tr>
-    ));
-
     const handleVoucherApprove = async (id) => {
         try {
             const resultAction = await dispatch(showInstantEntityData('accounting/voucher-entry/approve/' + id));
@@ -122,287 +108,213 @@ function _VoucherTable(props) {
         } finally {
             setReloadData(true);
         }
-
     };
 
+    const handleJournalDelete = async (id) => {
+        const resultAction = await dispatch(deleteEntityData(`accounting/voucher-entry/${id}`));
+        const status = resultAction?.payload?.data?.status;
+        if (status === 200) {
+            showNotificationComponent(resultAction?.payload?.data.message, "red");
+            setReloadData(true)
+        } else {
+            showNotificationComponent("Something went wrong", "red");
+        }
+    };
+
+    const [opened, {open, close}] = useDisclosure(false);
+    const [journalViewOpened, journalView] = useDisclosure(false);
 
     return (
-        <Box pt={6} bg={"#f0f1f9"}>
-            <Box>
-                <Grid columns={24} gutter={{base: 8}}>
-                    <Grid.Col span={1}><Navigation module={"voucher-entry"}/></Grid.Col>
-                    <Grid.Col span={14}>
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
-                            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'}
-                                 className={'boxBackground borderRadiusAll border-bottom-none'}>
-                                <KeywordSearch module={'customer'}/>
-                            </Box>
-                            <Box className={'borderRadiusAll'}>
-                                <DataTable
-                                    classNames={{
-                                        root: tableCss.root,
-                                        table: tableCss.table,
-                                        header: tableCss.header,
-                                        footer: tableCss.footer,
-                                        pagination: tableCss.pagination,
-                                    }}
-                                    records={indexData.data}
-                                    columns={[
-                                        {
-                                            accessor: 'index',
-                                            title: t('S/N'),
-                                            textAlignment: 'right',
-                                            render: (item) => (indexData.data.indexOf(item) + 1)
-
-                                        },
-
-                                        {accessor: 'created', title: t("Created")},
-                                        {
-                                            accessor: 'invoice_no',
-                                            title: t("Invoice"),
-                                            render: (item) => (
-                                                <Text
-                                                    component="a"
-                                                    size="sm"
-                                                    variant="subtle"
-                                                    c='var(--theme-primary-color-6)'
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        setLoading(true)
-                                                        setSalesViewData(item)
-                                                        setSelectedRow(item.invoice_no)
-                                                        setLoading(false)
-                                                    }}
-                                                    style={{cursor: "pointer"}}
-                                                >
-                                                    {item.invoice_no}
-                                                </Text>
-
-                                            )
-                                        },
-                                        {accessor: 'voucher_name', title: t('VoucherName')},
-                                        {accessor: 'process', title: t('Process')},
-                                        {accessor: 'debit', title: t('Amount')},
-                                        {accessor: 'issue_date', title: t('IssueDate')},
-                                        {
-                                            accessor: "action",
-                                            title: t("Action"),
-                                            textAlign: "right",
-                                            render: (data) => (
-                                                <Group gap={4} justify="right" wrap="nowrap">
-                                                    {
-                                                        data.process === 'Created' && data.can_approve &&
-                                                        <Button
-                                                            size="compact-xs"
-                                                            radius="xs"
-                                                            variant="filled"
-                                                            fw={'100'} fz={'12'} color='var(--theme-primary-color-6)'
-                                                            mr={'4'}
-                                                            onClick={(e) => {
-                                                                e.preventDefault()
-                                                                modals.openConfirmModal({
-                                                                    title: (<Text
-                                                                        size="md"> {t("ApproveConformation")}</Text>),
-                                                                    children: (
-                                                                        <Text
-                                                                            size="sm"> {t("FormConfirmationMessage")}</Text>),
-                                                                    labels: {
-                                                                        confirm: 'Confirm',
-                                                                        cancel: 'Cancel'
-                                                                    },
-                                                                    onCancel: () => console.log('Cancel'),
-                                                                    onConfirm: () => {
-                                                                        handleVoucherApprove(data.id)
-                                                                    },
-                                                                });
-                                                            }}
-                                                        >  {t('Approve')}</Button>
-                                                    }
-
-
-                                                </Group>
-                                            ),
-                                        }
-                                    ]
-                                    }
-                                    fetching={reloadData}
-                                    totalRecords={indexData.total}
-                                    recordsPerPage={perPage}
-                                    page={page}
-                                    onPageChange={(p) => {
-                                        setPage(p)
-                                        dispatch(setFetching(true))
-                                    }}
-                                    loaderSize="xs"
-                                    loaderColor="grape"
-                                    height={tableHeight - 32}
-                                    scrollAreaProps={{type: 'never'}}
-                                    rowBackgroundColor={(item) => {
-                                        if (item.invoice_no === selectedRow) return '#e2c2c263';
-                                    }}
-                                    rowColor={(item) => {
-                                        if (item.invoice_no === selectedRow) return 'red.6';
-                                    }}
-                                />
-                            </Box>
-                        </Box>
-
-                    </Grid.Col>
-
-                    <Grid.Col span={9}>
-
-                        <Box bg={'white'} p={'xs'} h={tableHeight + 40} className={'borderRadiusAll'} pos="relative">
-                            {loading &&
-                                <LoadingOverlay
-                                    visible={loading}
-                                    zIndex={1000}
-                                    overlayProps={{radius: "sm", blur: 2}}
-                                    loaderProps={{color: 'red'}}
-                                />
-                            }
-                            <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'}
-                                 className={'boxBackground textColor borderRadiusAll'}>
-                                {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice}
-                            </Box>
-                            <Box className={'borderRadiusAll'} fz={'sm'}>
-                                <Box h={'105'} pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'}
-                                     className={'boxBackground textColor'}>
-                                    <Grid gutter={{base: 4}}>
-                                        <Grid.Col span={'6'}>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}><Text fz="sm"
-                                                                         lh="xs">{t('Voucher')}</Text></Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.voucher_name && salesViewData.voucher_name}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}><Text fz="sm"
-                                                                         lh="xs">{t('InvoiceNo')}</Text></Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.invoice_no && salesViewData.invoice_no}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}><Text fz="sm"
-                                                                         lh="xs">{t('CreatedDate')}</Text></Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData?.created}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}><Text fz="sm"
-                                                                         lh="xs">{t('issueDate')}</Text></Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData?.issue_date}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Grid.Col>
-                                        <Grid.Col span={'6'}>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}><Text fz="sm"
-                                                                         lh="xs">{t('CreatedBy')}</Text></Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.created_by_name && salesViewData.created_by_name}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}><Text fz="sm"
-                                                                         lh="xs">{t('ApproveBy')}</Text></Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.approve_by_name && salesViewData.approve_by_name}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}><Text fz="sm" lh="xs">{t('RefNo')}</Text></Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.ref_no && salesViewData.ref_no}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{base: 4}}>
-                                                <Grid.Col span={6}><Text fz="sm"
-                                                                         lh="xs">{t('Process')}</Text></Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.process && salesViewData.process}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Grid.Col>
-                                    </Grid>
+        <>
+            <Box pt={6} bg={"#f0f1f9"}>
+                <Box>
+                    <Grid columns={24} gutter={{base: 8}}>
+                        <Grid.Col span={1}><Navigation module={"voucher-entry"}/></Grid.Col>
+                        <Grid.Col span={23}>
+                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={8} pt={'6'} pb={'4'}
+                                     className={'boxBackground borderRadiusAll border-bottom-none'}>
+                                    <KeywordSearch module={'voucher-entry'} open={open}/>
                                 </Box>
-                                <ScrollArea h={height + 72} scrollbarSize={2} type="never">
-                                    <Box>
-                                        <Table stickyHeader>
-                                            <Table.Thead>
-                                                <Table.Tr>
-                                                    <Table.Th fz="xs" w={'20'}>{t('S/N')}</Table.Th>
-                                                    <Table.Th fz="xs" ta="left" w={'300'}>{t('HeadName')}</Table.Th>
-                                                    <Table.Th fz="xs" ta="left" w={'300'}>{t('LedgerName')}</Table.Th>
-                                                    <Table.Th fz="xs" ta="center" w={'80'}>{t('Debit')}</Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={'80'}>{t('Credit')}</Table.Th>
-                                                </Table.Tr>
-                                            </Table.Thead>
-                                            <Table.Tbody>{rows}</Table.Tbody>
-                                            <Table.Tfoot>
-                                                <Table.Tr>
-                                                    <Table.Th colSpan={'4'} ta="right" fz="xs" w={'100'}></Table.Th>
-                                                </Table.Tr>
-                                                <Table.Tr>
-                                                    <Table.Th colSpan={'4'} ta="right" fz="xs" w={'100'}>
-                                                        {salesViewData && salesViewData.debit && Number(salesViewData.debit).toFixed(2)}
-                                                    </Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={'100'}>
-                                                        {salesViewData && salesViewData.debit && Number(salesViewData.debit).toFixed(2)}
-                                                    </Table.Th>
-                                                </Table.Tr>
-                                            </Table.Tfoot>
-                                        </Table>
-                                    </Box>
-                                    <Box mt={'xs'} pl={'xs'}>
-                                        <Grid gutter={{base: 4}}>
-                                            <Grid.Col span={'12'}>
-                                                <Text fz="sm" lh="xs">
-                                                    {t('Narration')} : {salesViewData?.description}
-                                                </Text>
-                                            </Grid.Col>
-                                        </Grid>
-                                    </Box>
-                                </ScrollArea>
-                            </Box>
-                            <Button.Group mb={'1'}>
-                                <Button
-                                    fullWidth={true}
-                                    variant="filled"
-                                    leftSection={<IconPrinter size={14}/>}
-                                    color="green.5"
-                                    onClick={() => {
-                                        setPrintA4(true)
-                                    }}
-                                >
-                                    {t('Print')}
-                                </Button>
-                            </Button.Group>
-                        </Box>
-                    </Grid.Col>
+                                <Box className={'borderRadiusAll'}>
+                                    <DataTable
+                                        classNames={{
+                                            root: tableCss.root,
+                                            table: tableCss.table,
+                                            header: tableCss.header,
+                                            footer: tableCss.footer,
+                                            pagination: tableCss.pagination,
+                                        }}
+                                        records={indexData.data}
+                                        columns={[
+                                            {
+                                                accessor: 'index',
+                                                title: t('S/N'),
+                                                textAlignment: 'right',
+                                                render: (item) => (indexData.data.indexOf(item) + 1)
 
-                </Grid>
+                                            },
+
+                                            {accessor: 'created', title: t("Created")},
+                                            {
+                                                accessor: 'invoice_no',
+                                                title: t("Invoice"),
+                                                render: (item) => (
+                                                    <Text
+                                                        component="a"
+                                                        size="sm"
+                                                        variant="subtle"
+                                                        c='var(--theme-primary-color-6)'
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            setLoading(true)
+                                                            setSalesViewData(item)
+                                                            setSelectedRow(item.invoice_no)
+                                                            setLoading(false)
+                                                            journalView.open();
+                                                        }}
+                                                        style={{cursor: "pointer"}}
+                                                    >
+                                                        {item.invoice_no}
+                                                    </Text>
+
+                                                )
+                                            },
+                                            {accessor: 'voucher_name', title: t('VoucherName')},
+                                            {accessor: 'process', title: t('Process')},
+                                            {accessor: 'debit', title: t('Amount')},
+                                            {accessor: 'issue_date', title: t('IssueDate')},
+                                            {
+                                                accessor: "action",
+                                                title: t("Action"),
+                                                textAlign: "right",
+                                                render: (data) => (
+                                                    <Group gap={4} justify="right" wrap="nowrap">
+                                                        {
+                                                            data.process === 'Created' && data.can_approve &&
+                                                            <Button
+                                                                size="compact-xs"
+                                                                radius="xs"
+                                                                variant="filled"
+                                                                fw={'100'} fz={'12'}
+                                                                color='var(--theme-primary-color-6)'
+                                                                mr={'4'}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault()
+                                                                    modals.openConfirmModal({
+                                                                        title: (<Text
+                                                                            size="md"> {t("ApproveConformation")}</Text>),
+                                                                        children: (
+                                                                            <Text
+                                                                                size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                        labels: {
+                                                                            confirm: 'Confirm',
+                                                                            cancel: 'Cancel'
+                                                                        },
+                                                                        onCancel: () => console.log('Cancel'),
+                                                                        onConfirm: () => {
+                                                                            handleVoucherApprove(data.id)
+                                                                        },
+                                                                    });
+                                                                }}
+                                                            >  {t('Approve')}</Button>
+                                                        }
+
+                                                        <Menu
+                                                            position="bottom-end"
+                                                            withArrow
+                                                            trigger="hover"
+                                                            width={200}
+                                                            openDelay={100}
+                                                            closeDelay={400}
+                                                        >
+                                                            <Menu.Target>
+                                                                <ActionIcon
+                                                                    size="sm"
+                                                                    variant="outline"
+                                                                    color="var(--theme-primary-color-6)"
+                                                                    radius="xl"
+                                                                >
+                                                                    <IconDotsVertical height={18} width={18}
+                                                                                      stroke={1.5}/>
+                                                                </ActionIcon>
+                                                            </Menu.Target>
+                                                            <Menu.Dropdown>
+
+                                                                {!data.approved_by_id && (
+                                                                    <Menu.Item
+                                                                        bg="red.1"
+                                                                        c="var(--theme-primary-color-6)"
+                                                                        onClick={() =>
+                                                                            modals.openConfirmModal({
+                                                                                title: <Text
+                                                                                    size="md">{t('FormConfirmationTitle')}</Text>,
+                                                                                children: (
+                                                                                    <Text
+                                                                                        size="sm">{t('FormConfirmationMessage')}</Text>
+                                                                                ),
+                                                                                labels: {
+                                                                                    confirm: 'Confirm',
+                                                                                    cancel: 'Cancel'
+                                                                                },
+                                                                                confirmProps: {color: 'red.6'},
+                                                                                onConfirm: () => handleJournalDelete(data.id)
+                                                                            })
+                                                                        }
+                                                                        rightSection={
+                                                                            <IconTrashX style={{
+                                                                                width: rem(14),
+                                                                                height: rem(14)
+                                                                            }}/>
+                                                                        }
+                                                                    >
+                                                                        {t('Delete')}
+                                                                    </Menu.Item>
+                                                                )}
+                                                            </Menu.Dropdown>
+                                                        </Menu>
+
+
+                                                    </Group>
+                                                ),
+                                            }
+                                        ]
+                                        }
+                                        fetching={reloadData}
+                                        totalRecords={indexData.total}
+                                        recordsPerPage={perPage}
+                                        page={page}
+                                        onPageChange={(p) => {
+                                            setPage(p)
+                                            dispatch(setFetching(true))
+                                        }}
+                                        loaderSize="xs"
+                                        loaderColor="grape"
+                                        height={tableHeight - 32}
+                                        scrollAreaProps={{type: 'never'}}
+                                        rowBackgroundColor={(item) => {
+                                            if (item.invoice_no === selectedRow) return '#e2c2c263';
+                                        }}
+                                        rowColor={(item) => {
+                                            if (item.invoice_no === selectedRow) return 'red.6';
+                                        }}
+                                    />
+                                </Box>
+                            </Box>
+
+                        </Grid.Col>
+
+                    </Grid>
+                </Box>
             </Box>
-        </Box>
+
+            <ReconciliationModal opened={opened} close={close}/>
+            <JournalViewModal
+                opened={journalViewOpened}
+                close={journalView.close}
+                id={salesViewData?.id}
+            />
+        </>
 
     );
 }
