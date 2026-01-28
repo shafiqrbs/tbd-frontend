@@ -332,12 +332,13 @@ export default function AccountingIncomeExpenseReport() {
 
                                         {/* ================= BANK TRANSFER ================= */}
                                         <Text fw={700} mt="md">
-                                            Bank Purpose Received
+                                            Account Summary
                                         </Text>
                                         <Table withTableBorder withColumnBorders striped>
                                             <Table.Thead>
                                                 <Table.Tr>
-                                                    <Table.Th>Description</Table.Th>
+                                                    <Table.Th w={'25'}>S/N</Table.Th>
+                                                    <Table.Th>Account Name</Table.Th>
                                                     <Table.Th ta="right">Opening</Table.Th>
                                                     <Table.Th ta="right">Received</Table.Th>
                                                     <Table.Th ta="right">Payment</Table.Th>
@@ -355,6 +356,7 @@ export default function AccountingIncomeExpenseReport() {
                                                     )
                                                     .map((row, i) => (
                                                         <Table.Tr key={i}>
+                                                            <Table.Td>{i+1}</Table.Td>
                                                             <Table.Td>{row.desc}</Table.Td>
                                                             <Table.Td ta="right">{(row.opening || 0).toLocaleString()}</Table.Td>
                                                             <Table.Td ta="right">{(row.received || 0).toLocaleString()}</Table.Td>
@@ -365,7 +367,7 @@ export default function AccountingIncomeExpenseReport() {
 
 
                                                 <Table.Tr className={batchTableCss.highlightedRow}>
-                                                    <Table.Td colSpan={4} ta="right"><b>Total</b></Table.Td>
+                                                    <Table.Td colSpan={5} ta="right"><b>Total</b></Table.Td>
                                                     <Table.Td ta="right"><b>{bankTotal.toLocaleString()}</b></Table.Td>
                                                 </Table.Tr>
                                             </Table.Tbody>
@@ -418,7 +420,8 @@ export default function AccountingIncomeExpenseReport() {
                                             <Table withTableBorder withColumnBorders striped>
                                                 <Table.Thead>
                                                     <Table.Tr>
-                                                        <Table.Th>Description</Table.Th>
+                                                        <Table.Th w={'25'}>S/N</Table.Th>
+                                                        <Table.Th>Branch Name</Table.Th>
 
                                                         {visibleLedgers.map(acc => (
                                                             <Table.Th key={acc.id} ta="right">
@@ -433,6 +436,7 @@ export default function AccountingIncomeExpenseReport() {
                                                 <Table.Tbody>
                                                     {receives.map((row, i) => (
                                                         <Table.Tr key={i}>
+                                                            <Table.Td>{i+1}</Table.Td>
                                                             <Table.Td>{row.outlet}</Table.Td>
 
                                                             {visibleLedgers.map(acc => (
@@ -449,7 +453,7 @@ export default function AccountingIncomeExpenseReport() {
 
                                                     {receives.length > 0 && (
                                                         <Table.Tr style={{ fontWeight: "bold" }}>
-                                                            <Table.Td ta="right">Grand Total</Table.Td>
+                                                            <Table.Td ta="right" colSpan={'2'}>Grand Total</Table.Td>
 
                                                             {visibleLedgers.map(acc => {
                                                                 const sum = receives.reduce(
@@ -490,21 +494,23 @@ export default function AccountingIncomeExpenseReport() {
                                         <Table withTableBorder withColumnBorders striped>
                                             <Table.Thead>
                                                 <Table.Tr>
+                                                    <Table.Th w={'25'}>S/N</Table.Th>
                                                     <Table.Th>Description</Table.Th>
+                                                    <Table.Th>Branch</Table.Th>
                                                     <Table.Th ta="right">Amount</Table.Th>
                                                 </Table.Tr>
                                             </Table.Thead>
-
                                             <Table.Tbody>
                                                 {expenses.map((row, i) => (
                                                     <Table.Tr key={i}>
+                                                        <Table.Td>{i+1}</Table.Td>
                                                         <Table.Td>{row.sub_head_name}</Table.Td>
+                                                        <Table.Td>{row.branch_name}</Table.Td>
                                                         <Table.Td ta="right">{row.amount.toLocaleString()}</Table.Td>
                                                     </Table.Tr>
                                                 ))}
-
                                                 <Table.Tr className={batchTableCss.errorBackground}>
-                                                    <Table.Td ta="right"><b>Total Expense</b></Table.Td>
+                                                    <Table.Td ta="right" colSpan={'3'}><b>Total Expense</b></Table.Td>
                                                     <Table.Td ta="right"><b>{expenseTotal.toLocaleString()}</b></Table.Td>
                                                 </Table.Tr>
                                             </Table.Tbody>
