@@ -32,7 +32,7 @@ export default function BranchVoucherNavigation({
                                                     setSecondaryLedgerHead,
                                                     setPrimaryLedgerDropdownEnable,
                                                     setLastVoucherDate,
-                                                    setBranchList
+                                                    setBranchList,setPrimaryLedgerHeadObject,submitForm,setBranchData
                                                 }) {
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -147,23 +147,76 @@ export default function BranchVoucherNavigation({
         loadMyItemsFromStorage();
     };
 
+    const handleResetVoucher = (e) => {
+        e.stopPropagation();
+
+        localStorage.removeItem("temp-branch-voucher-entry");
+        setBranchData(null)
+        setPrimaryLedgerDropdownEnable(false);
+        setPrimaryLedgerHeadObject(null)
+        setPrimaryLedgerHeadData(null);
+        setSecondaryLedgerHead(null);
+        setActiveVoucher(null);
+        loadMyItemsFromStorage();
+        submitForm.reset()
+    };
+
+
     const voucherListItems = useMemo(() => {
-        return filteredVoucherList.map((item) => (
-            <Box
-                key={item.id}
-                className={`${classes.pressableCard} border-radius`}
-                mih={40}
-                mt={4}
-                style={{cursor: "pointer"}}
-                bg={activeVoucher?.id === item.id ? 'var(--theme-primary-color-2)' : 'var(--theme-secondary-color-2)'}
-                onClick={() => handleActiveVoucher(item)}
-            >
-                <Text size="sm" pt={8} pl={8} fw={500} color="black">
-                    {item.name || t("UnnamedVoucher")}
-                </Text>
-            </Box>
-        ));
+        return filteredVoucherList.map((item) => {
+            const isActive = activeVoucher?.id === item.id;
+            const isDisabled = activeVoucher && !isActive;
+
+            return (
+                <Tooltip
+                    key={item.id}
+                    label={t("FinishCurrentVoucherFirst")}
+                    disabled={!isDisabled}
+                >
+                    <Box
+                        className={`${classes.pressableCard} border-radius`}
+                        mih={40}
+                        mt={4}
+                        bg={
+                            isActive
+                                ? "var(--theme-primary-color-2)"
+                                : "var(--theme-secondary-color-2)"
+                        }
+                        style={{
+                            cursor: isDisabled ? "not-allowed" : "pointer",
+                            opacity: isDisabled ? 0.5 : 1,
+                            pointerEvents: isDisabled ? "none" : "auto",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            paddingRight: 8,
+                        }}
+                        onClick={() => {
+                            if (!isDisabled) {
+                                handleActiveVoucher(item);
+                            }
+                        }}
+                    >
+                        <Text size="sm" fw={500} color="black" pl={8}>
+                            {item.name || t("UnnamedVoucher")}
+                        </Text>
+
+                        {isActive && (
+                            <Tooltip label={t("Reset")} withArrow>
+                                <IconX
+                                    size={16}
+                                    color="red"
+                                    style={{ cursor: "pointer" }}
+                                    onClick={handleResetVoucher}
+                                />
+                            </Tooltip>
+                        )}
+                    </Box>
+                </Tooltip>
+            );
+        });
     }, [filteredVoucherList, activeVoucher]);
+
 
     return (
         <Box>

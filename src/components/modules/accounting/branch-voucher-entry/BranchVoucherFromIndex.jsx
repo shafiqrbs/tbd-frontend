@@ -287,6 +287,11 @@ function BranchVoucherFromIndex({currencySymbol}) {
     const handleFormSubmit = (values) => {
         dispatch(setValidationData(false));
 
+        if (myItems.length == 0 || !primaryLedgerHeadObject || !Number(totals.debit)) {
+            showNotificationComponent('Validation Error','red')
+            return
+        }
+
         modals.openConfirmModal({
             title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
             children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
@@ -334,7 +339,7 @@ function BranchVoucherFromIndex({currencySymbol}) {
                     } else if (storeEntityData.fulfilled.match(resultAction)) {
                         showNotificationComponent(t("CreateSuccessfully"), "teal");
                         setTimeout(() => {
-                            setReloadList(true);
+                            // setReloadList(true);
                             localStorage.removeItem("temp-branch-voucher-entry");
                             setPrimaryLedgerDropdownEnable(false);
                             setPrimaryLedgerHeadObject(null)
@@ -377,6 +382,8 @@ function BranchVoucherFromIndex({currencySymbol}) {
                             setPrimaryLedgerHeadData={setPrimaryLedgerHeadData}
                             setLastVoucherDate={setLastVoucherDate}
                             setBranchList={setBranchList}
+                            submitForm={form}
+                            setBranchData={setBranchData}
                         />
                     </Box>
                 </Grid.Col>

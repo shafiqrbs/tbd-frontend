@@ -110,7 +110,7 @@ function VoucherFormIndex({currencySymbol}) {
         const fetchSlug = async () => {
             try {
                 if (primaryLedgerHeadObject?.parent_id && primaryLedgerHeadData) {
-                    const {parentLedgerSlug} = await getParentLedgerSlugWithDetails(primaryLedgerHeadObject.parent_id);
+                    const {parentLedgerSlug} = await getParentLedgerSlugWithDetails(primaryLedgerHeadObject?.parent_id);
 
                     if (isMounted) {
                         if (parentLedgerSlug === 'bank-account') {
@@ -162,7 +162,7 @@ function VoucherFormIndex({currencySymbol}) {
 
         const parentLedgerSlug = topLevelAccounts?.[0]?.slug || null;
 
-        return {parentLedgerSlug, response: null}; // optional response
+        return {parentLedgerSlug, response: null};
     };
 
     const handleAddProductByProductId = (addedType, bankInfo = {}) => {
@@ -283,6 +283,11 @@ function VoucherFormIndex({currencySymbol}) {
     const handleFormSubmit = (values) => {
         dispatch(setValidationData(false));
 
+        if (myItems.length == 0 || !primaryLedgerHeadObject || !Number(totals.debit)) {
+            showNotificationComponent('Validation Error','red')
+            return
+        }
+
         modals.openConfirmModal({
             title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
             children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
@@ -298,7 +303,7 @@ function VoucherFormIndex({currencySymbol}) {
                     items: myItems,
                 };
 
-                const {parentLedgerSlug} = await getParentLedgerSlugWithDetails(primaryLedgerHeadObject.parent_id);
+                const {parentLedgerSlug} = await getParentLedgerSlugWithDetails(primaryLedgerHeadObject?.parent_id);
                 let isFormSubmit = false
                 if (parentLedgerSlug === 'bank-account') {
                     if (myItems[0] && myItems[0].bankInfo && typeof myItems[0].bankInfo === 'object' && Object.keys(myItems[0].bankInfo).length > 0) {
@@ -330,7 +335,7 @@ function VoucherFormIndex({currencySymbol}) {
                     } else if (storeEntityData.fulfilled.match(resultAction)) {
                         showNotificationComponent(t("CreateSuccessfully"), "teal");
                         setTimeout(() => {
-                            setReloadList(true);
+                            // setReloadList(true);
                             localStorage.removeItem("temp-voucher-entry");
                             setPrimaryLedgerDropdownEnable(false);
                             setPrimaryLedgerHeadObject(null)
@@ -371,6 +376,7 @@ function VoucherFormIndex({currencySymbol}) {
                             setPrimaryLedgerDropdownEnable={setPrimaryLedgerDropdownEnable}
                             setPrimaryLedgerHeadData={setPrimaryLedgerHeadData}
                             setLastVoucherDate={setLastVoucherDate}
+                            submitForm={form}
                         />
                     </Box>
                 </Grid.Col>
