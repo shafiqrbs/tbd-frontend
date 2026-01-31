@@ -157,7 +157,7 @@ function HeadSubGroupForm(props) {
                                                             form={form}
                                                             dropdownValue={accountDropdown}
                                                             id={'parent_id'}
-                                                            searchable={false}
+                                                            searchable={true}
                                                             value={parentHead}
                                                             changeValue={setParentHead}
                                                         />

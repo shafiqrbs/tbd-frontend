@@ -17,6 +17,7 @@ import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 import {
     setEditEntityData,
+    setInsertType,
     setFetching,
     setFormLoading,
     updateEntityData

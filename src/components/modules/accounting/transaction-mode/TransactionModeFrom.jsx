@@ -80,7 +80,6 @@ function TransactionModeForm(props) {
             method_id : isNotEmpty(),
             name: hasLength({ min: 2}),
             short_name: hasLength({ min: 2}),
-
         }
     });
 

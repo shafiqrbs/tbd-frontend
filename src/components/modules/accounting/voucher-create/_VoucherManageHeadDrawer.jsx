@@ -98,6 +98,7 @@ function _VoucherManageHeadDrawer(props) {
       const result = await dispatch(storeEntityData(payload));
       if (storeEntityData.fulfilled.match(result) && result.payload?.status === 200) {
         showNotificationComponent(t('UpdateSuccessfully'), 'teal');
+        closeDrawer();
       } else {
         showNotificationComponent(t('UpdateFailed'), 'red');
       }
@@ -170,7 +171,7 @@ function _VoucherManageHeadDrawer(props) {
               <Box bg="gray.1"  px="sm" py="xs" >
                 <Text fz={14} fw={600}>{t('SecondaryVoucherHead')}</Text>
               </Box>
-              <ScrollArea h={height - 440} scrollbarSize={2} scrollbars="y" >
+              <ScrollArea h={height - 448} scrollbarSize={2} scrollbars="y" >
                 <Box p="md" className="borderRadiusAll">
                   {manageVoucherData?.id && (
                       <>
