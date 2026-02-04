@@ -646,7 +646,7 @@ export default function NewSales(props) {
                                                                         fit="cover"
                                                                         src={`${
                                                                             import.meta.env.VITE_IMAGE_GATEWAY_URL
-                                                                        }/uploads/inventory/product/feature_image/${
+                                                                        }/storage/${
                                                                             product.feature_image
                                                                         }`}
                                                                         fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
