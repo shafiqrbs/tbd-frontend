@@ -644,15 +644,11 @@ export default function NewSales(props) {
                                                                         mah={120}
                                                                         w="auto"
                                                                         fit="cover"
-                                                                        src={`${
-                                                                            import.meta.env.VITE_IMAGE_GATEWAY_URL
-                                                                        }/storage/${
-                                                                            product.feature_image
-                                                                        }`}
-                                                                        fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
-                                                                            product.display_name
-                                                                        )}`}
+                                                                        src={`${import.meta.env.VITE_IMAGE_GATEWAY_URL}/storage/${product.feature_image}`}
+                                                                        fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(product.display_name)}`}
+                                                                        onError={() => console.log("Image failed to load:", product.feature_image)}
                                                                     />
+
                                                                     <Text
                                                                         fw={600}
                                                                         size="sm"
