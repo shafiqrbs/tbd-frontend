@@ -13,6 +13,7 @@ import {
     Table,
     Menu,
     rem,
+    Flex,
     Checkbox,
     Tooltip,
     LoadingOverlay, Badge
@@ -224,6 +225,10 @@ function _SalesTable(props) {
 
     const current_date = formatDate(new Date());
 
+    const hasPurchaseWarehouse = indexData?.data?.some(
+        (row) => !!row?.purchase_warehouse_name
+    );
+
     return (
         <>
             <Box>
@@ -309,6 +314,7 @@ function _SalesTable(props) {
                                             )
                                         },
                                         { accessor: 'customerName', title: t("Customer") },
+                                        { accessor: 'purchase_warehouse_name', title: t("PurchaseWarehouse"),hidden: !hasPurchaseWarehouse },
                                         {
                                             accessor: 'total',
                                             title: t("Total"),
@@ -554,9 +560,34 @@ function _SalesTable(props) {
                                     loaderProps={{ color: 'red' }}
                                 />
                             }
-                            <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
-                                {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice}
-                            </Box>
+                            <Flex justify="space-between" gap="xs">
+                                <Box
+                                    h={36}
+                                    pl="xs"
+                                    pr={8}
+                                    pt={6}
+                                    fz="sm"
+                                    fw={600}
+                                    className="boxBackground textColor borderRadiusAll"
+                                >
+                                    {t('Invoice')} : {salesViewData?.invoice ?? ''}
+                                </Box>
+
+                                {salesViewData?.purchase_warehouse_name && (
+                                    <Box
+                                        h={36}
+                                        pl="xs"
+                                        pr={8}
+                                        pt={6}
+                                        fz="sm"
+                                        fw={600}
+                                        className="boxBackground textColor borderRadiusAll"
+                                    >
+                                        {t('PurchaseWarehouse')} : {salesViewData.purchase_warehouse_name}
+                                    </Box>
+                                )}
+                            </Flex>
+
                             <Box className={'borderRadiusAll'} fz={'sm'}  >
                                 <ScrollArea h={122} type="never">
                                     <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
@@ -594,6 +625,7 @@ function _SalesTable(props) {
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
+
                                             </Grid.Col>
                                             <Grid.Col span={'6'}>
                                                 <Grid columns={15} gutter={{ base: 4 }}>

@@ -1255,5 +1255,7 @@
   "ReceivablePayableHead": "Receivable Payable Head",
   "AccountTransactionHead": "Account Transaction Head",
   "DutiesAndTaxesLedger": "Duties & Taxes Ledger",
+  "PurchaseWarehouse": "Purchase Warehouse",
+  "ProductionDetails": "Production Details",
   "": ""
 }
