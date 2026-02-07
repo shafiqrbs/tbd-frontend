@@ -1259,5 +1259,13 @@
   "ProductionDetails": "Production Details",
   "SalesReconciliation": "Sales Reconciliation",
   "SalesReconciliationProcess": "Sales Reconciliation Process",
+  "ListOfCustomerLedger":"List of Customer Ledger",
+  "ListOfCashLedger":"List of Cash Ledger",
+  "ListOfMobileLedger":"List of Mobile Ledger",
+  "ListOfVendorLedger":"List of Vendor Ledger",
+  "ListOfAccountMenu":"List of Account Menu",
+  "ProductBarcode":"Product Barcode",
+  "SelectSize":"Select Size",
+  "ExpiryDuration":"Expiry Duration",
   "": ""
 }
