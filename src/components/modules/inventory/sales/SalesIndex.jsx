@@ -40,11 +40,11 @@ function SalesIndex() {
                                 <Grid.Col span={1} ><Navigation module={"sales"}/></Grid.Col>
                                     <Grid.Col span={23} >
                                     <_SalesTable
-                                    configData={configData}
-                                    allowZeroPercentage={configData?.zero_stock}
-                                    currancySymbol={configData?.currency?.symbol}
-                                    isWarehouse={configData?.sku_warehouse}
-                                />
+                                        configData={configData}
+                                        allowZeroPercentage={configData?.zero_stock}
+                                        currancySymbol={configData?.currency?.symbol}
+                                        isWarehouse={configData?.sku_warehouse}
+                                    />
                                     </Grid.Col>
                                 </Grid>
                             </Box>

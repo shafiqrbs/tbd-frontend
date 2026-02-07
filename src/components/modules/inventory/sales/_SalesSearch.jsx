@@ -11,14 +11,14 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
-  IconBrandOkRu,
-  IconFileTypeXls,
-  IconInfoCircle,
-  IconPdf,
-  IconRestore,
-  IconSearch,
-  IconX,
-  IconCalendar
+    IconBrandOkRu,
+    IconFileTypeXls,
+    IconInfoCircle,
+    IconPdf,
+    IconRestore,
+    IconSearch,
+    IconX,
+    IconCalendar, IconBrandOpenSource
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -449,6 +449,26 @@ function _SalesSearch(props) {
             </ActionIcon>
           </ActionIcon.Group>
         </Grid.Col>
+
+          <Grid.Col span={"3"}>
+              <ActionIcon.Group mt={"1"} justify="right">
+                  {props.showSalesReconciliation && (
+
+                      <Button
+                          fullWidth={true}
+                          variant="filled"
+                          color="red.8"
+                          onClick={(e) => {
+                              e.preventDefault()
+                              props.setSalesReconciliationModal(true)
+                          }}
+                      >
+                          {t("SalesReconciliation")}
+                      </Button>
+                  )}
+              </ActionIcon.Group>
+          </Grid.Col>
+
         <Grid.Col span={"3"}>
           <ActionIcon.Group mt={"1"} justify="right">
             {Object.keys(props.checkList).length >= 1 && (

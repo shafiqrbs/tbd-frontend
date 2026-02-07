@@ -43,6 +43,8 @@ import { SalesPrintPos } from "./print-component/SalesPrintPos.jsx";
 import { modals } from "@mantine/modals";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import {formatDate, parseDate} from "../../../../utils";
+import _ProductionProcessModal from "../../procurement/requistion-matrix/_ProductionProcessModal.jsx";
+import _SalesReconciliationModal from "./modal/_SalesReconciliationModal.jsx";
 
 function _SalesTable(props) {
     const {isWarehouse,configData} = props
@@ -62,6 +64,9 @@ function _SalesTable(props) {
     const [checked, setChecked] = useState(false);
     const [indexData,setIndexData] = useState([])
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
+
+    const [salesReconciliationModal, setSalesReconciliationModal] = useState(false)
+
 
     useEffect(() => {
         dispatch(setSearchKeyword(''))
@@ -238,7 +243,12 @@ function _SalesTable(props) {
                             <Grid>
                                 <Grid.Col>
                                     <Stack >
-                                        <_SalesSearch checkList={checkList} customerId={salesFilterData.customer_id} />
+                                        <_SalesSearch
+                                            checkList={checkList}
+                                            customerId={salesFilterData.customer_id}
+                                            showSalesReconciliation ={true}
+                                            setSalesReconciliationModal ={setSalesReconciliationModal}
+                                        />
                                     </Stack>
                                 </Grid.Col>
                             </Grid>
@@ -786,6 +796,14 @@ function _SalesTable(props) {
             {printPos && <div style={{ display: "none" }}>
                 <SalesPrintPos salesViewData={salesViewData} setPrintPos={setPrintPos} />
             </div>}
+
+            {/*{salesReconciliationModal && (*/}
+                <_SalesReconciliationModal
+                    salesReconciliationModal={salesReconciliationModal}
+                    setSalesReconciliationModal={setSalesReconciliationModal}
+                    // boardId={boardId}
+                />
+            {/*)}*/}
         </>
     );
 }

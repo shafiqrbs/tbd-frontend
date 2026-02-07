@@ -129,7 +129,7 @@ function _GenericRequisitionForm(props) {
         );
 
         if (categoryData) {
-            filteredProducts = localProducts.filter(product =>
+            filteredProducts = filteredProducts.filter(product =>
                 product.category_id === Number(categoryData)
             );
         }

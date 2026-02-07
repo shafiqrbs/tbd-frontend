@@ -1257,5 +1257,7 @@
   "DutiesAndTaxesLedger": "Duties & Taxes Ledger",
   "PurchaseWarehouse": "Purchase Warehouse",
   "ProductionDetails": "Production Details",
+  "SalesReconciliation": "Sales Reconciliation",
+  "SalesReconciliationProcess": "Sales Reconciliation Process",
   "": ""
 }
