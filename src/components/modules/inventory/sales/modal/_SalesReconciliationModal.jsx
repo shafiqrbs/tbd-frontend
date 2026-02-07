@@ -1,14 +1,10 @@
-import {Modal, Tabs, Box, Progress} from '@mantine/core';
+import {Modal, Box} from '@mantine/core';
 import {useTranslation} from 'react-i18next';
-import {useState} from 'react';
-import {useDispatch} from "react-redux";
-import {getLoadingProgress} from "../../../../global-hook/loading-progress/getLoadingProgress.js";
 import __ReconciliationProcess from "./__ReconciliationProcess.jsx";
 
 export default function _SalesReconciliationModal(props) {
     const {salesReconciliationModal, setSalesReconciliationModal} = props;
     const {t, i18} = useTranslation();
-    const [activeTab, setActiveTab] = useState('BoardDetails');
 
     const closeModel = () => {
         setSalesReconciliationModal(false);
@@ -30,40 +26,9 @@ export default function _SalesReconciliationModal(props) {
                         </Modal.Header>
                         <Modal.Body>
                             <Box className="" bg={'#f0f1f9'}>
-                                <Tabs
-                                    height={50}
-                                    p={4}
-                                    bg={'#f0f1f9'}
-                                    defaultValue='SalesReconciliation'
-                                    color="red.6" variant="pills" radius="sm"
-                                    onChange={(value) => setActiveTab(value)}
-                                >
-                                    <Tabs.List pos={'relative'}>
-                                        <Tabs.Tab
-                                            m={2}
-                                            value='SalesReconciliation'
-                                        >
-                                            {t('SalesReconciliation')}
-                                        </Tabs.Tab>
-                                        {/*<Tabs.Tab
-                                            m={2}
-                                            value='Process'
-                                        >
-                                            {t('Production')}
-                                        </Tabs.Tab>*/}
-                                    </Tabs.List>
-                                    <Tabs.Panel value="SalesReconciliation">
-                                        <Box>
-                                            <__ReconciliationProcess />
-                                        </Box>
-                                    </Tabs.Panel>
-                                    {/*<Tabs.Panel value="Process">
-                                        <Box>
-                                            <__ModalProductionProcess boardId={boardId}/>
-                                        </Box>
-                                    </Tabs.Panel>*/}
-                                </Tabs>
-
+                                <Box>
+                                    <__ReconciliationProcess closeModel={closeModel}/>
+                                </Box>
                             </Box>
                         </Modal.Body>
                     </Modal.Content>

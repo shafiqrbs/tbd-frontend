@@ -1,13 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Box, Button, NumberInput, ScrollArea, Text } from '@mantine/core';
-import { useDispatch } from 'react-redux';
-import { getIndexEntityData } from '../../../../../store/inventory/crudSlice.js';
-import { useOutletContext } from 'react-router-dom';
+import React, {useEffect, useState, useRef} from 'react';
+import {Box, Button, NumberInput, ScrollArea, Text} from '@mantine/core';
+import {useDispatch} from 'react-redux';
+import {getIndexEntityData, setFetching} from '../../../../../store/inventory/crudSlice.js';
+import {useOutletContext} from 'react-router-dom';
+import {modals} from "@mantine/modals";
+import {t} from "i18next";
+import {storeEntityData} from "../../../../../store/nbr/crudSlice.js";
+import {showNotificationComponent} from "../../../../core-component/showNotificationComponent.jsx";
 
-export default function ReconciliationTable() {
+export default function __ReconciliationProcess({closeModel}) {
     const dispatch = useDispatch();
-    const { mainAreaHeight } = useOutletContext();
-    const tableHeight = mainAreaHeight - 70;
+    const {mainAreaHeight} = useOutletContext();
+    const tableHeight = mainAreaHeight - 60;
     const scrollableTableRef = useRef(null);
     const fixedTableRef = useRef(null);
 
@@ -50,7 +54,6 @@ export default function ReconciliationTable() {
 
     const records = Object.values(editedData);
 
-    // Build unique item map: name => [sales_item_id]
     const uniqueItemMap = {};
     Object.values(editedData).forEach(row => {
         Object.values(row.items).forEach(item => {
@@ -62,10 +65,20 @@ export default function ReconciliationTable() {
     });
     const itemColumns = Object.keys(uniqueItemMap);
 
+    const uniqueItemStockMap = {};
+
+    Object.values(editedData).forEach(row => {
+        Object.values(row.items).forEach(item => {
+            if (uniqueItemStockMap[item.name] === undefined) {
+                uniqueItemStockMap[item.name] = item.stock_quantity ?? 0;
+            }
+        });
+    });
+
     // Quantity change
     const handleQuantityChange = (rowIndex, itemId, value) => {
         setEditedData(prev => {
-            const updated = { ...prev };
+            const updated = {...prev};
             const key = Object.keys(updated)[rowIndex];
             updated[key].items[itemId].quantity = value ?? 0;
             return updated;
@@ -73,23 +86,70 @@ export default function ReconciliationTable() {
     };
 
     // Approve submit
+    const [approveLoading, setApproveLoading] = useState(false);
+
     const handleApprove = () => {
-        const payload = Object.values(editedData).map(row => ({
-            invoice: row.invoice,
-            items: Object.values(row.items).map(i => ({
-                sales_item_id: i.sales_item_id,
-                quantity: i.quantity,
-            })),
-        }));
-        console.log('Submitting payload:', payload);
-        alert('Approved & submitted!');
+        modals.openConfirmModal({
+            title: (<Text size="md">{t("SalesConformation")}</Text>),
+            children: (<Text size="sm">{t("FormConfirmationMessage")}</Text>),
+            labels: {confirm: 'Confirm', cancel: 'Cancel'},
+            onCancel: () => console.log('Cancel'),
+            onConfirm: async (modal) => {
+                if (approveLoading) return;
+                setApproveLoading(true);
+
+                // Prepare payload
+                const payload = Object.values(editedData).map(row => ({
+                    sale_id: row.sale_id,
+                    invoice: row.invoice,
+                    items: Object.values(row.items).map(i => ({
+                        sales_item_id: i.sales_item_id,
+                        quantity: i.quantity,
+                    })),
+                }));
+
+                try {
+                    // Dispatch only once
+                    const resultAction = await dispatch(storeEntityData({
+                        url: 'inventory/sales/requisition/reconciliation-items',
+                        data: payload
+                    }));
+
+                    // Show only **one notification** based on overall API response
+                    const message =
+                        storeEntityData.fulfilled.match(resultAction)
+                            ? resultAction.payload?.data?.message || "Sales approved successfully"
+                            : resultAction.payload?.data?.message || "Approval failed";
+
+                    showNotificationComponent(
+                        message,
+                        storeEntityData.fulfilled.match(resultAction) ? "teal" : "red",
+                        "",
+                        true
+                    );
+                    closeModel()
+
+                } catch (error) {
+                    showNotificationComponent(
+                        "Something went wrong. Please try again.",
+                        "red",
+                        "",
+                        true
+                    );
+                    closeModel()
+                } finally {
+                    setApproveLoading(false);
+                    dispatch(setFetching(true))
+                }
+            },
+        });
     };
 
     // Function to calculate row height based on number of inputs - FIXED
     const getRowHeight = (rowIndex) => {
         const rowKey = Object.keys(editedData)[rowIndex];
         const currentRow = editedData[rowKey];
-        if (!currentRow) return 45; // Default height for single input
+        if (!currentRow) return 45;
 
         // Find max number of inputs in any item column for this row
         let maxInputs = 1;
@@ -108,8 +168,7 @@ export default function ReconciliationTable() {
     };
 
     return (
-        <Box style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-            {/* Two-table layout for fixed and scrollable columns */}
+        <Box style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
             <Box style={{
                 display: 'flex',
                 height: tableHeight,
@@ -117,7 +176,6 @@ export default function ReconciliationTable() {
                 borderRadius: '4px',
                 overflow: 'hidden'
             }}>
-                {/* Fixed columns table */}
                 <Box style={{
                     flexShrink: 0,
                     borderRight: '2px solid #dee2e6',
@@ -126,26 +184,12 @@ export default function ReconciliationTable() {
                 }}>
                     <ScrollArea
                         h={tableHeight}
-                        onScrollPositionChange={({ y }) => handleScroll({ target: { scrollTop: y } })}
+                        onScrollPositionChange={({y}) => handleScroll({target: {scrollTop: y}})}
                         viewportRef={fixedTableRef}
                     >
-                        <Box component="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <Box component="table" style={{width: '100%', borderCollapse: 'collapse'}}>
                             <thead>
-                            <tr style={{ height: '45px' }}>
-                                <th style={{
-                                    width: '200px',
-                                    textAlign: 'left',
-                                    padding: '8px',
-                                    backgroundColor: '#f8f9fa',
-                                    borderBottom: '2px solid #dee2e6',
-                                    position: 'sticky',
-                                    top: 0,
-                                    zIndex: 1
-                                }}>
-                                    <Text size="sm" fw={600} style={{ whiteSpace: 'nowrap' }}>
-                                        Customer
-                                    </Text>
-                                </th>
+                            <tr style={{height: '45px'}}>
                                 <th style={{
                                     width: '150px',
                                     textAlign: 'left',
@@ -156,15 +200,32 @@ export default function ReconciliationTable() {
                                     top: 0,
                                     zIndex: 1
                                 }}>
-                                    <Text size="sm" fw={600} style={{ whiteSpace: 'nowrap' }}>
+                                    <Text size="sm" fw={600} style={{whiteSpace: 'nowrap'}}>
+                                        Customer
+                                    </Text>
+                                </th>
+                                <th style={{
+                                    width: '100px',
+                                    textAlign: 'left',
+                                    padding: '8px',
+                                    backgroundColor: '#f8f9fa',
+                                    borderBottom: '2px solid #dee2e6',
+                                    position: 'sticky',
+                                    top: 0,
+                                    zIndex: 1
+                                }}>
+                                    <Text size="sm" fw={600} style={{whiteSpace: 'nowrap'}}>
                                         Invoice
                                     </Text>
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
+                            <tr style={{height: `${getRowHeight(0)}px`}}>
+
+                            </tr>
                             {records.map((record, index) => (
-                                <tr key={index} style={{ height: `${getRowHeight(index)}px` }}>
+                                <tr key={index} style={{height: `${getRowHeight(index)}px`}}>
                                     <td style={{
                                         padding: '8px',
                                         whiteSpace: 'nowrap',
@@ -202,7 +263,6 @@ export default function ReconciliationTable() {
                     </ScrollArea>
                 </Box>
 
-                {/* Scrollable columns table */}
                 <Box style={{
                     flex: 1,
                     overflow: 'auto',
@@ -210,12 +270,12 @@ export default function ReconciliationTable() {
                 }}>
                     <ScrollArea
                         h={tableHeight}
-                        onScrollPositionChange={({ y }) => handleScroll({ target: { scrollTop: y } })}
+                        onScrollPositionChange={({y}) => handleScroll({target: {scrollTop: y}})}
                         viewportRef={scrollableTableRef}
                     >
-                        <Box component="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <Box component="table" style={{width: '100%', borderCollapse: 'collapse'}}>
                             <thead>
-                            <tr style={{ height: '45px' }}>
+                            <tr style={{height: '45px'}}>
                                 {itemColumns.map((itemName, index) => (
                                     <th key={index} style={{
                                         width: '150px',
@@ -239,10 +299,28 @@ export default function ReconciliationTable() {
                                                 textAlign: 'center',
                                                 padding: '0 2px'
                                             }}
-                                            title={itemName} // Show full name on hover
+                                            title={itemName}
                                         >
                                             {itemName}
                                         </Text>
+                                    </th>
+                                ))}
+                            </tr>
+
+                            <tr style={{height: '45px'}}>
+                                {itemColumns.map(itemName => (
+                                    <th
+                                        key={itemName}
+                                        style={{
+                                            background: '#f1f3f5',
+                                            borderBottom: '2px solid #dee2e6',
+                                            textAlign: 'center',
+                                            fontSize: 15,
+                                            whiteSpace: 'nowrap',
+                                            color: 'red'
+                                        }}
+                                    >
+                                        {uniqueItemStockMap[itemName]}
                                     </th>
                                 ))}
                             </tr>
@@ -254,7 +332,7 @@ export default function ReconciliationTable() {
                                 const rowHeight = getRowHeight(rowIndex);
 
                                 return (
-                                    <tr key={rowIndex} style={{ height: `${rowHeight}px` }}>
+                                    <tr key={rowIndex} style={{height: `${rowHeight}px`}}>
                                         {itemColumns.map((itemName, colIndex) => {
                                             const itemIds = uniqueItemMap[itemName] || [];
 
@@ -269,7 +347,7 @@ export default function ReconciliationTable() {
                                                     <Box style={{
                                                         display: 'flex',
                                                         flexDirection: 'column',
-                                                        gap: 2, // Reduced gap
+                                                        gap: 2,
                                                         justifyContent: 'center',
                                                         height: '100%'
                                                     }}>
@@ -277,8 +355,7 @@ export default function ReconciliationTable() {
                                                             const itemData = currentRow?.items?.[id];
                                                             if (!itemData) return null;
                                                             return (
-                                                                <p style={{textAlign: 'center'}}>{itemData.quantity}</p>
-                                                                /*<NumberInput
+                                                                <NumberInput
                                                                     key={id}
                                                                     value={itemData.quantity}
                                                                     size="xs"
@@ -286,16 +363,16 @@ export default function ReconciliationTable() {
                                                                     hideControls
                                                                     styles={{
                                                                         input: {
-                                                                            height: 30, // Reduced height
+                                                                            height: 30,
                                                                             textAlign: 'center',
                                                                             padding: '0 4px',
                                                                             width: '100%',
-                                                                            fontSize: '13px', // Slightly smaller font
-                                                                            minHeight: 30 // Ensure consistent height
+                                                                            fontSize: '13px',
+                                                                            minHeight: 30
                                                                         }
                                                                     }}
                                                                     onChange={value => handleQuantityChange(rowIndex, id, value)}
-                                                                />*/
+                                                                />
                                                             );
                                                         })}
                                                     </Box>
@@ -311,7 +388,6 @@ export default function ReconciliationTable() {
                 </Box>
             </Box>
 
-            {/* Approve Button */}
             <Box style={{
                 display: 'flex',
                 justifyContent: 'flex-end',
@@ -321,12 +397,14 @@ export default function ReconciliationTable() {
             }}>
                 <Button
                     color="green"
-                    // onClick={handleApprove}
+                    onClick={handleApprove}
                     size="md"
-                    style={{ minWidth: 120 }}
+                    style={{minWidth: 120}}
+                    disabled={approveLoading}
                 >
-                    Approve
+                    {approveLoading ? 'Processing...' : 'Approve'}
                 </Button>
+
             </Box>
         </Box>
     );

@@ -43,7 +43,6 @@ import { SalesPrintPos } from "./print-component/SalesPrintPos.jsx";
 import { modals } from "@mantine/modals";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import {formatDate, parseDate} from "../../../../utils";
-import _ProductionProcessModal from "../../procurement/requistion-matrix/_ProductionProcessModal.jsx";
 import _SalesReconciliationModal from "./modal/_SalesReconciliationModal.jsx";
 
 function _SalesTable(props) {
@@ -797,13 +796,10 @@ function _SalesTable(props) {
                 <SalesPrintPos salesViewData={salesViewData} setPrintPos={setPrintPos} />
             </div>}
 
-            {/*{salesReconciliationModal && (*/}
                 <_SalesReconciliationModal
                     salesReconciliationModal={salesReconciliationModal}
                     setSalesReconciliationModal={setSalesReconciliationModal}
-                    // boardId={boardId}
                 />
-            {/*)}*/}
         </>
     );
 }
