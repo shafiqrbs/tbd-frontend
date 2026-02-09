@@ -1268,5 +1268,7 @@
   "ProductBarcode":"Product Barcode",
   "SelectSize":"Select Size",
   "ExpiryDuration":"Expiry Duration",
+  "SelectPrimaryLedger":"Primary Ledger",
+  "SelectSecendoryLedger":"Secondary Ledger",
   "": ""
 }

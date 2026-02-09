@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
-    Grid, Box, Group, Text, ActionIcon, Stack, Button, Flex, NumberInput, SimpleGrid, Title,
+    Grid, Box, Group, Text, ActionIcon, Stack, Button, Flex, NumberInput, SimpleGrid, Title, Loader, Center,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
@@ -65,6 +65,7 @@ function BranchVoucherFromIndex({currencySymbol}) {
     const [primaryLedgerDropdownEnable, setPrimaryLedgerDropdownEnable] = useState(false);
     const [bankDrawer, setBankDrawer] = useState(false);
     const [bankInfo, setBankInfo] = useState({});
+    const [voucherListLoaded, setVoucherListLoaded] = useState(false);
 
     const loadMyItemsFromStorage = () => {
         const saved = localStorage.getItem("temp-branch-voucher-entry");
@@ -288,7 +289,7 @@ function BranchVoucherFromIndex({currencySymbol}) {
         dispatch(setValidationData(false));
 
         if (myItems.length == 0 || !primaryLedgerHeadObject || !Number(totals.debit)) {
-            showNotificationComponent('Validation Error','red')
+            showNotificationComponent('Validation Error', 'red')
             return
         }
 
@@ -384,380 +385,393 @@ function BranchVoucherFromIndex({currencySymbol}) {
                             setBranchList={setBranchList}
                             submitForm={form}
                             setBranchData={setBranchData}
+                            onLoaded={() => setVoucherListLoaded(true)}
                         />
                     </Box>
                 </Grid.Col>
-                <Grid.Col span={18}>
-                    <Box
-                        p={"xs"}
-                        style={{borderRadius: 4}}
-                        className={`borderRadiusAll ${genericClass.genericSecondaryBg}`}
-                        mb={"6"}
-                    >
-                        <Box bg={'green'}>
-                            <Grid columns={'18'}>
-                                <Grid.Col span={'7'}>
-                                    <Box p="xs" ml={'xs'} pt={0} >
-                                    <Box mb={4} mt="xs">
-                                        <Grid>
-                                            <Grid.Col span={9}>
-                                                <Title order={6} >
-                                                    {t("SelectPrimaryLedger")}
-                                                </Title>
-                                            </Grid.Col>
-                                        </Grid>
-                                    </Box>
-                                    <Box  mt="xs" style={{display: 'flex', alignItems: 'center', gap: 8}}>
-                                        <Box style={{flexGrow: 1}}  pt={0} >
-                                            <SelectForm
-                                                tooltip={t("Head")}
-                                                label={t("")}
-                                                placeholder={t("ChooseLedgerHead")}
-                                                required={true}
-                                                nextField={""}
-                                                name={"main_ledger_head"}
-                                                form={form}
-                                                dropdownValue={primaryLedgerDropdownData}
-                                                id={"main_ledger_head"}
-                                                searchable={true}
-                                                value={primaryLedgerHeadData}
-                                                changeValue={setPrimaryLedgerHeadData}
-                                                disabled={primaryLedgerDropdownEnable}
-                                            />
-                                        </Box>
-                                        {/* Reset icon */}
-                                        {primaryLedgerHeadData && (
-                                            <ActionIcon mt={'2'} color='var( --theme-remove-color)'
-                                                        onClick={() => handleDeleteVoucher(1, 'main-ledger')}
-                                                        size="md" aria-label="Reset selection">
-                                                <IconX size={16} opacity={0.6}/>
-                                            </ActionIcon>
-                                        )}
-                                    </Box>
-                                    </Box>
+                {/*{voucherListLoaded ? (*/}
+                    <>
+                        <Grid.Col span={18}>
+                            <Box
+                                p={"xs"}
+                                style={{borderRadius: 4}}
+                                className={`borderRadiusAll ${genericClass.genericSecondaryBg}`}
+                                mb={"6"}
+                            >
+                                <Box bg={'green'}>
+                                    <Grid columns={'18'}>
+                                        <Grid.Col span={'7'}>
+                                            <Box p="xs" ml={'xs'} pt={0}>
+                                                <Box mb={4} mt="xs">
+                                                    <Grid>
+                                                        <Grid.Col span={9}>
+                                                            <Title order={6}>
+                                                                {t("SelectPrimaryLedger")}
+                                                            </Title>
+                                                        </Grid.Col>
+                                                    </Grid>
+                                                </Box>
+                                                <Box mt="xs" style={{display: 'flex', alignItems: 'center', gap: 8}}>
+                                                    <Box style={{flexGrow: 1}} pt={0}>
+                                                        <SelectForm
+                                                            tooltip={t("Head")}
+                                                            label={t("")}
+                                                            placeholder={t("ChooseLedgerHead")}
+                                                            required={true}
+                                                            nextField={""}
+                                                            name={"main_ledger_head"}
+                                                            form={form}
+                                                            dropdownValue={primaryLedgerDropdownData}
+                                                            id={"main_ledger_head"}
+                                                            searchable={true}
+                                                            value={primaryLedgerHeadData}
+                                                            changeValue={setPrimaryLedgerHeadData}
+                                                            disabled={primaryLedgerDropdownEnable}
+                                                        />
+                                                    </Box>
+                                                    {/* Reset icon */}
+                                                    {primaryLedgerHeadData && (
+                                                        <ActionIcon mt={'2'} color='var( --theme-remove-color)'
+                                                                    onClick={() => handleDeleteVoucher(1, 'main-ledger')}
+                                                                    size="md" aria-label="Reset selection">
+                                                            <IconX size={16} opacity={0.6}/>
+                                                        </ActionIcon>
+                                                    )}
+                                                </Box>
+                                            </Box>
 
-                                </Grid.Col>
-                                <Grid.Col span={'11'}>
-                                    <Box px="xs" mt="xs">
-                                        <Grid>
-                                            <Grid.Col span={9}>
-                                                <Title order={6} >
-                                                    {t("SelectPrimaryLedger")}
-                                                </Title>
-                                            </Grid.Col>
-                                        </Grid>
-                                    </Box>
-                                    <Box mr={'xs'}>{renderForm()}</Box>
+                                        </Grid.Col>
+                                        <Grid.Col span={'11'}>
+                                            <Box px="xs" mt="xs">
+                                                <Grid>
+                                                    <Grid.Col span={9}>
+                                                        <Title order={6}>
+                                                            {t("SelectSecendoryLedger")}
+                                                        </Title>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mr={'xs'}>{renderForm()}</Box>
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                            </Box>
+                            <Grid columns={24} gutter={{base: 6}}>
+                                <Grid.Col span={24}>
+                                    <form
+                                        id="indexForm"
+                                        onSubmit={form.onSubmit(handleFormSubmit)}>
+                                        <Box p={"xs"} className={"borderRadiusAll"} bg={"white"}>
+                                            <Box className="borderRadiusAll">
+                                                <DataTable
+                                                    classNames={{
+                                                        root: tableCss.root,
+                                                        table: tableCss.table,
+                                                        header: tableCss.header,
+                                                        footer: tableCss.footer,
+                                                        pagination: tableCss.pagination,
+                                                    }}
+                                                    records={myItems}
+                                                    columns={[{
+                                                        accessor: "item_index",
+                                                        title: t("S/N"),
+                                                        width: 70,
+                                                        render: (record) => (record?.bankInfo?.cross_using &&
+                                                            <ActionIcon color="red.5" size={"sm"}>
+                                                                <IconPlus height={18} width={18} stroke={1.5}/>
+                                                            </ActionIcon>),
+                                                    }, {
+                                                        accessor: "mode",
+                                                        title: t("Mode"),
+                                                        width: 100,
+                                                        render: (record) => {
+                                                            return record.mode === 'debit' ? 'Debit' : 'Credit'
+                                                        }
+                                                    }, {
+                                                        accessor: "ledger_name", title: t("LedgerName"),
+                                                    }, {
+                                                        accessor: "account_head", title: t("AccountHead"),
+                                                    }, {
+                                                        accessor: "debit",
+                                                        title: t("Debit"),
+                                                        width: 120,
+                                                        render: (record, index) => (<NumberInput
+                                                            disabled={record.mode === "credit"}
+                                                            hideControls
+                                                            size={'xs'}
+                                                            ta={"right"}
+                                                            value={record.debit}
+                                                            onChange={(val) => handleInputChange(index, "debit", val)}
+                                                        />),
+                                                        footer: (<Group gap="xs">
+                                                            <Box mb={-4}>
+                                                                <IconSum size={16}/>
+                                                            </Box>
+                                                            <div>{totals.debit}</div>
+                                                        </Group>),
+                                                    }, {
+                                                        accessor: "credit",
+                                                        title: t("Credit"),
+                                                        width: 120,
+                                                        resizable: true,
+                                                        render: (record, index) => (<NumberInput
+                                                            disabled={record.mode === "debit"}
+                                                            hideControls
+                                                            ta={"right"}
+                                                            size={'xs'}
+                                                            value={record.credit}
+                                                            onChange={(val) => handleInputChange(index, "credit", val)}
+                                                        />),
+                                                        footer: (<Group gap="xs">
+                                                            <Box mb={-4}>
+                                                                <IconSum size={16}/>
+                                                            </Box>
+                                                            <div>{totals.credit}</div>
+                                                        </Group>),
+                                                    }, {
+                                                        accessor: "action",
+                                                        title: t("Action"),
+                                                        textAlign: "right",
+                                                        render: (record, index) => (
+                                                            <Group gap={8} justify="right" wrap="nowrap">
+                                                                {<ActionIcon
+                                                                    size={"sm"}
+                                                                    variant="transparent"
+                                                                    color="red.5"
+                                                                    onClick={() => handleDeleteVoucher(index, record.type)}
+                                                                >
+                                                                    <IconTrashX size="xs" stroke={1.5}/>
+                                                                </ActionIcon>}
+                                                            </Group>),
+                                                    },]}
+                                                    rowExpansion={{
+                                                        collapseProps: {
+                                                            transitionDuration: 500,
+                                                            animateOpacity: false,
+                                                            transitionTimingFunction: 'ease-out',
+                                                        },
+                                                        allowMultiple: true,
+                                                        content: ({record}) => (
+                                                            <Stack className={classes.details} p="xs" gap={6}>
+                                                                <SimpleGrid cols={2} spacing="sm" verticalSpacing="xs"
+                                                                            breakpoints={[{maxWidth: 'sm', cols: 1}]}>
+                                                                    {record?.bankInfo?.cheque_date && (
+                                                                        <Group gap={6} align="start">
+                                                                            <div className={classes.label}>Cheque Date:
+                                                                            </div>
+                                                                            <div>
+                                                                                {(() => {
+                                                                                    const date = new Date(record.bankInfo.cheque_date);
+                                                                                    const formatted = date.toLocaleString('en-US', {
+                                                                                        year: 'numeric',
+                                                                                        month: 'long',
+                                                                                        day: 'numeric',
+                                                                                    });
+                                                                                    return formatted;
+                                                                                })()}
+                                                                            </div>
+                                                                        </Group>)}
+
+                                                                    {record?.bankInfo?.cross_using && (
+                                                                        <Group gap={6} align="start">
+                                                                            <div className={classes.label}>Cross using:
+                                                                            </div>
+                                                                            <div>{record.bankInfo.cross_using}</div>
+                                                                        </Group>)}
+
+                                                                    {record?.bankInfo?.amount && (
+                                                                        <Group gap={6} align="start">
+                                                                            <div className={classes.label}>Amount:</div>
+                                                                            <div>{record.bankInfo.amount}</div>
+                                                                        </Group>)}
+
+                                                                    {record?.bankInfo?.forwarding_name && (
+                                                                        <Group gap={6} align="start">
+                                                                            <div className={classes.label}>Forwarding
+                                                                                name:
+                                                                            </div>
+                                                                            <div>{record.bankInfo.forwarding_name}</div>
+                                                                        </Group>)}
+
+                                                                    {record?.bankInfo?.pay_mode && (
+                                                                        <Group gap={6} align="start">
+                                                                            <div className={classes.label}>Pay mode:
+                                                                            </div>
+                                                                            <div>{record.bankInfo.pay_mode}</div>
+                                                                        </Group>)}
+
+                                                                    {record?.bankInfo?.branch_name && (
+                                                                        <Group gap={6} align="start">
+                                                                            <div className={classes.label}>Branch name:
+                                                                            </div>
+                                                                            <div>{record.bankInfo.branch_name}</div>
+                                                                        </Group>)}
+
+                                                                    {record?.bankInfo?.received_from && (
+                                                                        <Group gap={6} align="start">
+                                                                            <div className={classes.label}>Received
+                                                                                from:
+                                                                            </div>
+                                                                            <div>{record.bankInfo.received_from}</div>
+                                                                        </Group>)}
+
+                                                                    {record?.bankInfo?.cheque_no && (
+                                                                        <Group gap={6} align="start">
+                                                                            <div className={classes.label}>Cheque no:
+                                                                            </div>
+                                                                            <div>{record.bankInfo.cheque_no}</div>
+                                                                        </Group>)}
+                                                                </SimpleGrid>
+                                                            </Stack>)
+                                                    }}
+                                                    fetching={fetching}
+                                                    totalRecords={indexData.total}
+                                                    key={"item_index"}
+                                                    recordsPerPage={perPage}
+                                                    onPageChange={(p) => {
+                                                        setPage(p);
+                                                        dispatch(setFetching(true));
+                                                    }}
+                                                    loaderSize="xs"
+                                                    loaderColor="grape"
+                                                    height={height - 188}
+                                                    scrollAreaProps={{type: "never"}}
+                                                />
+                                            </Box>
+                                        </Box>
+                                        <Box mt={4}>
+                                            <Box p={"xs"} className="borderRadiusAll" bg={"white"}>
+                                                <Grid columns={12} gutter={{base: 6}}>
+                                                    <Grid.Col span={5}>
+                                                        <Box
+                                                            className="borderRadiusAll"
+                                                            p={"xs"}
+                                                            bg={"white"}
+                                                        >
+                                                            <Box>
+                                                                <InputNumberForm
+                                                                    tooltip={t("VoucherRefNo")}
+                                                                    label={t("VoucherRefNo")}
+                                                                    placeholder={t("VoucherRefNo")}
+                                                                    required={false}
+                                                                    nextField={"issue_date"}
+                                                                    name={"ref_no"}
+                                                                    form={form}
+                                                                    mt={0}
+                                                                    id={"ref_no"}
+                                                                />
+                                                            </Box>
+                                                            <Box mt={"xs"}>
+
+                                                                <DatePickerWithMinMaxRange
+                                                                    tooltip={t("InvoiceDateValidateMessage")}
+                                                                    label={t("IssueDate")}
+                                                                    placeholder={t("IssueDate")}
+                                                                    required={true}
+                                                                    nextField="branch_id"
+                                                                    form={form}
+                                                                    name="issue_date"
+                                                                    id="issue_date"
+                                                                    leftSection={<IconCalendar size={16}
+                                                                                               opacity={0.5}/>}
+                                                                    rightSectionWidth={30}
+                                                                    closeIcon={true}
+                                                                    minDate={new Date(lastVoucherDate)}
+                                                                    maxDate={new Date()}
+                                                                />
+                                                            </Box>
+                                                        </Box>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={5}>
+                                                        <Box
+                                                            className="borderRadiusAll"
+                                                            p={"xs"}
+                                                            bg={"white"}
+                                                        >
+                                                            <Box>
+                                                                <SelectForm
+                                                                    tooltip={t("ChooseBranch")}
+                                                                    label={t("Outlet")}
+                                                                    placeholder={t("ChooseBranch")}
+                                                                    required={true}
+                                                                    nextField={"description"}
+                                                                    name={"branch_id"}
+                                                                    form={form}
+                                                                    dropdownValue={branchList}
+                                                                    id={"branch_id"}
+                                                                    searchable={true}
+                                                                    value={branchData}
+                                                                    changeValue={setBranchData}
+                                                                />
+                                                            </Box>
+                                                            <Box mt={"xs"}>
+
+                                                                <TextAreaForm
+                                                                    autosize={true}
+                                                                    minRows={2}
+                                                                    maxRows={2}
+                                                                    tooltip={t("Narration")}
+                                                                    label={t("")}
+                                                                    placeholder={t("Narration")}
+                                                                    required={false}
+                                                                    nextField={"EntityFormSubmits"}
+                                                                    name={"description"}
+                                                                    form={form}
+                                                                    mt={8}
+                                                                    id={"description"}
+                                                                />
+                                                            </Box>
+                                                        </Box>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={2}>
+                                                        <Flex
+                                                            mih={150}
+                                                            gap="xs"
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="column"
+                                                            wrap="wrap"
+                                                        >
+                                                            {!saveCreateLoading && isOnline && (<Button
+                                                                size="xl"
+                                                                color={"green.8"}
+                                                                type="submit"
+                                                                form={"indexForm"}
+                                                                id="EntityFormSubmits"
+                                                                leftSection={<IconDeviceFloppy size={16}/>}
+                                                                disabled={totals.debit !== totals.credit}
+                                                            >
+                                                                <Flex direction={"column"} gap={0}>
+                                                                    <Text fz={14} fw={400}>
+                                                                        {t("AddVoucher")}
+                                                                    </Text>
+                                                                </Flex>
+                                                            </Button>)}
+                                                        </Flex>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                        </Box>
+                                    </form>
                                 </Grid.Col>
                             </Grid>
-                        </Box>
-                    </Box>
-                    <Grid columns={24} gutter={{base: 6}}>
-                        <Grid.Col span={24}>
-                            <form
-                                id="indexForm"
-                                onSubmit={form.onSubmit(handleFormSubmit)}>
-                                <Box p={"xs"} className={"borderRadiusAll"} bg={"white"}>
-                                    <Box className="borderRadiusAll">
-                                        <DataTable
-                                            classNames={{
-                                                root: tableCss.root,
-                                                table: tableCss.table,
-                                                header: tableCss.header,
-                                                footer: tableCss.footer,
-                                                pagination: tableCss.pagination,
-                                            }}
-                                            records={myItems}
-                                            columns={[{
-                                                accessor: "item_index",
-                                                title: t("S/N"),
-                                                width: 70,
-                                                render: (record) => (record?.bankInfo?.cross_using &&
-                                                    <ActionIcon color="red.5" size={"sm"}>
-                                                        <IconPlus height={18} width={18} stroke={1.5}/>
-                                                    </ActionIcon>),
-                                            }, {
-                                                accessor: "mode",
-                                                title: t("Mode"),
-                                                width: 100,
-                                                render: (record) => {
-                                                    return record.mode === 'debit' ? 'Debit' : 'Credit'
-                                                }
-                                            }, {
-                                                accessor: "ledger_name", title: t("LedgerName"),
-                                            }, {
-                                                accessor: "account_head", title: t("AccountHead"),
-                                            }, {
-                                                accessor: "debit",
-                                                title: t("Debit"),
-                                                width: 120,
-                                                render: (record, index) => (<NumberInput
-                                                    disabled={record.mode === "credit"}
-                                                    hideControls
-                                                    size={'xs'}
-                                                    ta={"right"}
-                                                    value={record.debit}
-                                                    onChange={(val) => handleInputChange(index, "debit", val)}
-                                                />),
-                                                footer: (<Group gap="xs">
-                                                    <Box mb={-4}>
-                                                        <IconSum size={16}/>
-                                                    </Box>
-                                                    <div>{totals.debit}</div>
-                                                </Group>),
-                                            }, {
-                                                accessor: "credit",
-                                                title: t("Credit"),
-                                                width: 120,
-                                                resizable: true,
-                                                render: (record, index) => (<NumberInput
-                                                    disabled={record.mode === "debit"}
-                                                    hideControls
-                                                    ta={"right"}
-                                                    size={'xs'}
-                                                    value={record.credit}
-                                                    onChange={(val) => handleInputChange(index, "credit", val)}
-                                                />),
-                                                footer: (<Group gap="xs">
-                                                    <Box mb={-4}>
-                                                        <IconSum size={16}/>
-                                                    </Box>
-                                                    <div>{totals.credit}</div>
-                                                </Group>),
-                                            }, {
-                                                accessor: "action",
-                                                title: t("Action"),
-                                                textAlign: "right",
-                                                render: (record, index) => (
-                                                    <Group gap={8} justify="right" wrap="nowrap">
-                                                        {<ActionIcon
-                                                            size={"sm"}
-                                                            variant="transparent"
-                                                            color="red.5"
-                                                            onClick={() => handleDeleteVoucher(index, record.type)}
-                                                        >
-                                                            <IconTrashX size="xs" stroke={1.5}/>
-                                                        </ActionIcon>}
-                                                    </Group>),
-                                            },]}
-                                            rowExpansion={{
-                                                collapseProps: {
-                                                    transitionDuration: 500,
-                                                    animateOpacity: false,
-                                                    transitionTimingFunction: 'ease-out',
-                                                },
-                                                allowMultiple: true,
-                                                content: ({record}) => (
-                                                    <Stack className={classes.details} p="xs" gap={6}>
-                                                        <SimpleGrid cols={2} spacing="sm" verticalSpacing="xs"
-                                                                    breakpoints={[{maxWidth: 'sm', cols: 1}]}>
-                                                            {record?.bankInfo?.cheque_date && (
-                                                                <Group gap={6} align="start">
-                                                                    <div className={classes.label}>Cheque Date:
-                                                                    </div>
-                                                                    <div>
-                                                                        {(() => {
-                                                                            const date = new Date(record.bankInfo.cheque_date);
-                                                                            const formatted = date.toLocaleString('en-US', {
-                                                                                year: 'numeric',
-                                                                                month: 'long',
-                                                                                day: 'numeric',
-                                                                            });
-                                                                            return formatted;
-                                                                        })()}
-                                                                    </div>
-                                                                </Group>)}
-
-                                                            {record?.bankInfo?.cross_using && (
-                                                                <Group gap={6} align="start">
-                                                                    <div className={classes.label}>Cross using:
-                                                                    </div>
-                                                                    <div>{record.bankInfo.cross_using}</div>
-                                                                </Group>)}
-
-                                                            {record?.bankInfo?.amount && (
-                                                                <Group gap={6} align="start">
-                                                                    <div className={classes.label}>Amount:</div>
-                                                                    <div>{record.bankInfo.amount}</div>
-                                                                </Group>)}
-
-                                                            {record?.bankInfo?.forwarding_name && (
-                                                                <Group gap={6} align="start">
-                                                                    <div className={classes.label}>Forwarding
-                                                                        name:
-                                                                    </div>
-                                                                    <div>{record.bankInfo.forwarding_name}</div>
-                                                                </Group>)}
-
-                                                            {record?.bankInfo?.pay_mode && (
-                                                                <Group gap={6} align="start">
-                                                                    <div className={classes.label}>Pay mode:</div>
-                                                                    <div>{record.bankInfo.pay_mode}</div>
-                                                                </Group>)}
-
-                                                            {record?.bankInfo?.branch_name && (
-                                                                <Group gap={6} align="start">
-                                                                    <div className={classes.label}>Branch name:
-                                                                    </div>
-                                                                    <div>{record.bankInfo.branch_name}</div>
-                                                                </Group>)}
-
-                                                            {record?.bankInfo?.received_from && (
-                                                                <Group gap={6} align="start">
-                                                                    <div className={classes.label}>Received from:
-                                                                    </div>
-                                                                    <div>{record.bankInfo.received_from}</div>
-                                                                </Group>)}
-
-                                                            {record?.bankInfo?.cheque_no && (
-                                                                <Group gap={6} align="start">
-                                                                    <div className={classes.label}>Cheque no:</div>
-                                                                    <div>{record.bankInfo.cheque_no}</div>
-                                                                </Group>)}
-                                                        </SimpleGrid>
-                                                    </Stack>)
-                                            }}
-                                            fetching={fetching}
-                                            totalRecords={indexData.total}
-                                            key={"item_index"}
-                                            recordsPerPage={perPage}
-                                            onPageChange={(p) => {
-                                                setPage(p);
-                                                dispatch(setFetching(true));
-                                            }}
-                                            loaderSize="xs"
-                                            loaderColor="grape"
-                                            height={height - 188}
-                                            scrollAreaProps={{type: "never"}}
-                                        />
-                                    </Box>
-                                </Box>
-                                <Box mt={4}>
-                                    <Box p={"xs"} className="borderRadiusAll" bg={"white"}>
-                                        <Grid columns={12} gutter={{base: 6}}>
-                                            <Grid.Col span={5}>
-                                                <Box
-                                                    className="borderRadiusAll"
-                                                    p={"xs"}
-                                                    bg={"white"}
-                                                >
-                                                    <Box>
-                                                        <InputNumberForm
-                                                            tooltip={t("VoucherRefNo")}
-                                                            label={t("VoucherRefNo")}
-                                                            placeholder={t("VoucherRefNo")}
-                                                            required={false}
-                                                            nextField={"issue_date"}
-                                                            name={"ref_no"}
-                                                            form={form}
-                                                            mt={0}
-                                                            id={"ref_no"}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={"xs"}>
-
-                                                        <DatePickerWithMinMaxRange
-                                                            tooltip={t("InvoiceDateValidateMessage")}
-                                                            label={t("IssueDate")}
-                                                            placeholder={t("IssueDate")}
-                                                            required={true}
-                                                            nextField="branch_id"
-                                                            form={form}
-                                                            name="issue_date"
-                                                            id="issue_date"
-                                                            leftSection={<IconCalendar size={16} opacity={0.5}/>}
-                                                            rightSectionWidth={30}
-                                                            closeIcon={true}
-                                                            minDate={new Date(lastVoucherDate)}
-                                                            maxDate={new Date()}
-                                                        />
-                                                    </Box>
-                                                </Box>
-                                            </Grid.Col>
-                                            <Grid.Col span={5}>
-                                                <Box
-                                                    className="borderRadiusAll"
-                                                    p={"xs"}
-                                                    bg={"white"}
-                                                >
-                                                    <Box>
-                                                        <SelectForm
-                                                            tooltip={t("ChooseBranch")}
-                                                            label={t("Outlet")}
-                                                            placeholder={t("ChooseBranch")}
-                                                            required={true}
-                                                            nextField={"description"}
-                                                            name={"branch_id"}
-                                                            form={form}
-                                                            dropdownValue={branchList}
-                                                            id={"branch_id"}
-                                                            searchable={true}
-                                                            value={branchData}
-                                                            changeValue={setBranchData}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={"xs"}>
-
-                                                        <TextAreaForm
-                                                            autosize={true}
-                                                            minRows={2}
-                                                            maxRows={2}
-                                                            tooltip={t("Narration")}
-                                                            label={t("")}
-                                                            placeholder={t("Narration")}
-                                                            required={false}
-                                                            nextField={"EntityFormSubmits"}
-                                                            name={"description"}
-                                                            form={form}
-                                                            mt={8}
-                                                            id={"description"}
-                                                        />
-                                                    </Box>
-                                                </Box>
-                                            </Grid.Col>
-                                            <Grid.Col span={2}>
-                                                <Flex
-                                                    mih={150}
-                                                    gap="xs"
-                                                    justify="center"
-                                                    align="center"
-                                                    direction="column"
-                                                    wrap="wrap"
-                                                >
-                                                    {!saveCreateLoading && isOnline && (<Button
-                                                        size="xl"
-                                                        color={"green.8"}
-                                                        type="submit"
-                                                        form={"indexForm"}
-                                                        id="EntityFormSubmits"
-                                                        leftSection={<IconDeviceFloppy size={16}/>}
-                                                        disabled={totals.debit !== totals.credit}
-                                                    >
-                                                        <Flex direction={"column"} gap={0}>
-                                                            <Text fz={14} fw={400}>
-                                                                {t("AddVoucher")}
-                                                            </Text>
-                                                        </Flex>
-                                                    </Button>)}
-                                                </Flex>
-                                            </Grid.Col>
-                                        </Grid>
-                                    </Box>
-                                </Box>
-                            </form>
                         </Grid.Col>
-                    </Grid>
-                </Grid.Col>
-                <Grid.Col span={1}>
-                    <Box className={"borderRadiusAll"} pt={"16"} bg={"white"}>
-                        <ShortcutVoucher
-                            form={form}
-                            FormSubmit={"EntityFormSubmit"}
-                            Name={"method_id"}
-                            inputType="select"
-                        />
-                    </Box>
-                </Grid.Col>
+                        <Grid.Col span={1}>
+                            <Box className={"borderRadiusAll"} pt={"16"} bg={"white"}>
+                                <ShortcutVoucher
+                                    form={form}
+                                    FormSubmit={"EntityFormSubmit"}
+                                    Name={"method_id"}
+                                    inputType="select"
+                                />
+                            </Box>
+                        </Grid.Col>
+                    </>
+                /*) : (
+                    <>
+                    </>
+                )}*/
+
             </Grid>
         </Box>
         {bankDrawer && (<BankDrawer

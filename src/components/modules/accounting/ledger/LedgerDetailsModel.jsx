@@ -237,12 +237,20 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
             <Table.Td
                 style={{textAlign: "right"}}>{row.mode === "Credit" ? Math.abs(row.amount).toFixed(2) : ""}</Table.Td>
             <Table.Td style={{textAlign: "right"}}>
-                {(row.closing_amount) < 0
+                {/*{(row.closing_amount) < 0
                     ? `(${Math.abs(row.closing_amount).toFixed(2)})`
-                    : (row.closing_amount).toFixed(2)}
+                    : (row.closing_amount).toFixed(2)}*/}
             </Table.Td>
         </Table.Tr>
     ));
+
+    const formatBalance = (debit, credit) => {
+        const balance = debit - credit;
+        return balance < 0
+            ? `(${Math.abs(balance).toFixed(2)})`
+            : balance.toFixed(2);
+    };
+
 
     return (
         <Modal
@@ -403,6 +411,14 @@ function LedgerDetailsModel({ledgerDetails, setLedgerDetails}) {
                                         <Table.Tbody>
                                             <PreviousOpeningBalanceRow/>
                                             {records}
+                                            <Table.Tr>
+                                                <Table.Th colSpan={6} style={{textAlign: "center"}}>Total</Table.Th>
+                                                <Table.Th style={{textAlign: "right"}}>{Math.abs(totalDebit).toFixed(2)}</Table.Th>
+                                                <Table.Th style={{textAlign: "right"}}>{Math.abs(totalCredit).toFixed(2)}</Table.Th>
+                                                <Table.Th style={{textAlign: "right"}}>
+                                                    {formatBalance(totalDebit, totalCredit)}
+                                                </Table.Th>
+                                            </Table.Tr>
                                         </Table.Tbody>
                                     </Table>
                                 </Table.ScrollContainer>
