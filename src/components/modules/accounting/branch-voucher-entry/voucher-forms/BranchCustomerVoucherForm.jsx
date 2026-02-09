@@ -110,7 +110,7 @@ export default function BranchCustomerVoucherForm(props) {
         setBankDrawer(false);
         setBankInfo(info);
 
-        if (!secondaryLedgerHead || !info.amount) {
+        if (!secondaryLedgerHead) {
             showNotificationComponent(t("LedgerHeadAmountarerequired."), "red")
             return;
         }
@@ -141,10 +141,6 @@ export default function BranchCustomerVoucherForm(props) {
     };
 
     const handleSubmit = async (values) => {
-        if (!secondaryLedgerHead || !values.amount) {
-            showNotificationComponent(t("LedgerHeadAmountarerequired."), "red")
-            return;
-        }
 
         if (!primaryLedgerHeadObject) {
             showNotificationComponent(t("PleaseSelectCREntryFirst"), "red")
@@ -244,98 +240,57 @@ export default function BranchCustomerVoucherForm(props) {
     return (
         <Box>
             <form id="voucherForm" onSubmit={voucherForm.onSubmit(handleSubmit)}>
-                <Box p="xs" pt={0} className="borderRadiusAll">
-                    <Box
-                        px="xs"
-                        pt={6}
-                        pb={6}
-                        mb={4}
-                        mt="xs"
-                        className="boxBackground borderRadiusAll"
-                    >
-                        <Grid>
-                            <Grid.Col span={9}>
-                                <Title order={6} pl="sm">
-                                    {t("AddLedgerHead")}
-                                </Title>
-                            </Grid.Col>
-                        </Grid>
-                    </Box>
-
-                    <Box bg="white" px="xs" className="borderRadiusAll">
-                        <Grid>
-                            <Grid.Col span="auto">
-                                <ScrollArea
-                                    h={height - 158}
-                                    scrollbarSize={2}
-                                    scrollbars="y"
-                                    type="never"
-                                    pb="xs"
-                                >
-                                    <Box mt="xs">
-                                        <SelectForm
-                                            tooltip={t("LedgerHead")}
-                                            placeholder={t("ChooseLedgerHead")}
-                                            required
-                                            disabled={primaryLedgerHeadObject ? false : true}
-                                            nextField="amount"
-                                            name="ledger_head"
-                                            form={voucherForm}
-                                            dropdownValue={secondaryLedgerHeadDropdownData}
-                                            id="ledger_head"
-                                            searchable
-                                            value={secondaryLedgerHead}
-                                            changeValue={setSecondaryLedgerHead}
-                                        />
-                                    </Box>
-                                </ScrollArea>
-                            </Grid.Col>
-                        </Grid>
-                    </Box>
-
-                    <Box
-                        mt={4}
-                        px="xs"
-                        pt="xs"
-                        pb={6}
-                        mb={4}
-                        className="boxBackground borderRadiusAll"
-                    >
-                        <Grid>
-                            <Grid.Col span={8}>
-                                <InputNumberForm
-                                    tooltip={t("Amount")}
-                                    placeholder={t("Amount")}
-                                    required
-                                    nextField="voucherFormSubmit"
-                                    name="amount"
-                                    form={voucherForm}
-                                    id="amount"
-                                    ref={amountInputRef}
-                                />
-                            </Grid.Col>
-                            <Grid.Col span={4}>
-                                <Stack justify="flex-end" align="flex-end">
-                                    {!saveCreateLoading && isOnline && (
-                                        <Button
-                                            mt={2}
-                                            size="xs"
-                                            color="green.8"
-                                            type="submit"
-                                            leftSection={<IconDeviceFloppy size={16}/>}
-                                            id="voucherFormSubmit"
-                                        >
-                                            <Flex direction="column" gap={0}>
-                                                <Text fz={14} fw={400}>
-                                                    {t("AddLedger")}
-                                                </Text>
-                                            </Flex>
-                                        </Button>
-                                    )}
-                                </Stack>
-                            </Grid.Col>
-                        </Grid>
-                    </Box>
+                <Box p="xs" pt={0} >
+                    <Grid columns={18}>
+                        <Grid.Col span={10}>
+                            <SelectForm
+                                tooltip={t("LedgerHead")}
+                                placeholder={t("ChooseLedgerHead")}
+                                required
+                                disabled={primaryLedgerHeadObject ? false : true}
+                                nextField="amount"
+                                name="ledger_head"
+                                form={voucherForm}
+                                dropdownValue={secondaryLedgerHeadDropdownData}
+                                id="ledger_head"
+                                searchable
+                                value={secondaryLedgerHead}
+                                changeValue={setSecondaryLedgerHead}
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={4}>
+                            <InputNumberForm
+                                tooltip={t("Amount")}
+                                placeholder={t("Amount")}
+                                required
+                                nextField="voucherFormSubmit"
+                                name="amount"
+                                form={voucherForm}
+                                id="amount"
+                                ref={amountInputRef}
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={4}>
+                            <Stack justify="flex-end" align="flex-end">
+                                {!saveCreateLoading && isOnline && (
+                                    <Button
+                                        mt={2}
+                                        size="xs"
+                                        color="blue.8"
+                                        type="submit"
+                                        leftSection={<IconDeviceFloppy size={16}/>}
+                                        id="voucherFormSubmit"
+                                    >
+                                        <Flex direction="column" gap={0}>
+                                            <Text fz={14} fw={400}>
+                                                {t("AddLedger")}
+                                            </Text>
+                                        </Flex>
+                                    </Button>
+                                )}
+                            </Stack>
+                        </Grid.Col>
+                    </Grid>
                 </Box>
             </form>
 
@@ -343,7 +298,7 @@ export default function BranchCustomerVoucherForm(props) {
                 <BankDrawer
                     bankDrawer={bankDrawer}
                     setBankDrawer={setBankDrawer}
-                    module="CustomerVoucher"
+                    module="Bank Information"
                     setLoadVoucher={() => {
                     }}
                     sourceForm="customerVoucher"

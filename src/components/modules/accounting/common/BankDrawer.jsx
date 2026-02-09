@@ -67,12 +67,6 @@ function BankDrawer(props) {
                     : null,
             cross_using: (value) =>
                 entryType === "credit" && !value ? t("CrossUsingRequired") : null,
-            amount: (value) =>
-                (entryType === "credit" || entryType === "debit") && !value
-                    ? t("AmountRequired")
-                    : null,
-            forwarding_name: (value) =>
-                entryType === "credit" && !value ? t("ForwardingNameRequired") : null,
             pay_mode: (value) =>
                 entryType === "debit" && !value ? t("PayModeRequired") : null,
             bank_id: (value) =>
@@ -144,7 +138,7 @@ function BankDrawer(props) {
         <Drawer.Root opened={bankDrawer} position="right" onClose={closeDrawer} size={"30%"} offset={8} radius="md">
             <Drawer.Overlay/>
             <Drawer.Content>
-                <ScrollArea h={height + 170} scrollbarSize={1} type="never">
+
                     {/* Drawer Header */}
                     <Flex justify="flex-end" align="center" p="sm">
                         <ActionIcon
@@ -187,155 +181,100 @@ function BankDrawer(props) {
                             </Box>
 
                             <Box px="xs" className="borderRadiusAll">
-                                <ScrollArea h={height + 71} scrollbarSize={2} scrollbars="y" type="never">
-                                    <form onSubmit={bankForm.onSubmit(handleSalesFormSubmit)}>
+                                <form onSubmit={bankForm.onSubmit(handleSalesFormSubmit)}>
+                                    <>
+                                        <Box mt="xs">
+                                            <_SelectForm
+                                                tooltip={t("CrossUsing")}
+                                                label={t("CrossUsing")}
+                                                placeholder={t("CrossUsing")}
+                                                required
+                                                nextField="bank_amount"
+                                                name="cross_using"
+                                                form={bankForm}
+                                                dropdownValue={paymentModeOptions}
+                                                id="cross_using"
+                                                searchable={false}
+                                                value={payModeValue}
+                                                changeValue={(value) => {
+                                                    setPayModeValue(value);
+                                                    bankForm.setFieldValue("cross_using", value);
+                                                }}
+                                            />
+                                        </Box>
+                                    </>
+                                    {renderCommonFields()}
+                                    {entryType === "credit" && (
+                                        <>
+                                            <Box mt="xs">
+                                                <_InputForm
+                                                    tooltip={t("ForwardingName")}
+                                                    label={t("ForwardingName")}
+                                                    placeholder={t("ForwardingName")}
+                                                    nextField="EntityBankFormSubmit"
+                                                    name="forwarding_name"
+                                                    form={bankForm}
+                                                    id="forwarding_name"
+                                                />
+                                            </Box>
+                                        </>
+                                    )}
 
-                                        {renderCommonFields()}
+                                    {entryType === "debit" && (
+                                        <>
 
-                                        {entryType === "credit" && (
-                                            <>
-                                                <Box mt="xs">
-                                                    <_SelectForm
-                                                        tooltip={t("CrossUsing")}
-                                                        label={t("CrossUsing")}
-                                                        placeholder={t("CrossUsing")}
-                                                        required
-                                                        nextField="bank_amount"
-                                                        name="cross_using"
-                                                        form={bankForm}
-                                                        dropdownValue={paymentModeOptions}
-                                                        id="cross_using"
-                                                        searchable={false}
-                                                        value={payModeValue}
-                                                        changeValue={(value) => {
-                                                            setPayModeValue(value);
-                                                            bankForm.setFieldValue("cross_using", value);
-                                                        }}
-                                                    />
-                                                </Box>
+                                            <Box mt="xs">
+                                                <_SelectForm
+                                                    tooltip={t("ChooseBank")}
+                                                    label={t("ChooseBank")}
+                                                    placeholder={t("ChooseBank")}
+                                                    required
+                                                    nextField="bank_amount"
+                                                    name="bank_id"
+                                                    form={bankForm}
+                                                    dropdownValue={banksDropdownData}
+                                                    id="bank_id"
+                                                    searchable={false}
+                                                    value={bankData}
+                                                    changeValue={(value) => {
+                                                        setBankData(value);
+                                                        bankForm.setFieldValue("bank_id", value);
+                                                    }}
+                                                />
+                                            </Box>
 
-                                                <Box mt="xs">
-                                                    <InputForm
-                                                        tooltip={t("Amount")}
-                                                        label={t("Amount")}
-                                                        placeholder={t("Amount")}
-                                                        required
-                                                        nextField="forwarding_name"
-                                                        name="amount"
-                                                        form={bankForm}
-                                                        id="bank_amount"
-                                                        type="number"
-                                                        leftSection={<IconSortAscendingNumbers size={16}
-                                                                                               opacity={0.5}/>}
-                                                    />
-                                                </Box>
+                                            <Box mt="xs">
+                                                <_InputForm
+                                                    tooltip={t("BranchName")}
+                                                    label={t("BranchName")}
+                                                    placeholder={t("BranchName")}
+                                                    required
+                                                    nextField="received_from"
+                                                    name="branch_name"
+                                                    form={bankForm}
+                                                    id="branch_name"
+                                                />
+                                            </Box>
 
-                                                <Box mt="xs">
-                                                    <_InputForm
-                                                        tooltip={t("ForwardingName")}
-                                                        label={t("ForwardingName")}
-                                                        placeholder={t("ForwardingName")}
-                                                        required
-                                                        nextField="EntityBankFormSubmit"
-                                                        name="forwarding_name"
-                                                        form={bankForm}
-                                                        id="forwarding_name"
-                                                    />
-                                                </Box>
-                                            </>
-                                        )}
-
-                                        {entryType === "debit" && (
-                                            <>
-                                                <Box mt="xs">
-                                                    <_SelectForm
-                                                        tooltip={t("PaymentMode")}
-                                                        label={t("PaymentMode")}
-                                                        placeholder={t("ChoosePaymentMode")}
-                                                        required
-                                                        nextField="bank_amount"
-                                                        name="pay_mode"
-                                                        form={bankForm}
-                                                        dropdownValue={paymentModeOptions}
-                                                        id="pay_mode"
-                                                        searchable={false}
-                                                        value={payModeValue}
-                                                        changeValue={(value) => {
-                                                            setPayModeValue(value);
-                                                            bankForm.setFieldValue("pay_mode", value);
-                                                        }}
-                                                    />
-                                                </Box>
-
-                                                <Box mt="xs">
-                                                    <InputForm
-                                                        tooltip={t("Amount")}
-                                                        label={t("Amount")}
-                                                        placeholder={t("Amount")}
-                                                        required
-                                                        nextField="bank_id"
-                                                        name="amount"
-                                                        form={bankForm}
-                                                        id="bank_amount"
-                                                        type="number"
-                                                        leftSection={<IconSortAscendingNumbers size={16}
-                                                                                               opacity={0.5}/>}
-                                                    />
-                                                </Box>
-
-                                                <Box mt="xs">
-                                                    <_SelectForm
-                                                        tooltip={t("ChooseBank")}
-                                                        label={t("ChooseBank")}
-                                                        placeholder={t("ChooseBank")}
-                                                        required
-                                                        nextField="bank_amount"
-                                                        name="bank_id"
-                                                        form={bankForm}
-                                                        dropdownValue={banksDropdownData}
-                                                        id="bank_id"
-                                                        searchable={false}
-                                                        value={bankData}
-                                                        changeValue={(value) => {
-                                                            setBankData(value);
-                                                            bankForm.setFieldValue("bank_id", value);
-                                                        }}
-                                                    />
-                                                </Box>
-
-                                                <Box mt="xs">
-                                                    <_InputForm
-                                                        tooltip={t("BranchName")}
-                                                        label={t("BranchName")}
-                                                        placeholder={t("BranchName")}
-                                                        required
-                                                        nextField="received_from"
-                                                        name="branch_name"
-                                                        form={bankForm}
-                                                        id="branch_name"
-                                                    />
-                                                </Box>
-
-                                                <Box mt="xs">
-                                                    <_InputForm
-                                                        tooltip={t("ReceivedFrom")}
-                                                        label={t("ReceivedFrom")}
-                                                        placeholder={t("ReceivedFrom")}
-                                                        required
-                                                        nextField="EntityBankFormSubmit"
-                                                        name="received_from"
-                                                        form={bankForm}
-                                                        id="received_from"
-                                                    />
-                                                </Box>
-                                            </>
-                                        )}
-                                    </form>
-                                </ScrollArea>
+                                            <Box mt="xs">
+                                                <_InputForm
+                                                    tooltip={t("ReceivedFrom")}
+                                                    label={t("ReceivedFrom")}
+                                                    placeholder={t("ReceivedFrom")}
+                                                    required
+                                                    nextField="EntityBankFormSubmit"
+                                                    name="received_from"
+                                                    form={bankForm}
+                                                    id="received_from"
+                                                />
+                                            </Box>
+                                        </>
+                                    )}
+                                </form>
                             </Box>
                         </Box>
                     </Box>
-                </ScrollArea>
+
             </Drawer.Content>
         </Drawer.Root>
     );

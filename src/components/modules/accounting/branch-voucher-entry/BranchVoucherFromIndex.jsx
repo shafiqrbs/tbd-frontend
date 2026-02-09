@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
-    Grid, Box, Group, Text, ActionIcon, Stack, Button, Flex, NumberInput, SimpleGrid,
+    Grid, Box, Group, Text, ActionIcon, Stack, Button, Flex, NumberInput, SimpleGrid, Title,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
@@ -394,103 +394,69 @@ function BranchVoucherFromIndex({currencySymbol}) {
                         className={`borderRadiusAll ${genericClass.genericSecondaryBg}`}
                         mb={"6"}
                     >
-                        <Box p="xs" className={genericClass.genericHighlightedBox}
-                             style={{display: 'flex', alignItems: 'center', gap: 8}}>
-                            <Box style={{borderRadius: 4, flexGrow: 1}}
-                                 className={genericClass.genericHighlightedBox}>
-                                <SelectForm
-                                    tooltip={t("Head")}
-                                    label={t("")}
-                                    placeholder={t("ChooseLedgerHead")}
-                                    required={true}
-                                    nextField={""}
-                                    name={"main_ledger_head"}
-                                    form={form}
-                                    dropdownValue={primaryLedgerDropdownData}
-                                    id={"main_ledger_head"}
-                                    searchable={true}
-                                    value={primaryLedgerHeadData}
-                                    changeValue={setPrimaryLedgerHeadData}
-                                    disabled={primaryLedgerDropdownEnable}
-                                />
-                            </Box>
+                        <Box bg={'green'}>
+                            <Grid columns={'18'}>
+                                <Grid.Col span={'7'}>
+                                    <Box p="xs" ml={'xs'} pt={0} >
+                                    <Box mb={4} mt="xs">
+                                        <Grid>
+                                            <Grid.Col span={9}>
+                                                <Title order={6} >
+                                                    {t("SelectPrimaryLedger")}
+                                                </Title>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+                                    <Box  mt="xs" style={{display: 'flex', alignItems: 'center', gap: 8}}>
+                                        <Box style={{flexGrow: 1}}  pt={0} >
+                                            <SelectForm
+                                                tooltip={t("Head")}
+                                                label={t("")}
+                                                placeholder={t("ChooseLedgerHead")}
+                                                required={true}
+                                                nextField={""}
+                                                name={"main_ledger_head"}
+                                                form={form}
+                                                dropdownValue={primaryLedgerDropdownData}
+                                                id={"main_ledger_head"}
+                                                searchable={true}
+                                                value={primaryLedgerHeadData}
+                                                changeValue={setPrimaryLedgerHeadData}
+                                                disabled={primaryLedgerDropdownEnable}
+                                            />
+                                        </Box>
+                                        {/* Reset icon */}
+                                        {primaryLedgerHeadData && (
+                                            <ActionIcon mt={'2'} color='var( --theme-remove-color)'
+                                                        onClick={() => handleDeleteVoucher(1, 'main-ledger')}
+                                                        size="md" aria-label="Reset selection">
+                                                <IconX size={16} opacity={0.6}/>
+                                            </ActionIcon>
+                                        )}
+                                    </Box>
+                                    </Box>
 
-                            {/* Reset icon */}
-                            {primaryLedgerHeadData && (
-                                <ActionIcon color='var( --theme-remove-color)'
-                                            onClick={() => handleDeleteVoucher(1, 'main-ledger')} variant="subtle"
-                                            size="sm" aria-label="Reset selection">
-                                    <IconX size={16} opacity={0.6}/>
-                                </ActionIcon>)}
-                        </Box>
-                        <Box
-                            pl={"4"}
-                            pr={"4"}
-                            mt={"4"}
-                            pt={"8"}
-                            pb={"4"}
-                            style={{borderRadius: 4}}
-                        >
-                            <Grid columns={18} gutter={{base: 2}}>
-                                <Grid.Col span={3} mt={2}>
-                                    <Text ta="left" size="xs" pl={"md"}>
-                                        {t("Name")}
-                                    </Text>
                                 </Grid.Col>
-                                <Grid.Col span={6}>
-                                    <Text ta="left" size="sm">
-                                        {primaryLedgerHeadObject?.name}
-                                    </Text>
-                                </Grid.Col>
-                                <Grid.Col span={3} mt={2}>
-                                    <Text ta="left" size="xs" pl={"md"}>
-                                        {t("AccountNumber")}
-                                    </Text>
-                                </Grid.Col>
-                                <Grid.Col span={6}>
-                                    <Text ta="left" size="sm">
-                                        {" "}
-                                        {primaryLedgerHeadObject?.name}
-                                    </Text>
-                                </Grid.Col>
-                            </Grid>
-                            <Grid columns={18} gutter={{base: 2}}>
-                                <Grid.Col span={3} mt={2}>
-                                    <Text ta="left" size="xs" pl={"md"}>
-                                        {t("OpeningBalance")}
-                                    </Text>
-                                </Grid.Col>
-                                <Grid.Col span={6}>
-                                    <Text ta="left" size="sm">
-                                        {" "}
-                                        {currencySymbol} {Number(primaryLedgerHeadObject?.amount || 0).toFixed(2)}
-                                    </Text>
-                                </Grid.Col>
-                                <Grid.Col span={3} mt={2}>
-                                    <Text ta="left" size="xs" pl={"md"}>
-                                        {t("BranchName")}
-                                    </Text>
-                                </Grid.Col>
-                                <Grid.Col span={6}>
-                                    <Text ta="left" size="sm">
-                                        {" "}
-                                        {primaryLedgerHeadObject?.credit_limit}
-                                    </Text>
+                                <Grid.Col span={'11'}>
+                                    <Box px="xs" mt="xs">
+                                        <Grid>
+                                            <Grid.Col span={9}>
+                                                <Title order={6} >
+                                                    {t("SelectPrimaryLedger")}
+                                                </Title>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+                                    <Box mr={'xs'}>{renderForm()}</Box>
                                 </Grid.Col>
                             </Grid>
                         </Box>
                     </Box>
                     <Grid columns={24} gutter={{base: 6}}>
-                        <Grid.Col span={8}>
-                            <Box>
-                                <Box bg={"white"}>{renderForm()}</Box>
-                            </Box>
-                        </Grid.Col>
-                        <Grid.Col span={16}>
+                        <Grid.Col span={24}>
                             <form
                                 id="indexForm"
-                                onSubmit={form.onSubmit(handleFormSubmit)}
-                            >
+                                onSubmit={form.onSubmit(handleFormSubmit)}>
                                 <Box p={"xs"} className={"borderRadiusAll"} bg={"white"}>
                                     <Box className="borderRadiusAll">
                                         <DataTable
@@ -506,7 +472,7 @@ function BranchVoucherFromIndex({currencySymbol}) {
                                                 accessor: "item_index",
                                                 title: t("S/N"),
                                                 width: 70,
-                                                render: (record) => (record?.bankInfo?.amount &&
+                                                render: (record) => (record?.bankInfo?.cross_using &&
                                                     <ActionIcon color="red.5" size={"sm"}>
                                                         <IconPlus height={18} width={18} stroke={1.5}/>
                                                     </ActionIcon>),
@@ -661,7 +627,7 @@ function BranchVoucherFromIndex({currencySymbol}) {
                                             }}
                                             loaderSize="xs"
                                             loaderColor="grape"
-                                            height={height - 274}
+                                            height={height - 188}
                                             scrollAreaProps={{type: "never"}}
                                         />
                                     </Box>
@@ -669,7 +635,7 @@ function BranchVoucherFromIndex({currencySymbol}) {
                                 <Box mt={4}>
                                     <Box p={"xs"} className="borderRadiusAll" bg={"white"}>
                                         <Grid columns={12} gutter={{base: 6}}>
-                                            <Grid.Col span={6}>
+                                            <Grid.Col span={5}>
                                                 <Box
                                                     className="borderRadiusAll"
                                                     p={"xs"}
@@ -708,7 +674,7 @@ function BranchVoucherFromIndex({currencySymbol}) {
                                                     </Box>
                                                 </Box>
                                             </Grid.Col>
-                                            <Grid.Col span={6}>
+                                            <Grid.Col span={5}>
                                                 <Box
                                                     className="borderRadiusAll"
                                                     p={"xs"}
@@ -717,7 +683,7 @@ function BranchVoucherFromIndex({currencySymbol}) {
                                                     <Box>
                                                         <SelectForm
                                                             tooltip={t("ChooseBranch")}
-                                                            label={t("Branch")}
+                                                            label={t("Outlet")}
                                                             placeholder={t("ChooseBranch")}
                                                             required={true}
                                                             nextField={"description"}
@@ -749,41 +715,33 @@ function BranchVoucherFromIndex({currencySymbol}) {
                                                     </Box>
                                                 </Box>
                                             </Grid.Col>
+                                            <Grid.Col span={2}>
+                                                <Flex
+                                                    mih={150}
+                                                    gap="xs"
+                                                    justify="center"
+                                                    align="center"
+                                                    direction="column"
+                                                    wrap="wrap"
+                                                >
+                                                    {!saveCreateLoading && isOnline && (<Button
+                                                        size="xl"
+                                                        color={"green.8"}
+                                                        type="submit"
+                                                        form={"indexForm"}
+                                                        id="EntityFormSubmits"
+                                                        leftSection={<IconDeviceFloppy size={16}/>}
+                                                        disabled={totals.debit !== totals.credit}
+                                                    >
+                                                        <Flex direction={"column"} gap={0}>
+                                                            <Text fz={14} fw={400}>
+                                                                {t("AddVoucher")}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Button>)}
+                                                </Flex>
+                                            </Grid.Col>
                                         </Grid>
-                                        <Box mt={"4"} bg={"white"}>
-                                            <Box
-                                                mt={4}
-                                                pl={`xs`}
-                                                pr={8}
-                                                pt={"xs"}
-                                                pb={"xs"}
-                                                mb={"4"}
-                                                className={"boxBackground borderRadiusAll"}
-                                            >
-                                                <Grid>
-                                                    <Grid.Col span={9}></Grid.Col>
-                                                    <Grid.Col span={3}>
-                                                        <Stack right align="flex-end">
-                                                            {!saveCreateLoading && isOnline && (<Button
-                                                                size="xs"
-                                                                color={"green.8"}
-                                                                type="submit"
-                                                                form={"indexForm"}
-                                                                id="EntityFormSubmits"
-                                                                leftSection={<IconDeviceFloppy size={16}/>}
-                                                                disabled={totals.debit !== totals.credit}
-                                                            >
-                                                                <Flex direction={"column"} gap={0}>
-                                                                    <Text fz={14} fw={400}>
-                                                                        {t("AddVoucher")}
-                                                                    </Text>
-                                                                </Flex>
-                                                            </Button>)}
-                                                        </Stack>
-                                                    </Grid.Col>
-                                                </Grid>
-                                            </Box>
-                                        </Box>
                                     </Box>
                                 </Box>
                             </form>
