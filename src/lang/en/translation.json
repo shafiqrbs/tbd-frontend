@@ -1268,7 +1268,13 @@
   "ProductBarcode":"Product Barcode",
   "SelectSize":"Select Size",
   "ExpiryDuration":"Expiry Duration",
-  "SelectPrimaryLedger":"Primary Ledger",
-  "SelectSecendoryLedger":"Secondary Ledger",
+  "SelectPrimaryLedger": "Select Primary Ledger",
+  "SelectSecondaryLedger": "Select Secondary Ledger",
+  "ChooseBank": "Choose Bank",
+  "AccountHead": "Account Head",
+  "SubHead": "Sub-head",
+  "EntryList": "Entry List",
+  "BankMode": "Bank Mode",
+  "RoutingNumber": "Routing Number",
   "": ""
 }
