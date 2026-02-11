@@ -9,25 +9,14 @@ import {IconPercentage, IconSum, IconX} from "@tabler/icons-react";
 import {useOutletContext} from "react-router-dom";
 import __PosInvoiceSection from "./__PosInvoiceSetion.jsx";
 import {useToggle} from "@mantine/hooks";
-import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 import {useDispatch} from "react-redux";
-import {storeEntityData, updateEntityData} from "../../../../store/inventory/crudSlice.js";
+import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
 import inputCss from "../../../../assets/css/InlineInputField.module.css";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
-import genericClass from "../../../../assets/css/Generic.module.css";
-import useProductsDataStoreIntoLocalStorage
-    from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
+import {useTransactionModes} from "../../../global-hook/hooks/useTransactionModes.js";
+import {useCustomers} from "../../../global-hook/hooks/useCustomers.js";
+import {useStockItems} from "../../../global-hook/hooks/useStockItems.js";
 
-// Utility: Parses localStorage safely
-const getJSON = (key, fallback = null) => {
-    try {
-        const value = localStorage.getItem(key);
-        return value ? JSON.parse(value) : fallback;
-    } catch (e) {
-        console.warn(`Error parsing localStorage key: ${key}`, e);
-        return fallback;
-    }
-};
 export default function __PosSalesForm(props) {
     const {
         isSMSActive,
@@ -36,7 +25,8 @@ export default function __PosSalesForm(props) {
         setLoadCardProducts,
         salesConfig,
         isWarehouse,
-        setSearchValue
+        setSearchValue,
+        stockItemsRefetch
     } = props;
 
     //common hooks
@@ -47,13 +37,24 @@ export default function __PosSalesForm(props) {
     const dispatch = useDispatch();
 
     // transaction mode array
-    const transactionModeData = JSON.parse(localStorage.getItem("accounting-transaction-mode")) ? JSON.parse(localStorage.getItem("accounting-transaction-mode")) : [];
+    const {data: transactionModeData} = useTransactionModes();
+    const {data: customers} = useCustomers();
+
+    useEffect(() => {
+        if (!transactionModeData) return;
+
+        const selectedMode = transactionModeData.find(item => item.is_selected === 1);
+        if (selectedMode) {
+            form.setFieldValue("transaction_mode_id", selectedMode.id);
+        }
+    }, [transactionModeData]);
+
 
     // form
     const form = useForm({
         initialValues: {
             customer_id: "",
-            transaction_mode_id: transactionModeData.find(item => item.is_selected === 1)?.id,
+            transaction_mode_id: "",
             sales_by: "",
             order_process: "",
             narration: "",
@@ -76,9 +77,8 @@ export default function __PosSalesForm(props) {
     // setting defualt customer
     useEffect(() => {
         const fetchCustomers = async () => {
-            await useCustomerDataStoreIntoLocalStorage();
-            let coreCustomers = localStorage.getItem("core-customers");
-            coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : [];
+            if (!customers) return;
+            const coreCustomers = customers || [];
             let defaultId = defaultCustomerId;
             if (coreCustomers && coreCustomers.length > 0) {
                 const transformedData = coreCustomers.map((type) => {
@@ -101,7 +101,7 @@ export default function __PosSalesForm(props) {
         };
 
         fetchCustomers();
-    }, []);
+    }, [customers]);
 
     const [customerObject, setCustomerObject] = useState({});
     const [salesProfitAmount, setSalesProfitAmount] = useState(0);
@@ -275,7 +275,7 @@ export default function __PosSalesForm(props) {
                 showNotificationComponent('Fail to sales', 'red')
             } else if (storeEntityData.fulfilled.match(resultAction)) {
                 showNotificationComponent(t("CreateSuccessfully"), 'teal')
-                await useProductsDataStoreIntoLocalStorage()
+                stockItemsRefetch()
 
                 setTimeout(() => {
                     localStorage.removeItem("temp-sales-products");
@@ -306,6 +306,7 @@ export default function __PosSalesForm(props) {
                         customerObject={customerObject}
                         setCustomerObject={setCustomerObject}
                         customerData={customerData}
+                        customers={customers}
                         setCustomerData={setCustomerData}
                         customersDropdownData={customersDropdownData}
                         setCustomersDropdownData={setCustomersDropdownData}
@@ -417,7 +418,7 @@ export default function __PosSalesForm(props) {
 
                                                     localStorage.setItem("temp-sales-products", JSON.stringify(updated));
                                                     setLoadCardProducts(true);
-                                                    const el = document.getElementById("quantity_"+item.id);
+                                                    const el = document.getElementById("quantity_" + item.id);
                                                     if (!el) return;
                                                     el.focus();
                                                 }}
@@ -513,7 +514,7 @@ export default function __PosSalesForm(props) {
                                             <TextInput
                                                 type="number"
                                                 label=""
-                                                id={`quantity_`+item.id}
+                                                id={`quantity_` + item.id}
                                                 classNames={inputCss}
                                                 size="xs"
                                                 value={editedQuantity}
@@ -521,7 +522,7 @@ export default function __PosSalesForm(props) {
                                                 onKeyDown={handleKeyDown}
                                                 rightSection={
                                                     <Text
-                                                        style={{ textAlign: "right", width: "100%", paddingRight: 16 }}
+                                                        style={{textAlign: "right", width: "100%", paddingRight: 16}}
                                                         fz="xs"
                                                         color={"gray"}
                                                     >
@@ -799,6 +800,8 @@ export default function __PosSalesForm(props) {
                         setLoadCardProducts={setLoadCardProducts}
                         discount={discount}
                         setDiscount={setDiscount}
+                        transactionModeData={transactionModeData}
+                        customers={customers}
                     />
                 </Box>
             </form>

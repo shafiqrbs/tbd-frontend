@@ -9,12 +9,12 @@ import {IconPercentage, IconSum, IconX} from "@tabler/icons-react";
 import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import __PosInvoiceSection from "./__PosInvoiceSetion.jsx";
 import {getHotkeyHandler, useToggle} from "@mantine/hooks";
-import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 import {useDispatch} from "react-redux";
 import {updateEntityData} from "../../../../store/inventory/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import {useCustomers} from "../../../global-hook/hooks/useCustomers.js";
+import {useTransactionModes} from "../../../global-hook/hooks/useTransactionModes.js";
 
-const toNumber = value => isNaN(Number(value)) ? 0 : Number(value);
 export default function __PosSalesUpdateForm(props) {
     const {id} = useParams();
     const {
@@ -46,6 +46,9 @@ export default function __PosSalesUpdateForm(props) {
     const initialDatabaseDiscountType = entityEditData?.discount_type === "Percent" ? "Percent" : "Flat";
     // Local state: Discount type toggle (controlled after form init)
     const [discountType, setDiscountType] = useToggle(["Flat", "Percent"]);
+
+    const {data: customers} = useCustomers();
+    const {data: transactionModeData} = useTransactionModes();
 
     // Calculate initial discount value based on DB & type
     const initialDiscountValue = useMemo(() => {
@@ -119,9 +122,8 @@ export default function __PosSalesUpdateForm(props) {
     // Fetch customer dropdown data from local storage
     useEffect(() => {
         const fetchCustomers = async () => {
-            await useCustomerDataStoreIntoLocalStorage();
-            let coreCustomers = localStorage.getItem("core-customers");
-            coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : [];
+            if (!customers) return;
+            const coreCustomers = customers || [];
 
             let defaultId = defaultCustomerId;
 
@@ -186,7 +188,6 @@ export default function __PosSalesUpdateForm(props) {
     ]);
 
     const handleFormSubmit = async (values) => {
-        let createdBy = JSON.parse(localStorage.getItem("user"));
         let transformedArray = tempCardProducts.map((product) => {
             return {
                 sale_id: id,
@@ -233,7 +234,7 @@ export default function __PosSalesUpdateForm(props) {
         formValue["vat"] = 0;
         formValue["total"] = salesTotalAmount;
         formValue["sales_by_id"] = form.values.sales_by;
-        formValue["created_by_id"] = Number(createdBy["id"]);
+        formValue["created_by_id"] = null;
         formValue["process"] = form.values.order_process;
         formValue["narration"] = form.values.narration;
         formValue["invoice_date"] =
@@ -288,7 +289,7 @@ export default function __PosSalesUpdateForm(props) {
 
             const resultAction = await dispatch(updateEntityData(data));
             if (updateEntityData.rejected.match(resultAction)) {
-              showNotificationComponent('Fail to update','red')
+                showNotificationComponent('Fail to update', 'red')
             } else if (updateEntityData.fulfilled.match(resultAction)) {
                 showNotificationComponent(t("UpdatedSuccessfully"), 'teal')
                 if (lastClicked === "save") {
@@ -637,6 +638,8 @@ export default function __PosSalesUpdateForm(props) {
                         handleClick={handleClick}
                         entityEditData={entityEditData}
                         salesConfig={salesConfig}
+                        transactionModeData={transactionModeData}
+                        customers={customers}
                     />
                 </Box>
             </form>

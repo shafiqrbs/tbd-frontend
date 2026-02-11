@@ -5,12 +5,28 @@ import { AppShell, LoadingOverlay, Text, Button } from "@mantine/core";
 import Header from "./Header";
 import Footer from "./Footer";
 import { useAuth } from "../context/AuthContext";
+import {useStockItems} from "../global-hook/hooks/useStockItems.js";
+import {useConfig} from "../global-hook/hooks/useConfig.js";
+import {useCustomers} from "../global-hook/hooks/useCustomers.js";
+import {useTransactionModes} from "../global-hook/hooks/useTransactionModes.js";
+import {useUsers} from "../global-hook/hooks/useUsers.js";
+import {useVendors} from "../global-hook/hooks/useVendors.js";
 
 const Layout = () => {
     const [isOnline, setNetworkStatus] = useState(navigator.onLine);
     const { height } = useViewportSize();
     const paramPath = window.location.pathname;
     const { user, configData, isLoading, logout } = useAuth();
+
+    // HOOK CALL EXAMPLE FOR ALL LOCAL STORAGE API
+    /*const { data: stockItems ,loading: stockItemsLoading,error: stockItemError, refetch: stockItemsRefetch } = useStockItems();
+    const { data: config } = useConfig(user?.id);
+    const { data: customers } = useCustomers(user?.id);
+    const { data: transactionModes } = useTransactionModes(user?.id);
+    const { data: users } = useUsers(user?.id);
+    const { data: vendors } = useVendors(user?.id);
+    console.log(stockItems,stockItemsLoading,stockItemError)*/
+
 
     // Handle network status
     useEffect(() => {

@@ -69,9 +69,8 @@ export default function Login() {
             if (response.data.status === 200) {
                 try {
                     // Wait for all data to be stored and get the main config data
-                    const [configData, orderProcessData] = await Promise.all([
+                    const [configData] = await Promise.all([
                         useCommonDataStoreIntoLocalStorage(response.data.data.id),
-                        useOrderProcessDropdownLocalDataStore(response.data.data.id)
                     ]);
 
                     if (!configData) {

@@ -6,7 +6,6 @@ import InputForm from "../../../form-builders/InputForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput";
 import { useTranslation } from "react-i18next";
 import SelectForm from "../../../form-builders/SelectForm";
-import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
 import {showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import {useDispatch} from "react-redux";
@@ -25,21 +24,18 @@ export default function __PosCustomerSection(props) {
     setCustomersDropdownData,
     defaultCustomerId,
     setDefaultCustomerId,
+	  customers
   } = props;
   const { t } = useTranslation();
   const [openAddCustomer, setOpenAddCustomer] = useState(false);
-    const dispatch = useDispatch();
-
+  const dispatch = useDispatch();
 
     //fetching customer dropdownData
   useEffect(() => {
     const fetchCustomers = async () => {
-      await useCustomerDataStoreIntoLocalStorage();
-      let coreCustomers = localStorage.getItem("core-customers");
-      coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : [];
       let defaultId = defaultCustomerId;
-      if (coreCustomers && coreCustomers.length > 0) {
-        const transformedData = coreCustomers.map((type) => {
+      if (customers && customers.length > 0) {
+        const transformedData = customers.map((type) => {
           if (type.name === "Default") {
             defaultId = type.id;
           }

@@ -11,7 +11,7 @@ import {
     Tooltip,
     SegmentedControl,
     Center,
-    Input, ScrollArea, TextInput, Container,
+    Input, ScrollArea, TextInput,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
@@ -28,31 +28,25 @@ import {
     IconRefresh,
     IconDotsVertical, IconSearch, IconX, IconInfoCircle,
 } from "@tabler/icons-react";
-import {hasLength, useForm} from "@mantine/form";
-import {notifications, showNotification} from "@mantine/notifications";
+import {useForm} from "@mantine/form";
+import {notifications} from "@mantine/notifications";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
-import __SalesForm from "./__SalesForm.jsx";
 import {DataTable} from "mantine-datatable";
-import _ShortcutInvoice from "../../shortcut/_ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
-import useProductsDataStoreIntoLocalStorage
-    from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 import AddProductDrawer from "./drawer-form/AddProductDrawer.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
-import __GenericPosSalesForm from "./__GenericPosSalesForm";
-import useVendorDataStoreIntoLocalStorage
-    from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
-import Navigation from "../common/Navigation.jsx";
 import __PosSalesForm from "./__PosSalesForm.jsx";
 import {useHotkeys} from "@mantine/hooks";
 import SettingDrawer from "../common/SettingDrawer.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import SelectFormForSalesPurchaseProduct from "../../../form-builders/SelectFormForSalesPurchaseProduct.jsx";
+import {useStockItems} from "../../../global-hook/hooks/useStockItems.js";
+import {useVendors} from "../../../global-hook/hooks/useVendors.js";
 
 function _GenericPosForm({domainConfigData}) {
     // Constants
@@ -65,17 +59,14 @@ function _GenericPosForm({domainConfigData}) {
     const categoryDropDownData = getSettingCategoryDropdownData();
 
     // Hooks
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 360;
     const itemFromHeight = mainAreaHeight - 140;
 
     // State
-
     const [productSalesMode, setProductSalesMode] = useState("product");
     const [settingDrawer, setSettingDrawer] = useState(false);
     const [productDrawer, setProductDrawer] = useState(false);
-    const [salesByBarcode, setSalesByBarcode] = useState(true);
     const [warehouseData, setWarehouseData] = useState(null);
     const [vendorData, setVendorData] = useState(null);
     const [unitType, setUnitType] = useState(null);
@@ -103,6 +94,13 @@ function _GenericPosForm({domainConfigData}) {
     // Data
     const warehouseDropdownData = getCoreWarehouseDropdownData();
 
+    const {
+        data: stockItems,
+        loading: stockItemsLoading,
+        error: stockItemError,
+        refetch: stockItemsRefetch
+    } = useStockItems();
+    const {data: vendors} = useVendors();
     // Form setup
     const form = useForm({
         initialValues: {
@@ -124,7 +122,7 @@ function _GenericPosForm({domainConfigData}) {
         },
         validate: {
             product_id: (value, values) => {
-                if (value && value!= '') {
+                if (value && value != '') {
                     const isDigitsOnly = /^\d+$/.test(value);
                     console.log(isDigitsOnly, values.product_id)
                     if (!isDigitsOnly && values.product_id) {
@@ -194,9 +192,8 @@ function _GenericPosForm({domainConfigData}) {
     // Effects
     useEffect(() => {
         const fetchVendors = async () => {
-            await useVendorDataStoreIntoLocalStorage();
-            const coreVendors = localStorage.getItem("core-vendors");
-            const parsedVendors = coreVendors ? JSON.parse(coreVendors) : [];
+            if (!vendors) return;
+            const parsedVendors = vendors || [];
 
             if (parsedVendors && parsedVendors.length > 0) {
                 const transformedData = parsedVendors.map((vendor) => ({
@@ -207,11 +204,11 @@ function _GenericPosForm({domainConfigData}) {
             }
         };
         fetchVendors();
-    }, []);
+    }, [vendors]);
 
     useEffect(() => {
         if (stockProductRestore) {
-            useProductsDataStoreIntoLocalStorage();
+            stockItemsRefetch()
         }
     }, [stockProductRestore]);
 
@@ -231,8 +228,8 @@ function _GenericPosForm({domainConfigData}) {
     }, [form.values.unit_id]);
 
     useEffect(() => {
-        const storedProducts = localStorage.getItem("core-products");
-        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+        if (!stockItems) return;
+        const localProducts = stockItems || [];
 
         const filteredProducts = localProducts.filter(
             (product) => product.id === Number(form.values.product_id)
@@ -260,7 +257,7 @@ function _GenericPosForm({domainConfigData}) {
 
             if (isWarehouse === 1 && selectedProduct.current_warehouse_stock) {
                 const wd = selectedProduct.current_warehouse_stock.map((warehouse) => ({
-                    label: warehouse.warehouse_name+" ( stock #"+warehouse.quantity+" )",
+                    label: warehouse.warehouse_name + " ( stock #" + warehouse.quantity + " )",
                     value: String(warehouse.warehouse_id),
                 }));
                 setProductWarehouseDropdown(wd);
@@ -268,7 +265,7 @@ function _GenericPosForm({domainConfigData}) {
 
             if (selectedProduct.purchase_item_for_sales && isWarehouse === 0) {
                 const pi = selectedProduct.purchase_item_for_sales.map((pItem) => ({
-                    label: "Expire: "+pItem.expired_date+" (stock #"+pItem.remain_quantity+")",
+                    label: "Expire: " + pItem.expired_date + " (stock #" + pItem.remain_quantity + ")",
                     value: String(pItem.id),
                 }));
                 setProductPurchaseItemDropdown(pi);
@@ -288,12 +285,12 @@ function _GenericPosForm({domainConfigData}) {
             form.setFieldValue("price", "");
             form.setFieldValue("sales_price", "");
         }
-    }, [form.values.product_id]);
+    }, [form.values.product_id, stockItems]);
 
     useEffect(() => {
         if (form.values.product_warehouse_id) {
-            const storedProducts = localStorage.getItem("core-products");
-            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+            if (!stockItems) return;
+            const localProducts = stockItems || [];
 
             const filteredProducts = localProducts.filter(
                 (product) => product.id === Number(form.values.product_id)
@@ -309,7 +306,7 @@ function _GenericPosForm({domainConfigData}) {
                 setProductPurchaseItemDropdown(pi);
             }
         }
-    }, [form.values.product_warehouse_id]);
+    }, [form.values.product_warehouse_id, stockItems]);
 
 
     useEffect(() => {
@@ -325,14 +322,14 @@ function _GenericPosForm({domainConfigData}) {
             quantity = Number(form?.values?.quantity) || 0;
         }
 
-        if (productPurchaseItemDropdown.length > 0 && productPurchaseItemData ){
+        if (productPurchaseItemDropdown.length > 0 && productPurchaseItemData) {
             // extract number inside parentheses after "stock #"
             const match = productPurchaseItemData.label.match(/\(stock #(\d+)\)/);
 
             const stockNumber = match ? Number(match[1]) : null;
-            if (quantity > stockNumber){
+            if (quantity > stockNumber) {
                 form.setFieldError("quantity", true);
-                form.setFieldValue('quantity','')
+                form.setFieldValue('quantity', '')
                 alert(`Quantity exceeds stock limit (${stockNumber})`);
                 return
             }
@@ -366,8 +363,8 @@ function _GenericPosForm({domainConfigData}) {
 
 
     useEffect(() => {
-        const storedProducts = localStorage.getItem("core-products");
-        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+        if (!stockItems) return;
+        const localProducts = stockItems || [];
 
         const domainProductNature = JSON.parse(salesConfig?.sales_product_nature || '[]');
         let filteredProducts = localProducts.filter((product) => {
@@ -401,7 +398,7 @@ function _GenericPosForm({domainConfigData}) {
             value: String(product.id),
         }));
         setProductDropdown(transformedProducts);
-    }, [categoryData, searchValue]);
+    }, [categoryData, searchValue, stockItems]);
 
     useEffect(() => {
         const tempProducts = localStorage.getItem("temp-sales-products");
@@ -519,8 +516,8 @@ function _GenericPosForm({domainConfigData}) {
 
         const cardProducts = localStorage.getItem("temp-sales-products");
         const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
-        const storedProducts = localStorage.getItem("core-products");
-        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+        if (!stockItems) return;
+        const localProducts = stockItems || [];
 
         if (values.product_id && !values.barcode) {
             if (!salesConfig?.zero_stock) {
@@ -531,7 +528,7 @@ function _GenericPosForm({domainConfigData}) {
         } else if (!values.product_id && values.barcode) {
             handleAddProductByBarcode(values, myCardProducts, localProducts);
         }
-    }, [form, handleAddProductByBarcode, handleAddProductByProductId, salesConfig?.zero_stock, t]);
+    }, [form, handleAddProductByBarcode, handleAddProductByProductId, salesConfig?.zero_stock, t, stockItems]);
 
     return (
 
@@ -834,7 +831,6 @@ function _GenericPosForm({domainConfigData}) {
                                                         </Grid.Col>
                                                     </Grid>
                                                 </Box>
-
                                                 {isWarehouse === 1 && (
                                                     <Box mt={'4'} className={'boxBackground'}>
                                                         <Grid columns={24} gutter={{base: 1}}>
@@ -1501,6 +1497,7 @@ function _GenericPosForm({domainConfigData}) {
                         setSearchValue={setSearchValue}
                         setLoadCardProducts={setLoadCardProducts}
                         setTempCardProducts={setTempCardProducts}
+                        stockItemsRefetch={stockItemsRefetch}
                     />
                 </Grid.Col>
             </Grid>

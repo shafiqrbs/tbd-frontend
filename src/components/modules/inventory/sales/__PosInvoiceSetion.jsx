@@ -33,7 +33,8 @@ import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
-import useCustomerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useCustomerDataStoreIntoLocalStorage.js";
+import {useUsers} from "../../../global-hook/hooks/useUsers.js";
+import getSettingOrderProcessDropdownData from "../../../global-hook/dropdown/getSettingOrderProcessDropdownData.js";
 
 export default function __PosInvoiceSection(props) {
     const {
@@ -41,7 +42,6 @@ export default function __PosInvoiceSection(props) {
         currencySymbol,
         salesDiscountAmount,
         salesProfitAmount,
-        setSalesDiscountAmount,
         setSalesByUser,
         setOrderProcess,
         orderProcess,
@@ -54,14 +54,9 @@ export default function __PosInvoiceSection(props) {
         customerData,
         salesConfig,
         salesDueAmount,
-        setLoadCardProducts,
         setCustomersDropdownData,
-        customersDropdownData,
-        lastClicked,
         handleClick,
-        entityEditData,
-        discount, setDiscount,
-        data
+        entityEditData,transactionModeData,customers
     } = props;
 
     //common hooks
@@ -69,11 +64,8 @@ export default function __PosInvoiceSection(props) {
     const {t} = useTranslation();
 
     // transaction mode array
-    const transactionModeData = JSON.parse(
-        localStorage.getItem("accounting-transaction-mode")
-    )
-        ? JSON.parse(localStorage.getItem("accounting-transaction-mode"))
-        : [];
+    const { data: users  } = useUsers();
+    const salesProcessDropdown = getSettingOrderProcessDropdownData()
 
     // transaction modes hover hook
     const [hoveredModeId, setHoveredModeId] = useState(false);
@@ -83,9 +75,9 @@ export default function __PosInvoiceSection(props) {
 
     //useEffect to load salesByDropdownData
     useEffect(() => {
-        let coreUsers = localStorage.getItem("core-users")
-            ? JSON.parse(localStorage.getItem("core-users"))
-            : [];
+        if (!users) return;
+        const coreUsers = users || [];
+
         if (coreUsers && coreUsers.length > 0) {
             const transformedData = coreUsers.map((type) => {
                 return {
@@ -95,7 +87,7 @@ export default function __PosInvoiceSection(props) {
             });
             setSalesByDropdownData(transformedData);
         }
-    }, []);
+    }, [users]);
 
     //default customer id hook
     const [defaultCustomerId, setDefaultCustomerId] = useState(null);
@@ -103,9 +95,8 @@ export default function __PosInvoiceSection(props) {
     // get default customer id
     useEffect(() => {
         const fetchCustomers = async () => {
-            await useCustomerDataStoreIntoLocalStorage();
-            let coreCustomers = localStorage.getItem("core-customers");
-            coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : [];
+            if (!customers) return;
+            const coreCustomers = customers || [];
             let defaultId = defaultCustomerId;
             if (coreCustomers && coreCustomers.length > 0) {
                 const transformedData = coreCustomers.map((type) => {
@@ -124,7 +115,7 @@ export default function __PosInvoiceSection(props) {
         };
 
         fetchCustomers();
-    }, []);
+    }, [customers]);
 
     //submit disabled based on default customer check and zeroreceive
     const isDefaultCustomer = !customerData || customerData == defaultCustomerId;
@@ -287,18 +278,13 @@ export default function __PosInvoiceSection(props) {
                                         required={false}
                                         name={"order_process"}
                                         form={form}
-                                        dropdownValue={
-                                            localStorage.getItem("order-process")
-                                                ? JSON.parse(localStorage.getItem("order-process"))
-                                                : []
-                                        }
+                                        dropdownValue={salesProcessDropdown}
                                         id={"order_process"}
                                         nextField={"narration"}
                                         searchable={false}
                                         value={orderProcess}
                                         changeValue={setOrderProcess}
                                     />
-
                                 </Box>
                             )}
                             <Box pt={4}>

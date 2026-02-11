@@ -1,44 +1,47 @@
-import React, {useEffect, useState, useCallback} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
-    Button,
-    Flex,
     ActionIcon,
-    Grid,
     Box,
-    Group,
-    Text,
-    Tooltip,
-    SegmentedControl,
+    Button,
     Center,
-    Input, ScrollArea, TextInput,
+    Flex,
+    Grid,
+    Group,
+    Input,
+    ScrollArea,
+    SegmentedControl,
+    Text,
+    TextInput,
+    Tooltip,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
-    IconDeviceFloppy,
-    IconPercentage,
-    IconSum,
-    IconCurrency,
     IconBarcode,
     IconCoinMonero,
-    IconSortAscendingNumbers,
-    IconPlusMinus,
+    IconCurrency,
+    IconDeviceFloppy,
+    IconDotsVertical,
+    IconInfoCircle,
+    IconPercentage,
     IconPlus,
-    IconShoppingBag,
+    IconPlusMinus,
     IconRefresh,
-    IconDotsVertical, IconSearch, IconX, IconInfoCircle,
+    IconSearch,
+    IconShoppingBag,
+    IconSortAscendingNumbers,
+    IconSum,
+    IconX,
 } from "@tabler/icons-react";
 import {useForm} from "@mantine/form";
-import {notifications, showNotification} from "@mantine/notifications";
+import {notifications} from "@mantine/notifications";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import {DataTable} from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
-import useProductsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useProductsDataStoreIntoLocalStorage.js";
 import AddProductDrawer from "./drawer-form/AddProductDrawer.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
-import useVendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/useVendorDataStoreIntoLocalStorage.js";
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
@@ -48,6 +51,8 @@ import __PosSalesUpdateForm from "./__PosSalesUpdateForm.jsx";
 import {useHotkeys} from "@mantine/hooks";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import SelectFormForSalesPurchaseProduct from "../../../form-builders/SelectFormForSalesPurchaseProduct.jsx";
+import {useStockItems} from "../../../global-hook/hooks/useStockItems.js";
+import {useVendors} from "../../../global-hook/hooks/useVendors.js";
 
 function _UpdateInvoice(props) {
     const {
@@ -65,8 +70,7 @@ function _UpdateInvoice(props) {
     //common hooks and variables
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 360;
-    const itemFormheight = mainAreaHeight - 140;
+    const itemFormHeight = mainAreaHeight - 140;
 
     const [productSalesMode, setProductSalesMode] = useState("product");
     const [settingDrawer, setSettingDrawer] = useState(false);
@@ -90,6 +94,13 @@ function _UpdateInvoice(props) {
     const [productPurchaseItemData, setProductPurchaseItemData] = useState(null);
     const [productPurchaseItemDropdown, setProductPurchaseItemDropdown] = useState([]);
 
+    const {
+        data: stockItems,
+        loading: stockItemsLoading,
+        error: stockItemError,
+        refetch: stockItemsRefetch
+    } = useStockItems();
+    const {data: vendors} = useVendors();
 
     //function to handling button clicks
     const handleClick = (event) => {
@@ -106,13 +117,12 @@ function _UpdateInvoice(props) {
         </Text>
     );
 
-    //vendor dropdowndata
+    //vendor dropdown data
     const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
     useEffect(() => {
         const fetchVendors = async () => {
-            await useVendorDataStoreIntoLocalStorage();
-            let coreVendors = localStorage.getItem("core-vendors");
-            coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
+            if (!vendors) return;
+            const coreVendors = vendors || [];
 
             if (coreVendors && coreVendors.length > 0) {
                 const transformedData = coreVendors.map((type) => {
@@ -125,18 +135,17 @@ function _UpdateInvoice(props) {
             }
         };
         fetchVendors();
-    }, []);
+    }, [vendors]);
 
     //no use code
     const [stockProductRestore, setStockProductRestore] = useState(false);
     useEffect(() => {
         if (stockProductRestore) {
-            const local = useProductsDataStoreIntoLocalStorage();
+            stockItemsRefetch()
         }
     }, [stockProductRestore]);
 
     //product add form
-
     const form = useForm({
         initialValues: {
             multi_price: "",
@@ -155,7 +164,7 @@ function _UpdateInvoice(props) {
         },
         validate: {
             product_id: (value, values) => {
-                if (value && value!= '') {
+                if (value && value != '') {
                     const isDigitsOnly = /^\d+$/.test(value);
                     if (!isDigitsOnly && values.product_id) {
                         return true;
@@ -229,8 +238,8 @@ function _UpdateInvoice(props) {
     }, [form.values.unit_id]);
 
     useEffect(() => {
-        const storedProducts = localStorage.getItem("core-products");
-        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+        if (!stockItems) return;
+        const localProducts = stockItems || [];
 
         const filteredProducts = localProducts.filter(
             (product) => product.id === Number(form.values.product_id)
@@ -258,7 +267,7 @@ function _UpdateInvoice(props) {
 
             if (isWarehouse === 1 && selectedProduct.current_warehouse_stock) {
                 const wd = selectedProduct.current_warehouse_stock.map((warehouse) => ({
-                    label: warehouse.warehouse_name+" ( stock #"+warehouse.quantity+" )",
+                    label: warehouse.warehouse_name + " ( stock #" + warehouse.quantity + " )",
                     value: String(warehouse.warehouse_id),
                 }));
                 setProductWarehouseDropdown(wd);
@@ -266,7 +275,7 @@ function _UpdateInvoice(props) {
 
             if (selectedProduct.purchase_item_for_sales && isWarehouse === 0) {
                 const pi = selectedProduct.purchase_item_for_sales.map((pItem) => ({
-                    label: "Expire: "+pItem.expired_date+" (stock #"+pItem.remain_quantity+")",
+                    label: "Expire: " + pItem.expired_date + " (stock #" + pItem.remain_quantity + ")",
                     value: String(pItem.id),
                 }));
                 setProductPurchaseItemDropdown(pi);
@@ -286,12 +295,12 @@ function _UpdateInvoice(props) {
             form.setFieldValue("price", "");
             form.setFieldValue("sales_price", "");
         }
-    }, [form.values.product_id]);
+    }, [form.values.product_id, stockItems]);
 
     useEffect(() => {
         if (form.values.product_warehouse_id) {
-            const storedProducts = localStorage.getItem("core-products");
-            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+            if (!stockItems) return;
+            const localProducts = stockItems || [];
 
             const filteredProducts = localProducts.filter(
                 (product) => product.id === Number(form.values.product_id)
@@ -307,7 +316,7 @@ function _UpdateInvoice(props) {
                 setProductPurchaseItemDropdown(pi);
             }
         }
-    }, [form.values.product_warehouse_id]);
+    }, [form.values.product_warehouse_id, stockItems]);
 
     //selected product group text to show in input
     const inputGroupText = (
@@ -333,14 +342,14 @@ function _UpdateInvoice(props) {
             quantity = Number(form?.values?.quantity) || 0;
         }
 
-        if (productPurchaseItemDropdown.length > 0 && productPurchaseItemData ){
+        if (productPurchaseItemDropdown.length > 0 && productPurchaseItemData) {
             // extract number inside parentheses after "stock #"
             const match = productPurchaseItemData.label.match(/\(stock #(\d+)\)/);
 
             const stockNumber = match ? Number(match[1]) : null;
-            if (quantity > stockNumber){
+            if (quantity > stockNumber) {
                 form.setFieldError("quantity", true);
-                form.setFieldValue('quantity','')
+                form.setFieldValue('quantity', '')
                 alert(`Quantity exceeds stock limit (${stockNumber})`);
                 return
             }
@@ -469,8 +478,8 @@ function _UpdateInvoice(props) {
 
 
     useEffect(() => {
-        const storedProducts = localStorage.getItem("core-products");
-        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+        if (!stockItems) return;
+        const localProducts = stockItems || [];
 
         const domainProductNature = JSON.parse(salesConfig?.sales_product_nature || '[]');
         let filteredProducts = localProducts.filter((product) => {
@@ -504,7 +513,7 @@ function _UpdateInvoice(props) {
             value: String(product.id),
         }));
         setProductDropdown(transformedProducts);
-    }, [categoryData, searchValue]);
+    }, [categoryData, searchValue, stockItems]);
 
     //update local storage and reset form values
     function updateLocalStorageAndResetForm(addProducts) {
@@ -548,12 +557,12 @@ function _UpdateInvoice(props) {
         }
     }, [loadCardProducts]);
 
-  // Hotkeys
-  useHotkeys([
-    ["alt+n", () => document.getElementById("product_id")?.focus()],
-    ["alt+r", () => form.reset()],
-    ["alt+s", () => document.getElementById("EntityFormSubmit")?.click()],
-  ]);
+    // Hotkeys
+    useHotkeys([
+        ["alt+n", () => document.getElementById("product_id")?.focus()],
+        ["alt+r", () => form.reset()],
+        ["alt+s", () => document.getElementById("EntityFormSubmit")?.click()],
+    ]);
 
     const handleSubmit = useCallback((values) => {
         if (!values.barcode && !values.product_id) {
@@ -564,8 +573,9 @@ function _UpdateInvoice(props) {
 
         const cardProducts = localStorage.getItem("temp-sales-products");
         const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
-        const storedProducts = localStorage.getItem("core-products");
-        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+        if (!stockItems) return;
+        const localProducts = stockItems || [];
 
         if (values.product_id && !values.barcode) {
             if (!salesConfig?.zero_stock) {
@@ -668,7 +678,7 @@ function _UpdateInvoice(props) {
                             <Box className="boxBackground">
                                 <Box pt={'0'}>
                                     {productSalesMode === "product" && (
-                                        <ScrollArea h={itemFormheight - 56} scrollbarSize={2} scrollbars="y"
+                                        <ScrollArea h={itemFormHeight - 56} scrollbarSize={2} scrollbars="y"
                                                     type="never">
                                             {salesConfig?.is_barcode === 1 && (
                                                 <Box p={"xs"} className={genericClass.genericHighlightedBox}>
@@ -1268,7 +1278,7 @@ function _UpdateInvoice(props) {
                                                     ]}
                                                     loaderSize="xs"
                                                     loaderColor="grape"
-                                                    height={itemFormheight - 6}
+                                                    height={itemFormHeight - 6}
                                                     scrollAreaProps={{
                                                         scrollbarSize: 4,
                                                     }}
