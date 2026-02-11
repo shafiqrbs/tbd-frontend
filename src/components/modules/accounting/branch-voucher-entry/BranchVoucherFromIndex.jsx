@@ -104,6 +104,8 @@ function BranchVoucherFromIndex({currencySymbol}) {
                 };
             });
             setSecondaryLedgerHeadDropdownData(updatedData)
+            // const nextElement = document.getElementById("ledger_head");
+            // nextElement.focus()
         }
     }, [primaryLedgerHeadData, primaryLedgerDropdownData]);
 
@@ -418,7 +420,7 @@ function BranchVoucherFromIndex({currencySymbol}) {
                                                             label={t("")}
                                                             placeholder={t("ChooseLedgerHead")}
                                                             required={true}
-                                                            nextField={""}
+                                                            nextField={"ledger_head"}
                                                             name={"main_ledger_head"}
                                                             form={form}
                                                             dropdownValue={primaryLedgerDropdownData}

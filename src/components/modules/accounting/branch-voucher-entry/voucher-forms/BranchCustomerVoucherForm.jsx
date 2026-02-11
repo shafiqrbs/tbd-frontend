@@ -42,8 +42,9 @@ export default function BranchCustomerVoucherForm(props) {
     const amountInputRef = useRef(null);
 
     const voucherForm = useForm({
-        initialValues: {amount: ""},
+        initialValues: {amount: "", ledger_head: null},
         validate: {
+            ledger_head: (value) => (value ? null : t("SelectSecendoryLedger")),
             amount: (value) => (value ? null : t("AmountIsRequired")),
         },
     });

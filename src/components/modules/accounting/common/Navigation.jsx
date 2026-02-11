@@ -69,7 +69,7 @@ export default function Navigation(props) {
                             </Text>
                         </Flex>
                     </Flex>
-                    <Flex direction={`column`} align={"center"} mt="xs">
+                    {/*<Flex direction={`column`} align={"center"} mt="xs">
                         <Tooltip
                             label={t("AccountLedger")}
                             px={16}
@@ -114,9 +114,9 @@ export default function Navigation(props) {
                                 {t("EntryList")}
                             </Text>
                         </Flex>
-                    </Flex>
+                    </Flex>*/}
 
-                    <Flex direction={`column`} align={"center"}>
+                    {/*<Flex direction={`column`} align={"center"}>
                         <Tooltip
                             label={t("VoucherEntry")}
                             px={16}
@@ -158,7 +158,7 @@ export default function Navigation(props) {
                                 {t("Entry")}
                             </Text>
                         </Flex>
-                    </Flex>
+                    </Flex>*/}
 
                     <Flex direction={`column`} align={"center"} mt="xs">
                         <Tooltip
