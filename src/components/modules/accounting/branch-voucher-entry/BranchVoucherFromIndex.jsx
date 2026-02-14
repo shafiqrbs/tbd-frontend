@@ -391,7 +391,6 @@ function BranchVoucherFromIndex({currencySymbol}) {
                         />
                     </Box>
                 </Grid.Col>
-                {/*{voucherListLoaded ? (*/}
                     <>
                         <Grid.Col span={18}>
                             <Box
@@ -769,11 +768,6 @@ function BranchVoucherFromIndex({currencySymbol}) {
                             </Box>
                         </Grid.Col>
                     </>
-                /*) : (
-                    <>
-                    </>
-                )}*/
-
             </Grid>
         </Box>
         {bankDrawer && (<BankDrawer
