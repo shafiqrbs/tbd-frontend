@@ -58,7 +58,7 @@ export default function __PosPurchaseForm(props) {
             warehouse_id: "",
         },
         validate: {
-            transaction_mode_id: isNotEmpty(),
+            // transaction_mode_id: isNotEmpty(),
             vendor_id: isNotEmpty(),
             warehouse_id: (value) => {
                 if (!isWarehouse) return null;
@@ -157,7 +157,7 @@ export default function __PosPurchaseForm(props) {
                         vendor_mobile: form.values.mobile,
                         vendor_email: form.values.email,
                         sub_total: purchaseSubTotalAmount,
-                        transaction_mode_id: form.values.transaction_mode_id,
+                        transaction_mode_id: form.values.transaction_mode_id || null,
                         discount_type: discountType,
                         discount: purchaseDiscountAmount,
                         discount_calculation:

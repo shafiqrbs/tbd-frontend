@@ -882,7 +882,7 @@ function _GenericInvoiceForm() {
                                                         </Grid.Col>
                                                         <Grid.Col span={14}>
                                                             <InputButtonForm
-                                                                type="number"
+                                                                type="text"
                                                                 tooltip={t("BonusQuantityValidateMessage")}
                                                                 label=""
                                                                 placeholder={t("Quantity")}
