@@ -259,9 +259,6 @@ function _PurchaseItemTable() {
                                     loaderColor="grape"
                                     height={tableHeight}
                                     scrollAreaProps={{type: "never"}}
-                                    rowBackgroundColor={(item) => {
-                                        if (item.invoice === selectedRow) return "var(--theme-primary-color-1)";
-                                    }}
                                     rowColor={(item) => {
                                         if (item.invoice === selectedRow) return "var(--mantine-color-black-9)";
                                     }}
