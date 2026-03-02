@@ -50,6 +50,8 @@ function _SalesPurchaseHeaderNavbar(props) {
     { link: "/inventory/sales-invoice", label: t("NewSales") },
     { link: "/inventory/sales-return", label: t("Sales Return") },
     { link: "/inventory/purchase", label: t("Purchase") },
+    { link: "/inventory/purchase-item", label: t("Purchase Item") },
+    { link: "/inventory/damage-item", label: t("Damage") },
     { link: "/inventory/purchase-invoice", label: t("NewPurchase") },
     { link: "/inventory/purchase-return", label: t("Purchase Return") },
   ];

@@ -26,6 +26,7 @@ function InventoryHeaderNavbar(props) {
     const location = useLocation();
 
     const links = [
+        { link: "/inventory/purchase-item", label: t("Purchase Item") },
         { link: '/inventory/stock', label: t('Stock') },
         { link: '/inventory/product', label: t('Products') },
         { link: '/inventory/category', label: t('Category') },
