@@ -113,6 +113,7 @@ import StockTransferEdit from "./components/modules/inventory/stock-transfer/Sto
 import LoginJwt from "./components/LoginJwt.jsx";
 import BranchVoucherIndex from "./components/modules/accounting/branch-voucher-entry/BranchVoucherIndex.jsx";
 import AccountingIncomeExpenseReport from "./components/modules/report/accounting/AccountingIncomeExpenseReport.jsx";
+import PurchaseItemIndex from "./components/modules/inventory/purchase/PurchaseItemIndex";
 
 
 function AppRoute() {
@@ -328,6 +329,15 @@ function AppRoute() {
                             element={
                                 <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
                                     <PurchaseInvoice />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                         <Route
+                            path="purchase-item"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
+                                    <PurchaseItemIndex />
                                 </ProtectedRoute>
                             }
                         />

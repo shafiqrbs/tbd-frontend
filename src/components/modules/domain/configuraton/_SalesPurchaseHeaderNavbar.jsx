@@ -41,13 +41,17 @@ function _SalesPurchaseHeaderNavbar(props) {
   const location = useLocation();
   const links = [
     configData?.is_batch_invoice === 1 ?
-    { link: "/inventory/invoice-batch", label: t("InvoiceBatch") }:'',
+   { link: "/inventory/invoice-batch", label: t("InvoiceBatch") }:'',
+    /*
     { link: "/inventory/new-stock-transfer", label: t("NewStockTransfer") },
     { link: "/inventory/stock-transfer", label: t("StockTransfer") },
+    */
     { link: "/inventory/sales", label: t("Sales") },
     { link: "/inventory/sales-invoice", label: t("NewSales") },
+    { link: "/inventory/sales-return", label: t("Sales Return") },
     { link: "/inventory/purchase", label: t("Purchase") },
     { link: "/inventory/purchase-invoice", label: t("NewPurchase") },
+    { link: "/inventory/purchase-return", label: t("Purchase Return") },
   ];
   const items = links.map((link) => (
     <a

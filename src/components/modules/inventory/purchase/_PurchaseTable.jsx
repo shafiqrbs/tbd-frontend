@@ -13,7 +13,7 @@ import {
     Table,
     Menu,
     rem,
-    LoadingOverlay, Badge,
+    LoadingOverlay, Badge, Tooltip, Flex,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
@@ -24,7 +24,7 @@ import {
     IconPencil,
     IconEyeEdit,
     IconTrashX,
-    IconCheck, IconCopy,
+    IconCheck, IconCopy, IconSearch, IconRestore, IconPlus, IconArrowRight,
 } from "@tabler/icons-react";
 import {DataTable} from "mantine-datatable";
 import {useDispatch, useSelector} from "react-redux";
@@ -42,6 +42,8 @@ import {PurchasePrintPos} from "./print-component/PurchasePrintPos.jsx";
 import {notifications} from "@mantine/notifications";
 import useConfigData from "../../../global-hook/config-data/useConfigData.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import __FilterPopover from "../sales/__FilterPopover";
+import {setPurchaseFilterData} from "../../../../store/inventory/crudSlice";
 
 function _PurchaseTable() {
     const {configData} = useConfigData()
@@ -242,8 +244,8 @@ function _PurchaseTable() {
         <>
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
-                    <Grid.Col span={24}>
-                        <Box pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} className={'boxBackground borderRadiusAll'} >
+                    <Grid.Col span={18}>
+                        <Box pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} >
                             <Grid>
                                 <Grid.Col>
                                     <Stack>
@@ -251,6 +253,33 @@ function _PurchaseTable() {
                                     </Stack>
                                 </Grid.Col>
                             </Grid>
+                        </Box>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                        <Box al={'right'} pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} >
+                            <Flex
+                                gap="md"
+                                justify="flex-end"
+                                align="center"
+                                direction="row"
+                                wrap="wrap"
+                            >
+                                <Button
+                                    onClick={(e) => {
+                                        navigate("/inventory/purchase-item");
+                                    }}
+                                    variant="default"
+                                    rightSection={<IconArrowRight size={14} />}> Purchase Items
+                                </Button>
+                                <Button
+                                    onClick={(e) => {
+                                        navigate("/inventory/purchase-invoice");
+                                    }}
+                                    variant="filled"
+                                    leftSection={<IconPlus size={14} />}
+                                    rightSection={<IconArrowRight size={14} />}> New Purchase
+                                </Button>
+                            </Flex>
                         </Box>
                     </Grid.Col>
                 </Grid>
@@ -279,7 +308,7 @@ function _PurchaseTable() {
                                         {accessor: "created", title: t("Created")},
                                         {
                                             accessor: "invoice",
-                                            title: t("Invoice"),
+                                            title: t("GRN"),
                                             render: (item) => (
                                                 <Text
                                                     component="a"

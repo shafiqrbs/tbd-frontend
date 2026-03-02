@@ -14,7 +14,7 @@ import {
     Loader,
     Menu,
     rem,
-    LoadingOverlay, Badge,
+    LoadingOverlay, Badge, Flex,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
@@ -25,7 +25,7 @@ import {
     IconPencil,
     IconEyeEdit,
     IconTrashX,
-    IconCheck, IconChevronsRight, IconX, IconCopy,
+    IconCheck, IconChevronsRight, IconX, IconCopy, IconPlus, IconArrowRight,
 } from "@tabler/icons-react";
 import {DataTable} from "mantine-datatable";
 import {useDispatch, useSelector} from "react-redux";
@@ -189,7 +189,7 @@ function _SalesReturnTable() {
         <>
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
-                    <Grid.Col span={24}>
+                    <Grid.Col span={15}>
                         <Box pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                             <Grid>
                                 <Grid.Col>
@@ -198,6 +198,25 @@ function _SalesReturnTable() {
                                     </Stack>
                                 </Grid.Col>
                             </Grid>
+                        </Box>
+                    </Grid.Col>
+                    <Grid.Col span={9}>
+                        <Box al={'right'} pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} className={'boxBackground borderRadiusAll'} >
+                            <Flex
+                                gap="md"
+                                justify="flex-end"
+                                align="center"
+                                direction="row"
+                                wrap="wrap"
+                            >
+                                <Button
+                                    onClick={(e) => {
+                                        navigate("/inventory/sales-return-invoice");
+                                    }}
+                                    variant="filled"
+                                    leftSection={<IconPlus size={14} />}
+                                    rightSection={<IconArrowRight size={14} />}> New Return </Button>
+                            </Flex>
                         </Box>
                     </Grid.Col>
                 </Grid>

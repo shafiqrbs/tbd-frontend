@@ -65,6 +65,7 @@ function _GenericInvoiceForm() {
 
     const [categoryData, setCategoryData] = useState(null);
     const [products, setProducts] = useState([]);
+ //   console.log(productDropdown)
 
     // initial form field value
     const form = useForm({

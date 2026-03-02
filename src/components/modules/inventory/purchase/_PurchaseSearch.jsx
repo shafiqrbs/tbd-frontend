@@ -80,9 +80,9 @@ function _PurchaseSearch(props) {
   return (
     <>
       <Grid columns={24} justify="flex-start" align="flex-end">
-        <Grid.Col span={15}>
+        <Grid.Col span={21}>
           <Grid columns={24}>
-            <Grid.Col span={6}>
+            <Grid.Col span="auto">
               <Tooltip
                 label={t("EnterSearchAnyKeyword")}
                 opened={searchKeywordTooltip}
@@ -150,7 +150,7 @@ function _PurchaseSearch(props) {
                 />
               </Tooltip>
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col span="auto">
               <Tooltip
                 label={t("ChooseVendor")}
                 opened={vendorTooltip}
@@ -194,7 +194,7 @@ function _PurchaseSearch(props) {
                 />
               </Tooltip>
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col span="auto">
               <Tooltip
                 label={t("StartDate")}
                 opened={startDateTooltip}
@@ -249,7 +249,7 @@ function _PurchaseSearch(props) {
                 />
               </Tooltip>
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col span="auto">
               <Tooltip
                 label={t("EndDate")}
                 opened={endDateTooltip}

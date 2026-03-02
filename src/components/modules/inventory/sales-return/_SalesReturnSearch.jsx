@@ -41,23 +41,24 @@ function _SalesReturnSearch() {
   );
 
   /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
-  const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
-  const [refreshVendorDropdown, setRefreshVendorDropdown] = useState(false);
 
-  useEffect(() => {
-    let coreVendors = localStorage.getItem("core-vendors");
-    coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
-    if (coreVendors && coreVendors.length > 0) {
-      const transformedData = coreVendors.map((type) => {
-        return {
-          label: type.mobile + " -- " + type.name,
-          value: String(type.id),
-        };
-      });
-      setVendorsDropdownData(transformedData);
-      setRefreshVendorDropdown(false);
-    }
-  }, [refreshVendorDropdown]);
+    const [customersDropdownData, setCustomersDropdownData] = useState([]);
+    const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false);
+
+    useEffect(() => {
+        let coreCustomers = localStorage.getItem("core-customers");
+        coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : [];
+        if (coreCustomers && coreCustomers.length > 0) {
+            const transformedData = coreCustomers.map((type) => {
+                return {
+                    label: type.mobile + " -- " + type.name,
+                    value: String(type.id),
+                };
+            });
+            setCustomersDropdownData(transformedData);
+            setRefreshCustomerDropdown(false);
+        }
+    }, [refreshCustomerDropdown]);
   /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
 
   let [resetKey, setResetKey] = useState(0);
@@ -79,9 +80,9 @@ function _SalesReturnSearch() {
   return (
     <>
       <Grid columns={24} justify="flex-start" align="flex-end">
-        <Grid.Col span={15}>
+        <Grid.Col span={21}>
           <Grid columns={24}>
-            <Grid.Col span={6}>
+            <Grid.Col span="auto">
               <Tooltip
                 label={t("EnterSearchAnyKeyword")}
                 opened={searchKeywordTooltip}
@@ -149,9 +150,9 @@ function _SalesReturnSearch() {
                 />
               </Tooltip>
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col  span="auto">
               <Tooltip
-                label={t("ChooseVendor")}
+                label={t("ChooseCustomer")}
                 opened={vendorTooltip}
                 px={16}
                 py={2}
@@ -168,9 +169,9 @@ function _SalesReturnSearch() {
                 <Select
                   key={resetKey}
                   id={"Customer"}
-                  placeholder={t("ChooseVendor")}
+                  placeholder={t("ChooseCustomer")}
                   size="sm"
-                  data={vendorsDropdownData}
+                  data={customersDropdownData}
                   autoComplete="off"
                   clearable
                   searchable
@@ -193,7 +194,7 @@ function _SalesReturnSearch() {
                 />
               </Tooltip>
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col  span="auto">
               <Tooltip
                 label={t("StartDate")}
                 opened={startDateTooltip}
@@ -248,7 +249,7 @@ function _SalesReturnSearch() {
                 />
               </Tooltip>
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col  span="auto">
               <Tooltip
                 label={t("EndDate")}
                 opened={endDateTooltip}
