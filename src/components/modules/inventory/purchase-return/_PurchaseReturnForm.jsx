@@ -259,34 +259,7 @@ export default function _PurchaseReturnForm(props) {
                                                     {t("PurchaseReturn")}
                                                 </Text>
                                             </Grid.Col>
-                                            <Grid.Col span={5} align="center">
-                                                <Group justify="flex-end" align="center" gap={4}>
-                                                    <Tooltip
-                                                        multiline
-                                                        bg='var( --theme-primary-color-8)'
-                                                        position="top"
-                                                        withArrow
-                                                        ta={"center"}
-                                                        transitionProps={{duration: 200}}
-                                                        label={t("Settings")}
-                                                    >
-                                                        <ActionIcon
-                                                            radius={"xl"}
-                                                            variant="transparent"
-                                                            size={"md"}
-                                                            color="gray"
-                                                            mt={"1"}
-                                                            aria-label="Settings"
-                                                            onClick={() => {}}
-                                                        >
-                                                            <IconDotsVertical
-                                                                style={{width: "100%", height: "70%"}}
-                                                                stroke={1.5}
-                                                            />
-                                                        </ActionIcon>
-                                                    </Tooltip>
-                                                </Group>
-                                            </Grid.Col>
+
                                         </Grid>
                                     </Box>
 

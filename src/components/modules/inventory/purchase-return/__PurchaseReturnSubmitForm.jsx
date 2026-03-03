@@ -341,7 +341,7 @@ export default function __PurchaseReturnSubmitForm({
                         {t("Print")}
                     </Button>
                     <Button fullWidth className={genericClass.invoiceSave} type={"submit"} name="save" variant="filled" leftSection={<IconDeviceFloppy size={14} />}>
-                        {t("Generate")}
+                        {t("Save")}
                     </Button>
                 </Button.Group>
             </Box>
