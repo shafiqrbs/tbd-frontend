@@ -14,7 +14,7 @@ import {
     Loader,
     Menu,
     rem,
-    LoadingOverlay, Badge, Flex,
+    LoadingOverlay, Badge, Flex, Radio,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
@@ -183,7 +183,65 @@ function _SalesReturnTable() {
             fetchData();
         }
     }
+    const openApproveModal = (id) => {
+        modals.open({
+            title: (
+                <Text size="md">
+                    {t("FormConfirmationTitle")}
+                </Text>
+            ),
+            centered: true,
+            children: <ApproveModalContent id={id} />,
+        });
+    };
 
+    const ApproveModalContent = ({ id }) => {
+        const [approveType, setApproveType] = useState(null);
+        const dispatch = useDispatch();
+        const { t } = useTranslation();
+
+        const handleConfirm = async () => {
+            handleSalesReturnApprove(id,approveType)
+            modals.closeAll();
+        };
+
+        return (
+            <Stack>
+
+                <Radio.Group
+                    value={approveType}
+                    onChange={setApproveType}
+                    label="Select Approval Type"
+                >
+                    <Stack mt="xs">
+                        {/*<Radio value="sales_return" label="Sales Return Only" />*/}
+                        {/*<Radio value="sales_return_with_damage" label="Sales Return + Damage" />*/}
+                        <Radio value="sales_return_with_purchase" label="Approve With Stock" />
+                        <Radio value="sales_return_with_purchase_with_damage" label="Approve With Damage" />
+                    </Stack>
+                </Radio.Group>
+
+                <Group justify="flex-end" mt="md">
+                    <Button
+                        variant="default"
+                        onClick={() => modals.closeAll()}
+                    >
+                        Cancel
+                    </Button>
+
+                    <Button
+                        color="red"
+                        disabled={!approveType}
+                        onClick={handleConfirm}
+                    >
+                        Confirm
+                    </Button>
+                </Group>
+            </Stack>
+        );
+    };
+
+    console.log(indexData.data)
 
     return (
         <>
@@ -291,8 +349,21 @@ function _SalesReturnTable() {
                                                 <Group gap={4} justify="right" wrap="nowrap">
 
                                                     {
-                                                        !data.approved_by_id && data.process == "Created" &&
-                                                        <Button component="a" size="compact-xs" radius="xs"
+                                                        !data.approved_by_id && data.process == "Created" && data.purchase_return_id &&
+                                                        <Button
+                                                            component="a"
+                                                            size="compact-xs"
+                                                            radius="xs"
+                                                            variant="filled"
+                                                            fw={'100'}
+                                                            fz={'12'}
+                                                            color='var(--theme-red-color-8)'
+                                                            mr={'4'}
+                                                            onClick={() => openApproveModal(data.id)}
+                                                        >
+                                                            {t('Approve')}
+                                                        </Button>
+                                                        /*<Button component="a" size="compact-xs" radius="xs"
                                                                 variant="filled" fw={'100'} fz={'12'}
                                                                 color='var(--theme-red-color-8)'
                                                                 mr={'4'}
@@ -316,47 +387,14 @@ function _SalesReturnTable() {
                                                                         },
                                                                         confirmProps: {color: "red.6"},
                                                                         onCancel: () => console.log("Cancel"),
-                                                                        onConfirm: () => handleSalesReturnApprove(data.id,'child'),
+                                                                        // onConfirm: () => handleSalesReturnApprove(data.id,'child'),
                                                                     });
                                                                 }}
                                                         >{t('Approve')}
-                                                        </Button>
+                                                        </Button>*/
                                                     }
 
-                                                    {/*
-                                                    {
-                                                        !data.approved_by_id && data.process == "Created" && !data.sub_domain_id &&
-                                                        <Button component="a" size="compact-xs" radius="xs"
-                                                                variant="filled" fw={'100'} fz={'12'}
-                                                                color='var(--theme-secondary-color-8)'
-                                                                mr={'4'}
-                                                                onClick={() => {
-                                                                    modals.openConfirmModal({
-                                                                        title: (
-                                                                            <Text size="md">
-                                                                                {" "}
-                                                                                {t("FormConfirmationTitle")}
-                                                                            </Text>
-                                                                        ),
-                                                                        children: (
-                                                                            <Text size="sm">
-                                                                                {" "}
-                                                                                {t("FormConfirmationMessage")}
-                                                                            </Text>
-                                                                        ),
-                                                                        labels: {
-                                                                            confirm: "Confirm",
-                                                                            cancel: "Cancel",
-                                                                        },
-                                                                        confirmProps: {color: "red.6"},
-                                                                        onCancel: () => console.log("Cancel"),
-                                                                        onConfirm: () => handleSalesReturnApprove(data.id,'purchase'),
-                                                                    });
-                                                                }}
-                                                        >{t('Approve')}
-                                                        </Button>
-                                                    }
-                                                    <Menu
+                                                    {/*<Menu
                                                         position="bottom-end"
                                                         offset={3}
                                                         withArrow

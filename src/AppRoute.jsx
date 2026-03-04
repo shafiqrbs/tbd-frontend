@@ -309,6 +309,24 @@ function AppRoute() {
                                 </ProtectedRoute>
                             }
                         />
+
+                        <Route
+                            path="sales-return-invoice"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
+                                    <PurchaseReturnInvoice />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="sales-return/edit/:id"
+                            element={
+                                <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager"]}>
+                                    <PurchaseReturnEdit />
+                                </ProtectedRoute>
+                            }
+                        />
+
                         <Route
                             path="purchase/edit/:id"
                             element={
