@@ -43,6 +43,8 @@ import {showNotificationComponent} from "../../../core-component/showNotificatio
 import {PurchasePrintNormal} from "../purchase/print-component/PurchasePrintNormal.jsx";
 import {PurchasePrintPos} from "../purchase/print-component/PurchasePrintPos.jsx";
 import _SalesReturnSearch from "./_SalesReturnSearch.jsx";
+import {useDisclosure} from "@mantine/hooks";
+import __SalesReturnProcessModal from "./__SalesReturnProcessModal.jsx";
 
 function _SalesReturnTable() {
     const {configData} = useConfigData()
@@ -101,8 +103,21 @@ function _SalesReturnTable() {
                 </Table.Td>
 
                 <Table.Td ta="center" fz="xs" width={"60"}>
+                    {element.request_quantity}
+                </Table.Td>
+
+                <Table.Td ta="center" fz="xs" width={"60"}>
+                    {element.stock_entry_quantity}
+                </Table.Td>
+
+                <Table.Td ta="center" fz="xs" width={"60"}>
+                    {element.damage_entry_quantity}
+                </Table.Td>
+
+                <Table.Td ta="center" fz="xs" width={"60"}>
                     {element.quantity}
                 </Table.Td>
+
                 <Table.Td ta="right" fz="xs" width={"80"}>
                     {element.price}
                 </Table.Td>
@@ -183,6 +198,15 @@ function _SalesReturnTable() {
             fetchData();
         }
     }
+
+    const [opened, { open: processModalOpen, close: processModalClose }] = useDisclosure(false);
+
+    const [processModalId, setProcessModalId] = useState(null);
+    const openProcessModal = (id) => {
+        setProcessModalId(id);
+        processModalOpen();
+    };
+
     const openApproveModal = (id) => {
         modals.open({
             title: (
@@ -240,8 +264,6 @@ function _SalesReturnTable() {
             </Stack>
         );
     };
-
-    console.log(indexData.data)
 
     return (
         <>
@@ -323,6 +345,7 @@ function _SalesReturnTable() {
                                             ),
                                         },
                                         {accessor: "customer_name", title: t("Customer")},
+                                        {accessor: "request_quantity", title: t("RequestQuantity")},
                                         {accessor: "quantity", title: t("Quantity")},
                                         {accessor: "sub_total", title: t("Total")},
 
@@ -350,7 +373,7 @@ function _SalesReturnTable() {
 
                                                     {
                                                         !data.approved_by_id && data.process == "Created" && data.purchase_return_id &&
-                                                        <Button
+                                                        /*<Button
                                                             component="a"
                                                             size="compact-xs"
                                                             radius="xs"
@@ -362,6 +385,19 @@ function _SalesReturnTable() {
                                                             onClick={() => openApproveModal(data.id)}
                                                         >
                                                             {t('Approve')}
+                                                        </Button>*/
+                                                        <Button
+                                                            component="a"
+                                                            size="compact-xs"
+                                                            radius="xs"
+                                                            variant="filled"
+                                                            fw={'100'}
+                                                            fz={'12'}
+                                                            color='var(--theme-red-color-8)'
+                                                            mr={'4'}
+                                                            onClick={() => openProcessModal(data.id)}
+                                                        >
+                                                            {t('Process')}
                                                         </Button>
                                                         /*<Button component="a" size="compact-xs" radius="xs"
                                                                 variant="filled" fw={'100'} fz={'12'}
@@ -626,11 +662,25 @@ function _SalesReturnTable() {
                                                     </Table.Th>
 
                                                     <Table.Th fz="xs" ta="center" w={"60"}>
-                                                        {t("QTY")}
+                                                        {t("Req. QTY")}
                                                     </Table.Th>
+
+                                                    <Table.Th fz="xs" ta="center" w={"60"}>
+                                                        {t("Stock In Qty")}
+                                                    </Table.Th>
+
+                                                    <Table.Th fz="xs" ta="center" w={"60"}>
+                                                        {t("Damage Qty")}
+                                                    </Table.Th>
+
+                                                    <Table.Th fz="xs" ta="center" w={"60"}>
+                                                        {t("Total QTY")}
+                                                    </Table.Th>
+
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
                                                         {t("Price")}
                                                     </Table.Th>
+
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
                                                         {t("SubTotal")}
                                                     </Table.Th>
@@ -639,7 +689,7 @@ function _SalesReturnTable() {
                                             <Table.Tbody>{rows}</Table.Tbody>
                                             <Table.Tfoot>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={"4"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={"7"} ta="right" fz="xs" w={"100"}>
                                                         {t("SubTotal")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -650,7 +700,7 @@ function _SalesReturnTable() {
                                                 </Table.Tr>
 
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={"4"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={"7"} ta="right" fz="xs" w={"100"}>
                                                         {t("Total")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -736,6 +786,13 @@ function _SalesReturnTable() {
                     />
                 </div>
             )}
+
+            <__SalesReturnProcessModal
+                opened={opened}
+                processModalClose={processModalClose}
+                processModalId={processModalId}
+                setProcessModalId={setProcessModalId}
+            />
         </>
     );
 }
