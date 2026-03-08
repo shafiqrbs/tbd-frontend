@@ -115,6 +115,7 @@ import BranchVoucherIndex from "./components/modules/accounting/branch-voucher-e
 import AccountingIncomeExpenseReport from "./components/modules/report/accounting/AccountingIncomeExpenseReport.jsx";
 import PurchaseItemIndex from "./components/modules/inventory/purchase/PurchaseItemIndex";
 import DamageIndex from "./components/modules/inventory/damage-item/DamageIndex";
+import SalesReturnInvoice from "./components/modules/inventory/sales-return/SalesReturnInvoice.jsx";
 
 
 function AppRoute() {
@@ -314,7 +315,7 @@ function AppRoute() {
                             path="sales-return-invoice"
                             element={
                                 <ProtectedRoute roles={["role_domain", "role_sales_purchase_admin", "role_sales_purchase_manager", "role_sales_purchase_operator"]}>
-                                    <PurchaseReturnInvoice />
+                                    <SalesReturnInvoice />
                                 </ProtectedRoute>
                             }
                         />
