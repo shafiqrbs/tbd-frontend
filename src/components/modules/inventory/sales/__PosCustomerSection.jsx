@@ -257,9 +257,8 @@ export default function __PosCustomerSection(props) {
 										</Text>
 									</Grid.Col>
 									<Grid.Col span={6}>
-										<Text fz={"sm"} order={1} fw={"800"}>
-											{currencySymbol + " "}
-											{customerLiveData.outstanding_amount ? Number(customerLiveData?.outstanding_amount).toFixed(2):0.00}
+										<Text fz="sm" order={1} fw={800}>
+											{currencySymbol + " "} {(Number(customerLiveData?.outstanding_amount || 0)).toFixed(2)}
 										</Text>
 									</Grid.Col>
 									<Grid.Col span={3}>
