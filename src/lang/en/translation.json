@@ -1277,5 +1277,11 @@
   "BankMode": "Bank Mode",
   "RoutingNumber": "Routing Number",
   "NewSalesReturn": "New Sales Return",
+  "SearchInvoice": "Search Invoice",
+  "ChooseSale": "Choose Sale",
+  "ChooseDate": "Choose Date",
+  "StockEntryQty": "Stock Entry Qty",
+  "DamageEntryQty": "Damage Entry Qty",
+  "TotalCannotExceed": "Total Cannot Exceed ",
   "": ""
 }

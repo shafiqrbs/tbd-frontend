@@ -21,7 +21,8 @@ function __SalesReturnProcessModal({
                                        opened,
                                        processModalClose,
                                        processModalId,
-                                       setProcessModalId
+                                       setProcessModalId,
+                                       salesReturnFetchData
                                    }) {
     const dispatch = useDispatch();
 
@@ -136,15 +137,38 @@ function __SalesReturnProcessModal({
 
             const resultAction = await dispatch(storeEntityData(value));
 
-            if (storeEntityData.rejected.match(resultAction)) {
-                showNotificationComponent("Process failed", "red", "", true, 1000, true);
-            } else if (storeEntityData.fulfilled.match(resultAction)) {
-                showNotificationComponent("Sales return processed successfully", "green", "", true, 1000, true);
+            if (storeEntityData.fulfilled.match(resultAction)) {
+                const res = resultAction.payload?.data;
+                if (res?.status === 200) {
+                    showNotificationComponent(
+                        "Sales return processed successfully",
+                        "green",
+                        "",
+                        true,
+                        1000,
+                        true
+                    );
+                    salesReturnFetchData();
+                    processModalClose();
+                    setProcessModalId(null); // use setter
 
-                // refetch data after submit
-                await fetchData();
+                    // refetch data after submit
+                    // await fetchData();
+                } else {
+                    showNotificationComponent(
+                        res?.message || "Process failed",
+                        "red",
+                        "",
+                        true,
+                        1000,
+                        true
+                    );
+                }
+            } else if (storeEntityData.rejected.match(resultAction)) {
+                showNotificationComponent("Process failed", "red", "", true, 1000, true);
             }
         } catch (error) {
+            console.log(error)
             showNotificationComponent("Process failed", "red", "", true, 1000, true);
         }
 

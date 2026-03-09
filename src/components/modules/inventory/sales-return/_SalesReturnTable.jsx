@@ -372,20 +372,8 @@ function _SalesReturnTable() {
                                                 <Group gap={4} justify="right" wrap="nowrap">
 
                                                     {
-                                                        !data.approved_by_id && data.process == "Created" && data.purchase_return_id &&
-                                                        /*<Button
-                                                            component="a"
-                                                            size="compact-xs"
-                                                            radius="xs"
-                                                            variant="filled"
-                                                            fw={'100'}
-                                                            fz={'12'}
-                                                            color='var(--theme-red-color-8)'
-                                                            mr={'4'}
-                                                            onClick={() => openApproveModal(data.id)}
-                                                        >
-                                                            {t('Approve')}
-                                                        </Button>*/
+                                                        // !data.approved_by_id && data.process == "Created" && data.purchase_return_id &&
+                                                        !data.approved_by_id && data.process == "Created"  &&
                                                         <Button
                                                             component="a"
                                                             size="compact-xs"
@@ -792,6 +780,7 @@ function _SalesReturnTable() {
                 processModalClose={processModalClose}
                 processModalId={processModalId}
                 setProcessModalId={setProcessModalId}
+                salesReturnFetchData={fetchData}
             />
         </>
     );
