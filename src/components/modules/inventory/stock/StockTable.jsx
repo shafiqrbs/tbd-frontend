@@ -10,6 +10,8 @@ import __StockSearch from "./__StockSearch.jsx";
 import OverviewModal from "../product-overview/OverviewModal.jsx";
 import {IconListDetails, IconListCheck, IconList} from "@tabler/icons-react";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import {useDisclosure} from "@mantine/hooks";
+import _DamageProcessModal from "./_DamageProcessModal.jsx";
 
 function StockTable({categoryDropdown}) {
     const dispatch = useDispatch();
@@ -32,6 +34,9 @@ function StockTable({categoryDropdown}) {
     const [page, setPage] = useState(1);
     const [activeTab, setActiveTab] = useState("all-stock");
     const [viewModal, setViewModal] = useState(false);
+    const [damageItemData, setDamageItemData] = useState({});
+
+    const [damageModal, { open: damageModalOpen, close: damageModalClose }] = useDisclosure(false);
 
     const [isBrand, setBrand] = useState(configData?.is_brand === 1);
 
@@ -40,33 +45,35 @@ function StockTable({categoryDropdown}) {
     const [isSize, setSize] = useState(configData?.is_size === 1);
     const [isModel, setModel] = useState(configData?.is_model === 1);
 
+    const fetchTableData = async () => {
+        setFetching(true);
+        const value = {
+            url: "inventory/stock-item/matrix",
+            param: {
+                term: searchKeyword,
+                page: searchKeyword ? 1 : page,
+                offset: perPage,
+                product_nature: activeTab,
+            },
+        };
+        try {
+            const resultAction = await dispatch(getIndexEntityData(value));
+            if (getIndexEntityData.fulfilled.match(resultAction)) {
+                setIndexData(resultAction.payload);
+            } else {
+                console.error("Error:", resultAction);
+            }
+        } catch (err) {
+            console.error("Unexpected error:", err);
+        } finally {
+            setFetching(false);
+        }
+    };
+
+
     // API call whenever activeTab, searchKeyword, or page changes
     useEffect(() => {
-        const fetchData = async () => {
-            setFetching(true);
-            const value = {
-                url: "inventory/stock-item/matrix",
-                param: {
-                    term: searchKeyword,
-                    page: searchKeyword ? 1 : page,
-                    offset: perPage,
-                    product_nature: activeTab,
-                },
-            };
-            try {
-                const resultAction = await dispatch(getIndexEntityData(value));
-                if (getIndexEntityData.fulfilled.match(resultAction)) {
-                    setIndexData(resultAction.payload);
-                } else {
-                    console.error("Error:", resultAction);
-                }
-            } catch (err) {
-                console.error("Unexpected error:", err);
-            } finally {
-                setFetching(false);
-            }
-        };
-        fetchData();
+        fetchTableData();
     }, [activeTab, searchKeyword, page]);
 
     const [downloadStockXLS, setDownloadStockXls] = useState(false);
@@ -238,6 +245,22 @@ function StockTable({categoryDropdown}) {
                                         variant="filled"
                                         fw={"100"}
                                         fz={"12"}
+                                        color="var(--theme-validation-error-color)"
+                                        mr={4}
+                                        onClick={() => {
+                                            setDamageItemData(item)
+                                            damageModalOpen()
+                                        }}
+                                    >
+                                        {t("Damage")}
+                                    </Button>
+                                    <Button
+                                        component="a"
+                                        size="compact-xs"
+                                        radius="xs"
+                                        variant="filled"
+                                        fw={"100"}
+                                        fz={"12"}
                                         color="var(--theme-primary-color-6)"
                                         mr={4}
                                         onClick={() => {
@@ -269,6 +292,14 @@ function StockTable({categoryDropdown}) {
             </Box>
 
             {viewModal && <OverviewModal viewModal={viewModal} setViewModal={setViewModal}/>}
+
+            <_DamageProcessModal
+                opened={damageModal}
+                damageModalClose={damageModalClose}
+                damageItemData={damageItemData}
+                setDamageItemData={setDamageItemData}
+                fetchStockTableData={fetchTableData}
+            />
         </>
     );
 }
