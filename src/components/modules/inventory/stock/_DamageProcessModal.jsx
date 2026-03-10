@@ -183,9 +183,7 @@ function _DamageProcessModal({
                 data: payload
             };
 
-            console.log(value)
-
-            /*const resultAction = await dispatch(storeEntityData(value));
+            const resultAction = await dispatch(storeEntityData(value));
 
             if (storeEntityData.fulfilled.match(resultAction)) {
                 const res = resultAction.payload?.data;
@@ -202,7 +200,7 @@ function _DamageProcessModal({
                     fetchStockTableData()
                     modalClose();
                 }
-            }*/
+            }
         } catch (error) {
             showNotificationComponent("Process failed", "red", "", true, 1000, true);
         }
