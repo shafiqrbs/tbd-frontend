@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
     Modal,
     Table,
@@ -9,7 +9,8 @@ import {
     Text,
     Stack,
     Loader,
-    Center
+    Center,
+    Select
 } from "@mantine/core";
 import { useDispatch } from "react-redux";
 import { showInstantEntityData } from "../../../../store/inventory/crudSlice.js";
@@ -29,18 +30,21 @@ function _DamageProcessModal({
     const [loading, setLoading] = useState(false);
     const [itemNatureType, setItemNatureType] = useState("");
 
+    const [warehouses, setWarehouses] = useState([]);
+    const [selectedWarehouse, setSelectedWarehouse] = useState(null);
+
     /* -----------------------------
        MODAL CLOSE
     ------------------------------*/
     const modalClose = () => {
         setDamageItemData(null);
         setItems([]);
+        setWarehouses([]);
+        setSelectedWarehouse(null);
         damageModalClose();
     };
 
-    /* -----------------------------
-       FETCH PURCHASE ITEMS
-    ------------------------------*/
+    // FETCH PURCHASE ITEMS
     const fetchData = async () => {
         if (!damageItemData?.id) return;
 
@@ -79,39 +83,57 @@ function _DamageProcessModal({
         setLoading(false);
     };
 
-    /* -----------------------------
-       DETERMINE ITEM TYPE
-    ------------------------------*/
+    // DETERMINE ITEM TYPE
     useEffect(() => {
+        if (!damageItemData) return;
+
         const nature = damageItemData?.product_nature;
+
+        /* ---------- STOCKABLE ---------- */
 
         if (["raw-materials", "stockable"].includes(nature)) {
             setItemNatureType("Stockable");
             fetchData();
         }
 
+        /* ---------- PRODUCTION ---------- */
+
         if (
             ["post-production", "mid-production", "pre-production"].includes(nature)
         ) {
             setItemNatureType("Production");
 
-            if (damageItemData) {
-                setItems([
-                    {
-                        id: damageItemData.id,
-                        name: damageItemData.name,
-                        quantity: damageItemData.quantity,
-                        purchase_price: damageItemData.purchase_price || 0,
-                        damage_quantity: 0
-                    }
-                ]);
-            }
+            const warehouseList = Object.entries(
+                damageItemData?.warehouses || {}
+            ).map(([id, value]) => ({
+                value: id,
+                label: `${value.name} (Qty: ${value.quantity})`,
+                quantity: value.quantity
+            }));
+
+            setWarehouses(warehouseList);
+            setSelectedWarehouse(warehouseList?.[0]?.value || null);
+
+            setItems([
+                {
+                    id: damageItemData.id,
+                    name: damageItemData.name,
+                    quantity: damageItemData.quantity,
+                    purchase_price: damageItemData.purchase_price || 0,
+                    damage_quantity: 0
+                }
+            ]);
         }
     }, [damageItemData]);
 
-    /* -----------------------------
-       QTY CHANGE
-    ------------------------------*/
+    // SELECTED WAREHOUSE QTY
+    const selectedWarehouseQty = useMemo(() => {
+        return (
+            warehouses.find((w) => w.value === selectedWarehouse)?.quantity || 0
+        );
+    }, [selectedWarehouse, warehouses]);
+
+    // QTY CHANGE
     const handleQtyChange = (id, value) => {
         setItems((prev) =>
             prev.map((item) =>
@@ -122,47 +144,42 @@ function _DamageProcessModal({
         );
     };
 
-    /* -----------------------------
-       VALIDATION
-    ------------------------------*/
+    // VALIDATION
     const isInvalidQty = (item) => {
         if (itemNatureType === "Stockable") {
             return item.damage_quantity > item.remaining_quantity;
         }
 
         if (itemNatureType === "Production") {
-            return item.damage_quantity > item.quantity;
+            return item.damage_quantity > selectedWarehouseQty;
         }
 
         return false;
     };
 
-    /* -----------------------------
-       SUBTOTAL
-    ------------------------------*/
+    // SUBTOTAL
     const calculateSubTotal = (item) =>
         item.damage_quantity * item.purchase_price;
 
-    /* -----------------------------
-       SUBMIT ENABLE
-    ------------------------------*/
-    const hasDamageQty = items.some(item => item.damage_quantity > 0);
+    // SUBMIT ENABLE
+    const hasDamageQty = items.some((item) => item.damage_quantity > 0);
 
     const isSubmitEnabled =
-        items.length > 0 && hasDamageQty && items.every((item) => !isInvalidQty(item));
+        items.length > 0 &&
+        hasDamageQty &&
+        items.every((item) => !isInvalidQty(item));
 
-    /* -----------------------------
-       SUBMIT
-    ------------------------------*/
+    // SUBMIT
     const handleSubmit = async () => {
         try {
             setLoading(true);
-            const validItems = items.filter(item => item.damage_quantity > 0);
+
+            const validItems = items.filter((item) => item.damage_quantity > 0);
 
             const payload =
                 itemNatureType === "Stockable"
                     ? {
-                        item_nature_type:itemNatureType,
+                        item_nature_type: itemNatureType,
                         data: validItems.map((item) => ({
                             purchase_item_id: item.id,
                             damage_quantity: item.damage_quantity,
@@ -170,9 +187,10 @@ function _DamageProcessModal({
                         }))
                     }
                     : {
-                        item_nature_type:itemNatureType,
+                        item_nature_type: itemNatureType,
                         data: validItems.map((item) => ({
                             stock_item_id: damageItemData.id,
+                            warehouse_id: selectedWarehouse,
                             damage_quantity: item.damage_quantity,
                             subtotal: calculateSubTotal(item)
                         }))
@@ -197,7 +215,8 @@ function _DamageProcessModal({
                         1000,
                         true
                     );
-                    fetchStockTableData()
+
+                    fetchStockTableData();
                     modalClose();
                 }
             }
@@ -208,9 +227,7 @@ function _DamageProcessModal({
         setLoading(false);
     };
 
-    /* -----------------------------
-       TABLE ROWS
-    ------------------------------*/
+    // TABLE ROWS
     const rows = items.map((item, index) => {
         const subTotal = calculateSubTotal(item);
 
@@ -233,9 +250,9 @@ function _DamageProcessModal({
                 <Table.Td>{item.name}</Table.Td>
 
                 <Table.Td>
-                    {itemNatureType === "Stockable"
-                        ? item.remaining_quantity
-                        : item.quantity}
+                    {itemNatureType === "Production"
+                        ? selectedWarehouseQty
+                        : item.remaining_quantity}
                 </Table.Td>
 
                 <Table.Td>
@@ -255,9 +272,7 @@ function _DamageProcessModal({
         );
     });
 
-    /* -----------------------------
-       UI
-    ------------------------------*/
+    
     return (
         <Modal
             opened={opened}
@@ -271,6 +286,20 @@ function _DamageProcessModal({
             }
         >
             <Stack>
+
+                {/* Warehouse selector */}
+
+                {itemNatureType === "Production" && (
+                    <Select
+                        label="Select Warehouse"
+                        data={warehouses}
+                        value={selectedWarehouse}
+                        onChange={setSelectedWarehouse}
+                        searchable
+                        clearable={false}
+                    />
+                )}
+
                 {loading && items.length === 0 ? (
                     <Center>
                         <Loader />
