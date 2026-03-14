@@ -365,18 +365,6 @@ export default function __SalesReturnSubmitForm({
                 <Button.Group>
                     <Button
                         fullWidth
-                        leftSection={<IconRefresh size={14} />}
-                        onClick={() => {
-                            setReturnItems([]);
-                            form.reset();
-                        }}
-                        type="button"
-                    >
-                        {t("Reset")}
-                    </Button>
-
-                    <Button
-                        fullWidth
                         type="submit"
                         name="print"
                         leftSection={<IconPrinter size={14} />}

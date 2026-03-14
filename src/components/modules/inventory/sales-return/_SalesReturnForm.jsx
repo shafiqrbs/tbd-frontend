@@ -223,14 +223,13 @@ export default function _SalesReturnForm() {
                 {/* ==================== LEFT SIDE ==================== */}
                 <Grid.Col span={8}>
                     <form onSubmit={form.onSubmit(handleFormSubmit)}>
-                        <Box bg={"white"} p={"md"} pb="0" className={"borderRadiusAll"}>
+                        <Box bg={"white"} className={"borderRadiusAll"}>
                             {/* Header */}
-                            <Box mb={"xs"}>
+                            <Box m={"xs"}>
                                 <Text fz="md" fw={500} className={genericClass.cardTitle}>
                                     {t("SalesReturn")}
                                 </Text>
                             </Box>
-
                             <Box pl={8} pr={8} mb={"xs"} className={"boxBackground borderRadiusAll"}>
                                 {/* Customer */}
                                 <Box mt={"4"}>
@@ -291,7 +290,7 @@ export default function _SalesReturnForm() {
                                             pagination: tableCss.pagination,
                                         }}
                                         records={salesItems}
-                                        height={height + 35}
+                                        height={height + 54}
                                         columns={[
                                             {
                                                 accessor: "name",

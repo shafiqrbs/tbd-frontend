@@ -105,8 +105,8 @@ function Dashboard() {
       const value = {
         url: 'inventory/report/daily-summary',
         param: {
-          start_date: '2026-01-01',
-          end_date: '2026-02-28',
+          start_date: '2026-03-15',
+          end_date: '2026-03-15',
         }
       };
       try {
