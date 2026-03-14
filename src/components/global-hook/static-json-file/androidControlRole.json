@@ -2,6 +2,7 @@
   {
     "Group": "Android Apps",
     "actions": [
+      { "id": "ROLE_ADMIN", "label": "Admin" },
       { "id": "ROLE_MANAGER", "label": "Manager" },
       { "id": "ROLE_PURCHASE", "label": "InventoryPurchase" },
       { "id": "ROLE_SALES", "label": "InventorySales" },
