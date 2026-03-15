@@ -303,14 +303,14 @@ export default function _SalesReturnForm() {
                                                 textAlign: "right",
                                                 render: (data) => (
                                                     <Group justify="flex-end">
-                                                        <Button size="compact-xs">{data.quantity}</Button>
-                                                        <Button size="compact-xs">{data.available_return_qty}</Button>
+                                                        <Button size="compact-xs" bg={'green'}>{data.quantity}</Button>
+                                                        <Button size="compact-xs" bg={'red'}>{data.available_return_qty}</Button>
                                                         <Button size="compact-xs">{data.uom}</Button>
-
                                                         <Input
                                                             w={80}
                                                             type="number"
                                                             min={0}
+                                                            size="xs"
                                                             max={data.available_return_qty}
                                                             value={returnQuantities[data.id] || ""}
                                                             onChange={(e) => {
@@ -343,7 +343,7 @@ export default function _SalesReturnForm() {
                                 </Box>
 
                                 {/* Footer Buttons */}
-                                <Box mb="xs">
+                                <Box mb="xs" mt={'xs'}>
                                     <Grid columns={12}>
                                         <Grid.Col span={6}>
                                             <ActionIcon variant="transparent" size="lg" onClick={fetchSales}>

@@ -327,9 +327,7 @@ export default function __SalesReturnSubmitForm({
 
             <SimpleGrid cols={{ base: 1, md: 3 }} mt="xs">
 
-                <Card shadow="md" radius="4" className={`${classes.card} ${genericClass.genericBackground}`} padding="xs">
-                    <Box mt={8}></Box>
-                </Card>
+
                 <Card padding="xs">
                     <DatePickerForm
                         form={form}
@@ -359,21 +357,10 @@ export default function __SalesReturnSubmitForm({
                         classNames={inputCss}
                     />
                 </Card>
-            </SimpleGrid>
-
-            <Box mt={8}>
-                <Button.Group>
+                <Card padding="xs">
                     <Button
                         fullWidth
-                        type="submit"
-                        name="print"
-                        leftSection={<IconPrinter size={14} />}
-                    >
-                        {t("Print")}
-                    </Button>
-
-                    <Button
-                        fullWidth
+                        size={'xl'}
                         type="submit"
                         name="save"
                         leftSection={<IconDeviceFloppy size={14} />}
@@ -385,7 +372,11 @@ export default function __SalesReturnSubmitForm({
                     >
                         {t("Save")}
                     </Button>
-                </Button.Group>
+                </Card>
+            </SimpleGrid>
+
+            <Box mt={8}>
+
             </Box>
         </form>
     );
